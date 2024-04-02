@@ -1,0 +1,289 @@
+.homeSectionOne {
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center bottom;
+  position: relative;
+}
+
+.homeSectionTwo {
+  background-repeat: no-repeat;
+  position: relative;
+  background-position: center bottom;
+  height: 100vh;
+  background-size: 120%;
+  background-size: cover;
+}
+
+.rowThreeContainer {
+    display: flex;
+    padding: 90px 80px 0 80px;
+    gap: 76px;
+    align-items: center;
+}
+
+.sec3-img-container {
+    width: 70%;
+    order: 1;
+}
+
+.sec3TextContainer {
+    width: 30%;
+    order: 2;
+}
+
+.sec3-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-self: stretch;
+  color: white;
+}
+
+.ps5 {
+    padding-left: 20px;
+}
+
+.cards-container {
+  padding: 0 120px 100px 55px;
+  display: flex;
+  gap: 50px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  justify-content: space-between;
+  color: white;
+  position: relative;
+}
+
+.cards-container-title {
+  margin-top: 60px;
+  margin-bottom: 50px;
+  margin-left: 80px;
+  color: white;
+  font-size: 14px;
+}
+
+.cards {
+  display: flex;
+  background-color: #d9d9d9;
+  border-radius: 12px;
+  width: 100%;
+}
+
+.cards img {
+  border-radius: 12px;
+}
+
+.item-info {
+  margin-top: 20px;
+  /* padding: 0 40px; */
+}
+
+p.item-name {
+  margin-bottom: 4px;
+}
+
+.card1 {
+  position: absolute;
+  right: 193px;
+  bottom: 250px;
+  display: flex;
+  padding: 30px 24px 60px 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 42px;
+  border-radius: 4px;
+  background: black;
+  color: white;
+}
+
+.card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.card-info .title {
+  font-size: 14px;
+}
+
+.card-info .text {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.card-button {
+  display: flex;
+  padding: 18px 43px;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid #fff;
+  background: #000;
+  font-size: 15px;
+  font-weight: 500;
+  font-style: italic;
+  color: white;
+}
+
+.card2 {
+  position: absolute;
+  display: flex;
+  padding: 30px 20px 60px 24px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 42px;
+  left: 251px;
+  bottom: 250px;
+  background: rgba(255, 255, 255, 0.53);
+  color: black;
+}
+
+.card2-button {
+  display: flex;
+  padding: 18px 52px;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  color: white;
+  font-style: italic;
+}
+
+.arrow-png {
+  position: absolute;
+  top: 140px;
+  right: 35px;
+}
+
+@media (max-width: 375px) {
+  .card1 {
+    right: 21px;
+    bottom: 30%;
+    padding: 20px 19px;
+    position: absolute;
+  }
+
+  .card-info .title {
+    font-size: 12px;
+  }
+
+  .card-info .text {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .card-button {
+    font-size: 13px;
+    height: 37px;
+    padding: 18px 33px;
+    gap: 10px;
+  }
+
+  #homeSectionTwo {
+    background-size: cover;
+  }
+
+  .card2 {
+    padding: 20px 0px 18px 19px;
+    left: 17px;
+    bottom: 35%;
+  }
+
+  .card2-button {
+    padding: 18px 37px;
+    font-size: 12px;
+  }
+
+  .homeSectionThree {
+    display: flex;
+    padding: 40px 0px;
+    flex-direction: column;
+    align-items: center;
+    gap: 35px;
+    height: auto;
+  }
+
+  .rowThreeContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-items: flex-start;
+    padding: 0 30px;
+  }
+
+  .sec3-text {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-self: stretch;
+  }
+
+  .sec3-img-container {
+    width: 100%;
+    order: 2;
+  }
+
+  .sec3TextContainer {
+    width: 100%;
+    order: 1;
+    display: flex;
+    gap: 6px;
+  }
+
+  .sec3-img {
+    height: 200px;
+    border-radius: 12px;
+  }
+
+  .cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    flex-wrap: nowrap;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+    padding-bottom: 100px;
+  }
+
+  .cards-container-title {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    margin-bottom: 35px;
+    font-size: 11px;
+  }
+
+  .cards {
+    display: flex;
+    background-color: #d9d9d9;
+    border-radius: 12px;
+    width: 300px;
+  }
+
+  .item-info .item-name {
+    font-size: 14px;
+  }
+
+  .item-info .item-price {
+    font-size: 15px;
+  }
+
+  .arrow-png {
+    position: absolute;
+    top: 95%;
+    left: 140px;
+    right: 0;
+    transform: rotate(90deg);
+  }
+}
