@@ -15,7 +15,7 @@ import Login from "@/pages/member/account/login";
 import ProfileModal from "../modals/profile-modal";
 import NavbarPopup from "./navbarPopup";
 
-export default function Navbar({ className, navColor = "" }) {
+export default function Navbar({ className, navColor = "white" }) {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
