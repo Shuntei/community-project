@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { RiStarFill } from '@remixicon/react'
 import Image from 'next/image'
 Image
-function Modal() {
+function CommentModal() {
   const [isOpen, setIsOpen] = useState(false)
 
   const openModal = () => setIsOpen(true)
@@ -77,4 +77,4 @@ function Modal() {
   )
 }
 
-export default Modal
+export default CommentModal
