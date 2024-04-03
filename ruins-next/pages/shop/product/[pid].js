@@ -52,7 +52,7 @@ export default function Product() {
           <div className="flex  flex-col md:w-4/5">
             {/* 右-商品數量&moreInfo&addToCart */}
             <div className="flex flex-col md:flex-row ">
-              <div className="md:w-1/3   md:ms-6 md:space-y-7 fixed bottom-16 md:static bg-gray-100">
+              <div className="md:w-1/3 w-11/12  md:ms-6 md:space-y-7 fixed bottom-20 md:static bg-gray-100">
                 <div className=" text-black bg-gray-100 border-black border-b-2 text-[13px] font-semibold font-['Noto Sans TC'] ">
                   數量
                 </div>
