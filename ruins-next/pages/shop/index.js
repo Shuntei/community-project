@@ -81,7 +81,7 @@ export default function Index() {
           {/* 搜尋與排序欄結束 */}
           {/* 商品欄開始 */}
 
-          <div class="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
+          <div className="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
             <Link
               href="/shop/product"
               className=" flex-col md:row-span-2 md:col-span-2 gap-5 flex"
