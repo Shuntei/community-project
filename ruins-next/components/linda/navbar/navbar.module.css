@@ -1,7 +1,6 @@
 .navbar{
   padding: 24px 44px 10px 44px;
   display: flex;
-  color: white;
   justify-content: space-between;
   position: fixed;
   top: 0;
@@ -25,7 +24,7 @@
 
 .navlinks a {
   text-decoration: none;
-  color: white;
+  /* color: white; */
 }
 
 .navlinks {
@@ -52,18 +51,11 @@
 
 .text-main {
   font-size: 15px;
-  color: white;
   padding-left: 40px;
 }
 
 @media (max-width: 375px) {
 
-  /* .body {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    overflow-x: hidden;
-  } */
   .navbar {
     padding: 12px 20px;
   }
@@ -81,7 +73,6 @@
 
   .nav-cart-mobile {
     text-decoration: none;
-    color: white;
     display: flex;
     align-items: center;
     gap: 3px;
