@@ -10,7 +10,7 @@ export default function Product() {
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center relative pt-28">
         {/* header開始 */}
-        <Navbar />
+        <Navbar navColor={""} />
         {/* header結束 */}
         {/* 標題&首圖開始 */}
         <div className="w-full flex flex-col md:flex-row justify-between md:px-24 px-4 py-5">

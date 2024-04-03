@@ -91,7 +91,7 @@ export default function Navbar({ className, navColor = "white" }) {
               navColor === "white" ? "text-white" : "text-black"
             }  ${styles["navlinks"]}`}
           >
-            <a href="">CART</a>
+            <a href="/shop/cart">CART</a>
             <div className={`${styles["cart-number"]}`}>
               {navColor === "white" ? (
                 <Image alt="" src={CartSvg} />
