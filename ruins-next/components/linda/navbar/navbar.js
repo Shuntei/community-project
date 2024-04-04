@@ -31,8 +31,8 @@ export default function Navbar({ className, navColor = "white" }) {
         } relative`}
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
-          <div className="flex md:justify-start gap-[15px]" onClick={toggleNav}>
-            <Link href={"#"} className="pt-[2px]">
+          <div className="flex cursor-pointer md:justify-start gap-[15px]" >
+            <div onClick={toggleNav} className="pt-[2px]">
               <div
                 id="nav-icon4"
                 className="md:w-[30px] w-[23px] h-auto absolute"
@@ -52,8 +52,8 @@ export default function Navbar({ className, navColor = "white" }) {
                   }`}
                 ></div>
               </div>
-            </Link>
-            <Link href={"/"} className="md:block hidden text-[15px] pl-[40px]">
+            </div>
+            <Link href='/' className="md:block hidden text-[15px] pl-[40px]">
               MAIN
             </Link>
           </div>
