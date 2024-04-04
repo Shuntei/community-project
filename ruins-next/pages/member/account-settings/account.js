@@ -14,7 +14,6 @@ import AccountLayout from "@/components/linda/accountLayout";
 export default function Account() {
   return (
     <>
-    <AccountLayout>
     <div className="md:py-[50px] md:px-[80px] p-0 flex flex-col items-start md:p-0 p-[30px] gap-[28px] w-full">
             {/* Profile */}
             <div
@@ -150,7 +149,14 @@ export default function Account() {
               </button>
             </div>
           </div>
-    </AccountLayout>
     </>
   );
+}
+
+Account.getLayout = function getLayout(page) {
+  return (
+    <AccountLayout>
+      {page}
+    </AccountLayout>
+  )
 }
