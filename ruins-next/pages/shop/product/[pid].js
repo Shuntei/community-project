@@ -1,11 +1,53 @@
 import Image from "next/image";
-import React from "react";
+
 import { RiStarFill, RiStarLine } from "@remixicon/react";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/linda/navbar/navbar";
 import Footer from "@/components/linda/footer/footer";
+import { useRouter } from "next/router";
 
-export default function Product() {
+export default function Pid() {
+  const router = useRouter();
+
+  const [product, setProduct] = useState({
+    id: "",
+    picture: "",
+    stock: 0,
+    name: "",
+    price: 0,
+    tags: "",
+  });
+  const getProductById = async (pid) => {
+    const url = `http://localhost:3005/product/api/getProduct/${pid}`;
+
+    // 用 try...catch語法來作例外處理
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      console.log(data);
+      // 設定到狀態中 ===> 觸發重新渲染(re-render)
+      // 要設定到狀態前，最好先檢查資料類型是否一致
+      if (typeof data === "object" && data !== null) {
+        setProduct(data.row);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // 2. 在useEffet中監聽isReady值為true時，才能得到網址上的pid和伺服器獲取資料
+  useEffect(() => {
+    if (router.isReady) {
+      //確保能得到pid
+      const { pid } = router.query;
+      console.log(pid);
+      // 有pid後，向伺服器要求資料
+      getProductById(pid);
+    }
+  }, [router.isReady]);
+
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center relative pt-28">
@@ -16,19 +58,20 @@ export default function Product() {
         <div className="w-full flex flex-col md:flex-row justify-between md:px-24 px-4 py-5">
           <div className="flex items-start flex-col justify-end md:order-1 order-2">
             <div className="text-black  md:text-6xl text-[36px] font-semibold font-['Noto Sans TC']">
-              石頭燭台
+              {product.name}
             </div>
             <div className="text-black text-[20px] md:text-[32px] font-normal font-['IBM Plex Mono']">
-              $380
+              ${product.price}
             </div>
           </div>
           <div className="md:order-2 order-1 ">
             <Image
-              src="/images/camp.jpg"
+              src={product.img}
               alt="Picture of camp"
               width={500}
               height={500}
               className="rounded-xl"
+              unoptimized={true}
             />
           </div>
         </div>
@@ -41,11 +84,7 @@ export default function Product() {
               商品敘述
             </div>
             <div className="w-full text-black text-[15px] font-normal">
-              Sphere
-              系列帶有獨特的輪廓和紋理，雕刻優雅，每個花瓶都飾有複雜華麗的細節。以裝飾和雕塑的方式聚集在一起。現已成為
-              101 Copenhagen
-              的鮮明視覺標誌了。受中國古代花瓶的啟發，褪色的大地色調是 Sphere
-              系列的特色，光滑的形狀和鋒利的邊緣之間精確的比例及對比是與技藝精湛的陶藝師密切研創製成的作品。
+              {product.description}
             </div>
           </div>
           {/* 右-商品數量&moreInfo&addToCart&圖片 */}

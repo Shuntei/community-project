@@ -1,11 +1,30 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Navbar from "@/components/linda/navbar/navbar";
 import Footer from "@/components/linda/footer/footer";
 import Carousel from "@/components/kevin/carousel";
 
-export default function Index() {
+export default function List() {
+  const [products, setProuducts] = useState([])
+  const getProducts = async () => {
+    const url =
+      'http://localhost:3005/product/api'
+
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
+      if (Array.isArray(data.rows)) {
+        setProuducts(data.rows)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    getProducts()
+  }, [])
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-28">
@@ -82,127 +101,31 @@ export default function Index() {
           {/* 商品欄開始 */}
 
           <div className="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
-            <div className=" flex-col  gap-5 flex">
+        {' '}
+        {products.map((v, i) => {
+          return (
+            <Link
+                href={`/shop/product/${v.pid}`} className=" flex-col  gap-5 flex " key={v.pid}>
               <img
                 className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
+                src={v.img}
                 alt="pic"
               />
-              <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
+              <div
+                className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex"
+              >
                 <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  原石擺設
+                  {v.name}
                 </div>
                 <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  78000
+                  {v.price}
                 </div>
               </div>
-            </div>
-            <div className=" flex-col  gap-5 flex">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  4人快開防曬遮陽帳篷
-                </div>
-                <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  1499
-                </div>
-              </div>
-            </div>
-            <div className=" flex-col  gap-5 flex">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  咖啡豆擺飾
-                </div>
-                <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  5000
-                </div>
-              </div>
-            </div>
-            <div className=" flex-col  gap-5 flex">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  球型泡泡花瓶
-                </div>
-                <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  220
-                </div>
-              </div>
-            </div>
-            <div className=" flex-col  gap-5 flex">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  原石擺設
-                </div>
-                <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  78000
-                </div>
-              </div>
-            </div>
-            <div className=" flex-col  gap-5 flex">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  4人快開防曬遮陽帳篷
-                </div>
-                <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  1499
-                </div>
-              </div>
-            </div>
-            <div className=" flex-col  gap-5 flex">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  咖啡豆擺飾
-                </div>
-                <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  5000
-                </div>
-              </div>
-            </div>
-            <div className=" flex-col  gap-5 flex ">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  咖啡豆擺飾
-                </div>
-                <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  5000
-                </div>
-              </div>
-            </div>
-          </div>
+            </Link>
+          )
+        })}
+
+      </div>
           {/* 商品欄結束 */}
           {/* 頁碼開始 */}
           <div className="py-[60px] justify-start items-center flex">
