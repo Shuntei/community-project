@@ -11,7 +11,7 @@ export default function Index() {
       <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-28">
         {/* header開始 */}
         {/* header開始 */}
-        <Navbar />
+        <Navbar navColor={""} />
         {/* header結束 */}
         <div className=" bg-gray-100 flex flex-col justify-center items-center w-full py-7 md:py-12 space-y-6 md:space-y-12">
           {/* 輪播開始 */}
@@ -81,7 +81,7 @@ export default function Index() {
           {/* 搜尋與排序欄結束 */}
           {/* 商品欄開始 */}
 
-          <div class="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
+          <div className="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
             <div className=" flex-col  gap-5 flex">
               <img
                 className="w-full aspect-square  rounded-xl"

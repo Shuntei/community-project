@@ -10,7 +10,7 @@ export default function Index() {
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center w-full  pt-28">
         {/* header開始 */}
-        <Navbar className="" />
+        <Navbar navColor={""} />
         {/* header結束 */}
         <div className=" bg-gray-100 flex flex-col justify-center items-center w-full py-7 md:py-12 space-y-6 md:space-y-12">
           {/* 輪播開始 */}
@@ -21,7 +21,7 @@ export default function Index() {
           {/* 分類開始 */}
           <div className="w-full md:gap-[36px]  gap-[20px]  justify-between   md:px-24 px-4 items-center  flex ">
             <Link
-              href="/shop/list"
+              href="/shop/product/list"
               className="w-full aspect-square bg-black md:rounded-[20px] rounded-[7px] justify-center items-center flex  "
             >
               <div className="text-center text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans'] tracking-[2.80px]">
@@ -81,9 +81,9 @@ export default function Index() {
           {/* 搜尋與排序欄結束 */}
           {/* 商品欄開始 */}
 
-          <div class="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
+          <div className="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
             <Link
-              href="/shop/product"
+              href="/shop/product/1"
               className=" flex-col md:row-span-2 md:col-span-2 gap-5 flex"
             >
               <img

@@ -10,7 +10,7 @@ export default function ConfirmDoc() {
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-28">
         {/* header開始 */}
-        <Navbar />
+        <Navbar navColor={""} />
         {/* header結束 */}
 
         <div className="md:w-10/12  w-full flex  flex-col justify-center items-center bg-gradient-to-t from-gray-400 to-gray-100 md:px-24 px-4 py-5 mb-5">
