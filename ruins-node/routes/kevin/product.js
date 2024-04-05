@@ -1,11 +1,14 @@
 import express from "express";
 import db from "../../utils/mysql2-connect.js"
+import dayjs from "dayjs";
+
+
 const router = express.Router();
 
 // 取得商品所有資料
 router.get("/api", async (req, res) => {
   let page = +req.query.page || 1;
-  const perPage = 10;
+  const perPage = 12;
   const t_sql = "SELECT COUNT(1) totalRows FROM products";
   const [[{ totalRows }]] = await db.query(t_sql);
 
