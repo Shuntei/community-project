@@ -26,7 +26,7 @@ export default function EmailAndPassword() {
               </div>
             </div>
             <div className="text-end md:p-[50px] relative">
-              <Image src={shieldSvg} className="w-[160px]" />
+              <Image alt="" src={shieldSvg} className="w-[160px]" />
               <RiKey2Line className="absolute md:bottom-[35%] bottom-[60%] md:left-[20%] left-[-4%] text-[50px]" />
             </div>
           </div>
