@@ -10,7 +10,7 @@ export default function LoginModal({isVisible}) {
           <Link href="/member/account/login">LOGIN</Link>
         </div>
         <div className="justify-start items-start gap-2.5 inline-flex">
-          <div href="/member/account/signup">SIGN UP</div>
+          <Link href="/member/account/signup">SIGN UP</Link>
         </div>
       </div>
     </>

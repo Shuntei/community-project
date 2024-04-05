@@ -14,6 +14,7 @@ import LoginModal from "../modals/login-modal";
 import Login from "@/pages/member/account/login";
 import ProfileModal from "../modals/profile-modal";
 import NavbarPopup from "./navbarPopup";
+import NavbarMobile from "./navbar-mobile";
 
 export default function Navbar({ className, navColor = "white" }) {
   const [showModal, setShowModal] = useState(false);
@@ -41,19 +42,19 @@ export default function Navbar({ className, navColor = "white" }) {
                   className={`w-full h-[2px] ${
                     navColor === "white" ? "bg-white" : "bg-black"
                   } transform transition duration-500 ease-in-out ${
-                    isOpen ? "rotate-45 translate-y-1.5" : ""
+                    isOpen ? "rotate-45 md:translate-y-1.5 translate-y-1.5" : ""
                   } `}
                 ></div>
                 <div
                   className={`w-full h-[2px] ${
                     navColor === "white" ? "bg-white" : "bg-black"
                   }  md:mt-[10px] mt-[6px] transform  transition duration-500 ease-in-out ${
-                    isOpen ? "-rotate-45 -translate-y-1.5" : ""
+                    isOpen ? "-rotate-45 md:-translate-y-1.5 -translate-y-[0.125rem]" : ""
                   }`}
                 ></div>
               </div>
             </div>
-            <Link href='/' className="md:block hidden text-[15px] pl-[40px]">
+            <Link href='#' className="md:block hidden text-[15px] pl-[40px]">
               MAIN
             </Link>
           </div>
@@ -133,6 +134,7 @@ export default function Navbar({ className, navColor = "white" }) {
         {/* <LogoutModal isVisible={showModal} /> */}
       </nav>
       {isOpen ? <NavbarPopup /> : ""}
+      {/* <NavbarMobile /> */}
     </>
   );
 }

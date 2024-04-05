@@ -47,7 +47,7 @@ export default function Account() {
             </div>
             {/* Upload avatar */}
             <div className="flex md:flex-row flex-col md:gap-[37px] gap-[20px] md:items-start items-center md:border-b md:border-white w-full">
-              <Image src={ProfileIcon} className="w-[110px] stroke-1" />
+              <Image alt="" src={ProfileIcon} className="w-[110px] stroke-1" />
               <div className="flex flex-col md:gap-[50px] gap-[30px] w-full">
                 <div className="flex flex-col gap-[24px]">
                   <div className="flex w-1/3 flex-col gap-[6px] md:w-2/5 w-full">
