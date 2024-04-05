@@ -1,6 +1,7 @@
 import express from "express";
 import multer from "multer";
 import memberRouter from "./routes/linda/member.js";
+import productRouter from "./routes/kevin/product.js"
 import db from "./utils/mysql2-connect.js";
 import cors from "cors"
 
@@ -20,6 +21,9 @@ const corsOptions = {
 app.use(cors(corsOptions))
 
 app.use("/member", memberRouter);
+app.use("/product", productRouter);
+
+
 
 app.get("/try-db", async (req, res) => {
   const sql = "SELECT * from mb_user LIMIT 3";
