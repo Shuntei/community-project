@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/linda/navbar/navbar";
 import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
-import Checkbox from "@/public/checkbox.svg";
-import CheckboxEmpty from "@/public/CheckboxEmpty.svg";
+import Checkbox from "@/public/icons/checkbox.svg";
+import CheckboxEmpty from "@/public/icons/CheckboxEmpty.svg";
+import CheckboxEmptyRed from "@/public/icons/CheckboxEmptyRed.svg";
 import Image from "next/image";
 import GoogleBtn from "@/components/linda/buttons/googleBtn";
 import AccountBtn from "@/components/linda/buttons/accountBtn";
@@ -11,13 +12,16 @@ import { z } from "zod";
 import Router, { useRouter } from "next/router";
 import { MB_SIGNUP } from "@/components/config/api-path";
 
-const schemaName = z
-  .string()
-  .min(2, { message: "Your user name is too short" });
-const schemaEmail = z.string().email({ message: "Email address is wrong" });
+const schemaName = z.string().min(3, { message: "Username is too short" });
+const passwordRe = new RegExp(/^(?=.*\d)[A-Za-z\d]{8,}$/)
+const schemaPassword = z.string().regex(passwordRe, {message: "wrong password"})
+const schemaEmail = z.string().email({ message: "Invalid email address" });
+const phoneRe = new RegExp(/^09\d{2}-?\d{3}-?\d{3}$/);
+const schemaPhone = z.string().regex(phoneRe, { message: "Invalid number" });
 
 export default function Signup() {
-  const router = useRouter()
+  const router = useRouter();
+  const [submitted, setSubmitted] = useState(false)
   const [checked, setChecked] = useState(false);
   const [myForm, setMyForm] = useState({
     email: "",
@@ -34,15 +38,14 @@ export default function Signup() {
     username: "",
     phone: "",
     birthday: "",
+    agreement: false
   });
 
   const handleChange = (e) => {
     setMyForm({ ...myForm, [e.target.name]: e.target.value });
   };
 
-  const handleFormSubmit = async (e) => {
-    e.preventDefault();
-
+  const updateError = ()=>{
     let initErrors = {
       hasErrors: false,
       email: "",
@@ -50,46 +53,127 @@ export default function Signup() {
       username: "",
       phone: "",
       birthday: "",
+      agreement: '',
     };
 
-    const emailZod = schemaEmail.safeParse(myForm.email);
-    if(!emailZod.success){
-      initErrors = {
-        ...initErrors, 
-        hasErrors: true,
-        email: emailZod.error.issues[0].message
-      }
-    }
-
-    const nameZod = schemaName.safeParse(myForm.username)
-    if(!nameZod.success){
+    if (!myForm.email) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
-        username: nameZod.error.issues[0].message
+        email: "Cannot be blank",
+      };
+    } else {
+      const emailZod = schemaEmail.safeParse(myForm.email);
+      if (!emailZod.success) {
+        initErrors = {
+          ...initErrors,
+          hasErrors: true,
+          email: emailZod.error.issues[0].message,
+        };
       }
     }
 
-    if(initErrors.hasErrors){
-      setErrors(initErrors)
-      return
+    if (!myForm.password) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        password: "Cannot be blank",
+      };
+    } else {
+      const passwordZod = schemaPassword.safeParse(myForm.password);
+      if (!passwordZod.success) {
+        initErrors = {
+          ...initErrors,
+          hasErrors: true,
+          password: passwordZod.error.issues[0].message,
+        };
+      }
     }
 
-    const r = await fetch(MB_SIGNUP, {
-      method: 'post',
-      body: JSON.stringify(myForm),
-      headers: {
-        "Content-Type": "application/json"
+    if (!myForm.username) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        username: "Cannot be blank",
+      };
+    } else {
+      const nameZod = schemaName.safeParse(myForm.username);
+      if (!nameZod.success) {
+        initErrors = {
+          ...initErrors,
+          hasErrors: true,
+          username: nameZod.error.issues[0].message,
+        };
       }
-    })
+    }
 
-    const result = await r.json()
-    console.log(result);
-    
-    // if(result.success){
-    //   router.push('/')
-    // }
+    if (!myForm.phone) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        phone: "Cannot be blank",
+      };
+    } else {
+      const phoneZod = schemaPhone.safeParse(myForm.phone);
+      if (!phoneZod.success) {
+        initErrors = {
+          ...initErrors,
+          hasErrors: true,
+          phone: phoneZod.error.issues[0].message,
+        };
+      }
+    }
+
+    if(!checked){
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        agreement: "You must agree"
+      }
+    }
+
+    if (initErrors.hasErrors) {
+      setErrors(initErrors);
+      return false;
+    } else {
+      setErrors(initErrors);
+      return true;
+    }
+
+    // const result = initErrors.hasErrors
+    // return result;
+  }
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitted(true)
+
+    const result =  updateError()
+
+    if(result){
+      const r = await fetch(MB_SIGNUP, {
+        method: "post",
+        body: JSON.stringify(myForm),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      const result = await r.json();
+      console.log(result);
+  
+      // if(result.success){
+      //   router.push('/')
+      // }
+    }
+
   };
+
+  useEffect(()=>{
+    if(submitted){
+      updateError()
+    }
+  }, [myForm])
 
   return (
     <>
@@ -119,7 +203,7 @@ export default function Signup() {
                     <div className="bg-white px-2 text-black">1</div>
                     <div className="text-[#9F9F9F] text-base">EMAIL</div>
                   </div>
-                  <div className="text-[#EA7E7E] font-medium py-1 text-xs flex-1 uppercase">
+                  <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
                     {errors.email}
                   </div>
                   <div className="pl-[66px] py-3">
@@ -139,7 +223,7 @@ export default function Signup() {
                     <div className="bg-white px-2 text-black">2</div>
                     <div className="text-[#9F9F9F] text-base">PASSWORD</div>
                   </div>
-                  <div className="text-[#EA7E7E] font-medium py-1 text-xs flex-1"></div>
+                  <div className={`h-[24px] ${errors.password ? 'text-[#EA7E7E]' : 'text-white' }  font-medium py-1 text-xs uppercase`}>USE 8 OR MORE CHARACTERS MIXING LETTERS AND NUMBERS</div>
                   <div className="flex pl-[66px] py-3">
                     {" "}
                     <input
@@ -159,7 +243,7 @@ export default function Signup() {
                       <div className="bg-white px-2 text-black">3</div>
                       <div className="text-[#9F9F9F] text-base">USERNAME</div>
                     </div>
-                    <div className="text-[#EA7E7E] font-medium py-1 text-xs flex-1 uppercase">
+                    <div className="h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
                       {errors.username}
                     </div>
                     <div className="flex pl-[66px] py-3">
@@ -179,7 +263,9 @@ export default function Signup() {
                       <div className="bg-white px-2 text-black">4</div>
                       <div className="text-[#9F9F9F] text-base">PHONE</div>
                     </div>
-                    <div className="text-[#EA7E7E] font-medium py-1 text-xs flex-1"></div>
+                    <div className="h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
+                      {errors.phone}
+                    </div>
                     <div className="flex pl-[66px] py-3">
                       {" "}
                       <input
@@ -199,7 +285,7 @@ export default function Signup() {
                       <div className="bg-white px-2 text-black">5</div>
                       <div className="text-[#9F9F9F] text-base">BIRTHDAY</div>
                     </div>
-                    <div className="text-[#EA7E7E] font-medium py-1 text-xs flex-1"></div>
+                    <div className="h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase"></div>
                     <div className="flex relative pl-[66px] py-3 self-stretch justify-between">
                       {" "}
                       <input
@@ -210,7 +296,7 @@ export default function Signup() {
                         onChange={handleChange}
                         className="bg-inherit focus:outline-none text-base text-white flex self-stretch w-full flex-1 text-base"
                       />{" "}
-                      <div className="flex gap-2.5 md:relative md:top-0 absolute top-[100px] right-0">
+                      <div onClick={handleChange} className="flex gap-2.5 md:relative md:top-0 absolute top-[100px] right-0">
                         <div
                           onClick={() => {
                             setChecked(!checked);
@@ -218,12 +304,11 @@ export default function Signup() {
                         >
                           <Image
                             alt=""
-                            src={checked ? Checkbox : CheckboxEmpty}
+                            src={errors.agreement ? CheckboxEmptyRed : checked ? Checkbox : CheckboxEmpty}
                             className="cursor-pointer md:w-[30px] w-[20px]"
                           />
                         </div>
-                        {/* <Image src={CheckboxEmpty} className="md:w-[30px] w-[20px] /> */}
-                        <div className="text-white md:text-[15px] text-[12px] flex items-end text-[#F1F1F1]">
+                        <div className={`${errors.agreement ? 'text-[#EA7E7E]' : 'text-[#F1F1F1]' } md:text-[15px] text-[12px] flex items-end`}>
                           I ACCEPT THE ACCOUNT AGREEMENT
                         </div>
                       </div>

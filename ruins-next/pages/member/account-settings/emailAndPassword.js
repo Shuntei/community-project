@@ -10,7 +10,6 @@ import Link from "next/link";
 export default function EmailAndPassword() {
   return (
     <>
-      <AccountLayout>
         <div className="flex w-full flex-col md:p-0 p-[30px] gap-[37px]">
           <div className="pt-[50px] md:px-[80px] flex w-full">
             <div className="flex flex-col gap-[30px] w-full">
@@ -64,7 +63,10 @@ export default function EmailAndPassword() {
             </Link>
           </div>
         </div>
-      </AccountLayout>
     </>
   );
 }
+
+EmailAndPassword.getLayout = function getLayout(page) {
+  return <AccountLayout>{page}</AccountLayout>;
+};
