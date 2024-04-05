@@ -4,10 +4,9 @@ import { IoMdEye } from "react-icons/io";
 import { IoMdEyeOff } from "react-icons/io";
 import AccountLayout from "@/components/linda/accountLayout";
 
-export default function EmailAndPassword() {
+export default function EditPassword() {
   return (
     <>
-      <AccountLayout>
         <div className="flex w-full flex-col items-center md:p-0 p-[30px] gap-[37px]">
           <div className="pt-[50px] md:px-[80px] flex items-start w-full">
             <div className="flex flex-col gap-[30px] w-full">
@@ -62,7 +61,10 @@ export default function EmailAndPassword() {
             </button>
           </div>
         </div>
-      </AccountLayout>
     </>
   );
 }
+
+EditPassword.getLayout = function getLayout(page) {
+  return <AccountLayout>{page}</AccountLayout>;
+};
