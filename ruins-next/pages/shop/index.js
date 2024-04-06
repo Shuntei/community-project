@@ -5,8 +5,10 @@ import Navbar from "@/components/linda/navbar/navbar";
 import Footer from "@/components/linda/footer/footer";
 import Carousel from "@/components/kevin/carousel";
 import { RiSearchLine } from "@remixicon/react";
+import { useCart } from "@/hooks/use-cart";
 
 export default function Index() {
+  const { onAddItem } = useCart();
   const [products, setProuducts] = useState([]);
   const getProducts = async () => {
     const url = "http://localhost:3005/product/api";
@@ -88,7 +90,7 @@ export default function Index() {
           {/* 搜尋與排序欄開始 */}
           <div className="w-full justify-between flex md:px-24 px-4 ">
             <div className="w-5 h-[19.50px] relative">
-              {/* 搜尋 */} 
+              {/* 搜尋 */}
               <RiSearchLine></RiSearchLine>
             </div>
             <div className="justify-start items-center gap-[15px] flex">
@@ -119,25 +121,35 @@ export default function Index() {
             </Link>
             {products.map((v, i) => {
               return (
-                <Link
-                  href={`/shop/product/${v.pid}`}
-                  className=" flex-col  gap-5 flex "
-                  key={v.pid}
-                >
-                  <img
-                    className="w-full aspect-square  rounded-xl"
-                    src={v.img}
-                    alt="pic"
-                  />
-                  <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                    <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                      {v.name}
+                <>
+                  <Link
+                    href={`/shop/product/${v.pid}`}
+                    className=" flex-col  gap-5 flex "
+                    key={v.pid}
+                  >
+                    <img
+                      className="w-full aspect-square  rounded-xl"
+                      src={v.img}
+                      alt="pic"
+                    />
+                    <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
+                      <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
+                        {v.name}
+                      </div>
+                      <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
+                        {v.price}
+                      </div>
                     </div>
-                    <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                      {v.price}
-                    </div>
-                  </div>
-                </Link>
+                  </Link>
+                  {/* <button
+                    onClick={() => {
+                      console.log(v)
+                      onAddItem(v);
+                    }}
+                  >
+                    +++++
+                  </button> */}
+                </>
               );
             })}
           </div>
