@@ -6,12 +6,13 @@ import React, { useEffect, useState } from "react";
 import Navbar from "@/components/linda/navbar/navbar";
 import Footer from "@/components/linda/footer/footer";
 import { useRouter } from "next/router";
+import { useCart } from "@/hooks/use-cart";
 
 export default function Pid() {
   const router = useRouter();
-
+  const { addMutiItem,onAddItem,items} = useCart();
   const [product, setProduct] = useState({
-    id: "",
+    pid: "",
     picture: "",
     stock: 0,
     name: "",
@@ -138,11 +139,20 @@ export default function Pid() {
                 </div>
               </div>
               <div className="md:w-1/3  md:ms-6 md:space-y-7  fixed bottom-1 md:static">
-                <div className="px-[80px] md:px-[46px] md:py-[43px] py-[18px] border border-black bg-black justify-center items-center flex">
+                <button
+                  onClick={() => {
+
+                    console.log(product.pid)
+                    console.log(items)
+
+                    onAddItem(product);
+                  }}
+                  className="px-[80px] md:px-[46px] md:py-[43px] py-[18px] border border-black bg-black justify-center items-center flex"
+                >
                   <div className="text-white italic text-[26px] font-semibold font-['IBM Plex Mono']">
                     ADD TO CART
                   </div>
-                </div>
+                </button>
               </div>
             </div>
             {/* 右-圖片 */}

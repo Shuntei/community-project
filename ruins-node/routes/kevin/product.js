@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 
 const router = express.Router();
 
-const getListData = async (req) => {
+const getListData = async (req,res) => {
   let page = +req.query.page || 1;
   const perPage = 12;
   const t_sql = "SELECT COUNT(1) totalRows FROM products";
@@ -19,7 +19,7 @@ const getListData = async (req) => {
     LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [rows] = await db.query(sql);
   }
-  res.json({ totalRows, totalPages, page, perPage, rows });
+  return({ totalRows, totalPages, page, perPage, rows });
 };
 
 // 取得商品所有資料
