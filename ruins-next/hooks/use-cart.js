@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 // 1. 建立context
@@ -10,8 +10,21 @@ export function CartProvider({ children }) {
   // 加入購物車的商品項目
   // 和products的物件相比會多了一個qty(數量)數字屬性
 
-
   const [items, setItems] = useState([]);
+
+  useEffect(() => {
+    // 在組件掛載時，從 localStorage 中讀取購物車資料
+    const storedCart = localStorage.getItem('ruins-cart')
+    if (storedCart) {
+      setItems(JSON.parse(storedCart))
+    }
+  }, [])
+
+  const saveToLocalStorage = (cartItems) => {
+    // 將購物車資料存入 localStorage
+    localStorage.setItem('ruins-cart', JSON.stringify(cartItems))
+  }
+
 
   // 純函式: 單純改變狀態的陣列 --- START ---
   // 商品數量(qty)遞增的函式
@@ -101,10 +114,13 @@ export function CartProvider({ children }) {
   // 事件處理函式: 包含狀態更動共通三個步驟 --- START ---
   const onAddItem = (product) => {
     setItems(add(items, product));
+    saveToLocalStorage(add(items, product))
   };
 
   const onIncreaseItem = (id) => {
     setItems(increase(items, id));
+    saveToLocalStorage(increase(items, id))
+
   };
 
   // 遞減時需考慮數量為0要移除
@@ -114,10 +130,14 @@ export function CartProvider({ children }) {
  nextItems = nextItems.filter((v) => v.qty > 0);
 
     setItems(nextItems);
+    saveToLocalStorage(nextItems)
+
   };
 
   const onRemoveItem = (id) => {
     setItems(remove(items, id));
+    saveToLocalStorage(remove(items, id))
+
   };
   // 事件處理函式: 包含狀態更動共通三個步驟 --- END ---
 
