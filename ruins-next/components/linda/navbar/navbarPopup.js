@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 
 export default function NavbarPopup() {
@@ -10,7 +11,7 @@ export default function NavbarPopup() {
       >
         <div className="w-1/5 text-[13px] font-semibold">
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">SHOP</a></p>
-          <p className="font-['IBM Plex Mono']"><a href="#">ALL GOODS</a></p>
+          <p className="font-['IBM Plex Mono']"><Link href="/shop">ALL GOODS</Link></p>
           <p className="font-['IBM Plex Mono']"><a href="#">ORDER LIST</a></p>
         </div>
         <div className="w-1/5 text-[13px] font-semibold">
