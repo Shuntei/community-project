@@ -16,7 +16,7 @@ import ProfileModal from "../modals/profile-modal";
 import NavbarPopup from "./navbarPopup";
 import NavbarMobile from "./navbar-mobile";
 import { useCart } from "@/hooks/use-cart";
-
+import CartModal from "@/components/kevin/cart-modal";
 export default function Navbar({ className, navColor = "white" }) {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -93,7 +93,8 @@ export default function Navbar({ className, navColor = "white" }) {
               navColor === "white" ? "text-white" : "text-black"
             }  ${styles["navlinks"]}`}
           >
-            <Link href="/shop/cart">CART</Link>
+            {/* <Link href="/shop/cart">CART</Link> */}
+            <CartModal />
             <div className={`${styles["cart-number"]}`}>
               {navColor === "white" ? (
                 <Image alt="" src={CartSvg} />
