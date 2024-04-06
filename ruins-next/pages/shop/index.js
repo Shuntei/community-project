@@ -91,7 +91,7 @@ export default function Index() {
           <div className="w-full justify-between flex md:px-24 px-4 ">
             <div className="w-5 h-[19.50px] relative">
               {/* 搜尋 */}
-              <RiSearchLine></RiSearchLine>
+              <RiSearchLine />
             </div>
             <div className="justify-start items-center gap-[15px] flex">
               <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
@@ -122,33 +122,33 @@ export default function Index() {
             {products.map((v, i) => {
               return (
                 <>
-                  <Link
-                    href={`/shop/product/${v.pid}`}
-                    className=" flex-col  gap-5 flex "
-                    key={v.pid}
-                  >
-                    <img
-                      className="w-full aspect-square  rounded-xl"
-                      src={v.img}
-                      alt="pic"
-                    />
+                  <div className=" flex-col  gap-5 flex " key={v.pid}>
+                    <Link href={`/shop/product/${v.pid}`}>
+                      <img
+                        className="w-full aspect-square  rounded-xl"
+                        src={v.img}
+                        alt="pic"
+                      />
+                    </Link>
                     <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                      <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
+                      <Link
+                        href={`/shop/product/${v.pid}`}
+                        className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']"
+                      >
                         {v.name}
-                      </div>
-                      <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                        {v.price}
+                      </Link>
+                      <div className="text-zinc-500 md:w-full md:text-sm text-xs font-medium font-['IBM Plex Mono'] flex justify-between">
+                        <div>{v.price}</div>
+                        <button
+                          onClick={() => {
+                            onAddItem(v);
+                          }}
+                        >
+                          +
+                        </button>
                       </div>
                     </div>
-                  </Link>
-                  {/* <button
-                    onClick={() => {
-                      console.log(v)
-                      onAddItem(v);
-                    }}
-                  >
-                    +++++
-                  </button> */}
+                  </div>
                 </>
               );
             })}
