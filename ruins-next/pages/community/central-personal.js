@@ -15,8 +15,8 @@ export default function CentralContentP() {
 
   return (
     <>
-      {/* 依據navbar 加mt-[113px] */}
-      <div className="w-full flex justify-center pt-[50px] bg-black mt-[113px]">
+      {/* 依據navbar 加mt-[88px] pc:mt-[113px] */}
+      <div className="w-full flex justify-center pt-[50px] bg-black mt-[88px] pc:mt-[113px]">
         {/* <!-- 中間內容 --> */}
         <section className="w-full pc:w-[800px]">
           {/* <div> */}

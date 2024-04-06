@@ -20,6 +20,7 @@ export default function BoardsContextProvider({ children }) {
     totalPages: 0,
   });
   const [getPost, setGetPost] = useState([]);
+  const [render, setRender] = useState(false);
 
   // 初始載入posts, 預設第一頁用於點全部按鈕
   const allPostsShow = async (currentPage = "?page=1") => {
@@ -87,6 +88,8 @@ export default function BoardsContextProvider({ children }) {
         handlePage,
         handleBdPosts,
         handleBdPostsPage,
+        render,
+        setRender,
       }}
     >
       {children}

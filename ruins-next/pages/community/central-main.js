@@ -1,8 +1,5 @@
 import "tailwindcss/tailwind.css";
-import {
-  RiSearchLine,
-  RiArrowDropDownLine,
-} from "@remixicon/react";
+import { RiSearchLine, RiArrowDropDownLine } from "@remixicon/react";
 import MainContent from "@/components/johnny/content-list";
 import SeeMoreFollows from "@/components/johnny/seemore-follows";
 import SeeMoreNotification from "@/components/johnny/seemore-notification";
@@ -13,8 +10,8 @@ export default function CentralContent() {
 
   return (
     <>
-      {/* 依據navbar 加mt-[113px] */}
-      <div className="flex justify-center pt-[50px] mt-[113px] bg-black overflow-scroll">
+      {/* 依據navbar  加mt-[88px] pc:mt-[113px] */}
+      <div className="flex justify-center mt-[50px] mt-[88px] pc:mt-[113px] bg-black overflow-scroll">
         <section className="w-full pc:w-[800px]">
           {toggles.follows || toggles.notification ? (
             ""

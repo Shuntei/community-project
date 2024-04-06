@@ -15,8 +15,6 @@ import { SN_DELETE_POST } from "./config/api-path";
 
 export default function MainContent() {
   const router = useRouter();
-  const [render, setRender] = useState(false);
-
   const {
     postsList,
     selectedPosts,
@@ -24,9 +22,12 @@ export default function MainContent() {
     getPostId,
     handlePage,
     handleBdPostsPage,
+    render,
+    setRender,
   } = useBoards();
 
   const { removeBox, setRemoveBox } = useToggles();
+  const [toggleMenu, setToggleMenu] = useState(false);
 
   useEffect(() => {
     const currentPage = location.search;
@@ -48,11 +49,18 @@ export default function MainContent() {
     const result = await r.json();
     console.log(result);
     if (result.success) {
-      router.reload();
+      // router.reload();
+      // router.push(location.search);
+      setRender(true);
     } else {
       alert("刪除失敗");
     }
   };
+
+  useEffect(() => {
+    allPostsShow();
+    setRender(false);
+  }, [render]);
 
   return (
     <>
@@ -144,17 +152,23 @@ export default function MainContent() {
                         85
                       </span>
                       <div className="dropdown dropdown-right dropdown-end">
-                        <div tabIndex={0} role="button">
+                        <div
+                          tabIndex={0}
+                          role="button"
+                          onClick={() => setToggleMenu(!toggleMenu)}
+                        >
                           <RiMoreFill className="pr-1" />
                         </div>
-                        <ul
-                          tabIndex={0}
-                          className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-24"
-                        >
-                          <li onClick={() => removePost(v.post_id)}>
-                            <a>remove</a>
-                          </li>
-                        </ul>
+                        {toggleMenu && (
+                          <ul
+                            tabIndex={0}
+                            className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-24"
+                          >
+                            <li onClick={() => removePost(v.post_id)}>
+                              <a>remove</a>
+                            </li>
+                          </ul>
+                        )}
                       </div>
                     </div>
                   </div>

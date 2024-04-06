@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import img from "./img/90.jpg";
 import postImg from "./img/1868140_screenshots_20240117160639_1.jpg";
@@ -18,11 +18,12 @@ import {
 } from "@remixicon/react";
 import { SN_ADD_POST } from "./config/api-path";
 import { useRouter } from "next/router";
+import { useBoards } from "@/contexts/use-boards";
 
 export default function PostModal() {
   const { postModal, setPostModal } = useToggles();
   const [postFrom, setPostForm] = useState({ title: "", content: "" });
-  const router = useRouter();
+  const { render, setRender, allPostsShow } = useBoards();
 
   const changeHandler = (e) => {
     setPostForm({ ...postFrom, [e.target.name]: e.target.value });
@@ -41,11 +42,18 @@ export default function PostModal() {
 
     const result = await r.json();
     if (result.success) {
-      router.reload();
+      console.log(result);
+      setRender(true);
+      setPostModal(!postModal);
     } else {
       alert("發文失敗");
     }
   };
+
+  useEffect(() => {
+    allPostsShow();
+    setRender(false);
+  }, [render]);
 
   return (
     <>
