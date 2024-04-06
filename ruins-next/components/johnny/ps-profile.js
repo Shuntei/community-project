@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-// import img from "./img/1868140_screenshots_20240116015852_1.jpg";
 import img from "./img/90.jpg";
 import { RiDraftLine, RiBookmarkFill } from "@remixicon/react";
 import { useToggles } from "@/contexts/use-toggles";

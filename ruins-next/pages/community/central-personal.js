@@ -1,22 +1,6 @@
 import React, { useState } from "react";
 import "tailwindcss/tailwind.css";
-import {
-  RiChat4Fill,
-  RiEyeFill,
-  RiVideoOnFill,
-  RiImageFill,
-  RiMapPinFill,
-  RiPriceTag3Fill,
-  RiEmotionLaughFill,
-  RiSettings3Fill,
-  RiEqualizerLine,
-  RiSendPlane2Fill,
-  RiDraftLine,
-  RiCloseLargeLine,
-  RiArrowDropDownLine,
-  RiAddLine,
-  RiBookmarkFill,
-} from "@remixicon/react";
+import { RiSettings3Fill, RiEqualizerLine, RiAddLine } from "@remixicon/react";
 import MainContent from "@/components/johnny/content-list";
 import PostModal from "@/components/johnny/modal-post";
 import PersonalBackground from "@/components/johnny/ps-background";
@@ -24,16 +8,10 @@ import Profile from "@/components/johnny/ps-profile";
 import SeeMoreFollows from "@/components/johnny/seemore-follows";
 import SeeMoreNotification from "@/components/johnny/seemore-notification";
 import { useToggles } from "@/contexts/use-toggles";
-// import MainContent from "@/component/community/content-list";
-// import PostModal from "@/component/community/post-modal";
-// import PersonalBackground from "@/component/community/personal-background";
-// import Profile from "@/component/community/profile";
-// import SeeMoreFollows from "@/component/community/seemore-follows";
-// import SeeMoreNotification from "@/component/community/seemore-notification";
-// import { useToggles } from "@/contexts/use-toggles";
 
 export default function CentralContentP() {
-  const { postModal, setPostModal, toggles } = useToggles();
+  const { postModal, setPostModal, toggles, removeBox, setRemoveBox } =
+    useToggles();
 
   return (
     <>
@@ -68,10 +46,13 @@ export default function CentralContentP() {
                 <div className="pc:pl-10 text-[20px]">POSTS</div>
                 <div className="flex gap-5">
                   <span>
-                    <RiEqualizerLine className="text-[24px]" />
+                    <RiEqualizerLine />
                   </span>
                   <span>
-                    <RiSettings3Fill className="text-[24px]" />
+                    <RiSettings3Fill
+                      className="cursor-pointer"
+                      onClick={() => setRemoveBox(!removeBox)}
+                    />
                   </span>
                 </div>
               </div>
@@ -84,8 +65,6 @@ export default function CentralContentP() {
           ) : (
             <MainContent />
           )}
-          {/* {toggles.notification ? <SeeMoreNotification /> : <MainContent />} */}
-          {/* </div> */}
         </section>
       </div>
     </>

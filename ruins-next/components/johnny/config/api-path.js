@@ -7,6 +7,11 @@ export const SN_POSTS = `${API_SERVER}/posts`;
 
 export const SN_BOARDS = `${API_SERVER}/boards`;
 
+export const SN_ADD_POST = `${API_SERVER}/psadd`;
+
+//方法delete, `${API_SERVER}/${post_id}`
+export const SN_DELETE_POST = `${API_SERVER}`;
+
 // // 新增資料 POST
 // export const AB_ADD_POST = `${API_SERVER}/address-book/add`;
 // // 刪除單筆

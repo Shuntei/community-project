@@ -1,5 +1,5 @@
 import { SN_POSTS, SN_BOARDS } from "@/components/johnny/config/api-path";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useState } from "react";
 import React from "react";
 
 const BoardsContext = createContext();

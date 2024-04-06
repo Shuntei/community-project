@@ -28,9 +28,6 @@ export default function MainPost() {
   const { commentModal, setCommentModal } = useToggles();
   const { getPost } = useBoards();
 
-  // useEffect(() => {
-  //   getPost();
-  // }, []);
 
   return (
     <>

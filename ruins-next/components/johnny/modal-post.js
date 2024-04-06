@@ -1,7 +1,8 @@
-import React from "react";
-// import img from "./img/90.jpg";
+import React, { useState } from "react";
 import Image from "next/image";
 import img from "./img/90.jpg";
+import postImg from "./img/1868140_screenshots_20240117160639_1.jpg";
+import { z } from "zod";
 import { useToggles } from "@/contexts/use-toggles";
 import {
   RiVideoOnFill,
@@ -15,17 +16,46 @@ import {
   RiCloseLargeLine,
   RiArrowDropDownLine,
 } from "@remixicon/react";
+import { SN_ADD_POST } from "./config/api-path";
+import { useRouter } from "next/router";
 
 export default function PostModal() {
   const { postModal, setPostModal } = useToggles();
+  const [postFrom, setPostForm] = useState({ title: "", content: "" });
+  const router = useRouter();
+
+  const changeHandler = (e) => {
+    setPostForm({ ...postFrom, [e.target.name]: e.target.value });
+  };
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    const r = await fetch(`${SN_ADD_POST}`, {
+      method: "POST",
+      body: JSON.stringify(postFrom),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    console.log(postFrom);
+
+    const result = await r.json();
+    if (result.success) {
+      router.reload();
+    } else {
+      alert("發文失敗");
+    }
+  };
 
   return (
     <>
       {" "}
       {/* <!-- 發文框 --> */}
       <form
-        className="    bg-gray-400 bg-opacity-50 fixed backdrop-blur-sm inset-0 flex justify-center items-center z-[1001]"
+        name="form1"
+        className=" bg-gray-400 bg-opacity-50 fixed backdrop-blur-sm inset-0 flex justify-center items-center z-[1001]"
         id="postModal"
+        onSubmit={submitHandler}
       >
         <div className="bg-black w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl">
           <div className="flex justify-between pb-5 text-white">
@@ -43,12 +73,12 @@ export default function PostModal() {
                 <Image className="size-[35px] rounded-full" src={img} alt="" />
                 <span className="text-white text-[20px]">John Doe</span>
               </div>
-
+              {/* 操作按鈕區 */}
               <div className="text-white flex gap-10">
-                <button>
+                <button type="button">
                   <RiEqualizerLine />
                 </button>
-                <button>
+                <button type="button">
                   <RiDraftLine />
                 </button>
                 <button type="submit">
@@ -63,7 +93,10 @@ export default function PostModal() {
                 <input
                   className="justify-center w-full text-[20px] leading-10 px-10 py-1 rounded-lg outline-none"
                   placeholder="Title Here"
-                ></input>
+                  name="title"
+                  onChange={changeHandler}
+                  value={postFrom.title}
+                />
               </div>
               <div className="rounded-lg bg-slate-300">
                 <div className="flex justify-center gap-2 pc:gap-5 py-3">
@@ -85,23 +118,23 @@ export default function PostModal() {
                   type="text"
                   className="w-full h-[150px] outline-none p-10"
                   placeholder="What are you thinking??"
-                ></textarea>
+                  name="content"
+                  onChange={changeHandler}
+                  value={postFrom.content}
+                ></textarea>{" "}
                 <div className="flex justify-center py-2 overflow-hidden gap-5">
-                  <img
-                    className="size-[150px] object-cover rounded-lg"
-                    src="../../../各種程式使用圖片/1868140_screenshots_20240117160639_1.jpg"
-                    alt=""
-                  />
-                  <img
-                    className="size-[150px] object-cover rounded-lg"
-                    src="../../../各種程式使用圖片/1868140_screenshots_20240117160639_1.jpg"
-                    alt=""
-                  />
-                  <img
-                    className="size-[150px] object-cover rounded-lg"
-                    src="../../../各種程式使用圖片/1868140_screenshots_20240117160639_1.jpg"
-                    alt=""
-                  />
+                  {Array(3)
+                    .fill(1)
+                    .map((v, i) => {
+                      return (
+                        <Image
+                          className="size-[150px] object-cover rounded-lg"
+                          src={postImg}
+                          alt=""
+                          key={i}
+                        />
+                      );
+                    })}
                 </div>
               </div>
             </div>

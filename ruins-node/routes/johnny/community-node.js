@@ -130,12 +130,48 @@ router.get("/posts/:post_id?", async (req, res) => {
   res.json(chosenPost);
 });
 
-router.get("/add", async (req, res) => {
+router.post("/psadd", async (req, res) => {
   const output = {
     success: false,
     bodyData: req.body,
     errors: {},
   };
+  console.log(output);
+
+  let result = {};
+  const sql = "INSERT INTO `sn_posts` SET ?";
+  try {
+    [result] = await db.query(sql, [req.body]);
+    output.success = !!result.affectedRows;
+  } catch (err) {
+    console.log(err);
+  }
+  console.log(output);
+
+  res.json(output);
+});
+
+router.delete("/:post_id", async (req, res) => {
+  let post_id = +req.params.post_id || 0;
+  console.log(post_id);
+  let output = {
+    success: false,
+    bodyData: req.body || "no body data",
+    errors: {},
+    post_id,
+  };
+
+  let result = {};
+  try {
+    if (post_id >= 1) {
+      const sql = "DELETE FROM `sn_posts` WHERE post_id=?";
+      [result] = await db.query(sql, [post_id]);
+      output.success = !!result.affectedRows;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  res.json(output);
 });
 
 export default router;

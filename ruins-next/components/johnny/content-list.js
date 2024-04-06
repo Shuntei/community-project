@@ -1,13 +1,22 @@
-import React, { useEffect } from "react";
-import { RiChat4Fill, RiEyeFill } from "@remixicon/react";
+import React, { useEffect, useState } from "react";
+import {
+  RiChat4Fill,
+  RiEyeFill,
+  RiDeleteBinLine,
+  RiMoreFill,
+} from "@remixicon/react";
 import Image from "next/image";
 import img from "./img/1868140_screenshots_20240115034222_1.jpg";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useBoards } from "@/contexts/use-boards";
+import { useToggles } from "@/contexts/use-toggles";
+import { SN_DELETE_POST } from "./config/api-path";
 
 export default function MainContent() {
   const router = useRouter();
+  const [render, setRender] = useState(false);
+
   const {
     postsList,
     selectedPosts,
@@ -17,21 +26,38 @@ export default function MainContent() {
     handleBdPostsPage,
   } = useBoards();
 
+  const { removeBox, setRemoveBox } = useToggles();
+
+  useEffect(() => {
+    const currentPage = location.search;
+    // allPostsShow(currentPage);
+    allPostsShow();
+    console.log("location.search: ", location.search);
+  }, []);
+
   const handlePush = (postId) => {
     router.push(`/community/main-post`);
     getPostId(postId);
   };
 
-  useEffect(() => {
-    const currentPage = location.search;
-    allPostsShow(currentPage);
-    console.log("location.search: ", location.search);
-  }, []);
+  const removePost = async (postId) => {
+    const r = await fetch(`${SN_DELETE_POST}/${postId}`, {
+      method: "DELETE",
+      body: JSON.stringify(postId),
+    });
+    const result = await r.json();
+    console.log(result);
+    if (result.success) {
+      router.reload();
+    } else {
+      alert("刪除失敗");
+    }
+  };
 
   return (
     <>
       {postsList ? (
-        <ul className="bg-sky-300 h-[100px] flex justify-center">
+        <ul className="bg-sky-300 flex justify-center">
           {Array(10)
             .fill(1)
             .map((v, i) => {
@@ -39,8 +65,12 @@ export default function MainContent() {
               // const p = i;
               if (p < 1 || p > postsList.totalPostsRows) return null;
               return (
-                <li key={p} className="bg-red-300 mx-5 text-[50px]">
-                  <Link href={`?page=${p}`} onClick={() => handlePage(p)}>
+                <li key={p} className="mx-5">
+                  <Link
+                    href={`?page=${p}`}
+                    onClick={() => handlePage(p)}
+                    className="btn btn-primary"
+                  >
                     {p}
                     {/* <a href={`?page=${p}`}>{p}</a> */}
                   </Link>
@@ -49,7 +79,7 @@ export default function MainContent() {
             })}{" "}
         </ul>
       ) : selectedPosts ? (
-        <ul className="bg-sky-400 h-[100px] flex justify-center">
+        <ul className="bg-sky-400 flex justify-center">
           {Array(10)
             .fill(1)
             .map((v, i) => {
@@ -57,11 +87,12 @@ export default function MainContent() {
               // const p = i;
               if (p < 1 || p > selectedPosts.selectedBdPostsRows) return null;
               return (
-                <li key={p} className="bg-red-300 mx-5 text-[50px]">
+                <li key={p} className="mx-5">
                   <Link
                     href={`?page=${p}`}
                     // onClick={handleBdPostsPage(location.search)}
                     onClick={() => handleBdPostsPage(p)}
+                    className="btn btn-primary"
                   >
                     {p}
                   </Link>
@@ -75,36 +106,71 @@ export default function MainContent() {
       {(postsList.totalPostsRows || selectedPosts.selectedBdPostsRows).map(
         (v, i) => {
           return (
-            <div
-              onClick={() => handlePush(v.post_id)} // href={`/community/main-post`}
-              className="bg-neutral-300 border-b-2 border-b-slate-500 pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform cursor-pointer"
-              key={v.post_id}
-            >
-              <div className="w-[70%]">
-                <div className="text-[20px] font-semibold">{v.title}</div>
-                <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
-                <div className="text-[14px] text-292929">
-                  <span>{v.content}</span>
-                  <div className="flex gap-2">
-                    <span className="text-575757 pr-2 flex">
-                      <RiEyeFill className="pr-1" />
-                      297
-                    </span>
-                    <span className="text-575757 flex">
-                      <RiChat4Fill className="pr-1" />
-                      85
-                    </span>
+            <main className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative">
+              {/*relative用於toggle垃圾桶*/}
+              <div
+                // onClick={() => handlePush(v.post_id)} // href={`/community/main-post`}
+                className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
+                key={v.post_id}
+              >
+                {" "}
+                <div className="px-2 flex text-center absolute left-0">
+                  {removeBox ? (
+                    <label className="flex-col">
+                      <input type="checkbox" />
+                      <RiDeleteBinLine />
+                    </label>
+                  ) : (
+                    ""
+                  )}
+                </div>
+                <div className="w-[70%]">
+                  <div
+                    onClick={() => handlePush(v.post_id)}
+                    className="cursor-pointer"
+                  >
+                    <div className="text-[20px] font-semibold">{v.title}</div>
+                    <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
+                    <span>{v.content}</span>
+                  </div>
+                  <div className="text-[14px] text-292929">
+                    <div className="flex gap-2">
+                      <span className="text-575757 pr-2 flex">
+                        <RiEyeFill className="pr-1" />
+                        297
+                      </span>
+                      <span className="text-575757 flex">
+                        <RiChat4Fill className="pr-1" />
+                        85
+                      </span>
+                      <div className="dropdown dropdown-right dropdown-end">
+                        <div tabIndex={0} role="button">
+                          <RiMoreFill className="pr-1" />
+                        </div>
+                        <ul
+                          tabIndex={0}
+                          className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-24"
+                        >
+                          <li onClick={() => removePost(v.post_id)}>
+                            <a>remove</a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
+                <div
+                  className="ml-6 w-[100px] pc:w-[150px] flex items-center justify-end flex-shrink-0 cursor-pointer"
+                  onClick={() => handlePush(v.post_id)}
+                >
+                  <Image
+                    className="size-[100px] object-cover rounded-xl"
+                    src={img}
+                    alt="Description of image"
+                  />
+                </div>
               </div>
-              <div className="ml-6 w-[100px] pc:w-[150px] flex items-center justify-end flex-shrink-0">
-                <Image
-                  className="size-[100px] object-cover rounded-xl"
-                  src={img}
-                  alt="Description of image"
-                />
-              </div>
-            </div>
+            </main>
           );
         }
       )}

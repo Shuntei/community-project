@@ -6,6 +6,8 @@ const TogglesContext = createContext();
 export default function TogglesContextProvider({ children }) {
   const [postModal, setPostModal] = useState(false);
   const [commentModal, setCommentModal] = useState(false);
+  const [removeBox, setRemoveBox] = useState(false);
+
   const [toggles, setToggles] = useState({
     follows: false,
     notification: false,
@@ -21,6 +23,8 @@ export default function TogglesContextProvider({ children }) {
         setToggles,
         commentModal,
         setCommentModal,
+        removeBox,
+        setRemoveBox,
       }}
     >
       {children}
