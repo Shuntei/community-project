@@ -29,16 +29,19 @@ function CartModal() {
       <button onClick={openModal}>CART</button>
       {isOpen && (
         <div className="modal flex justify-end items-center fixed top-0 left-0 w-full h-full  bg-black/50 z-40 ">
-          <div className="modal-content bg-white  rounded  z-50 md:w-[447px] w-[320px] h-[700px] p-5 relative">
+          <div className="modal-content bg-white  rounded  z-50 md:w-[447px] w-[320px] h-[700px] px-10 py-5 relative">
             <div className="flex flex-col">
               <div className="flex justify-end">
                 <button className="close text-[30px] " onClick={closeModal}>
                 <RiCloseLargeLine />
                 </button>
               </div>
+              <div className="text-[13px] font-semibold font-['IBM Plex Mono']  border-b border-black">cart</div>
+              <div className="h-[500px] overflow-auto">
+              
               {items.map((v, i) => {
                 return (
-                  <div key={v.pid} className="flex w-full justify-between">
+                  <div key={v.pid} className="flex w-full justify-between py-3">
                     <div className="md:w-1/5  ">
                       <Image
                         src={v.img}
@@ -50,7 +53,7 @@ function CartModal() {
                       />
                     </div>
                     <div className=" w-full md:px-5 px-2  space-y-5">
-                      <div className="text-black text-base font-semibold font-['Noto Sans TC']">
+                      <div className="text-base font-semibold font-['Noto Sans TC']">
                         {v.name}
                       </div>
                       <div className="flex justify-between">
@@ -73,7 +76,7 @@ function CartModal() {
                               }}
                             />
                             {/* The default size is 24 */}{" "}
-                            <div className="text-black text-[13px] font-light font-['IBM Plex Mono']">
+                            <div className="text-[13px] font-light font-['IBM Plex Mono']">
                               {v.qty}
                             </div>
                             {/* This sets the icon size to the current font size */}
@@ -94,7 +97,8 @@ function CartModal() {
                   </div>
                 );
               })}
-              <div className="flex w-10/12 justify-between absolute bottom-20">
+              </div>
+              <div className="flex  justify-between ">
                 <div className="text-black text-[13px] font-semibold font-['IBM Plex Mono']">
                   合計 {totalItems}項(TWD)
                 </div>
@@ -103,13 +107,13 @@ function CartModal() {
                 </div>
               </div>
               <div className="flex justify-center">
-                <button className="py-3 absolute bottom-2">
+                <Link  href="/shop/cart" className="py-3 ">
                   <div className=" px-[98px] py-[18px] bg-black border border-black justify-center items-center gap-2.5 inline-flex">
-                    <Link href="/shop/cart" className="text-white text-[15px] font-normal font-['IBM Plex Mono']">
+                    <div className="text-white text-[15px] font-normal font-['IBM Plex Mono']">
                       CHECKOUT{/* <Link href="/shop/cart">CART</Link> */}
-                    </Link>
+                    </div>
                   </div>
-                </button>
+                </Link>
               </div>
             </div>
           </div>
