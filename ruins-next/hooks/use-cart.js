@@ -1,8 +1,8 @@
-import { createContext, useContext, useState } from 'react'
-import Swal from 'sweetalert2';
+import { createContext, useContext, useState } from "react";
+import Swal from "sweetalert2";
 
 // 1. 建立context
-const CartContext = createContext(null)
+const CartContext = createContext(null);
 
 // 2. 建立一個Context Provider元件
 // 提供給最上層元件(_app.js)使用，把所需狀態都在這元件集中管理
@@ -43,181 +43,170 @@ export function CartProvider({ children }) {
   //   },
   // ];
 
-  const [items, setItems] = useState([])
+  const [items, setItems] = useState([]);
 
   // 純函式: 單純改變狀態的陣列 --- START ---
   // 商品數量(qty)遞增的函式
   const increase = (items, id) => {
     return items.map((v, i) => {
       // 如果id是傳入的id則qty屬性+1
-      if (v.pid === id) return { ...v, qty: v.qty + 1 }
-      else return v
-    })
-  }
+      if (v.pid === id) return { ...v, qty: v.qty + 1 };
+      else return v;
+    });
+  };
 
   // 商品數量(qty)遞減的函式
   const decrease = (items, id) => {
     return items.map((v, i) => {
       // 如果id是傳入的id則qty屬性-1
-      if (v.pid === id) return { ...v, qty: v.qty - 1 }
-      else return v
-    })
-  }
+      if (v.pid === id) return { ...v, qty: v.qty - 1 };
+      else return v;
+    });
+  };
 
   // 刪除函式
   const remove = (items, id) => {
-    return items.filter((v, i) => v.id !== id)
-  }
+    return items.filter((v, i) => v.id !== id);
+  };
 
+  // 加入購物車後要將item設定進去items
+  const addItem = (item) => {
+    // 檢查是否存在: 用 findIndex，沒找到會回傳-1
+    const index = items.findIndex((v, i) => {
+      return v.sid === item.sid;
+    });
 
-
-
-
- // 加入購物車後要將item設定進去items
- const addItem = (item) => {
-  // 檢查是否存在: 用 findIndex，沒找到會回傳-1
-  const index = items.findIndex((v, i) => {
-    return v.sid === item.sid
-  })
-
-  // 如果有找到，如果沒找到就會往下跑
-  if (index > -1) {
-    // 數量+1
-    increment(items, item.sid)
-    Swal.fire({
-      toast: true,
-      width: 280,
-      position: 'top',
-      icon: 'success',
-      title: '商品已添加到購物車',
-      showConfirmButton: false,
-      timer: 1500,
-    })
-    return // 跳出函式
-  }
-
-  // 擴充: 原本商品資料物件中沒有數量(qty)
-  const newItem = { ...item, qty: 1, subtotal: item.product_price }
-
-  Swal.fire({
-    toast: true,
-    width: 280,
-    position: 'top',
-    icon: 'success',
-    title: '商品已添加到購物車',
-    showConfirmButton: false,
-    timer: 1500,
-  })
-
-  // 通用三步驟: 展開後值接設定進去
-  setItems([...items, newItem])
-
-}
-
-const addMutiItem = (item) => {
-  const { qty, ...remain } = item
-  console.log(item)
-  const index = items.findIndex((v, i) => v.sid === item.sid)
-
-  if (index > -1) {
-    const newQty = items[index].qty + qty
-    if (newQty > item.stock) {
+    // 如果有找到，如果沒找到就會往下跑
+    if (index > -1) {
+      // 數量+1
+      increment(items, item.sid);
       Swal.fire({
         toast: true,
-        width: 350,
-        position: 'top',
-        icon: 'warning',
-        iconColor: '#ff804a',
-        title: '您已將所有庫存加入購物車',
+        width: 280,
+        position: "top",
+        icon: "success",
+        title: "商品已添加到購物車",
         showConfirmButton: false,
         timer: 1500,
-      })
-      return
+      });
+      return; // 跳出函式
     }
 
-    setItems((prevItems) => {
-      const newItems = prevItems.map((v, i) =>
-        v.sid === item.sid
-          ? { ...v, qty: newQty, subtotal: item.product_price * newQty }
-          : v
-      )
-
-      return newItems
-    })
+    // 擴充: 原本商品資料物件中沒有數量(qty)
+    const newItem = { ...item, qty: 1, subtotal: item.product_price };
 
     Swal.fire({
       toast: true,
       width: 280,
-      position: 'top',
-      icon: 'success',
-      title: '商品已添加到購物車',
+      position: "top",
+      icon: "success",
+      title: "商品已添加到購物車",
       showConfirmButton: false,
       timer: 1500,
-    })
-    return
-  }
+    });
 
-  const newItem = { ...item, qty: qty, subtotal: item.product_price * qty }
+    // 通用三步驟: 展開後值接設定進去
+    setItems([...items, newItem]);
+  };
 
-  Swal.fire({
-    toast: true,
-    width: 280,
-    position: 'top',
-    icon: 'success',
-    title: '商品已添加到購物車',
-    showConfirmButton: false,
-    timer: 1500,
-  })
+  const addMutiItem = (item) => {
+    const { qty, ...remain } = item;
+    console.log(item);
+    const index = items.findIndex((v, i) => v.sid === item.sid);
 
-  setItems([...items, newItem])
+    if (index > -1) {
+      const newQty = items[index].qty + qty;
+      if (newQty > item.stock) {
+        Swal.fire({
+          toast: true,
+          width: 350,
+          position: "top",
+          icon: "warning",
+          iconColor: "#ff804a",
+          title: "您已將所有庫存加入購物車",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return;
+      }
 
-}
+      setItems((prevItems) => {
+        const newItems = prevItems.map((v, i) =>
+          v.sid === item.sid
+            ? { ...v, qty: newQty, subtotal: item.product_price * newQty }
+            : v
+        );
 
+        return newItems;
+      });
 
+      Swal.fire({
+        toast: true,
+        width: 280,
+        position: "top",
+        icon: "success",
+        title: "商品已添加到購物車",
+        showConfirmButton: false,
+        timer: 1500,
+      });
+      return;
+    }
 
+    const newItem = { ...item, qty: qty, subtotal: item.product_price * qty };
 
+    Swal.fire({
+      toast: true,
+      width: 280,
+      position: "top",
+      icon: "success",
+      title: "商品已添加到購物車",
+      showConfirmButton: false,
+      timer: 1500,
+    });
 
+    setItems([...items, newItem]);
+  };
 
   // 新增商品到購物車的函式
   // product是傳入的商品物件, product.id是要加入的商品物件的id
   const add = (items, product) => {
     // 先判斷這個商品是否有在購物車裡
-    const foundIndex = items.findIndex((v) => v.pid === product.pid)
+    const foundIndex = items.findIndex((v) => v.pid === product.pid);
 
     if (foundIndex > -1) {
       // 如果有找到 ==> 遞增
-      return increase(items, product.pid)
+      return increase(items, product.pid);
     } else {
       // 如果沒找到 ==> 新增商品
       // !!注意: 需要擴增商品物件多一個qty(數量)數字屬性
-      const newItem = { ...product, qty: 1 }
-      return [...items, newItem]
+      const newItem = { ...product, qty: 1 };
+      return [...items, newItem];
     }
-  }
-  
+  };
+
   // 純函式: 單純改變狀態的陣列 --- END ---
 
   // 事件處理函式: 包含狀態更動共通三個步驟 --- START ---
   const onAddItem = (product) => {
-    setItems(add(items, product))
-  }
+    setItems(add(items, product));
+  };
 
   const onIncreaseItem = (id) => {
-    setItems(increase(items, id))
-  }
+    setItems(increase(items, id));
+  };
 
   // 遞減時需考慮數量為0要移除
   const onDecreaseItem = (id) => {
-    let nextItems = decrease(items, id)
+    let nextItems = decrease(items, id);
     // 刪除(過濾)掉商品數量<=0的
-    nextItems = nextItems.filter((v) => v.qty > 0)
+    nextItems = nextItems.filter((v) => v.qty > 0);
 
-    setItems(nextItems)
-  }
+    setItems(nextItems);
+  };
 
   const onRemoveItem = (id) => {
-    setItems(remove(items, id))
-  }
+    setItems(remove(items, id));
+  };
   // 事件處理函式: 包含狀態更動共通三個步驟 --- END ---
 
   // const calcTotalItems = () => {
@@ -238,8 +227,8 @@ const addMutiItem = (item) => {
 
   // 陣列迭代方法 reduce(累加/歸納)
   // https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Reference/Global_Objects/Array/Reduce
-  const totalItems = items.reduce((acc, v) => acc + v.qty, 0)
-  const totalPrice = items.reduce((acc, v) => acc + v.qty * v.price, 0)
+  const totalItems = items.reduce((acc, v) => acc + v.qty, 0);
+  const totalPrice = items.reduce((acc, v) => acc + v.qty * v.price, 0);
 
   return (
     <CartContext.Provider
@@ -252,13 +241,13 @@ const addMutiItem = (item) => {
         onDecreaseItem,
         onIncreaseItem,
         onRemoveItem,
-        addMutiItem
+        addMutiItem,
       }}
     >
       {children}
     </CartContext.Provider>
-  )
+  );
 }
 
 // 3. 提供一個包裝好useContext名稱，給消費者(Consumer)方便地直接呼叫使用
-export const useCart = () => useContext(CartContext)
+export const useCart = () => useContext(CartContext);
