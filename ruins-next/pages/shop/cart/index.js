@@ -37,7 +37,7 @@ export default function Cart() {
 
             <div className="flex w-10/12 justify-between">
               <div className="text-black text-[13px] font-semibold font-['IBM Plex Mono']">
-                合計 (TWD){totalItems}
+                合計 {totalItems}項(TWD)
               </div>
               <div className="text-black text-xl font-semibold font-['IBM Plex Mono']">
                 $ {totalPrice}

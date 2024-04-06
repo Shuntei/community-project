@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { RiStarFill } from '@remixicon/react'
 import Image from 'next/image'
-Image
+
 function CommentModal() {
   const [isOpen, setIsOpen] = useState(false)
 
