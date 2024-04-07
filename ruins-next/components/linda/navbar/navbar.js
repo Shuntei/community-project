@@ -15,11 +15,12 @@ import Login from "@/pages/member/account/login";
 import ProfileModal from "../modals/profile-modal";
 import NavbarPopup from "./navbarPopup";
 import NavbarMobile from "./navbar-mobile";
-
+import { useCart } from "@/hooks/use-cart";
+import CartModal from "@/components/kevin/cart-modal";
 export default function Navbar({ className, navColor = "white" }) {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const {totalItems}= useCart()
   const toggleNav = () => {
     setIsOpen(!isOpen);
   };
@@ -92,7 +93,8 @@ export default function Navbar({ className, navColor = "white" }) {
               navColor === "white" ? "text-white" : "text-black"
             }  ${styles["navlinks"]}`}
           >
-            <a href="/shop/cart">CART</a>
+            {/* <Link href="/shop/cart">CART</Link> */}
+            <CartModal />
             <div className={`${styles["cart-number"]}`}>
               {navColor === "white" ? (
                 <Image alt="" src={CartSvg} />
@@ -100,7 +102,7 @@ export default function Navbar({ className, navColor = "white" }) {
                 <Image alt="" src={CartLineBlack} />
               )}
 
-              <span>1</span>
+              <span>{totalItems}</span>
             </div>
           </div>
         </div>
