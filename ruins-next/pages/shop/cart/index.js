@@ -5,7 +5,7 @@ import Process0 from "@/components/common/process0";
 import Link from "next/link";
 import Navbar from "@/components/linda/navbar/navbar";
 import Footer from "@/components/linda/footer/footer";
-import CartList from "@/components/kevin/cart-list";
+import CartList from "@/components/kevin/cart/cart-list";
 import { useCart } from "@/hooks/use-cart";
 
 

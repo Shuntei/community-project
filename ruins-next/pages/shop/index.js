@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/linda/navbar/navbar";
 import Footer from "@/components/linda/footer/footer";
-import Carousel from "@/components/kevin/carousel";
+import Carousel from "@/components/kevin/product/carousel";
 import { RiSearchLine } from "@remixicon/react";
 import { useCart } from "@/hooks/use-cart";
-import Pagination from "@/components/kevin/pagination";
+import Pagination from "@/components/kevin/product/pagination";
 import { useRouter } from "next/router";
-
+import Category from "@/components/kevin/product/category";
+import Search from "@/components/kevin/product/search";
+import SortBy from "@/components/kevin/product/sort-by";
 export default function Index() {
   const router = useRouter();
   const { onAddItem } = useCart();
@@ -41,46 +43,7 @@ export default function Index() {
           </div>
           {/* 輪播結束 */}
           {/* 分類開始 */}
-          <div className="w-full md:gap-[36px]  gap-[20px]  justify-between   md:px-24 px-4 items-center  flex ">
-            <Link
-              href="/shop/product/list"
-              className="w-full aspect-square bg-black md:rounded-[20px] rounded-[7px] justify-center items-center flex  "
-            >
-              <div className="text-center text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans'] tracking-[2.80px]">
-                All
-              </div>
-            </Link>
-
-            <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex   bg-cover bg-center bg-no-repeat bg-rock relative">
-              <Image
-                src="/images/rock.jpg"
-                alt="Picture of camp"
-                width={500}
-                height={500}
-                className="aspect-square rounded-xl"
-              />
-              <div className=" text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans Tc'] tracking-[2.80px] absolute">
-                手作
-              </div>
-            </div>
-            <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-cover bg-center bg-no-repeat bg-camp relative">
-              <Image
-                src="/images/camp.jpg"
-                alt="Picture of camp"
-                width={500}
-                height={500}
-                className="aspect-square rounded-xl"
-              />
-              <div className=" text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans TC'] tracking-[2.80px] absolute">
-                戶外
-              </div>
-            </div>
-            <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-black">
-              <div className="text-center text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans TC'] tracking-[2.80px]">
-                直播
-              </div>
-            </div>
-          </div>
+          <Category />
           {/* 分類結束 */}
           {/* 分類標題 */}
           <div className="w-full md:px-24 px-[16px] ">
@@ -92,11 +55,11 @@ export default function Index() {
           <div className="w-full justify-between flex md:px-24 px-4 ">
             <div className="w-5 h-[19.50px] relative">
               {/* 搜尋 */}
-              <RiSearchLine />
+              <Search />
             </div>
             <div className="justify-start items-center gap-[15px] flex">
               <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
-                排序
+                <SortBy></SortBy>
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RiStarFill } from "@remixicon/react";
 import Image from "next/image";
 import { useCart } from "@/hooks/use-cart";
-import CartList from "@/components/kevin/cart-list";
+import CartList from "@/components/kevin/cart/cart-list";
 import { RiAddFill } from "@remixicon/react";
 import { RiSubtractFill } from "@remixicon/react";
 import { RiCloseLargeLine } from "@remixicon/react";
