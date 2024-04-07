@@ -5,6 +5,9 @@ export default function Trycontent() {
   return (
     <>
       <NavbarMobile />
+      <div class="[--scroll-offset:56px] lg:[--scroll-offset:44px]">
+  1234568978626
+</div>
       <div className="w-[375px] h-[600px] bg-slate-800">
         <div className="text-white space-y-3">
           <h1>this is topic</h1>
