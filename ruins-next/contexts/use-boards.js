@@ -21,6 +21,9 @@ export default function BoardsContextProvider({ children }) {
   });
   const [getPost, setGetPost] = useState([]);
   const [render, setRender] = useState(false);
+  {
+    /*render, setRender用於新增及刪除post不刷新頁面useEffect */
+  }
 
   // 初始載入posts, 預設第一頁用於點全部按鈕
   const allPostsShow = async (currentPage = "?page=1") => {
@@ -44,9 +47,19 @@ export default function BoardsContextProvider({ children }) {
     }
   };
 
-  const getPostId = async (postId) => {
+  // const handlePostId = async (postId) => {
+  //   try {
+  //     const r = await fetch(`${SN_POSTS}/${postId}`);
+  //     const data = await r.json();
+  //     setGetPost(data);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
+  const handlePostId = async (postId) => {
     try {
-      const r = await fetch(`${SN_POSTS}/${postId}`);
+      const r = await fetch(`${SN_POSTS}?postId=${postId}`);
       const data = await r.json();
       setGetPost(data);
     } catch (err) {
@@ -84,7 +97,7 @@ export default function BoardsContextProvider({ children }) {
         allPostsShow,
         getPost,
         setGetPost,
-        getPostId,
+        handlePostId,
         handlePage,
         handleBdPosts,
         handleBdPostsPage,

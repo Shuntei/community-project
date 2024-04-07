@@ -19,7 +19,7 @@ export default function MainContent() {
     postsList,
     selectedPosts,
     allPostsShow,
-    getPostId,
+    handlePostId,
     handlePage,
     handleBdPostsPage,
     render,
@@ -37,8 +37,8 @@ export default function MainContent() {
   }, []);
 
   const handlePush = (postId) => {
-    router.push(`/community/main-post`);
-    getPostId(postId);
+    // router.push(`/community/main-post`);
+    handlePostId(postId);
   };
 
   const removePost = async (postId) => {
@@ -133,14 +133,15 @@ export default function MainContent() {
                   )}
                 </div>
                 <div className="w-[70%]">
-                  <div
+                  <Link
                     onClick={() => handlePush(v.post_id)}
+                    href={`/community/main-post?postId=${v.post_id}`}
                     className="cursor-pointer"
                   >
                     <div className="text-[20px] font-semibold">{v.title}</div>
                     <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
                     <span>{v.content}</span>
-                  </div>
+                  </Link>
                   <div className="text-[14px] text-292929">
                     <div className="flex gap-2">
                       <span className="text-575757 pr-2 flex">
@@ -173,16 +174,17 @@ export default function MainContent() {
                     </div>
                   </div>
                 </div>
-                <div
+                <Link
                   className="ml-6 w-[100px] pc:w-[150px] flex items-center justify-end flex-shrink-0 cursor-pointer"
                   onClick={() => handlePush(v.post_id)}
+                  href={`/community/main-post?postId=${v.post_id}`}
                 >
                   <Image
                     className="size-[100px] object-cover rounded-xl"
                     src={img}
                     alt="Description of image"
                   />
-                </div>
+                </Link>
               </div>
             </main>
           );

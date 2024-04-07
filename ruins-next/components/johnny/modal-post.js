@@ -22,7 +22,14 @@ import { useBoards } from "@/contexts/use-boards";
 
 export default function PostModal() {
   const { postModal, setPostModal } = useToggles();
-  const [postFrom, setPostForm] = useState({ title: "", content: "" });
+  const [postFrom, setPostForm] = useState({
+    title: "",
+    content: "",
+    image_url: "",
+  });
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+
   const { render, setRender, allPostsShow } = useBoards();
 
   const changeHandler = (e) => {
@@ -38,7 +45,7 @@ export default function PostModal() {
         "Content-Type": "application/json",
       },
     });
-    console.log(postFrom);
+    console.log("postForm:", postFrom);
 
     const result = await r.json();
     if (result.success) {
@@ -54,6 +61,31 @@ export default function PostModal() {
     allPostsShow();
     setRender(false);
   }, [render]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    console.log(file);
+    if (file) {
+      setSelectedFile(file);
+      const fileUrl = URL.createObjectURL(file);
+      setPostForm({ ...postFrom, image_url: fileUrl });
+      setPreviewUrl("");
+    } else {
+      selectedFile(null);
+      setPreviewUrl("");
+    }
+  };
+
+  useEffect(() => {
+    if (!selectedFile) {
+      setPreviewUrl("");
+      return;
+    }
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setPreviewUrl(objectUrl);
+    console.log(objectUrl);
+    // return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
 
   return (
     <>
@@ -137,7 +169,9 @@ export default function PostModal() {
                       return (
                         <Image
                           className="size-[150px] object-cover rounded-lg"
-                          src={postImg}
+                          src={previewUrl}
+                          width={150}
+                          height={150}
                           alt=""
                           key={i}
                         />
@@ -153,10 +187,18 @@ export default function PostModal() {
               <RiVideoOnFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">VIDEO</span>
             </button>
-            <button className="flex items-center">
+            <label className="flex items-center cursor-pointer">
+              <input
+                type="file"
+                hidden
+                onChange={handleFileChange}
+                multiple
+                accept="image/png,image/jpeg"
+                name="image_url"
+              />
               <RiImageFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">PHOTO</span>
-            </button>
+            </label>
             <button className="flex items-center">
               <RiMapPinFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">LOCATION</span>

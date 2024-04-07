@@ -1,11 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import postImg from "../../components/johnny/img/1868140_screenshots_20240113120319_1.jpg";
 import profileImg from "../../components/johnny/img/16.jpg";
 import { useRouter } from "next/router";
-// import CommentModal from "@/component/community/comment-modal";
-// import { useToggles } from "@/contexts/use-toggles";
 import CommentModal from "@/components/johnny/modal-comment";
 import { useToggles } from "@/contexts/use-toggles";
 import { useBoards } from "@/contexts/use-boards";
@@ -18,6 +16,7 @@ import {
   RiAddLine,
   RiHeartLine,
 } from "@remixicon/react";
+import { SN_POSTS } from "@/components/johnny/config/api-path";
 
 export default function MainPost() {
   const router = useRouter();
@@ -26,8 +25,39 @@ export default function MainPost() {
   };
 
   const { commentModal, setCommentModal } = useToggles();
-  const { getPost } = useBoards();
+  const { getPost, setGetPost, handlePostId, handlePush } = useBoards();
+  console.log("lc", location.search);
+  console.log("rq", router.query);
+  useEffect(() => {
+    // const currentPage = location.search;
+    // // allPostsShow(currentPage);
+    // handlePostId(currentPage);
+    // console.log("location.search: ", location.search);
 
+    // try {
+    const currentPage = location.search;
+    console.log(`${SN_POSTS}${currentPage}`);
+    fetch(`${SN_POSTS}${currentPage}`)
+      .then((r) => r.json())
+      .then((data) => setGetPost(data));
+    // } catch (err) {
+    //   console.log(err);
+    // }
+  }, []);
+
+  // useEffect(() => {
+  //   // const blobUrl = getPost[0].image_url;
+  //   // // 將Blob URL轉換為Data URL
+  //   // fetch(blobUrl)
+  //   //   .then((r) => r.blob())
+  //   //   .then((blob) => {
+  //   //     const reader = new FileReader();
+  //   //     reader.readAsDataURL(blob);
+  //   //     const dataUrl = reader.result;
+  //   //     console.log("readerRst:", dataUrl);
+  //   //   })
+  //   //   .catch((error) => console.error("Error fetching blob:", error));
+  // }, []);
 
   return (
     <>
@@ -70,7 +100,7 @@ export default function MainPost() {
 
           {/* <!-- 圖片 --> */}
           <div className="mb-2">
-            <Image src={postImg} alt="" />
+            {/* <Image src={getPost[0].image_url} width={300} height={300} alt="" /> */}
           </div>
           {/* <!-- 留言按鈕 --> */}
           <div
