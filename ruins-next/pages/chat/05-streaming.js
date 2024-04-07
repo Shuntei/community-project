@@ -1,5 +1,5 @@
 import React from 'react'
-import styles from '../styles/streaming.module.css'
+import styles from '@/styles/streaming.module.css'
 import { RiSearchLine, RiCloseLine, RiArrowRightSLine, RiMoneyDollarCircleFill, RiStoreLine, RiDonutChartFill, RiArrowLeftSLine, RiGift2Line, RiUserFill, RiArrowDownSLine, RiArrowUpSLine, RiCornerUpLeftFill, RiReplyFill } from "@remixicon/react";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';

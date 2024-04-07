@@ -1,9 +1,9 @@
-import Sidebar from '@/components/sidebar/sidebar';
-import StepMap from '@/components/step-map/step-map';
+import Sidebar from '@/components/common/sidebar';
+import StepMap from '@/components/tyler/step-map';
 import { RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import styles from '../styles/insert-live-details.module.css';
+import styles from '@/styles/insert-live-details.module.css';
 
 export default function CheckWebcamSource() {
 

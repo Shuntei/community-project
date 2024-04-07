@@ -1,8 +1,8 @@
-import Sidebar from '@/components/sidebar/sidebar';
+import Sidebar from '@/components/common/sidebar';
 import { RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import styles from '../styles/final-check.module.css';
+import styles from '@/styles/final-check.module.css';
 
 export default function CheckWebcamSource() {
 

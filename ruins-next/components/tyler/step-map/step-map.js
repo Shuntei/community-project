@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from './step-map.module.css'
-import Link from 'next/link'
 import { RiArrowDownSLine, RiArrowUpSLine } from "@remixicon/react";
 import { useRouter } from 'next/router'
 import { useState } from 'react';
