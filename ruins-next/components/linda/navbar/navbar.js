@@ -16,7 +16,7 @@ import ProfileModal from "../modals/profile-modal";
 import NavbarPopup from "./navbarPopup";
 import NavbarMobile from "./navbar-mobile";
 import { useCart } from "@/hooks/use-cart";
-import CartModal from "@/components/kevin/cart-modal";
+import CartModal from "@/components/kevin/modal/cart-modal";
 export default function Navbar({ className, navColor = "white" }) {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
