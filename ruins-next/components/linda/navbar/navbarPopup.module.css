@@ -5,7 +5,6 @@
 
 .headerReplace{
   height: 0px;
-  background-color: blue;
 }
 
 .catalogueBox{
@@ -49,7 +48,6 @@
   .headerReplace{
     display: none;
     height: 0px;
-    background-color: blue;
   }
 
   .catalogueBox{
