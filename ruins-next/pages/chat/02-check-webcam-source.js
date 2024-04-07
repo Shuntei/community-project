@@ -1,9 +1,10 @@
-import Sidebar from '@/components/common/sidebar';
-import StepMap from '@/components/tyler/step-map';
+import Sidebar from '@/components/common/sidebar/sidebar';
+import StepMap from '@/components/tyler/step-map/step-map';
 import { RiCloseLine, RiMicFill, RiRecordCircleFill } from "@remixicon/react";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styles from '@/styles/check-webcam-source.module.css';
+import Process0 from '@/components/common/process0';
 
 export default function CheckWebcamSource() {
 
@@ -36,9 +37,11 @@ export default function CheckWebcamSource() {
 
           {/* 標題 */}
           <div className={styles['title']}>{!onPhone && "第一步: 確認影音來源"}</div>
-          {onPhone &&
+          {/* {onPhone &&
             <div className='max-md:py-7'></div>
-          }
+          } */}
+          {onPhone && <Process0></Process0>}
+          
           {/* 白框內 */}
           <div className={styles['white-block']}>
             <div className={styles['innerline']}>
