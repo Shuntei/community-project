@@ -4,22 +4,36 @@ import dayjs from "dayjs";
 
 const router = express.Router();
 
-const getListData = async (req,res) => {
+const getListData = async (req, res) => {
   let page = +req.query.page || 1;
-  const perPage = 12;
-  const t_sql = "SELECT COUNT(1) totalRows FROM products";
+  let keyword = req.query.keyword || "";
+  let where = " WHERE 1 ";
+  if (keyword) {
+    const keywordEsc = db.escape("%" + keyword + "%");
+    where += ` AND ( \`name\` LIKE ${keywordEsc} )`;
+  }
+
+  if (page < 1) {
+    return { success: false, redirect: "?page=1" };
+  }
+  const perPage = 8;
+  const t_sql = `SELECT COUNT(1) totalRows FROM products ${where}`;
   const [[{ totalRows }]] = await db.query(t_sql);
 
   let rows = []; // 預設值
   let totalPages = 0;
   if (totalRows) {
     totalPages = Math.ceil(totalRows / perPage);
+    if (page > totalPages) {
+      return { success: false, redirect: `?page=${totalPages}` };
+    }
     const sql = `SELECT * FROM products 
+    ${where}
     ORDER BY pid DESC 
     LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [rows] = await db.query(sql);
   }
-  return({ totalRows, totalPages, page, perPage, rows });
+  return { success: true, totalRows, totalPages, page, perPage, rows , query:req.query,};
 };
 
 // 取得商品所有資料
