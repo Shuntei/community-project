@@ -6,28 +6,28 @@ import Footer from "@/components/linda/footer/footer";
 import Carousel from "@/components/kevin/carousel";
 import { RiSearchLine } from "@remixicon/react";
 import { useCart } from "@/hooks/use-cart";
+import Pagination from "@/components/kevin/pagination";
+import { useRouter } from "next/router";
 
 export default function List() {
+  const router = useRouter();
   const { onAddItem } = useCart();
-  const [products, setProuducts] = useState([])
+  const [products, setProuducts] = useState([]);
   const getProducts = async () => {
-    const url =
-      'http://localhost:3005/product/api'
-
+    const url = `http://localhost:3005/product/api${location.search}`;
     try {
-      const res = await fetch(url)
-      const data = await res.json()
+      const res = await fetch(url);
+      const data = await res.json();
       //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
-      if (Array.isArray(data.rows)) {
-        setProuducts(data.rows)
-      }
+
+      setProuducts(data);
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
   useEffect(() => {
-    getProducts()
-  }, [])
+    getProducts();
+  }, [router]);
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-28">
@@ -105,7 +105,8 @@ export default function List() {
 
           <div className="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
         {' '}
-        {products.map((v, i) => {
+        {products.rows &&
+          products.rows.map((v, i) => {
           return (
             <div className=" flex-col  gap-5 flex " key={v.pid}>
                     <Link href={`/shop/product/${v.pid}`}>
@@ -140,38 +141,8 @@ export default function List() {
       </div>
           {/* 商品欄結束 */}
           {/* 頁碼開始 */}
-          <div className="py-[60px] justify-start items-center flex">
-            <div className="h-[18px] pr-[21px] justify-start items-center flex">
-              <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
-                1{" "}
-              </div>
-            </div>
-            <div className="px-5 py-[19px] border-l border-t border-b border-neutral-400 flex-col justify-center items-center gap-2.5 flex">
-              <div className="text-neutral-400 text-sm font-medium font-['IBM Plex Mono']">
-                2
-              </div>
-            </div>
-            <div className="px-5 py-[19px] border-l border-t border-b border-neutral-400 flex-col justify-center items-center gap-2.5 flex">
-              <div className="text-neutral-400 text-sm font-medium font-['IBM Plex Mono']">
-                3
-              </div>
-            </div>
-            <div className="px-5 py-[19px] border-l border-t border-b border-neutral-400 flex-col justify-center items-center gap-2.5 flex">
-              <div className="text-neutral-400 text-sm font-medium font-['IBM Plex Mono']">
-                ...
-              </div>
-            </div>
-            <div className="px-5 py-[19px] border-l border-t border-b border-neutral-400 flex-col justify-center items-center gap-2.5 flex">
-              <div className="text-neutral-400 text-sm font-medium font-['IBM Plex Mono']">
-                9
-              </div>
-            </div>
-            <div className="px-5 py-[19px] border border-neutral-400 flex-col justify-center items-center gap-2.5 flex">
-              <div className="text-neutral-400 text-sm font-medium font-['IBM Plex Mono']">
-                NEXT
-              </div>
-            </div>
-          </div>
+          <Pagination products={products}></Pagination>
+
           {/* 頁碼結束 */}
         </div>{" "}
         {/* footer開始 */}
