@@ -11,18 +11,30 @@ import AccountBtn from "@/components/linda/buttons/accountBtn";
 import { z } from "zod";
 import Router, { useRouter } from "next/router";
 import { MB_SIGNUP } from "@/components/config/api-path";
+import dayjs from "dayjs";
 
 const schemaName = z.string().min(3, { message: "Username is too short" });
-const passwordRe = new RegExp(/^(?=.*\d)[A-Za-z\d]{8,}$/)
-const schemaPassword = z.string().regex(passwordRe, {message: "wrong password"})
+const passwordRe = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/);
+const schemaPassword = z
+  .string()
+  .regex(passwordRe, { message: "wrong password" });
 const schemaEmail = z.string().email({ message: "Invalid email address" });
 const phoneRe = new RegExp(/^09\d{2}-?\d{3}-?\d{3}$/);
 const schemaPhone = z.string().regex(phoneRe, { message: "Invalid number" });
+const birthdayRe = new RegExp(
+  /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/
+);
+const schemaBirthday = z
+  .string()
+  .regex(birthdayRe, { message: "Invalid birthday" });
 
 export default function Signup() {
   const router = useRouter();
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
+  const [showPass, setShowPass] = useState(false);
+  const [emailErrorCode, setEmailErrorCode] = useState(null);
+  const [usernameErrorCode, setUsernameErrorCode] = useState(null);
   const [myForm, setMyForm] = useState({
     email: "",
     password: "",
@@ -38,14 +50,19 @@ export default function Signup() {
     username: "",
     phone: "",
     birthday: "",
-    agreement: false
+    agreement: false,
   });
 
+  const today = new Date().toISOString().split("T")[0];
   const handleChange = (e) => {
     setMyForm({ ...myForm, [e.target.name]: e.target.value });
   };
 
-  const updateError = ()=>{
+  const handleShowPass = () => {
+    setShowPass(!showPass);
+  };
+
+  const updateError = () => {
     let initErrors = {
       hasErrors: false,
       email: "",
@@ -53,7 +70,7 @@ export default function Signup() {
       username: "",
       phone: "",
       birthday: "",
-      agreement: '',
+      agreement: "",
     };
 
     if (!myForm.email) {
@@ -61,6 +78,12 @@ export default function Signup() {
         ...initErrors,
         hasErrors: true,
         email: "Cannot be blank",
+      };
+    } else if (emailErrorCode === 2 || emailErrorCode === 3) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        email: "email is in use. try another",
       };
     } else {
       const emailZod = schemaEmail.safeParse(myForm.email);
@@ -96,6 +119,12 @@ export default function Signup() {
         hasErrors: true,
         username: "Cannot be blank",
       };
+    } else if (usernameErrorCode === 1 || usernameErrorCode === 3) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        username: "THIS NAME IS ALREADY TAKEN, TRY ANOTHER",
+      };
     } else {
       const nameZod = schemaName.safeParse(myForm.username);
       if (!nameZod.success) {
@@ -124,12 +153,29 @@ export default function Signup() {
       }
     }
 
-    if(!checked){
+    if (!myForm.birthday) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
-        agreement: "You must agree"
+        birthday: "Cannot be blank",
+      };
+    } else {
+      const birthdayZod = schemaBirthday.safeParse(myForm.birthday);
+      if (!birthdayZod.success) {
+        initErrors = {
+          ...initErrors,
+          hasErrors: true,
+          birthday: birthdayZod.error.issues[0].message,
+        };
       }
+    }
+
+    if (!checked) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        agreement: "You must agree",
+      };
     }
 
     if (initErrors.hasErrors) {
@@ -142,15 +188,15 @@ export default function Signup() {
 
     // const result = initErrors.hasErrors
     // return result;
-  }
+  };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
-    setSubmitted(true)
+    setSubmitted(true);
 
-    const result =  updateError()
+    const result = updateError();
 
-    if(result){
+    if (result) {
       const r = await fetch(MB_SIGNUP, {
         method: "post",
         body: JSON.stringify(myForm),
@@ -158,22 +204,30 @@ export default function Signup() {
           "Content-Type": "application/json",
         },
       });
-  
+
       const result = await r.json();
       console.log(result);
-  
+
+      if (!result.success) {
+        updateError();
+        setEmailErrorCode(result.code);
+        setUsernameErrorCode(result.code);
+      } else {
+        setEmailErrorCode(null);
+        setUsernameErrorCode(null);
+      }
+
       // if(result.success){
       //   router.push('/')
       // }
     }
-
   };
 
-  useEffect(()=>{
-    if(submitted){
-      updateError()
+  useEffect(() => {
+    if (submitted) {
+      updateError();
     }
-  }, [myForm])
+  }, [myForm, emailErrorCode, usernameErrorCode]);
 
   return (
     <>
@@ -212,7 +266,10 @@ export default function Signup() {
                       type="text"
                       name="email"
                       value={myForm.email}
-                      onChange={handleChange}
+                      onChange={(e)=>{
+                        handleChange(e)
+                        setEmailErrorCode(null)
+                      }}
                       className="bg-inherit focus:outline-none md:text-base text-[14px] text-white flex self-stretch w-full flex-1 text-base"
                     />{" "}
                   </div>
@@ -223,17 +280,29 @@ export default function Signup() {
                     <div className="bg-white px-2 text-black">2</div>
                     <div className="text-[#9F9F9F] text-base">PASSWORD</div>
                   </div>
-                  <div className={`h-[24px] ${errors.password ? 'text-[#EA7E7E]' : 'text-white' }  font-medium py-1 text-xs uppercase`}>USE 8 OR MORE CHARACTERS MIXING LETTERS AND NUMBERS</div>
+                  <div
+                    className={`h-[24px] ${
+                      errors.password ? "text-[#EA7E7E]" : "text-white"
+                    }  font-medium py-1 text-xs uppercase`}
+                  >
+                    USE 8 OR MORE CHARACTERS MIXING LETTERS AND NUMBERS
+                  </div>
                   <div className="flex pl-[66px] py-3">
                     {" "}
                     <input
-                      type="password"
+                      type={showPass ? "text" : "password"}
                       name="password"
                       value={myForm.password}
                       onChange={handleChange}
                       className="bg-inherit focus:outline-none text-base text-white flex self-stretch w-full flex-1 text-base"
                     />{" "}
-                    <IoMdEye className="md:text-3xl text-xl text-white" />
+                    <div onClick={handleShowPass}>
+                      {showPass ? (
+                        <IoMdEye className="md:text-3xl text-xl text-white" />
+                      ) : (
+                        <IoMdEyeOff className="md:text-3xl text-xl text-white" />
+                      )}
+                    </div>
                   </div>
                 </div>
                 <div className="flex w-full md:flex-row flex-col">
@@ -252,7 +321,10 @@ export default function Signup() {
                         type="text"
                         name="username"
                         value={myForm.username}
-                        onChange={handleChange}
+                        onChange={(e)=>{
+                        handleChange(e)
+                        setUsernameErrorCode(null)
+                      }}
                         className="bg-inherit focus:outline-none text-base text-white flex self-stretch w-full flex-1 text-base"
                       />{" "}
                     </div>
@@ -285,18 +357,24 @@ export default function Signup() {
                       <div className="bg-white px-2 text-black">5</div>
                       <div className="text-[#9F9F9F] text-base">BIRTHDAY</div>
                     </div>
-                    <div className="h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase"></div>
+                    <div className="h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
+                      {errors.birthday}
+                    </div>
                     <div className="flex relative pl-[66px] py-3 self-stretch justify-between">
                       {" "}
                       <input
                         placeholder="YYYY/MM/DD"
                         type="date"
                         name="birthday"
+                        max={today}
                         value={myForm.birthday}
                         onChange={handleChange}
                         className="bg-inherit focus:outline-none text-base text-white flex self-stretch w-full flex-1 text-base"
                       />{" "}
-                      <div onClick={handleChange} className="flex gap-2.5 md:relative md:top-0 absolute top-[100px] right-0">
+                      <div
+                        onClick={handleChange}
+                        className="flex gap-2.5 md:relative md:top-0 absolute top-[100px] right-0"
+                      >
                         <div
                           onClick={() => {
                             setChecked(!checked);
@@ -304,11 +382,23 @@ export default function Signup() {
                         >
                           <Image
                             alt=""
-                            src={errors.agreement ? CheckboxEmptyRed : checked ? Checkbox : CheckboxEmpty}
+                            src={
+                              errors.agreement
+                                ? CheckboxEmptyRed
+                                : checked
+                                ? Checkbox
+                                : CheckboxEmpty
+                            }
                             className="cursor-pointer md:w-[30px] w-[20px]"
                           />
                         </div>
-                        <div className={`${errors.agreement ? 'text-[#EA7E7E]' : 'text-[#F1F1F1]' } md:text-[15px] text-[12px] flex items-end`}>
+                        <div
+                          className={`${
+                            errors.agreement
+                              ? "text-[#EA7E7E]"
+                              : "text-[#F1F1F1]"
+                          } md:text-[15px] text-[12px] flex items-end`}
+                        >
                           I ACCEPT THE ACCOUNT AGREEMENT
                         </div>
                       </div>

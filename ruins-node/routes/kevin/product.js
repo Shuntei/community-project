@@ -1,5 +1,5 @@
 import express from "express";
-import db from "../../utils/mysql2-connect.js";
+import db from "../../utils/kevin/mysql2-connect.js";
 import dayjs from "dayjs";
 
 const router = express.Router();
@@ -21,13 +21,14 @@ const getListData = async (req, res) => {
     req.query.main_category && typeof req.query.main_category === "string"
       ? req.query.main_category
       : "";
+      let categoryEsc = db.escape(`${main_category}`);
 
   // 分類篩選
   let category =
     req.query.category && typeof req.query.category === "string"
       ? req.query.category
       : "";
-  let categoryEsc = db.escape(`${category}`);
+  let categoryEsc2 = db.escape(`${category}`);
 
   // 價格由高到低、低到高、最新上架
   let sortBy =
@@ -35,26 +36,25 @@ const getListData = async (req, res) => {
       ? req.query.sortBy.trim()
       : "";
 
-      if (keyword) {
-        qs.keyword = keyword // 如果有qs 就給keyword屬性，設定到keyword
-        where += ` AND ( \`name\` LIKE ${keywordEsc})`
-      }
-      if (main_category) {
-        qs.main_category = main_category
-        where += ` AND (category_id = ${categoryEsc})`
-      }
+  if (keyword) {
+    qs.keyword = keyword; // 如果有qs 就給keyword屬性，設定到keyword
+    where += ` AND ( \`name\` LIKE ${keywordEsc})`;
+  }
+  if (main_category) {
+    qs.main_category = main_category;
+    where += ` AND (category_id = ${categoryEsc})`;
+  }
 
-      if (sortBy) {
-        qs.sortBy = sortBy
-        if (sortBy === 'priceFromHighToLow') {
-          where += ` ORDER BY \`price\` DESC`
-        } else if (sortBy === 'priceFromLowToHigh') {
-          where += ` ORDER BY \`price\` ASC `
-        } else if (sortBy === 'latest') {
-          where += ` ORDER BY \`create_at\` ASC `
-        }
-      }
-
+  if (sortBy) {
+    qs.sortBy = sortBy;
+    if (sortBy === "priceFromHighToLow") {
+      where += ` ORDER BY \`price\` DESC`;
+    } else if (sortBy === "priceFromLowToHigh") {
+      where += ` ORDER BY \`price\` ASC `;
+    } else if (sortBy === "latest") {
+      where += ` ORDER BY \`create_at\` ASC `;
+    }
+  }
 
   if (page < 1) {
     return { success: false, redirect: "?page=1" };
@@ -83,7 +83,7 @@ const getListData = async (req, res) => {
     perPage,
     rows,
     query: req.query,
-    qs,
+    qs:qs,
   };
 };
 

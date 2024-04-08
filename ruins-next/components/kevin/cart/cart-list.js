@@ -19,7 +19,7 @@ export default function CartList() {
                 alt="Picture of camp"
                 width={100}
                 height={100}
-                className="aspect-square rounded-xl"
+                className="aspect-square rounded-sm"
                 unoptimized={true}
               />
             </div>

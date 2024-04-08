@@ -93,8 +93,9 @@ export default function Navbar({ className, navColor = "white" }) {
               navColor === "white" ? "text-white" : "text-black"
             }  ${styles["navlinks"]}`}
           >
+<CartModal />
             {/* <Link href="/shop/cart">CART</Link> */}
-            <CartModal />
+
             <div className={`${styles["cart-number"]}`}>
               {navColor === "white" ? (
                 <Image alt="" src={CartSvg} />
@@ -110,7 +111,8 @@ export default function Navbar({ className, navColor = "white" }) {
           className={`${styles["navlink-container-mobile"]} w-1/3 justify-end`}
         >
           <a href="" className={`${styles["nav-cart-mobile"]}`}>
-            <div>CART</div>
+            {/* <div>CART</div>             */}
+            
             {navColor === "white" ? (
               <Image alt="" src={CartLine} />
             ) : (

@@ -12,8 +12,8 @@ function CommentModal() {
     <div>
       <button onClick={openModal}>Open Modal</button>
       {isOpen && (
-        <div className="modal flex justify-center items-center fixed top-0 left-0 w-full h-full  bg-black/50 z-40 ">
-          <div className="modal-content bg-white  p-5 rounded  z-50 md:w-[800px] w-[330px] md:h-[470px] md:px-20 md:py-10">
+        <div className="flex justify-center items-center fixed top-0 left-0 w-full h-full  bg-black/50 z-40 ">
+          <div className=" bg-white  p-5 rounded  z-50 md:w-[800px] w-[330px] md:h-[470px] md:px-20 md:py-10">
             <div className="flex flex-col">
               <div className="flex justify-end">
                 <button className="close text-[30px] " onClick={closeModal}>
