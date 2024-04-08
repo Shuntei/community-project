@@ -13,5 +13,5 @@ export default function App({ Component, pageProps }) {
         </TogglesContextProvider>
       </BoardsContextProvider>
     </CartProvider>
-  );
+  )
 }

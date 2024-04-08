@@ -6,22 +6,25 @@ export default function SortBy() {
   const router = useRouter()
 
   const handleChange = (e) => {
-    const sortByValue = e.target.value;
-    setSortBy(sortByValue);
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, sortBy: sortByValue }
-    },
-    
-    undefined,
-    { scroll: false });
+    const sortByValue = e.target.value
+    setSortBy(sortByValue)
+    router.push(
+      {
+        pathname: router.pathname,
+        query: { ...router.query, sortBy: sortByValue },
+      },
+
+      undefined,
+      { scroll: false }
+    )
   }
 
   return (
     <>
       <select
+        className="bg-gray-100"
         name="sortBy"
-        id='sortBy'
+        id="sortBy"
         value={sortBy}
         onChange={handleChange}
       >
