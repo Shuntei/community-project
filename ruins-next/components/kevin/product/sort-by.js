@@ -11,7 +11,10 @@ export default function SortBy() {
     router.push({
       pathname: router.pathname,
       query: { ...router.query, sortBy: sortByValue }
-    });
+    },
+    
+    undefined,
+    { scroll: false });
   }
 
   return (

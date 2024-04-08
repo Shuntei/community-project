@@ -27,7 +27,9 @@ export default function Search() {
         role="search"
         onSubmit={(e) => {
           e.preventDefault()
-          router.push(`?keyword=` + e.currentTarget.keyword.value)
+          router.push(`?keyword=` + e.currentTarget.keyword.value,
+                  undefined,
+                  { scroll: false })
         }}
       >
         <input
