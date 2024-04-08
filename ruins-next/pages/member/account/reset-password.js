@@ -7,7 +7,7 @@ export default function ResetPassword() {
   const router = useRouter();
 
   const handleSendLink = () => {
-    router.push("./checkEmail");
+    router.push("./check-email");
   };
   return (
     <>

@@ -8,7 +8,7 @@ export default function NavbarMobile() {
       title: 'general',
       items: [
         { label: 'Profile', href: '/member/account-settings/account' },
-        { label: 'Email & Password', href: '/member/account-settings/emailAndPassword' },
+        { label: 'Email & Password', href: '/member/account-settings/email-and-password' },
       ],
     },
     {

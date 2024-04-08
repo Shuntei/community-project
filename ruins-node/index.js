@@ -3,7 +3,6 @@ import multer from "multer";
 import johnnyRouter from "./routes/johnny/community-node.js";
 import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js"
-import db from "./utils/mysql2-connect.js";
 import cors from "cors"
 
 const upload = multer({ dest: "profile_uploads/" });
