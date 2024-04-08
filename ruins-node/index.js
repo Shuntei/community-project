@@ -28,12 +28,6 @@ app.use("/product", productRouter);
 
 
 
-app.get("/try-db", async (req, res) => {
-  const sql = "SELECT * from mb_user LIMIT 3";
-  const [rows] = await db.query(sql);
-  res.json(rows);
-});
-
 app.use((req, res) => {
   res.status(404).send(`<h2>404 wrong path</h2>`);
 });
