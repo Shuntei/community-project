@@ -13,7 +13,7 @@ export default function Category() {
     router.push(
       {
         pathname: '/shop/product/list',
-        query: { ...router.query, main_category: cateValue },
+        query: { main_category: cateValue },
       },
       undefined,
       { scroll: false }
@@ -24,17 +24,17 @@ export default function Category() {
     <>
       <div className="w-full md:gap-[36px]  gap-[20px]  justify-between   md:px-24 px-4 items-center  flex ">
         <div
-        onClick={() => {
-          console.log("aaa")
-                
-                router.push(
-                  {
-                    pathname: '/shop/product/list',
-                  },
-                  undefined,
-                  { scroll: false }
-                )
-              }}
+          onClick={() => {
+            console.log('aaa')
+
+            router.push(
+              {
+                pathname: '/shop/product/list',
+              },
+              undefined,
+              { scroll: false }
+            )
+          }}
           className="w-full aspect-square bg-black md:rounded-[20px] rounded-[7px] justify-center items-center flex  "
         >
           <div className="text-center text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans'] tracking-[2.80px]">
