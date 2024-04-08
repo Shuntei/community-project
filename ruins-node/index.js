@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import johnnyRouter from "./routes/johnny/community-node.js";
 import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js"
 import db from "./utils/mysql2-connect.js";
@@ -12,6 +13,8 @@ const app = express();
 // top level middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use("/johnny", johnnyRouter);
+
 const corsOptions = {
     credentials: true,
     origin: (origin, callback)=>{

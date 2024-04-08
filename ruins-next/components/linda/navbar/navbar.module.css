@@ -1,4 +1,4 @@
-.navbar{
+.navbar {
   padding: 24px 44px 10px 44px;
   display: flex;
   justify-content: space-between;
@@ -55,7 +55,6 @@
 }
 
 @media (max-width: 375px) {
-
   .navbar {
     padding: 12px 20px;
   }
