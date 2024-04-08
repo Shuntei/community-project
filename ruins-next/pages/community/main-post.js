@@ -26,23 +26,22 @@ export default function MainPost() {
 
   const { commentModal, setCommentModal } = useToggles();
   const { getPost, setGetPost, handlePostId, handlePush } = useBoards();
-  console.log("lc", location.search);
-  console.log("rq", router.query);
+
   useEffect(() => {
     // const currentPage = location.search;
     // // allPostsShow(currentPage);
     // handlePostId(currentPage);
     // console.log("location.search: ", location.search);
 
-    // try {
-    const currentPage = location.search;
-    console.log(`${SN_POSTS}${currentPage}`);
-    fetch(`${SN_POSTS}${currentPage}`)
-      .then((r) => r.json())
-      .then((data) => setGetPost(data));
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    // const currentPage = location.search;
+
+    try {
+      // fetch(`http://localhost:3005/johnny/posts?postId=15`);
+      fetch(`${SN_POSTS}?postId=${15}`);
+      then((r) => r.json()).then((data) => setGetPost(data));
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   // useEffect(() => {
