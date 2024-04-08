@@ -1,7 +1,7 @@
 import express, { query } from "express";
 import cors from "cors";
-import db from "../../utils/mysql2-connect.js";
-import uploadImgs from "../../utils/upload-imgs.js";
+import db from "../../utils/johnny/mysql2-connect.js";
+import uploadImgs from "../../utils/johnny/upload-imgs.js";
 
 const router = express.Router();
 
