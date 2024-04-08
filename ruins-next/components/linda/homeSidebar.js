@@ -30,7 +30,7 @@ export default function HomeSidebar() {
           <div className="self-stretch h-auto py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">TOUR</div>
             <Link
-              href="/member/account-settings/myTrips"
+              href="/member/account-settings/my-trips"
               onClick={(e) => {
                 handleLinkClick("My Trips");
               }}
@@ -41,7 +41,7 @@ export default function HomeSidebar() {
               My Trips
             </Link>
             <Link
-              href="/member/account-settings/favTours"
+              href="/member/account-settings/fav-tours"
               onClick={(e) => {
                 handleLinkClick("Favorite Tours");
               }}
@@ -52,7 +52,7 @@ export default function HomeSidebar() {
               Favorite Tours
             </Link>
             <Link
-              href="/member/account-settings/myPosts"
+              href="/member/account-settings/my-posts"
               onClick={(e) => {
                 handleLinkClick("My Posts");
               }}
