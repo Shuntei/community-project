@@ -63,7 +63,7 @@ export default function Login() {
             </div>
           </div>
           <div className="flex md:gap-[100px] gap-0 md:flex-row flex-col text-white md:items-center">
-            <a href="./resetPassword" className="border-b border-white ml-auto">
+            <a href="./reset-password" className="border-b border-white ml-auto">
               FORGOT PASSWORD
             </a>
             <GoogleBtn className="mt-[50px]" />
