@@ -37,7 +37,7 @@ export default function NavbarPopup() {
           <p className="font-['IBM Plex Mono']"><a href="#">MY POSTS</a></p>
         </div>
         <div className={styles["titleMagintop"]}>
-          <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">GAME</a></p>
+          <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="/ruins-next/pages/game/indexGame.js">GAME</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">ACHIEVEMENT</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">NOTE</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">SCREENSHOT</a></p>
