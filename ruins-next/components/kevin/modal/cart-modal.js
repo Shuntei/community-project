@@ -28,7 +28,7 @@ function CartModal() {
     <div>
       <button onClick={openModal}>CARTwww</button>
       {isOpen && (
-        <div className="modal flex justify-end items-start fixed top-0 left-0 w-full h-full  bg-black/50 z-40 ">
+        <div className=" flex justify-end items-start fixed top-0 left-0 w-full h-full  bg-black/50 z-40 ">
           <div className="modal-content bg-white  rounded  z-50 md:w-[447px] w-[320px] h-[700px] me-2 mt-2 px-10 py-5 relative">
             <div className="flex flex-col">
               <div className="flex justify-end">
@@ -48,7 +48,7 @@ function CartModal() {
                         alt="Picture of camp"
                         width={100}
                         height={100}
-                        className="aspect-square rounded-xl"
+                        className="aspect-square rounded-sm"
                         unoptimized={true}
                       />
                     </div>
