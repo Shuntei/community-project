@@ -4,21 +4,10 @@ import { useRouter } from "next/router";
 
 export default function HomeSidebar() {
   const [activeLink, setActiveLink] = useState(null);
-  const router = useRouter()
+  const router = useRouter();
 
   const handleLinkClick = (link) => {
     setActiveLink(link);
-    switch (link) {
-      case "notifications":
-        router.push("/member/account-settings/notifications");
-        break;
-      case "preference":
-        router.push("/member/account-settings/preference");
-        break;
-      // Add more cases for other links if needed
-      default:
-        break;
-    }
   };
 
   return (
@@ -38,7 +27,7 @@ export default function HomeSidebar() {
               Favorite Products
             </div>
           </div>
-          <div className="self-stretch h-24 py-[11px] flex-col justify-start items-start gap-[11px] flex">
+          <div className="self-stretch h-auto py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">TOUR</div>
             <div className="self-stretch pl-5 text-sm font-medium">
               My Trips
@@ -47,7 +36,7 @@ export default function HomeSidebar() {
               Favorite Tours
             </div>
           </div>
-          <div className="self-stretch h-[98px] py-[11px] flex-col justify-start items-start gap-[11px] flex">
+          <div className="self-stretch h-auto py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">SOCIAL</div>
             <div className="self-stretch pl-5 text-sm font-medium">
               Saved posts
@@ -61,41 +50,52 @@ export default function HomeSidebar() {
           <div className="self-stretch pb-2.5 border-b-2 border-white font-semibold">
             Settings
           </div>
-          <div className="self-stretch h-[127px] py-[11px] flex-col justify-start items-start gap-[11px] flex">
+          <div className="self-stretch h-auto py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">GENERAL</div>
             <Link
               href="/member/account-settings/account"
-              className="self-stretch pl-5 text-sm font-medium"
+              onClick={(e) => {
+                handleLinkClick("profile");
+              }}
+              className={`self-stretch pl-5 text-sm font-medium ${
+                activeLink === "profile" ? "bg-white text-black" : ""
+              }`}
             >
               Profile
             </Link>
             <Link
               href="/member/account-settings/emailAndPassword"
-              className="self-stretch pl-5 text-sm font-medium"
+              onClick={(e) => {
+                handleLinkClick("emailAndPassword");
+              }}
+              className={`self-stretch pl-5 text-sm font-medium ${
+                activeLink === "emailAndPassword" ? "bg-white text-black" : ""
+              }`}
             >
               Email & Password
             </Link>
-            <div className="self-stretch pl-5 text-sm font-medium">
-              Account validation
-            </div>
           </div>
-          <div className="self-stretch h-[98px] py-[11px] flex-col justify-start items-start gap-[11px] flex">
+          <div className="self-stretch h-auto py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">SYSTEM</div>
             <Link
               href="/member/account-settings/notifications"
-              onClick={(e)=>{
-                e.preventDefault()
-                handleLinkClick('notifications')}}
-              className={`self-stretch pl-5 text-sm font-medium ${activeLink === 'notifications' ? 'bg-white text-black' : ''}`}
+              onClick={(e) => {
+                handleLinkClick("notifications");
+              }}
+              className={`self-stretch pl-5 text-sm font-medium ${
+                activeLink === "notifications" ? "bg-white text-black" : ""
+              }`}
             >
               Notifications
             </Link>
             <Link
               href="/member/account-settings/preference"
-              onClick={(e)=>{
-                e.preventDefault()
-                handleLinkClick('preference')}}
-              className={`self-stretch pl-5 text-sm font-medium ${activeLink === 'preference' ? 'bg-white text-black' : ''}`}
+              onClick={(e) => {
+                handleLinkClick("preference");
+              }}
+              className={`self-stretch pl-5 text-sm font-medium ${
+                activeLink === "preference" ? "bg-white text-black" : ""
+              }`}
             >
               Preference
             </Link>

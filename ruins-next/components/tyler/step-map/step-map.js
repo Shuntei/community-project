@@ -1,6 +1,5 @@
 import React from 'react'
 import styles from './step-map.module.css'
-import Link from 'next/link'
 import { RiArrowDownSLine, RiArrowUpSLine } from "@remixicon/react";
 import { useRouter } from 'next/router'
 import { useState } from 'react';
@@ -10,13 +9,13 @@ export default function StepMap() {
   const router = useRouter()
 
   const [turnPage, setTurnPage] = useState([{
-    url: '/01-check-role'
+    url: '/chat/01-check-role'
   }, {
-    url: '/02-check-webcam-source'
+    url: '/chat/02-check-webcam-source'
   }, {
-    url: '/03-insert-live-details'
+    url: '/chat/03-insert-live-details'
   }, {
-    url: '/04-final-check'
+    url: '/chat/04-final-check'
   }])
 
   const handlePageChange = () => {

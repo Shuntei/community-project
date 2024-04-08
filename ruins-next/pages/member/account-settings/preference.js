@@ -4,10 +4,9 @@ import { MdCheckBoxOutlineBlank } from "react-icons/md";
 import { MdCheckBox } from "react-icons/md";
 import AccountLayout from "@/components/linda/accountLayout";
 
-export default function Notifications() {
+export default function Preference() {
   return (
     <>
-      <AccountLayout>
         <div className="flex w-full flex-col pt-[80px] items-center justify-center">
           <div className="md:py-[33px] md:px-[60px] px-[16px] w-full md:w-auto rounded-xl p-0 flex flex-col items-center md:justify-center md:bg-[#57575747] md:border-2 md:border-white md:shadow-[12px_12px_30px_0_rgba(255,255,255,0.3)] md:shadow-[-12px_-12px_30px_0_rgba(255,255,255,0.4)]">
             <div className="flex pb-[17px] flex-col md:justify-center items-center gap-[20px]">
@@ -56,12 +55,15 @@ export default function Notifications() {
                 </div>
               </div>
             </div>
-            <button className="bg-black hover:bg-[#7A7A7A] flex text-[15px] max-w-[300px] mt-[10px] italic py-[18px] md:px-[98px] w-full border border-white justify-center items-center">
+            <button className="bg-white text-black hover:bg-black hover:text-white flex text-[15px] max-w-[300px] mt-[10px] italic py-[18px] md:px-[98px] w-full border border-black hover:border-white justify-center items-center">
               SAVE CHANGE
             </button>
           </div>
         </div>
-      </AccountLayout>
     </>
   );
 }
+
+Preference.getLayout = function getLayout(page) {
+  return <AccountLayout>{page}</AccountLayout>;
+};

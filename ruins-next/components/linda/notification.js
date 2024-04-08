@@ -13,7 +13,7 @@ export default function Notification({
       {/* notification */}
       <div className="flex gap-[12px] items-start">
         <div className="h-[50px] min-w-[50px] overflow-y-hidden">
-          <Image src={src} className="min-w-[50px] max-w-[50px] bg-cover" />
+          <Image alt="" src={src} className="min-w-[50px] max-w-[50px] bg-cover" />
         </div>
         <div className="flex flex-col gap-[4px]">
           <div className="font-semibold text-base">{name}</div>
