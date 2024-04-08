@@ -29,12 +29,39 @@ export default function HomeSidebar() {
           </div>
           <div className="self-stretch h-auto py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">TOUR</div>
-            <div className="self-stretch pl-5 text-sm font-medium">
+            <Link
+              href="/member/account-settings/myTrips"
+              onClick={(e) => {
+                handleLinkClick("My Trips");
+              }}
+              className={`self-stretch pl-5 text-sm font-medium ${
+                activeLink === "My Trips" ? "bg-white text-black" : ""
+              }`}
+            >
               My Trips
-            </div>
-            <div className="self-stretch pl-5 text-sm font-medium">
+            </Link>
+            <Link
+              href="/member/account-settings/favTours"
+              onClick={(e) => {
+                handleLinkClick("Favorite Tours");
+              }}
+              className={`self-stretch pl-5 text-sm font-medium ${
+                activeLink === "Favorite Tours" ? "bg-white text-black" : ""
+              }`}
+            >
               Favorite Tours
-            </div>
+            </Link>
+            <Link
+              href="/member/account-settings/myPosts"
+              onClick={(e) => {
+                handleLinkClick("My Posts");
+              }}
+              className={`self-stretch pl-5 text-sm font-medium ${
+                activeLink === "My Posts" ? "bg-white text-black" : ""
+              }`}
+            >
+              My Posts
+            </Link>
           </div>
           <div className="self-stretch h-auto py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">SOCIAL</div>

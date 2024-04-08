@@ -1,11 +1,54 @@
 import Image from "next/image";
-import React from "react";
+
 import { RiStarFill, RiStarLine } from "@remixicon/react";
 import Link from "next/link";
+import React, { useEffect, useState } from "react";
 import Navbar from "@/components/linda/navbar/navbar";
 import Footer from "@/components/linda/footer/footer";
+import { useRouter } from "next/router";
+import { useCart } from "@/hooks/use-cart";
 
-export default function Product() {
+export default function Pid() {
+  const router = useRouter();
+  const { addMutiItem,onAddItem,items} = useCart();
+  const [product, setProduct] = useState({
+    pid: "",
+    picture: "",
+    stock: 0,
+    name: "",
+    price: 0,
+    tags: "",
+  });
+  const getProductById = async (pid) => {
+    const url = `http://localhost:3005/product/api/getProduct/${pid}`;
+
+    // 用 try...catch語法來作例外處理
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      console.log(data);
+      // 設定到狀態中 ===> 觸發重新渲染(re-render)
+      // 要設定到狀態前，最好先檢查資料類型是否一致
+      if (typeof data === "object" && data !== null) {
+        setProduct(data.row);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // 2. 在useEffet中監聽isReady值為true時，才能得到網址上的pid和伺服器獲取資料
+  useEffect(() => {
+    if (router.isReady) {
+      //確保能得到pid
+      const { pid } = router.query;
+      console.log(pid);
+      // 有pid後，向伺服器要求資料
+      getProductById(pid);
+    }
+  }, [router.isReady]);
+
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center relative pt-28">
@@ -16,19 +59,20 @@ export default function Product() {
         <div className="w-full flex flex-col md:flex-row justify-between md:px-24 px-4 py-5">
           <div className="flex items-start flex-col justify-end md:order-1 order-2">
             <div className="text-black  md:text-6xl text-[36px] font-semibold font-['Noto Sans TC']">
-              石頭燭台
+              {product.name}
             </div>
             <div className="text-black text-[20px] md:text-[32px] font-normal font-['IBM Plex Mono']">
-              $380
+              ${product.price}
             </div>
           </div>
           <div className="md:order-2 order-1 ">
             <Image
-              src="/images/camp.jpg"
+              src={product.img}
               alt="Picture of camp"
               width={500}
               height={500}
               className="rounded-xl"
+              unoptimized={true}
             />
           </div>
         </div>
@@ -36,16 +80,12 @@ export default function Product() {
         {/* 商品內容開始 */}
         <div className="flex flex-col md:flex-row w-full  justify-between px-4 md:px-24 py-5 gap-5 md:gap-0">
           {/* 左-商品敘述 */}
-          <div className="md:w-1/5 md:space-y-7 space-y-2 md:sticky top-5 h-min">
+          <div className="md:w-1/5 md:space-y-7 space-y-2 md:sticky top-16 h-min">
             <div className="w-full text-black border-b-2 border-black  text-[13px] font-semibold font-['Noto Sans TC']">
               商品敘述
             </div>
             <div className="w-full text-black text-[15px] font-normal">
-              Sphere
-              系列帶有獨特的輪廓和紋理，雕刻優雅，每個花瓶都飾有複雜華麗的細節。以裝飾和雕塑的方式聚集在一起。現已成為
-              101 Copenhagen
-              的鮮明視覺標誌了。受中國古代花瓶的啟發，褪色的大地色調是 Sphere
-              系列的特色，光滑的形狀和鋒利的邊緣之間精確的比例及對比是與技藝精湛的陶藝師密切研創製成的作品。
+              {product.description}
             </div>
           </div>
           {/* 右-商品數量&moreInfo&addToCart&圖片 */}
@@ -99,11 +139,20 @@ export default function Product() {
                 </div>
               </div>
               <div className="md:w-1/3  md:ms-6 md:space-y-7  fixed bottom-1 md:static">
-                <div className="px-[80px] md:px-[46px] md:py-[43px] py-[18px] border border-black bg-black justify-center items-center flex">
+                <button
+                  onClick={() => {
+
+                    console.log(product.pid)
+                    console.log(items)
+
+                    onAddItem(product);
+                  }}
+                  className="px-[80px] md:px-[46px] md:py-[43px] py-[18px] border border-black bg-black justify-center items-center flex"
+                >
                   <div className="text-white italic text-[26px] font-semibold font-['IBM Plex Mono']">
                     ADD TO CART
                   </div>
-                </div>
+                </button>
               </div>
             </div>
             {/* 右-圖片 */}

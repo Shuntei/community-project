@@ -1,7 +1,7 @@
 import Image from "next/image";
 import React from "react";
 import Link from "next/link";
-import Modal from "@/components/kevin/comment-modal";
+import Modal from "@/components/kevin/modal/comment-modal";
 
 export default function MyOrder() {
   return (
