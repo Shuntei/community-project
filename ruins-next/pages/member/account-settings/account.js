@@ -14,7 +14,6 @@ import AccountLayout from "@/components/linda/accountLayout";
 export default function Account() {
   return (
     <>
-    <AccountLayout>
     <div className="md:py-[50px] md:px-[80px] p-0 flex flex-col items-start md:p-0 p-[30px] gap-[28px] w-full">
             {/* Profile */}
             <div
@@ -48,7 +47,7 @@ export default function Account() {
             </div>
             {/* Upload avatar */}
             <div className="flex md:flex-row flex-col md:gap-[37px] gap-[20px] md:items-start items-center md:border-b md:border-white w-full">
-              <Image src={ProfileIcon} className="w-[110px] stroke-1" />
+              <Image alt="" src={ProfileIcon} className="w-[110px] stroke-1" />
               <div className="flex flex-col md:gap-[50px] gap-[30px] w-full">
                 <div className="flex flex-col gap-[24px]">
                   <div className="flex w-1/3 flex-col gap-[6px] md:w-2/5 w-full">
@@ -150,7 +149,14 @@ export default function Account() {
               </button>
             </div>
           </div>
-    </AccountLayout>
     </>
   );
+}
+
+Account.getLayout = function getLayout(page) {
+  return (
+    <AccountLayout>
+      {page}
+    </AccountLayout>
+  )
 }

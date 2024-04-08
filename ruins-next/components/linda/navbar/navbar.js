@@ -14,11 +14,13 @@ import LoginModal from "../modals/login-modal";
 import Login from "@/pages/member/account/login";
 import ProfileModal from "../modals/profile-modal";
 import NavbarPopup from "./navbarPopup";
-
+import NavbarMobile from "./navbar-mobile";
+import { useCart } from "@/hooks/use-cart";
+import CartModal from "@/components/kevin/modal/cart-modal";
 export default function Navbar({ className, navColor = "white" }) {
   const [showModal, setShowModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
+  const {totalItems}= useCart()
   const toggleNav = () => {
     setIsOpen(!isOpen);
   };
@@ -31,8 +33,8 @@ export default function Navbar({ className, navColor = "white" }) {
         } relative`}
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
-          <div className="flex md:justify-start gap-[15px]" onClick={toggleNav}>
-            <Link href={"#"} className="pt-[2px]">
+          <div className="flex cursor-pointer md:justify-start gap-[15px]" >
+            <div onClick={toggleNav} className="pt-[2px]">
               <div
                 id="nav-icon4"
                 className="md:w-[30px] w-[23px] h-auto absolute"
@@ -41,19 +43,19 @@ export default function Navbar({ className, navColor = "white" }) {
                   className={`w-full h-[2px] ${
                     navColor === "white" ? "bg-white" : "bg-black"
                   } transform transition duration-500 ease-in-out ${
-                    isOpen ? "rotate-45 translate-y-1.5" : ""
+                    isOpen ? "rotate-45 md:translate-y-1.5 translate-y-1.5" : ""
                   } `}
                 ></div>
                 <div
                   className={`w-full h-[2px] ${
                     navColor === "white" ? "bg-white" : "bg-black"
                   }  md:mt-[10px] mt-[6px] transform  transition duration-500 ease-in-out ${
-                    isOpen ? "-rotate-45 -translate-y-1.5" : ""
+                    isOpen ? "-rotate-45 md:-translate-y-1.5 -translate-y-[0.125rem]" : ""
                   }`}
                 ></div>
               </div>
-            </Link>
-            <Link href={"/"} className="md:block hidden text-[15px] pl-[40px]">
+            </div>
+            <Link href='#' className="md:block hidden text-[15px] pl-[40px]">
               MAIN
             </Link>
           </div>
@@ -91,7 +93,11 @@ export default function Navbar({ className, navColor = "white" }) {
               navColor === "white" ? "text-white" : "text-black"
             }  ${styles["navlinks"]}`}
           >
+
             <a href="/shop/cart">CART</a>
+
+            {/* <Link href="/shop/cart">CART</Link> */}
+            <CartModal />
             <div className={`${styles["cart-number"]}`}>
               {navColor === "white" ? (
                 <Image alt="" src={CartSvg} />
@@ -99,7 +105,7 @@ export default function Navbar({ className, navColor = "white" }) {
                 <Image alt="" src={CartLineBlack} />
               )}
 
-              <span>1</span>
+              <span>{totalItems}</span>
             </div>
           </div>
         </div>
@@ -133,6 +139,7 @@ export default function Navbar({ className, navColor = "white" }) {
         {/* <LogoutModal isVisible={showModal} /> */}
       </nav>
       {isOpen ? <NavbarPopup /> : ""}
+      {/* <NavbarMobile /> */}
     </>
   );
 }

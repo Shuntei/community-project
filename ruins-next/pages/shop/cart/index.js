@@ -1,12 +1,15 @@
-import CountNumber from "@/components/kevin/count-number";
 import Image from "next/image";
 import React from "react";
 import Process0 from "@/components/common/process0";
 import Link from "next/link";
 import Navbar from "@/components/linda/navbar/navbar";
 import Footer from "@/components/linda/footer/footer";
+import CartList from "@/components/kevin/cart/cart-list";
+import { useCart } from "@/hooks/use-cart";
+
 
 export default function Cart() {
+  const {totalItems, totalPrice} = useCart()
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-28">
@@ -25,80 +28,18 @@ export default function Cart() {
               SHOPPING CART
             </div>
             {/* 購物細項 */}
-            <div className="flex md:w-10/12 w-full justify-between">
-              <div className="md:w-1/5  ">
-                <Image
-                  src="/images/rock.jpg"
-                  alt="Picture of camp"
-                  width={100}
-                  height={100}
-                  className="aspect-square rounded-xl"
-                />
-              </div>
-              <div className="md:w-4/5 w-full md:px-5 px-2  space-y-5">
-                <div className="text-black text-base font-semibold font-['Noto Sans TC']">
-                  登山健行諾羊毛頭巾
-                </div>
-                <div className="flex justify-between">
-                  <div className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
-                    深空灰
-                  </div>
-                  <div className="t text-neutral-300 text-xs font-extralight font-['IBM Plex Mono']">
-                    $1,998
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CountNumber />
-                  </div>
-                  <div className="text-black text-base font-normal font-['IBM Plex Mono']">
-                    $ 1,998
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="flex md:w-10/12 w-full justify-between">
-              <div className="md:w-1/5  ">
-                <Image
-                  src="/images/camp.jpg"
-                  alt="Picture of camp"
-                  width={100}
-                  height={100}
-                  className="aspect-square rounded-xl"
-                />
-              </div>
-              <div className="md:w-4/5 w-full md:px-5 px-2  space-y-5">
-                <div className="text-black text-base font-semibold font-['Noto Sans TC']">
-                  登山健行諾羊毛頭巾
-                </div>
-                <div className="flex justify-between">
-                  <div className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
-                    深空灰
-                  </div>
-                  <div className="t text-neutral-300 text-xs font-extralight font-['IBM Plex Mono']">
-                    $1,998
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <div>
-                    <CountNumber />
-                  </div>
-                  <div className="text-black text-base font-normal font-['IBM Plex Mono']">
-                    $ 1,998
-                  </div>
-                </div>
-              </div>
-            </div>
+
+            <CartList></CartList>
 
             {/* 分隔線 */}
             <div className="w-10/12 border-dotted border-black border-b border-t h-1"></div>
 
             <div className="flex w-10/12 justify-between">
               <div className="text-black text-[13px] font-semibold font-['IBM Plex Mono']">
-                合計 (TWD)
+                合計 {totalItems}項(TWD)
               </div>
               <div className="text-black text-xl font-semibold font-['IBM Plex Mono']">
-                $ 3,996
+                $ {totalPrice}
               </div>
             </div>
             <Link

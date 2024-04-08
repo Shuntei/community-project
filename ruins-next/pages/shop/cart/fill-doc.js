@@ -4,8 +4,11 @@ import Process1 from "@/components/common/process1";
 import Link from "next/link";
 import Navbar from "@/components/linda/navbar/navbar";
 import Footer from "@/components/linda/footer/footer";
+import { useCart } from "@/hooks/use-cart";
 
 export default function FillDoc() {
+  const { items, onDecreaseItem, onIncreaseItem, totalPrice} = useCart();
+
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-28">
@@ -167,68 +170,43 @@ export default function FillDoc() {
               </div>
 
               {/* 右側 */}
-              <div className="flex md:w-6/12 flex-col space-y-10 sticky h-min  top-10 ">
+              <div className="flex md:w-6/12 flex-col space-y-10 sticky h-min  top-20 ">
                 <div>
                   {" "}
                   {/* 購物細項 */}
-                  <div className="flex w-full justify-between pb-4">
-                    <div className="w-1/5  ">
-                      <Image
-                        src="/images/rock.jpg"
-                        alt="Picture of camp"
-                        width={100}
-                        height={50}
-                        className="aspect-square rounded-xl"
-                      />
-                    </div>
-                    <div className="w-4/5 px-5 space-y-5">
-                      <div className="text-black text-small font-semibold font-['Noto Sans Tc']">
-                        登山健行美麗諾羊毛透氣
+                  {items.map((v, i) => {
+                    return(
+                    <div className="flex w-full justify-between pb-4">
+                      <div className="w-1/5  ">
+                        <Image
+                          src={v.img}
+                          alt="Picture of camp"
+                          width={100}
+                          height={50}
+                          className="aspect-square rounded-xl"
+                          unoptimized={true}
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <div className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
-                          深空灰
+                      <div className="w-4/5 px-5 space-y-5">
+                        <div className="text-black text-small font-semibold font-['Noto Sans Tc']">
+                          {v.name}
                         </div>
-                        <div className="t text-neutral-400 text-xs font-extralight font-['IBM Plex Mono']">
-                          x2
+                        <div className="flex justify-between">
+                          <div className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
+                            深空灰
+                          </div>
+                          <div className="t text-neutral-400 text-xs font-extralight font-['IBM Plex Mono']">
+                            {v.qty}
+                          </div>
                         </div>
-                      </div>
-                      <div className="flex justify-end">
-                        <div className="text-black text-base font-normal font-['IBM Plex Mono']">
-                          $ 1,998
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex w-full justify-between pb-4">
-                    <div className="w-1/5  ">
-                      <Image
-                        src="/images/camp.jpg"
-                        alt="Picture of camp"
-                        width={100}
-                        height={50}
-                        className="aspect-square rounded-xl"
-                      />
-                    </div>
-                    <div className="w-4/5 px-5 space-y-5">
-                      <div className="text-black text-small font-semibold font-['Noto Sans Tc']">
-                        登山健行美麗諾羊毛透氣
-                      </div>
-                      <div className="flex justify-between">
-                        <div className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
-                          深空灰
-                        </div>
-                        <div className="t text-neutral-400 text-xs font-extralight font-['IBM Plex Mono']">
-                          x2
+                        <div className="flex justify-end">
+                          <div className="text-black text-base font-normal font-['IBM Plex Mono']">
+                            {v.price}
+                          </div>
                         </div>
                       </div>
-                      <div className="flex justify-end">
-                        <div className="text-black text-base font-normal font-['IBM Plex Mono']">
-                          $ 1,998
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                    </div>)
+                  })}
                   {/* 分隔線 */}
                   <div className="w-full border-dotted border-gray border-b  h-1"></div>
                   <div className="flex w-full items-center justify-between py-5">
@@ -236,7 +214,7 @@ export default function FillDoc() {
                       合計 (TWD)
                     </div>
                     <div className="text-black text-xl font-semibold font-['IBM Plex Mono']">
-                      $ 3,996
+                      $ {totalPrice}
                     </div>
                   </div>
                 </div>
