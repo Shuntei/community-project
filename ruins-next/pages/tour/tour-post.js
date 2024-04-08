@@ -2,11 +2,13 @@ import React from 'react'
 import 'remixicon/fonts/remixicon.css'
 import { FaUserCheck } from 'react-icons/fa'
 import Link from 'next/link'
+import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 
 export default function TourPost() {
   return (
     <>
+    <Navbar />
       <div className="bg-zinc-800">
         <div id="headerReplace" className="h-32"></div>
         <div className=" px-[150px] py-2.5 space-y-5">
