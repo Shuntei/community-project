@@ -9,6 +9,6 @@
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": [
         "source.formatDocument",
-        "source.fixAll.eslint"
+        "source.fixAll.eslint" 
     ]
 }
