@@ -2,6 +2,8 @@ import express, { query } from "express";
 import cors from "cors";
 import db from "../../utils/johnny/mysql2-connect.js";
 import uploadImgs from "../../utils/johnny/upload-imgs.js";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
 
@@ -181,6 +183,7 @@ router.get("/posts/:post_id?", async (req, res) => {
 
   const chosenPostSql = " SELECT * FROM sn_posts WHERE post_id=? ";
   const [chosenPost] = await db.query(chosenPostSql, [postId]);
+  console.log(postId);
   res.json(chosenPost);
 });
 
@@ -193,9 +196,11 @@ router.post("/psadd", async (req, res) => {
   console.log(output);
 
   let result = {};
-  const sql = "INSERT INTO `sn_posts` SET ?";
+  const sql = "INSERT INTO `sn_posts` SET ? ";
   try {
+    req.body.post_type = "yours";
     [result] = await db.query(sql, [req.body]);
+    console.log(req.body);
     output.success = !!result.affectedRows;
   } catch (err) {
     console.log(err);
@@ -231,6 +236,16 @@ router.delete("/:post_id", async (req, res) => {
 router.post("/try-uploads", uploadImgs.array("photos", 3), (req, res) => {
   console.log(req.files);
   res.json(req.files);
+});
+
+// 设置静态文件目录，存放图片
+router.use(express.static("routes/johnny/img"));
+
+// 路由，返回图片URL
+router.get("/api/images", (req, res) => {
+  const imageUrl =
+    "file:///D:/data/Desktop/team/ruins-final/ruins-node/routes/johnny/img/774851e1-32ca-4fce-8660-5769d7f4bc02.jpg";
+  res.json({ imageUrl });
 });
 
 export default router;

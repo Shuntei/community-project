@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import img from "./img/90.jpg";
-import postImg from "./img/1868140_screenshots_20240117160639_1.jpg";
-import { z } from "zod";
-import { useToggles } from "@/contexts/use-toggles";
+import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
+import img from './img/90.jpg'
+import postImg from './img/1868140_screenshots_20240117160639_1.jpg'
+import { z } from 'zod'
+import { useToggles } from '@/contexts/use-toggles'
 import {
   RiVideoOnFill,
   RiImageFill,
@@ -15,85 +15,85 @@ import {
   RiDraftLine,
   RiCloseLargeLine,
   RiArrowDropDownLine,
-} from "@remixicon/react";
-import { SN_ADD_POST } from "./config/api-path";
-import { useRouter } from "next/router";
-import { useBoards } from "@/contexts/use-boards";
+} from '@remixicon/react'
+import { SN_ADD_POST } from './config/api-path'
+import { useRouter } from 'next/router'
+import { useBoards } from '@/contexts/use-boards'
 
 export default function PostModal() {
-  const { postModal, setPostModal } = useToggles();
+  const { postModal, setPostModal } = useToggles()
   const [postFrom, setPostForm] = useState({
-    title: "",
-    content: "",
-    image_url: "",
-  });
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("");
+    title: '',
+    content: '',
+    image_url: '',
+  })
+  const [selectedFile, setSelectedFile] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState('')
 
-  const { render, setRender, allPostsShow } = useBoards();
+  const { render, setRender, allPostsShow } = useBoards()
 
   const changeHandler = (e) => {
-    setPostForm({ ...postFrom, [e.target.name]: e.target.value });
-  };
+    setPostForm({ ...postFrom, [e.target.name]: e.target.value })
+  }
 
   const submitHandler = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     const r = await fetch(`${SN_ADD_POST}`, {
-      method: "POST",
+      method: 'POST',
       body: JSON.stringify(postFrom),
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
-    });
-    console.log("postForm:", postFrom);
+    })
+    console.log('postForm:', postFrom)
 
-    const result = await r.json();
+    const result = await r.json()
     if (result.success) {
-      console.log(result);
-      setRender(true);
-      setPostModal(!postModal);
+      console.log(result)
+      setRender(true)
+      setPostModal(!postModal)
     } else {
-      alert("發文失敗");
+      alert('發文失敗')
     }
-  };
+  }
 
   useEffect(() => {
-    allPostsShow();
-    setRender(false);
-  }, [render]);
+    allPostsShow()
+    setRender(false)
+  }, [render])
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file);
+    const file = e.target.files[0]
+    console.log(file)
     if (file) {
-      setSelectedFile(file);
-      const fileUrl = URL.createObjectURL(file);
-      setPostForm({ ...postFrom, image_url: fileUrl });
-      setPreviewUrl("");
+      setSelectedFile(file)
+      const fileUrl = URL.createObjectURL(file)
+      setPostForm({ ...postFrom, image_url: fileUrl })
+      setPreviewUrl('')
     } else {
-      selectedFile(null);
-      setPreviewUrl("");
+      selectedFile(null)
+      setPreviewUrl('')
     }
-  };
+  }
 
   useEffect(() => {
     if (!selectedFile) {
-      setPreviewUrl("");
-      return;
+      setPreviewUrl('')
+      return
     }
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreviewUrl(objectUrl);
-    console.log(objectUrl);
-    // return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile]);
+    const objectUrl = URL.createObjectURL(selectedFile)
+    setPreviewUrl(objectUrl)
+    console.log(objectUrl)
+    // return () => URL.revokeObjectURL(objectUrl)
+  }, [selectedFile])
 
   return (
     <>
-      {" "}
+      {' '}
       {/* <!-- 發文框 --> */}
       <form
         name="form1"
-        className=" bg-gray-400 bg-opacity-50 fixed backdrop-blur-sm inset-0 flex justify-center items-center z-[1001]"
+        className=" bg-gray-400 bg-opacity-50 fixed backdrop-blur-sm inset-0 flex justify-center items-center z-[1003]"
         id="postModal"
         onSubmit={submitHandler}
       >
@@ -161,9 +161,9 @@ export default function PostModal() {
                   name="content"
                   onChange={changeHandler}
                   value={postFrom.content}
-                ></textarea>{" "}
+                ></textarea>{' '}
                 <div className="flex justify-center py-2 overflow-hidden gap-5">
-                  {Array(3)
+                  {Array(1)
                     .fill(1)
                     .map((v, i) => {
                       return (
@@ -175,7 +175,7 @@ export default function PostModal() {
                           alt=""
                           key={i}
                         />
-                      );
+                      )
                     })}
                 </div>
               </div>
@@ -215,5 +215,5 @@ export default function PostModal() {
         </div>
       </form>
     </>
-  );
+  )
 }

@@ -13,7 +13,7 @@ import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
 import { SN_DELETE_POST } from './config/api-path'
 
-export default function MainContent() {
+export default function PersonalContent() {
   const router = useRouter()
   const {
     postsList,
@@ -62,57 +62,34 @@ export default function MainContent() {
     setRender(false)
   }, [render])
 
+  console.log(postsList.totalPostsRows)
+
   return (
     <>
-      {postsList ? (
-        <ul className="bg-sky-300 flex justify-center mt-[90px]">
-          {Array(10)
-            .fill(1)
-            .map((v, i) => {
-              const p = postsList.page - 5 + i
-              // const p = i;
-              if (p < 1 || p > postsList.totalPostsRows) return null
-              return (
-                <li key={p} className="mx-5">
-                  <Link
-                    href={`?page=${p}`}
-                    onClick={() => handlePage(p)}
-                    className="btn btn-primary"
-                  >
-                    {p}
-                    {/* <a href={`?page=${p}`}>{p}</a> */}
-                  </Link>
-                </li>
-              )
-            })}{' '}
-        </ul>
-      ) : selectedPosts ? (
-        <ul className="bg-sky-400 flex justify-center mt-[90px]">
-          {Array(10)
-            .fill(1)
-            .map((v, i) => {
-              const p = selectedPosts.page - 5 + i
-              // const p = i;
-              if (p < 1 || p > selectedPosts.selectedBdPostsRows) return null
-              return (
-                <li key={p} className="mx-5">
-                  <Link
-                    href={`?page=${p}`}
-                    // onClick={handleBdPostsPage(location.search)}
-                    onClick={() => handleBdPostsPage(p)}
-                    className="btn btn-primary"
-                  >
-                    {p}
-                  </Link>
-                </li>
-              )
-            })}{' '}
-        </ul>
-      ) : (
-        ''
-      )}
-      {(postsList.totalPostsRows || selectedPosts.selectedBdPostsRows).map(
-        (v, i) => {
+      <ul className="bg-sky-300 flex justify-center">
+        {Array(10)
+          .fill(1)
+          .map((v, i) => {
+            const p = postsList.page - 5 + i
+            // const p = i;
+            if (p < 1 || p > postsList.totalPostsRows) return null
+            return (
+              <li key={p} className="mx-5">
+                <Link
+                  href={`?page=${p}`}
+                  onClick={() => handlePage(p)}
+                  className="btn btn-primary"
+                >
+                  {p}
+                  {/* <a href={`?page=${p}`}>{p}</a> */}
+                </Link>
+              </li>
+            )
+          })}{' '}
+      </ul>
+      {postsList.totalPostsRows
+        .filter((v) => v.post_type === 'yours')
+        .map((v, i) => {
           return (
             <main className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative">
               {/*relative用於toggle垃圾桶*/}
@@ -189,8 +166,7 @@ export default function MainContent() {
               </div>
             </main>
           )
-        }
-      )}
+        })}
     </>
   )
 }

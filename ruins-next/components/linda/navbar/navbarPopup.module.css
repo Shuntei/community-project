@@ -39,7 +39,7 @@
   margin-top: 93px;
 }
 
-@media (max-width: 375px) {
+@media (max-width: 768px) {
   .nav{
     margin-left: 20px;
     margin-right: 20px;

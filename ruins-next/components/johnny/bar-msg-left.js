@@ -40,8 +40,7 @@ export default function ChannelAndMsg() {
                     <Image
                       className="w-[35px] rounded-full mr-5"
                       src={profileImg}
-                      alt=""
-                    />
+                      alt="" />
                     <span>Louisa</span>
                   </div>
                   <RiCloseLine />
