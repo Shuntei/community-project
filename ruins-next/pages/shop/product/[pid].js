@@ -1,5 +1,5 @@
 import Image from "next/image";
-
+import { PRODUCT_ONE } from "@/components/config/api-path";
 import { RiStarFill, RiStarLine } from "@remixicon/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -20,7 +20,7 @@ export default function Pid() {
     tags: "",
   });
   const getProductById = async (pid) => {
-    const url = `http://localhost:3005/product/api/getProduct/${pid}`;
+    const url = `${PRODUCT_ONE}/${pid}`;
 
     // 用 try...catch語法來作例外處理
     try {

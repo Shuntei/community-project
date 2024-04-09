@@ -11,12 +11,13 @@ import { useRouter } from "next/router";
 import Category from "@/components/kevin/product/category";
 import Search from "@/components/kevin/product/search";
 import SortBy from "@/components/kevin/product/sort-by";
+import { PRODUCT_LIST } from "@/components/config/api-path";
 export default function Index() {
   const router = useRouter();
   const { onAddItem } = useCart();
   const [products, setProuducts] = useState([]);
   const getProducts = async () => {
-    const url = `http://localhost:3005/product/api${location.search}`;
+    const url = `${PRODUCT_LIST}${location.search}`;
     try {
       const res = await fetch(url);
       const data = await res.json();
