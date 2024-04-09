@@ -6,16 +6,6 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-router.get("/test", (req, res) => {
-  res.send("<h2>Hi</h2>");
-});
-
-// router.get("/try-db", async (req, res) => {
-//     const sql = "SELECT * from mb_user LIMIT 3";
-//     const [rows] = await db.query(sql);
-//     res.json(rows);
-//   });
-
 router.post("/signup", async (req, res) => {
   const output = {
     success: false,
@@ -97,6 +87,61 @@ router.post("/signup", async (req, res) => {
 
   res.json(output);
 });
+
+router.post("/login", async (req, res) => {
+  const output = {
+    success: false,
+    code: 0,
+    error: "",
+    data: {
+      id: 0,
+      username: "",
+      token: "",
+    },
+  };
+
+  const {account, password} = req.body
+
+  const usernameSql = `SELECT * FROM mb_user WHERE username LIKE ?`;
+  const [usernameRows] = await db.query(usernameSql, [`%${account}%`]);
+  const emailSql = `SELECT * FROM mb_user WHERE email LIKE ?`;
+  const [emailRows] = await db.query(emailSql, [`%${account}%`]);
+
+  if (!usernameRows.length && !emailRows.length) {
+    output.success = false,
+    output.code = 1
+    output.error = "Account or password is wrong"
+    return res.json(output);
+  }
+
+  const row = usernameRows.length ? usernameRows[0] : emailRows[0];
+
+  const result = await bcrypt.compare(password, row.password);
+  if (result) {
+    output.success = true;
+
+    const token = jwt.sign(
+      {
+        id: row.id,
+        account: row.username,
+      },
+      process.env.JWT_SECRET
+    );
+
+    // TODO:
+    output.data = {
+      id: row.id,
+      username: row.username,
+      token,
+    };
+  } else {
+    output.code = 2;
+    output.error = "Account or password is wrong";
+  }
+
+  res.json(output);
+
+})
 
 // router.post("/edit-profile", upload.array("photos", 5), (req, res)=>{
 //     res.json({

@@ -10,10 +10,13 @@ import GoogleBtn from "@/components/linda/buttons/googleBtn";
 import AccountBtn from "@/components/linda/buttons/accountBtn";
 import { z } from "zod";
 import Router, { useRouter } from "next/router";
-import { MB_SIGNUP } from "@/components/config/api-path";
 import dayjs from "dayjs";
+import { useAuth } from "@/contexts/auth-context";
 
-const schemaName = z.string().min(3, { message: "Username is too short" });
+const nameRe = new RegExp(/^[a-zA-Z0-9]+$/);
+const schemaName = z.string().min(3, { message: "Username is too short" })
+.regex(nameRe, {message: "Invalid username (use letters & numbers)"})
+.max(25, {message: "It's too long"});
 const passwordRe = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/);
 const schemaPassword = z
   .string()
@@ -30,6 +33,7 @@ const schemaBirthday = z
 
 export default function Signup() {
   const router = useRouter();
+  const {signup} = useAuth()
   const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
   const [showPass, setShowPass] = useState(false);
@@ -113,6 +117,7 @@ export default function Signup() {
       }
     }
 
+    myForm.username = myForm.username.trim();
     if (!myForm.username) {
       initErrors = {
         ...initErrors,
@@ -197,16 +202,7 @@ export default function Signup() {
     const result = updateError();
 
     if (result) {
-      const r = await fetch(MB_SIGNUP, {
-        method: "post",
-        body: JSON.stringify(myForm),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const result = await r.json();
-      console.log(result);
+      const result = await signup(myForm)
 
       if (!result.success) {
         updateError();
@@ -217,9 +213,9 @@ export default function Signup() {
         setUsernameErrorCode(null);
       }
 
-      // if(result.success){
-      //   router.push('/')
-      // }
+      if(result.success){
+        router.push('/')
+      }
     }
   };
 

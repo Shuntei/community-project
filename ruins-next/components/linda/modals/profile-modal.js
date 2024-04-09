@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-export default function ProfileModal({isVisible}) {
+export default function ProfileModal({isVisible, logout}) {
     if (!isVisible) return null
   return (
     <>
@@ -31,7 +31,8 @@ export default function ProfileModal({isVisible}) {
                 SETTINGS
               </Link>
               <Link
-                href={"/member/account/logout"}
+                href="#"
+                onClick={logout}
                 className="text-rose-400 text-base uppercase"
               >
                 LOGOUT
