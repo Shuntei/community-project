@@ -33,7 +33,7 @@ const schemaBirthday = z
 
 export default function Signup() {
   const router = useRouter();
-  const {signup} = useAuth()
+  const {signup, auth} = useAuth()
   const [submitted, setSubmitted] = useState(false);
   const [checked, setChecked] = useState(false);
   const [showPass, setShowPass] = useState(false);
@@ -56,6 +56,12 @@ export default function Signup() {
     birthday: "",
     agreement: false,
   });
+
+  useEffect(() => {
+    if (auth.id) { 
+      router.back()
+    }
+  }, [auth, router])
 
   const today = new Date().toISOString().split("T")[0];
   const handleChange = (e) => {
@@ -214,7 +220,10 @@ export default function Signup() {
       }
 
       if(result.success){
-        router.push('/')
+        if(router.back().includes("login") || router.back().includes("signup") ){
+          router.push('/')
+
+        }
       }
     }
   };

@@ -10,11 +10,11 @@ export default function LogoutModal({isVisible}) {
       {/* mobile pop up logout */}
       <div className="md:hidden w-full absolute top-[47px] left-0 bg-black flex-col items-center">
         <div className="flex-col text-xs items-center flex">
-          <div className="px-[19px] py-3 border-b border-white flex-col justify-start items-center flex">
+          <div className="text-neutral-300 px-[19px] py-3 border-b border-white flex-col justify-start items-center flex">
             ACCOUNT
           </div>
         </div>
-        <div className="py-[15px] flex-col justify-start items-center gap-1.5 flex">
+        <div className="text-white py-[15px] flex-col justify-start items-center gap-1.5 flex">
           <Link href="/member/account-settings/account" className="text-base">
             PROFILE
           </Link>

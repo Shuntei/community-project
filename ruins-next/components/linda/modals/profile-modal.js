@@ -23,7 +23,7 @@ export default function ProfileModal({isVisible, logout}) {
                 </div>
               </div>
             </div>
-            <div className="self-stretch h-28 pt-[3px] pb-[26px] flex-col justify-start items-start gap-2.5 flex">
+            <div className=" text-white self-stretch h-28 pt-[3px] pb-[26px] flex-col justify-start items-start gap-2.5 flex">
               <Link href={"/member/account-settings/account"} className="text-base">
                 PROFILE
               </Link>

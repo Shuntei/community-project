@@ -18,7 +18,7 @@ const schemaPassword = z.string().regex(passwordRe, { message: '' })
 const schemaEmail = z.string().email({ message: '' })
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, auth } = useAuth()
   const [showPass, setShowPass] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [loginFailed, setLoginFailed] = useState(false)
@@ -34,6 +34,12 @@ export default function Login() {
     account: '',
     password: '',
   })
+
+  useEffect(() => {
+    if (auth.id) { 
+      router.back()
+    }
+  }, [auth, router])
 
   const handleChange = (e) => {
     setMyForm({ ...myForm, [e.target.name]: e.target.value })
