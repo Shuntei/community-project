@@ -11,11 +11,13 @@ import { useRouter } from 'next/router'
 import Category from '@/components/kevin/product/category'
 import Search from '@/components/kevin/product/search'
 import SortBy from '@/components/kevin/product/sort-by'
+import SubCategory from '@/components/kevin/product/sub-category'
 
 export default function List() {
   const router = useRouter()
   const { onAddItem } = useCart()
   const [products, setProuducts] = useState([])
+
   const getProducts = async () => {
     const url = `http://localhost:3005/product/api${location.search}`
     try {
@@ -31,6 +33,22 @@ export default function List() {
   useEffect(() => {
     getProducts()
   }, [router])
+
+  useEffect(() => {
+    // 检查 router.query 中的 keyword 或 category 参数是否有变化
+    if (router.query.keyword || router.query.main_category) {
+      // 如果有变化，则更新页面的 page 参数为 1
+      const updatedQuery = { ...router.query, page: '1' }
+      router.push(
+        {
+          pathname: router.pathname,
+          query: updatedQuery,
+        },
+        undefined,
+        { scroll: false }
+      )
+    }
+  }, [router.query.main_category])
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-28">
@@ -50,7 +68,8 @@ export default function List() {
           {/* 分類標題 */}
           <div className="w-full md:px-24 px-[16px] ">
             <div className="text-black md:text-[32px] font-semibold font-['Noto Sans TC'] ">
-              所有商品
+            
+              <SubCategory />
             </div>
           </div>
           {/* 搜尋與排序欄開始 */}

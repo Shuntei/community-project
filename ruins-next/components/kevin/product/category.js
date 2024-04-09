@@ -10,23 +10,37 @@ export default function Category() {
     const cateValue = e.currentTarget.getAttribute('data-value')
     console.log(cateValue)
     setCate(cateValue)
-    router.push({
-      pathname: router.pathname,
-      query: { ...router.query, main_category: cateValue },
-    })
+    router.push(
+      {
+        pathname: '/shop/product/list',
+        query: { main_category: cateValue },
+      },
+      undefined,
+      { scroll: false }
+    )
   }
 
   return (
     <>
       <div className="w-full md:gap-[36px]  gap-[20px]  justify-between   md:px-24 px-4 items-center  flex ">
-        <Link
-          href="/shop/product/list"
+        <div
+          onClick={() => {
+            console.log('aaa')
+
+            router.push(
+              {
+                pathname: '/shop/product/list',
+              },
+              undefined,
+              { scroll: false }
+            )
+          }}
           className="w-full aspect-square bg-black md:rounded-[20px] rounded-[7px] justify-center items-center flex  "
         >
           <div className="text-center text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans'] tracking-[2.80px]">
             All
           </div>
-        </Link>
+        </div>
 
         <div
           className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex   bg-cover bg-center bg-no-repeat bg-rock relative"
