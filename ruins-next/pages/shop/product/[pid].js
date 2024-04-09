@@ -13,11 +13,9 @@ export default function Pid() {
   const { addMutiItem,onAddItem,items} = useCart();
   const [product, setProduct] = useState({
     pid: "",
-    picture: "",
-    stock: 0,
+    img: "",
     name: "",
     price: 0,
-    tags: "",
   });
   const getProductById = async (pid) => {
     const url = `${PRODUCT_ONE}/${pid}`;
@@ -26,8 +24,6 @@ export default function Pid() {
     try {
       const res = await fetch(url);
       const data = await res.json();
-
-      console.log(data);
       // 設定到狀態中 ===> 觸發重新渲染(re-render)
       // 要設定到狀態前，最好先檢查資料類型是否一致
       if (typeof data === "object" && data !== null) {
@@ -51,6 +47,7 @@ export default function Pid() {
 
   return (
     <>
+    {console.log(product.img.split(',')[0])}
       <div className=" bg-gray-100 flex flex-col justify-center items-center relative pt-28">
         {/* header開始 */}
         <Navbar navColor={""} />
@@ -67,7 +64,7 @@ export default function Pid() {
           </div>
           <div className="md:order-2 order-1 ">
             <Image
-              src={product.img}
+              src={product.img.split(',')[0]}
               alt="Picture of camp"
               width={500}
               height={500}
@@ -159,15 +156,15 @@ export default function Pid() {
             <div className="md:px-5 md:py-10 py-5 space-y-3">
               <img
                 className=" aspect-square rounded-xl"
-                src="https://via.placeholder.com/919x609"
+                src={product.img.split(',')[1]}
               />
               <img
                 className="aspect-square  rounded-xl"
-                src="https://via.placeholder.com/919x609"
+                src={product.img.split(',')[2]}
               />
               <img
                 className="aspect-square  rounded-xl"
-                src="https://via.placeholder.com/919x609"
+                src={product.img.split(',')[3]}
               />
             </div>
           </div>
