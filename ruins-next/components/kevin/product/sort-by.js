@@ -29,6 +29,7 @@ export default function SortBy() {
         onChange={handleChange}
       >
         <option value="">請選擇排序方式</option>
+        <option value="latest">上架時間</option>
         <option value="priceFromHighToLow">價格由高到低</option>
         <option value="priceFromLowToHigh">價格由低到高</option>
       </select>
