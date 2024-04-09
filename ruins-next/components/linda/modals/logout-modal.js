@@ -1,7 +1,9 @@
 import React from "react";
 import Link from "next/link";
+import { useAuth } from "@/contexts/auth-context";
 
 export default function LogoutModal({isVisible}) {
+  const {logout} = useAuth()
     if (!isVisible) return null
   return (
     <>
@@ -16,10 +18,13 @@ export default function LogoutModal({isVisible}) {
           <Link href="/member/account-settings/account" className="text-base">
             PROFILE
           </Link>
-          <Link href="/member/account-settings/account" className="text-base">
+          <Link href="#" onClick={()=>{
+            e.preventDefault();
+            logout()
+          }} className="text-base">
             SETTINGS
           </Link>
-          <Link href="/member/account/logout" className="text-rose-400 text-base">
+          <Link href="#" onClick={logout} className="text-rose-400 text-base">
             LOGOUT
           </Link>
         </div>
