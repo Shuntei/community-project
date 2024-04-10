@@ -54,6 +54,8 @@ const getListData = async (req, res) => {
     } else if (sortBy === "latest") {
       where += ` ORDER BY \`create_at\` ASC `;
     }
+  }else{
+    where += ` ORDER BY \`pid\` DESC `;
   }
 
   if (page < 1) {
