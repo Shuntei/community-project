@@ -77,7 +77,7 @@ router.post("/signup", async (req, res) => {
         output.data = {
           id: rows[0].id,
           username: rows[0].username,
-          token
+          token,
         };
       }
     } catch (ex) {
@@ -100,7 +100,7 @@ router.post("/login", async (req, res) => {
     },
   };
 
-  const {account, password} = req.body
+  const { account, password } = req.body;
 
   const usernameSql = `SELECT * FROM mb_user WHERE username LIKE ?`;
   const [usernameRows] = await db.query(usernameSql, [`%${account}%`]);
@@ -108,9 +108,8 @@ router.post("/login", async (req, res) => {
   const [emailRows] = await db.query(emailSql, [`%${account}%`]);
 
   if (!usernameRows.length && !emailRows.length) {
-    output.success = false,
-    output.code = 1
-    output.error = "Account or password is wrong"
+    (output.success = false), (output.code = 1);
+    output.error = "Account or password is wrong";
     return res.json(output);
   }
 
@@ -140,8 +139,76 @@ router.post("/login", async (req, res) => {
   }
 
   res.json(output);
+});
 
-})
+router.post("/google-login", async (req, res) => {
+  const output = {
+    success: false,
+    code: 0,
+    error: "",
+    data: {
+      id: 0,
+      username: "",
+      token: "",
+    },
+  };
+
+  const { account, username, photoUrl } = req.body;
+
+  const emailSql = `SELECT * FROM mb_user WHERE email LIKE ?`;
+  const [emailRows] = await db.query(emailSql, [`%${account}%`]);
+
+  if (!emailRows.length) {
+    const sql = `INSERT INTO mb_user
+    (username, 
+    email, 
+    created_at) 
+    VALUES (?, ?, NOW())`;
+
+    try {
+      const [rows] = await db.query(sql, [username, account]);
+      output.success = !!rows.affectedRows;
+
+      if (output.success) {
+        const sql = "SELECT * FROM mb_user WHERE username=?";
+        const [rows] = await db.query(sql, username);
+
+        const token = jwt.sign(
+          { id: rows[0].id, username: rows[0].username },
+          process.env.JWT_SECRET
+        );
+
+        output.data = {
+          id: rows[0].id,
+          username: rows[0].username,
+          token,
+        };
+      }
+    } catch (ex) {
+      console.log(ex);
+    }
+  } else {
+    output.success = true;
+
+    const row = emailRows[0]
+    const token = jwt.sign(
+      {
+        id: row.id,
+        account: row.username,
+      },
+      process.env.JWT_SECRET
+    );
+
+    // TODO:
+    output.data = {
+      id: row.id,
+      username: row.username,
+      token,
+    };
+  }
+
+  res.json(output);
+});
 
 // router.post("/edit-profile", upload.array("photos", 5), (req, res)=>{
 //     res.json({
