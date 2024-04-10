@@ -1,5 +1,12 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { MB_SIGNUP, MB_LOGIN } from '@/components/config/api-path'
+import {
+  MB_SIGNUP,
+  MB_LOGIN,
+  MB_GOOGLE_LOGIN,
+} from '@/components/config/api-path'
+import { firebaseAuth } from '@/pages/member/account/firebase'
+import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const AuthContext = createContext()
 
@@ -11,8 +18,9 @@ const defaultAuth = {
 const storageKey = 'ruins-auth'
 
 export function AuthContextProvider({ children }) {
+  const googleAuth = new GoogleAuthProvider()
   const [auth, setAuth] = useState(defaultAuth)
-  const [previousPath, setPreviousPath] = useState(null)
+  const { user, setUser } = useAuthState(firebaseAuth)
 
   const signup = async (formData) => {
     try {
@@ -56,10 +64,49 @@ export function AuthContextProvider({ children }) {
     }
   }
 
-  const logout = () => {
-    localStorage.removeItem(storageKey)
-    setAuth(defaultAuth)
+  const googleLogin = async () => {
+    const result = await signInWithPopup(firebaseAuth, googleAuth)
+    const { user } = result
+
+    let account = user.email
+    let username = user.displayName
+    let photoUrl = user.photoURL
+
+    if (account && username) {
+      const r = await fetch(MB_GOOGLE_LOGIN, {
+        method: 'post',
+        body: JSON.stringify({ account, username, photoUrl }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+
+      const res = await r.json()
+      if (res.success) {
+        localStorage.setItem(storageKey, JSON.stringify(res.data))
+        setAuth(res.data)
+        return true
+      } else {
+        return false
+      }
+    } else {
+      console.log(user)
+    }
   }
+
+  const logout = async () => {
+    try {
+      await signOut(firebaseAuth)
+      localStorage.removeItem(storageKey)
+      setAuth(defaultAuth)
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
+  }
+
+  useEffect(() => {
+    console.log(user)
+  }, [user])
 
   useEffect(() => {
     const str = localStorage.getItem(storageKey)
@@ -72,7 +119,7 @@ export function AuthContextProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ login, logout, signup, auth, previousPath, setPreviousPath }}>
+    <AuthContext.Provider value={{ login, logout, signup, auth, googleLogin }}>
       {children}
     </AuthContext.Provider>
   )

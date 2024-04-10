@@ -3,14 +3,10 @@ import Navbar from '@/components/linda/navbar/navbar'
 import { IoMdEye } from 'react-icons/io'
 import { IoMdEyeOff } from 'react-icons/io'
 import { FaGoogle } from 'react-icons/fa'
-import GoogleBtn from '@/components/linda/buttons/googleBtn'
 import AccountBtn from '@/components/linda/buttons/accountBtn'
 import { useAuth } from '@/contexts/auth-context'
 import { z } from 'zod'
 import { useRouter } from 'next/router'
-import { firebaseAuth } from './firebase'
-import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
-import { useAuthState } from 'react-firebase-hooks/auth'
 
 const nameRe = new RegExp(/^[a-zA-Z0-9]+$/)
 const schemaName = z
@@ -22,13 +18,11 @@ const schemaPassword = z.string().regex(passwordRe, { message: '' })
 const schemaEmail = z.string().email({ message: '' })
 
 export default function Login() {
-  const googleAuth = new GoogleAuthProvider()
-  const { login, auth } = useAuth()
+  const { login, auth, googleLogin } = useAuth()
   const [showPass, setShowPass] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [loginFailed, setLoginFailed] = useState(false)
   const router = useRouter()
-  const { user, setUser } = useAuthState(firebaseAuth)
 
   const [myForm, setMyForm] = useState({
     account: '',
@@ -46,11 +40,6 @@ export default function Login() {
       router.back()
     }
   }, [auth, router])
-
-  const googleLogin = async () => {
-    const result = await signInWithPopup(firebaseAuth, googleAuth)
-    console.log(result)
-  }
 
   const handleChange = (e) => {
     setMyForm({ ...myForm, [e.target.name]: e.target.value })
@@ -117,10 +106,6 @@ export default function Login() {
       })
     }
   }
-
-  useEffect(() => {
-    console.log(user)
-  }, [user])
 
   useEffect(() => {
     if (submitted) {
