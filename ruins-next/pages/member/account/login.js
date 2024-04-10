@@ -2,11 +2,15 @@ import { useState, useEffect } from 'react'
 import Navbar from '@/components/linda/navbar/navbar'
 import { IoMdEye } from 'react-icons/io'
 import { IoMdEyeOff } from 'react-icons/io'
+import { FaGoogle } from 'react-icons/fa'
 import GoogleBtn from '@/components/linda/buttons/googleBtn'
 import AccountBtn from '@/components/linda/buttons/accountBtn'
 import { useAuth } from '@/contexts/auth-context'
 import { z } from 'zod'
 import { useRouter } from 'next/router'
+import { firebaseAuth } from './firebase'
+import { signInWithPopup, GoogleAuthProvider } from 'firebase/auth'
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const nameRe = new RegExp(/^[a-zA-Z0-9]+$/)
 const schemaName = z
@@ -18,11 +22,13 @@ const schemaPassword = z.string().regex(passwordRe, { message: '' })
 const schemaEmail = z.string().email({ message: '' })
 
 export default function Login() {
-  const { login } = useAuth()
+  const googleAuth = new GoogleAuthProvider()
+  const { login, auth } = useAuth()
   const [showPass, setShowPass] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [loginFailed, setLoginFailed] = useState(false)
   const router = useRouter()
+  const { user, setUser } = useAuthState(firebaseAuth)
 
   const [myForm, setMyForm] = useState({
     account: '',
@@ -34,6 +40,17 @@ export default function Login() {
     account: '',
     password: '',
   })
+
+  useEffect(() => {
+    if (auth.id) {
+      router.back()
+    }
+  }, [auth, router])
+
+  const googleLogin = async () => {
+    const result = await signInWithPopup(firebaseAuth, googleAuth)
+    console.log(result)
+  }
 
   const handleChange = (e) => {
     setMyForm({ ...myForm, [e.target.name]: e.target.value })
@@ -72,7 +89,7 @@ export default function Login() {
         hasErrors: true,
         password: 'Cannot be blank',
       }
-    } 
+    }
 
     if (initErrors.hasErrors) {
       setErrors(initErrors)
@@ -102,6 +119,10 @@ export default function Login() {
   }
 
   useEffect(() => {
+    console.log(user)
+  }, [user])
+
+  useEffect(() => {
     if (submitted) {
       updateError()
     }
@@ -110,8 +131,8 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <div className="flex h-lvh justify-center">
-        <div className="flex md:w-1/2 md:py-0 px-[24px] pt-[75px] pb-[36px] md:h-lvh h-auto flex-col justify-center items-center gap-y-2.5 ">
+      <div className="flex md:h-[500px] md:pt-0 pt-[175px] justify-center">
+        <div className="flex md:w-1/2 md:py-0 px-[24px] pb-[36px] md:h-lvh h-auto flex-col justify-center items-center gap-y-2.5 ">
           <div className="flex flex-col self-stretch items-center pb-[34px]">
             <div className="flex self-stretch border-b-[3px] text-white">
               <div className="flex md:flex-row w-full flex-col gap-[35px]">
@@ -133,7 +154,9 @@ export default function Login() {
                 <div className="flex gap-[30px] font-medium text-xl">
                   <div className="text-[#9F9F9F] text-base">ACCOUNT</div>
                 </div>
-                <div className={`h-[24px] ${errors.account ? 'text-[#EA7E7E]' : 'text-white'}  font-medium py-1 text-xs uppercase`}>
+                <div
+                  className={`h-[24px] ${errors.account ? 'text-[#EA7E7E]' : 'text-white'}  font-medium py-1 text-xs uppercase`}
+                >
                   {errors.account ? errors.account : 'username or email'}
                 </div>
                 <div className="flex pl-[66px] py-3">
@@ -157,7 +180,7 @@ export default function Login() {
                 <div className="flex pl-[66px] py-3">
                   {' '}
                   <input
-                     type={showPass ? "text" : "password"}
+                    type={showPass ? 'text' : 'password'}
                     name="password"
                     onChange={handleChange}
                     className="bg-inherit focus:outline-none text-base text-white flex self-stretch w-full flex-1 text-base"
@@ -180,7 +203,13 @@ export default function Login() {
             >
               FORGOT PASSWORD
             </a>
-            <GoogleBtn className="mt-[50px]" />
+            <button
+              onClick={googleLogin}
+              className="mt-[50px] flex bg-black hover:bg-[#7A7A7A] justify-center text-white border items-center gap-2.5 px-[35px] py-[18px] md:my-0"
+            >
+              <FaGoogle />
+              <div className="font-[15px]">CONTINUE WITH GOOGLE</div>
+            </button>
           </div>
         </div>
       </div>

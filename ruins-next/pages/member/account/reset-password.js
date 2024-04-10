@@ -12,7 +12,7 @@ export default function ResetPassword() {
   return (
     <>
       <Navbar />
-      <div className="flex justify-center">
+      <div className="flex justify-center h-[500px]">
         <div className="flex md:w-5/12 md:py-0 pb-[36px] h-lvh pb-[140px] flex-col justify-center items-center gap-y-2.5 ">
           <div className="flex flex-col self-stretch items-center pb-[34px]">
             <div className="flex self-stretch border-b-[3px] text-white">

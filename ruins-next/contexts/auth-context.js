@@ -12,6 +12,7 @@ const storageKey = 'ruins-auth'
 
 export function AuthContextProvider({ children }) {
   const [auth, setAuth] = useState(defaultAuth)
+  const [previousPath, setPreviousPath] = useState(null)
 
   const signup = async (formData) => {
     try {
@@ -71,7 +72,7 @@ export function AuthContextProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ login, logout, signup, auth }}>
+    <AuthContext.Provider value={{ login, logout, signup, auth, previousPath, setPreviousPath }}>
       {children}
     </AuthContext.Provider>
   )
