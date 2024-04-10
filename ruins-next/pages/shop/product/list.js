@@ -37,7 +37,11 @@ export default function List() {
 
   useEffect(() => {
     // 检查 router.query 中的 keyword 或 category 参数是否有变化
-    if (router.query.keyword || router.query.main_category) {
+    if (
+      router.query.keyword ||
+      router.query.main_category ||
+      router.query.sortBy
+    ) {
       // 如果有变化，则更新页面的 page 参数为 1
       const updatedQuery = { ...router.query, page: '1' }
       router.push(
@@ -49,7 +53,7 @@ export default function List() {
         { scroll: false }
       )
     }
-  }, [router.query.main_category])
+  }, [router.query.main_category, router.query.sortBy, router.query.keyword])
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-28">
@@ -69,7 +73,6 @@ export default function List() {
           {/* 分類標題 */}
           <div className="w-full md:px-24 px-[16px] ">
             <div className="text-black md:text-[32px] font-semibold font-['Noto Sans TC'] ">
-            
               <SubCategory />
             </div>
           </div>
