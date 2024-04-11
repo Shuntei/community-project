@@ -4,7 +4,7 @@ import {
   MB_LOGIN,
   MB_GOOGLE_LOGIN,
 } from '@/components/config/api-path'
-import { firebaseAuth } from '@/pages/member/account/firebase'
+import { firebaseAuth } from '@/components/config/firebase'
 import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 
