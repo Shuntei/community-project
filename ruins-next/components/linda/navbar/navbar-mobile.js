@@ -21,7 +21,7 @@ export default function NavbarMobile() {
     {
       title: 'shop',
       items: [
-        { label: 'history order', href: '#order' },
+        { label: 'history order', href: '/product/my-order' },
         { label: 'favorite products', href: '#products' },
       ],
     },
