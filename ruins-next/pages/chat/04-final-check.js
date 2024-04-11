@@ -1,9 +1,8 @@
-import Sidebar from '@/components/common/sidebar/sidebar';
+import Sidebar from '@/components/sidebar/sidebar';
 import { RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styles from '@/styles/final-check.module.css';
-import Process2 from '@/components/common/process2';
 
 export default function CheckWebcamSource() {
 
@@ -39,11 +38,9 @@ export default function CheckWebcamSource() {
           {/* 標題 */}
           <div className={styles['title']}>{!onPhone && "第三步: 最後確認！"}</div>
 
-           {/* {onPhone &&
+          {onPhone &&
             <div className='max-md:py-7'></div>
-          } */}
-          {onPhone && <Process2></Process2>}
-
+          }
           {/* 白框內 */}
           <div className={styles['white-block']}>
             <div className={styles['innerline']}>
