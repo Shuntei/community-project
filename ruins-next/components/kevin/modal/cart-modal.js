@@ -32,7 +32,7 @@ function CartModal() {
           <div className="modal-content bg-white  rounded  z-50 md:w-[447px] w-[320px] h-[700px] me-2 mt-2 px-10 py-5 relative">
             <div className="flex flex-col">
               <div className="flex justify-end">
-                <button className="close text-[30px] " onClick={closeModal}>
+                <button className="close text-[30px] cursor-pointer" onClick={closeModal}>
                 <RiCloseLargeLine />
                 </button>
               </div>
@@ -71,6 +71,7 @@ function CartModal() {
                             <RiSubtractFill
                               color="black"
                               size="1em"
+                              className="cursor-pointer"
                               onClick={() => {
                                 onDecreaseItem(v.pid);
                               }}
@@ -83,6 +84,7 @@ function CartModal() {
                             <RiAddFill
                               color="black"
                               size="1em"
+                              className="cursor-pointer"
                               onClick={() => {
                                 onIncreaseItem(v.pid);
                               }}

@@ -42,6 +42,7 @@ export default function CartList() {
                     <RiSubtractFill
                       color="black"
                       size="1em"
+                      className='cursor-pointer'
                       onClick={() => {
                         onDecreaseItem(v.pid)
                       }}
@@ -54,6 +55,7 @@ export default function CartList() {
                     <RiAddFill
                       color="black"
                       size="1em"
+                      className='cursor-pointer'
                       onClick={() => {
                         onIncreaseItem(v.pid)
                       }}

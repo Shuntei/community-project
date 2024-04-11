@@ -35,7 +35,7 @@ export default function Category() {
               { scroll: false }
             )
           }}
-          className="w-full aspect-square bg-black md:rounded-[20px] rounded-[7px] justify-center items-center flex  "
+          className="w-full aspect-square bg-black md:rounded-[20px] rounded-[7px] justify-center items-center flex cursor-pointer "
         >
           <div className="text-center text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans'] tracking-[2.80px]">
             All
@@ -43,7 +43,7 @@ export default function Category() {
         </div>
 
         <div
-          className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex   bg-cover bg-center bg-no-repeat bg-rock relative"
+          className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex   bg-cover bg-center bg-no-repeat bg-rock relative cursor-pointer"
           name="main_category"
           data-value="2"
           onClick={handleChange}
@@ -59,7 +59,7 @@ export default function Category() {
             手作
           </div>
         </div>
-        <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-cover bg-center bg-no-repeat bg-camp relative">
+        <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-cover bg-center bg-no-repeat bg-camp relative cursor-pointer">
           <Image
             src="/images/camp.jpg"
             alt="Picture of camp"
@@ -74,7 +74,7 @@ export default function Category() {
             戶外
           </div>
         </div>
-        <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-black">
+        <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-black cursor-pointer">
           <div className="text-center text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans TC'] tracking-[2.80px]">
             直播
           </div>

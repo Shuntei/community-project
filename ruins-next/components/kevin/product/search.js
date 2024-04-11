@@ -39,7 +39,7 @@ export default function Search() {
           aria-label="Search"
           name="keyword"
         />
-        <button class="btn btn-outline-success" type="submit">
+        <button className="btn btn-outline-success" type="submit">
           <RiSearchLine />
         </button>
       </form>
