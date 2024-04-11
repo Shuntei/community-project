@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { RiStarFill } from '@remixicon/react'
+import { RiStarFill, RiCloseLargeLine } from '@remixicon/react'
 import Image from 'next/image'
 
 function CommentModal() {
@@ -16,8 +16,8 @@ function CommentModal() {
           <div className=" bg-white  p-5 rounded  z-50 md:w-[800px] w-[330px] md:h-[470px] md:px-20 md:py-10">
             <div className="flex flex-col">
               <div className="flex justify-end">
-                <button className="close text-[30px] " onClick={closeModal}>
-                  &times;
+                <button className="close text-[30px] text-black" onClick={closeModal}>
+                <RiCloseLargeLine />
                 </button>
               </div>
               <div className="text-black text-xl font-['IBM Plex Mono']">
@@ -36,7 +36,7 @@ function CommentModal() {
 
                   <div className="w-8/12                  ">
                     <Image
-                      src="/img/camp.jpg"
+                      src="/images/camp.jpg"
                       alt="Picture of camp"
                       width={200}
                       height={200}

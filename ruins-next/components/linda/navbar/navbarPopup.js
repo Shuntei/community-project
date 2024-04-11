@@ -14,7 +14,7 @@ export default function NavbarPopup() {
         <div className={styles["title"]}>
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">SHOP</a></p>
           <p className="font-['IBM Plex Mono']"><Link href="/shop">ALL GOODS</Link></p>
-          <p className="font-['IBM Plex Mono']"><a href="#">ORDER LIST</a></p>
+          <p className="font-['IBM Plex Mono']"><Link href="/shop/my-order">ORDER LIST</Link></p>
         </div>
         <div className={styles["title"]}>
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">COMMUNITIES</a></p>
