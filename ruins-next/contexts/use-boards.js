@@ -1,5 +1,4 @@
 import { SN_POSTS, SN_BOARDS } from '@/components/johnny/config/api-path'
-import { useQuery } from '@tanstack/react-query'
 import { createContext, useContext, useState } from 'react'
 import React from 'react'
 
@@ -48,19 +47,10 @@ export default function BoardsContextProvider({ children }) {
     }
   }
 
-  // const handlePostId = async (postId) => {
-  //   try {
-  //     const r = await fetch(`${SN_POSTS}/${postId}`);
-  //     const data = await r.json();
-  //     setGetPost(data);
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // };
-
   const handlePostId = async (postId) => {
     try {
       const r = await fetch(`${SN_POSTS}?postId=${postId}`)
+      //   const r = await fetch(`${SN_POSTS}/${postId}`);
       const data = await r.json()
       setGetPost(data)
     } catch (err) {

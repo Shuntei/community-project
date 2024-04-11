@@ -121,7 +121,6 @@ export default function MainContent() {
                 className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
                 key={v.post_id}
               >
-                {' '}
                 <div className="px-2 flex text-center absolute left-0">
                   {removeBox ? (
                     <label className="flex-col">

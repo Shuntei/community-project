@@ -33,7 +33,7 @@ export default function PersonalContent() {
     const currentPage = location.search
     // allPostsShow(currentPage);
     allPostsShow()
-    console.log('location.search: ', location.search)
+    // console.log('location.search: ', location.search)
   }, [])
 
   const handlePush = (postId) => {
@@ -47,7 +47,7 @@ export default function PersonalContent() {
       body: JSON.stringify(postId),
     })
     const result = await r.json()
-    console.log(result)
+    // console.log(result)
     if (result.success) {
       // router.reload();
       // router.push(location.search);
@@ -62,7 +62,7 @@ export default function PersonalContent() {
     setRender(false)
   }, [render])
 
-  console.log(postsList.totalPostsRows)
+  // console.log(postsList.totalPostsRows)
 
   return (
     <>
@@ -87,86 +87,91 @@ export default function PersonalContent() {
             )
           })}{' '}
       </ul>
-      {postsList.totalPostsRows
-        .filter((v) => v.post_type === 'yours')
-        .map((v, i) => {
-          return (
-            <main className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative">
-              {/*relative用於toggle垃圾桶*/}
-              <div
-                // onClick={() => handlePush(v.post_id)} // href={`/community/main-post`}
-                className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
-                key={v.post_id}
-              >
-                {' '}
-                <div className="px-2 flex text-center absolute left-0">
-                  {removeBox ? (
-                    <label className="flex-col">
-                      <input type="checkbox" />
-                      <RiDeleteBinLine />
-                    </label>
-                  ) : (
-                    ''
-                  )}
-                </div>
-                <div className="w-[70%]">
-                  <Link
-                    name="postId"
-                    onClick={() => handlePush(v.post_id)}
-                    href={`/community/main-post?postId=${v.post_id}`}
-                    className="cursor-pointer"
-                  >
-                    <div className="text-[20px] font-semibold">{v.title}</div>
-                    <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
-                    <span>{v.content}</span>
-                  </Link>
-                  <div className="text-[14px] text-292929">
-                    <div className="flex gap-2">
-                      <span className="text-575757 pr-2 flex">
-                        <RiEyeFill className="pr-1" />
-                        297
-                      </span>
-                      <span className="text-575757 flex">
-                        <RiChat4Fill className="pr-1" />
-                        85
-                      </span>
-                      <div className="dropdown dropdown-right dropdown-end">
-                        <div
-                          tabIndex={0}
-                          role="button"
-                          onClick={() => setToggleMenu(!toggleMenu)}
-                        >
-                          <RiMoreFill className="pr-1" />
-                        </div>
-                        {toggleMenu && (
-                          <ul
+      {postsList &&
+        postsList.totalPostsRows
+          .filter((v) => v.post_type === 'yours')
+          .map((v, i) => {
+            return (
+              <main className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative">
+                {/*relative用於toggle垃圾桶*/}
+                <div
+                  // onClick={() => handlePush(v.post_id)} // href={`/community/main-post`}
+                  className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
+                  key={v.post_id}
+                >
+                  {' '}
+                  <div className="px-2 flex text-center absolute left-0">
+                    {removeBox ? (
+                      <label className="flex-col">
+                        <input type="checkbox" />
+                        <RiDeleteBinLine />
+                      </label>
+                    ) : (
+                      ''
+                    )}
+                  </div>
+                  <div className="w-[70%]">
+                    <Link
+                      name="postId"
+                      onClick={() => handlePush(v.post_id)}
+                      href={`/community/main-post?postId=${v.post_id}`}
+                      className="cursor-pointer"
+                    >
+                      <div className="text-[20px] font-semibold">{v.title}</div>
+                      <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
+                      <span>{v.content}</span>
+                    </Link>
+                    <div className="text-[14px] text-292929">
+                      <div className="flex gap-2">
+                        <span className="text-575757 pr-2 flex">
+                          <RiEyeFill className="pr-1" />
+                          297
+                        </span>
+                        <span className="text-575757 flex">
+                          <RiChat4Fill className="pr-1" />
+                          85
+                        </span>
+                        <div className="dropdown dropdown-right dropdown-end">
+                          <div
                             tabIndex={0}
-                            className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-24"
+                            role="button"
+                            onClick={() => setToggleMenu(!toggleMenu)}
                           >
-                            <li onClick={() => removePost(v.post_id)}>
-                              <a>remove</a>
-                            </li>
-                          </ul>
-                        )}
+                            <RiMoreFill className="pr-1" />
+                          </div>
+                          {toggleMenu && (
+                            <ul
+                              tabIndex={0}
+                              className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-24"
+                            >
+                              <li onClick={() => removePost(v.post_id)}>
+                                <a>remove</a>
+                              </li>
+                            </ul>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
+                  <Link
+                    className="ml-6 w-[100px] pc:w-[150px] flex items-center justify-end flex-shrink-0 cursor-pointer"
+                    onClick={() => handlePush(v.post_id)}
+                    href={`/community/main-post?postId=${v.post_id}`}
+                  >
+                    {v.image_url && (
+                      <Image
+                        className="size-[100px] object-cover rounded-xl"
+                        src={v.image_url}
+                        width={100}
+                        height={100}
+                        alt="Description of image"
+                      />
+                    )}
+                  </Link>
                 </div>
-                <Link
-                  className="ml-6 w-[100px] pc:w-[150px] flex items-center justify-end flex-shrink-0 cursor-pointer"
-                  onClick={() => handlePush(v.post_id)}
-                  href={`/community/main-post?postId=${v.post_id}`}
-                >
-                  <Image
-                    className="size-[100px] object-cover rounded-xl"
-                    src={img}
-                    alt="Description of image"
-                  />
-                </Link>
-              </div>
-            </main>
-          )
-        })}
+              </main>
+            )
+          })}
     </>
   )
 }
