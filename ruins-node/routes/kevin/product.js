@@ -62,7 +62,7 @@ const getListData = async (req, res) => {
     return { success: false, redirect: "?page=1" };
   }
   const perPage = 8; //每頁幾筆
-  const t_sql = `SELECT COUNT(1) totalRows FROM products ${where}`;
+  const t_sql = `SELECT COUNT(1) totalRows FROM ca_products ${where}`;
   const [[{ totalRows }]] = await db.query(t_sql);
 
   let rows = []; // 預設值
@@ -72,7 +72,7 @@ const getListData = async (req, res) => {
     if (page > totalPages) {
       return { success: false, redirect: `?page=${totalPages}` };
     }
-    const sql = `SELECT * FROM products 
+    const sql = `SELECT * FROM ca_products 
     ${where}
     LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [rows] = await db.query(sql);
@@ -98,7 +98,7 @@ router.get("/api", async (req, res) => {
 router.get("/api/getProduct/:pid", async (req, res) => {
   const pid = +req.params.pid;
 
-  const sql = `SELECT * FROM products WHERE pid=?`;
+  const sql = `SELECT * FROM ca_products WHERE pid=?`;
   const [rows] = await db.query(sql, [pid]);
   if (!rows.length) {
     return res.json({ success: false });
