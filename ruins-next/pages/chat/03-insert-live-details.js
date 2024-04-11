@@ -1,10 +1,9 @@
-import Sidebar from '@/components/common/sidebar/sidebar';
-import StepMap from '@/components/tyler/step-map/step-map';
+import Sidebar from '@/components/sidebar/sidebar';
+import StepMap from '@/components/step-map/step-map';
 import { RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import styles from '@/styles/insert-live-details.module.css';
-import Process1 from '@/components/common/process1';
 
 export default function CheckWebcamSource() {
 
@@ -25,7 +24,7 @@ export default function CheckWebcamSource() {
       {/* 最大框 */}
       <div className={styles['container']}>
 
-        {/* FIXME:連結用不了 */}
+      {/* FIXME:連結用不了 */}
         <Link href="/"><RiCloseLine className={styles['cancel']} /></Link>
 
         {/* 測邊框 */}
@@ -36,10 +35,9 @@ export default function CheckWebcamSource() {
           {/* 標題 */}
           <div className={styles['title']}>{!onPhone && "第二步: 輸入直播資訊"}</div>
 
-          {/* {onPhone &&
+          {onPhone &&
             <div className='max-md:py-7'></div>
-          } */}
-          {onPhone && <Process1></Process1>}
+          }
 
           {/* 白框內 */}
           <div className={styles['white-block']}>
