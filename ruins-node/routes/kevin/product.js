@@ -48,12 +48,14 @@ const getListData = async (req, res) => {
   if (sortBy) {
     qs.sortBy = sortBy;
     if (sortBy === "priceFromHighToLow") {
-      where += ` ORDER BY \`price\` DESC`;
+      where += ` ORDER BY \`price\` DESC `;
     } else if (sortBy === "priceFromLowToHigh") {
       where += ` ORDER BY \`price\` ASC `;
     } else if (sortBy === "latest") {
       where += ` ORDER BY \`create_at\` ASC `;
     }
+  }else{
+    where += ` ORDER BY \`pid\` DESC `;
   }
 
   if (page < 1) {
