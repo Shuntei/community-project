@@ -1,41 +1,41 @@
-import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import Link from "next/link";
-import Navbar from "@/components/linda/navbar/navbar";
-import Footer from "@/components/linda/footer/footer";
-import Carousel from "@/components/kevin/product/carousel";
-import { RiSearchLine } from "@remixicon/react";
-import { useCart } from "@/hooks/use-cart";
-import Pagination from "@/components/kevin/product/pagination";
-import { useRouter } from "next/router";
-import Category from "@/components/kevin/product/category";
-import Search from "@/components/kevin/product/search";
-import SortBy from "@/components/kevin/product/sort-by";
-import { PRODUCT_LIST } from "@/components/config/api-path";
+import Image from 'next/image'
+import React, { useEffect, useState } from 'react'
+import Link from 'next/link'
+import Navbar from '@/components/linda/navbar/navbar'
+import Footer from '@/components/linda/footer/footer'
+import Carousel from '@/components/kevin/product/carousel'
+import { RiSearchLine } from '@remixicon/react'
+import { useCart } from '@/hooks/use-cart'
+import Pagination from '@/components/kevin/product/pagination'
+import { useRouter } from 'next/router'
+import Category from '@/components/kevin/product/category'
+import Search from '@/components/kevin/product/search'
+import SortBy from '@/components/kevin/product/sort-by'
+import { PRODUCT_LIST } from '@/components/config/api-path'
 export default function Index() {
-  const router = useRouter();
-  const { onAddItem } = useCart();
-  const [products, setProuducts] = useState([]);
+  const router = useRouter()
+  const { onAddItem } = useCart()
+  const [products, setProuducts] = useState([])
   const getProducts = async () => {
-    const url = `${PRODUCT_LIST}${location.search}`;
+    const url = `${PRODUCT_LIST}${location.search}`
     try {
-      const res = await fetch(url);
-      const data = await res.json();
+      const res = await fetch(url)
+      const data = await res.json()
       //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
 
-      setProuducts(data);
+      setProuducts(data)
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  };
+  }
   useEffect(() => {
-    getProducts();
-  }, [router]);
+    getProducts()
+  }, [router])
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center w-full  pt-28">
         {/* header開始 */}
-        <Navbar navColor={""} />
+        <Navbar navColor={''} />
         {/* header結束 */}
         <div className=" bg-gray-100 flex flex-col justify-center items-center w-full py-7 md:py-12 space-y-6 md:space-y-12">
           {/* 輪播開始 */}
@@ -74,13 +74,15 @@ export default function Index() {
             >
               <img
                 className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
+                src="/images/product/rock1.webp"
                 alt="pic"
               />
               <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']"></div>
+                <div className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']">
+                  廢墟花瓶
+                </div>
                 <div className="text-zinc-500 md:text-sm text-xs font-medium font-['IBM Plex Mono']">
-                  220
+                  5000
                 </div>
               </div>
             </Link>
@@ -92,7 +94,7 @@ export default function Index() {
                       <Link href={`/shop/product/${v.pid}`}>
                         <img
                           className="w-full aspect-square  rounded-xl"
-                          src={v.img}
+                          src={`/images/product/${v.img.split(',')[0]}`}
                           alt="pic"
                         />
                       </Link>
@@ -107,7 +109,7 @@ export default function Index() {
                           <div>{v.price}</div>
                           <button
                             onClick={() => {
-                              onAddItem(v);
+                              onAddItem(v)
                             }}
                           >
                             +
@@ -116,7 +118,7 @@ export default function Index() {
                       </div>
                     </div>
                   </>
-                );
+                )
               })}
           </div>
           {/* 商品欄結束 */}
@@ -124,11 +126,11 @@ export default function Index() {
           <Pagination products={products}></Pagination>
 
           {/* 頁碼結束 */}
-        </div>{" "}
+        </div>{' '}
         {/* footer開始 */}
         <Footer />
         {/* FOOTER結束 */}
       </div>
     </>
-  );
+  )
 }

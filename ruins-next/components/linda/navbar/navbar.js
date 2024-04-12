@@ -65,7 +65,10 @@ export default function Navbar({ className, navColor = 'white' }) {
             </Link>
           </div>
         </div>
-        <Link href="/" className="md:text-[40px] text-[20px] font-medium justify-center flex w-1/3">
+        <Link
+          href="/"
+          className="md:text-[40px] text-[20px] font-medium justify-center flex w-1/3"
+        >
           Ruins
         </Link>
         <div className={`${styles['navlink-container']} relative w-1/3`}>
@@ -79,8 +82,15 @@ export default function Navbar({ className, navColor = 'white' }) {
                   }}
                 >
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
-                  <a href="" className="absolute top-[-4px] left-[-30px]">
-                    <CgProfile className="text-[25px]" />
+                  <a href="" className="absolute top-[-4px] left-[-35px]">
+                    {/* <CgProfile className="text-[25px]" /> */}
+                    <Image
+                      width={25}
+                      className="rounded-full"
+                      height={25}
+                      src="https://lh3.googleusercontent.com/a/ACg8ocI4VUmpEMt9lXmuUU6IGPtHQ6DfAX7DthWshGUN4Hi7vVqq7A=s96-c"
+                      alt=""
+                    />
                   </a>
                   <div className="tracking-wide before:py-[10px]">
                     {auth.username}
@@ -122,7 +132,7 @@ export default function Navbar({ className, navColor = 'white' }) {
           className={`${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
           <a href="" className={`${styles['nav-cart-mobile']}`}>
-            {/* <div>CART</div>             */}
+            <div>CART</div>
 
             {navColor === 'white' ? (
               <Image alt="" src={CartLine} />

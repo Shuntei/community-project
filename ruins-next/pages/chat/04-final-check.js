@@ -1,4 +1,4 @@
-import Sidebar from '@/components/sidebar/sidebar';
+import Sidebar from '@/components/common/sidebar/sidebar';
 import { RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

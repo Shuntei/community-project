@@ -10,80 +10,56 @@ export default function NavbarPopup() {
       <div className={styles['nav']}>
         <div id="headerReplace" className={styles['headerReplace']}></div>
         <div id="catalogueBox" className={styles['catalogueBox']}>
-          <div className={styles['title']}>
+          <div className={`${styles['title']} space-y-1`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
-              <a href="#">SHOP</a>
+              <a href="/shop">SHOP</a>
             </p>
-            <p className="font-['IBM Plex Mono']">
+            <p className="font-['IBM Plex Mono'] ">
               <Link href="/shop">ALL GOODS</Link>
             </p>
-            <p className="font-['IBM Plex Mono']">
+            <p className="font-['IBM Plex Mono'] ">
               <Link href="/shop/my-order">ORDER LIST</Link>
             </p>
           </div>
-          <div className={styles['title']}>
+          <div className={`${styles['title']} space-y-1`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
-              <a href="#">COMMUNITIES</a>
+              <a href="/community/main-page">COMMUNITY</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="#">HOME</a>
+              <a href="/community/main-personal">PERSONAL</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="#">ALL GOODS</a>
-            </p>
-            <p className="font-['IBM Plex Mono']">
-              <a href="#">ARCHIVE</a>
-            </p>
-            <p className="font-['IBM Plex Mono']">
-              <a href="#">MEMBERSHIP</a>
+              <a href="community/main-messenger">MESSENGER</a>
             </p>
           </div>
-          <div className={styles['titleMagintop']}>
+          <div className={`${styles['title']} space-y-1`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
-              <a href="#">LIVE</a>
+              <a href="#">CHATROOM</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="#">HOME</a>
-            </p>
-            <p className="font-['IBM Plex Mono']">
-              <a href="#">ALL GOODS</a>
-            </p>
-            <p className="font-['IBM Plex Mono']">
-              <a href="#">ARCHIVE</a>
-            </p>
-            <p className="font-['IBM Plex Mono']">
-              <a href="#">MEMBERSHIP</a>
+              <a href="/chat/01-check-role">START NOW</a>
             </p>
           </div>
-          <div className={styles['titleMagintop']}>
+          <div className={`${styles['title']} space-y-1`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
-              <a href="#">TOUR</a>
+              <a href="/tour/main-search">TOUR</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="#">SEARCH FOR TRIPS</a>
+              <a href="/member/account-settings/my-trips">MY TRIPS</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="#">FAVORITE TOURS</a>
+              <a href="/member/account-settings/fav-tour-lists">FAVORITE TOURS</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="#">MY POSTS</a>
+              <a href="/member/account-settings/my-posts">MY POSTS</a>
             </p>
           </div>
-          <div className={styles['titleMagintop']}>
+          <div className={`${styles['title']} space-y-1`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
-              <a href="/ruins-next/pages/game/indexGame.js">GAME</a>
+              <a href="/game">GAME</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="#">ACHIEVEMENT</a>
-            </p>
-            <p className="font-['IBM Plex Mono']">
-              <a href="#">NOTE</a>
-            </p>
-            <p className="font-['IBM Plex Mono']">
-              <a href="#">SCREENSHOT</a>
-            </p>
-            <p className="font-['IBM Plex Mono']">
-              <a href="#">MISSION</a>
+              <a href="/game/three">JOIN GAME</a>
             </p>
           </div>
         </div>
