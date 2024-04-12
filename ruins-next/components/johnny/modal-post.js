@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
-import img from "./img/90.jpg";
-import postImg from "./img/1868140_screenshots_20240117160639_1.jpg";
-import { z } from "zod";
-import { useToggles } from "@/contexts/use-toggles";
+import React, { useEffect, useState, useRef } from 'react'
+import Image from 'next/image'
+import img from './img/90.jpg'
+import postImg from './img/1868140_screenshots_20240117160639_1.jpg'
+import { z } from 'zod'
+import { useToggles } from '@/contexts/use-toggles'
+
 import {
   RiVideoOnFill,
   RiImageFill,
@@ -15,93 +16,130 @@ import {
   RiDraftLine,
   RiCloseLargeLine,
   RiArrowDropDownLine,
-} from "@remixicon/react";
-import { SN_ADD_POST } from "./config/api-path";
-import { useRouter } from "next/router";
-import { useBoards } from "@/contexts/use-boards";
+} from '@remixicon/react'
+import { SN_ADD_POST, SN_BOARDS } from './config/api-path'
+import { useRouter } from 'next/router'
+import { useBoards } from '@/contexts/use-boards'
+import { API_SERVER } from '../config/api-path'
 
 export default function PostModal() {
-  const { postModal, setPostModal } = useToggles();
-  const [postFrom, setPostForm] = useState({
-    title: "",
-    content: "",
-    image_url: "",
-  });
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [previewUrl, setPreviewUrl] = useState("");
+  const { postModal, setPostModal } = useToggles()
+  const [postForm, setPostForm] = useState({
+    title: '',
+    content: '',
+    photo: '',
+    boardId: '',
+  })
+  // const [selectedFile, setSelectedFile] = useState(null)
+  const [previewUrl, setPreviewUrl] = useState('')
 
-  const { render, setRender, allPostsShow } = useBoards();
+  const { render, setRender, allPostsShow } = useBoards()
 
   const changeHandler = (e) => {
-    setPostForm({ ...postFrom, [e.target.name]: e.target.value });
-  };
-
-  const submitHandler = async (e) => {
-    e.preventDefault();
-    const r = await fetch(`${SN_ADD_POST}`, {
-      method: "POST",
-      body: JSON.stringify(postFrom),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    console.log("postForm:", postFrom);
-
-    const result = await r.json();
-    if (result.success) {
-      console.log(result);
-      setRender(true);
-      setPostModal(!postModal);
-    } else {
-      alert("發文失敗");
-    }
-  };
-
-  useEffect(() => {
-    allPostsShow();
-    setRender(false);
-  }, [render]);
+    setPostForm({ ...postForm, [e.target.name]: e.target.value })
+  }
 
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    console.log(file);
+    const file = e.target.files[0]
+    setPostForm({ ...postForm, photo: file })
     if (file) {
-      setSelectedFile(file);
-      const fileUrl = URL.createObjectURL(file);
-      setPostForm({ ...postFrom, image_url: fileUrl });
-      setPreviewUrl("");
+      const fileUrl = URL.createObjectURL(file)
+      setPreviewUrl(fileUrl)
     } else {
-      selectedFile(null);
-      setPreviewUrl("");
+      setPreviewUrl('')
     }
-  };
+  }
+
+  const submitHandler = async (e) => {
+    e.preventDefault()
+
+    const formData = new FormData()
+    formData.append('title', postForm.title)
+    formData.append('content', postForm.content)
+    formData.append('photo', postForm.photo)
+    formData.append('boardId', postForm.boardId)
+    console.log(postForm)
+    // http:localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg
+
+    try {
+      const response = await fetch(SN_ADD_POST, {
+        method: 'POST',
+        body: formData,
+      })
+      const result = await response.json()
+      if (result.success) {
+        setRender(true)
+        setPostModal(!postModal)
+      } else {
+        alert('發文失敗')
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error)
+    }
+  }
+
+  const [bdChoose, setBdChoose] = useState([])
+
+  const bdChooseHandler = () => {
+    try {
+      fetch(`${SN_BOARDS}`)
+        .then((r) => r.json())
+        .then((data) => setBdChoose(data))
+    } catch (err) {
+      console.log('boards error')
+    }
+  }
 
   useEffect(() => {
-    if (!selectedFile) {
-      setPreviewUrl("");
-      return;
-    }
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setPreviewUrl(objectUrl);
-    console.log(objectUrl);
-    // return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile]);
+    allPostsShow()
+    setRender(false)
+  }, [render])
+
+  // useEffect(() => {
+  //   if (!selectedFile) {
+  //     setPreviewUrl('')
+  //     return
+  //   }
+  //   const objectUrl = URL.createObjectURL(selectedFile)
+  //   setPreviewUrl(objectUrl)
+  //   console.log(objectUrl)
+  //   // return () => URL.revokeObjectURL(objectUrl)
+  // }, [selectedFile])
 
   return (
     <>
-      {" "}
+      {' '}
       {/* <!-- 發文框 --> */}
       <form
         name="form1"
-        className=" bg-gray-400 bg-opacity-50 fixed backdrop-blur-sm inset-0 flex justify-center items-center z-[1001]"
+        className=" bg-gray-400 bg-opacity-50 fixed backdrop-blur-sm inset-0 flex justify-center items-center z-[1003]"
         id="postModal"
         onSubmit={submitHandler}
       >
         <div className="bg-black w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl">
           <div className="flex justify-between pb-5 text-white">
-            <div className="text-[25px] flex items-center">
-              Choose a Board
-              <RiArrowDropDownLine />
+            <div
+              className="text-[25px] flex items-center"
+              onClick={bdChooseHandler}
+            >
+              <select
+                className="bg-black cursor-pointer"
+                onChange={changeHandler}
+                name="boardId"
+              >
+                <option hidden>
+                  Choose a Board <RiArrowDropDownLine />
+                </option>
+                {bdChoose.map((v, i) => {
+                  return (
+                    <>
+                      <option key={v.board_id} value={v.board_id}>
+                        {v.board_name}
+                      </option>
+                    </>
+                  )
+                })}
+              </select>
             </div>
             <button onclick="closeModal()">
               <RiCloseLargeLine onClick={() => setPostModal(!postModal)} />
@@ -135,7 +173,7 @@ export default function PostModal() {
                   placeholder="Title Here"
                   name="title"
                   onChange={changeHandler}
-                  value={postFrom.title}
+                  value={postForm.title}
                 />
               </div>
               <div className="rounded-lg bg-slate-300">
@@ -157,26 +195,28 @@ export default function PostModal() {
                 <textarea
                   type="text"
                   className="w-full h-[150px] outline-none p-10"
-                  placeholder="What are you thinking??"
+                  placeholder="What are you thinking ??"
                   name="content"
                   onChange={changeHandler}
-                  value={postFrom.content}
-                ></textarea>{" "}
+                  value={postForm.content}
+                ></textarea>{' '}
                 <div className="flex justify-center py-2 overflow-hidden gap-5">
-                  {Array(3)
-                    .fill(1)
-                    .map((v, i) => {
-                      return (
-                        <Image
-                          className="size-[150px] object-cover rounded-lg"
-                          src={previewUrl}
-                          width={150}
-                          height={150}
-                          alt=""
-                          key={i}
-                        />
-                      );
-                    })}
+                  {previewUrl
+                    ? Array(1)
+                        .fill(1)
+                        .map((v, i) => {
+                          return (
+                            <Image
+                              className="size-[150px] object-cover rounded-lg"
+                              src={previewUrl}
+                              width={150}
+                              height={150}
+                              alt=""
+                              key={i}
+                            />
+                          )
+                        })
+                    : 'Show your image'}
                 </div>
               </div>
             </div>
@@ -193,8 +233,8 @@ export default function PostModal() {
                 hidden
                 onChange={handleFileChange}
                 multiple
-                accept="image/png,image/jpeg"
-                name="image_url"
+                accept="image/*"
+                name="photo"
               />
               <RiImageFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">PHOTO</span>
@@ -215,5 +255,5 @@ export default function PostModal() {
         </div>
       </form>
     </>
-  );
+  )
 }

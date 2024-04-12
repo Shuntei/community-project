@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 import {
   RiChat4Fill,
   RiEyeFill,
   RiDeleteBinLine,
   RiMoreFill,
-} from "@remixicon/react";
-import Image from "next/image";
-import img from "./img/1868140_screenshots_20240115034222_1.jpg";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useBoards } from "@/contexts/use-boards";
-import { useToggles } from "@/contexts/use-toggles";
-import { SN_DELETE_POST } from "./config/api-path";
+} from '@remixicon/react'
+import Image from 'next/image'
+import img from './img/1868140_screenshots_20240115034222_1.jpg'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useBoards } from '@/contexts/use-boards'
+import { useToggles } from '@/contexts/use-toggles'
+import { SN_DELETE_POST } from './config/api-path'
 
 export default function MainContent() {
-  const router = useRouter();
+  const router = useRouter()
   const {
     postsList,
     selectedPosts,
@@ -24,54 +24,54 @@ export default function MainContent() {
     handleBdPostsPage,
     render,
     setRender,
-  } = useBoards();
+  } = useBoards()
 
-  const { removeBox, setRemoveBox } = useToggles();
-  const [toggleMenu, setToggleMenu] = useState(false);
+  const { removeBox, setRemoveBox } = useToggles()
+  const [toggleMenu, setToggleMenu] = useState(false)
 
   useEffect(() => {
-    const currentPage = location.search;
+    const currentPage = location.search
     // allPostsShow(currentPage);
-    allPostsShow();
-    console.log("location.search: ", location.search);
-  }, []);
+    allPostsShow()
+    console.log('location.search: ', location.search)
+  }, [])
 
   const handlePush = (postId) => {
-    // router.push(`/community/main-post`);
-    handlePostId(postId);
-  };
+    // router.push(`/community/main-post?postId=${postId}`);
+    handlePostId(postId)
+  }
 
   const removePost = async (postId) => {
     const r = await fetch(`${SN_DELETE_POST}/${postId}`, {
-      method: "DELETE",
+      method: 'DELETE',
       body: JSON.stringify(postId),
-    });
-    const result = await r.json();
-    console.log(result);
+    })
+    const result = await r.json()
+    console.log(result)
     if (result.success) {
       // router.reload();
       // router.push(location.search);
-      setRender(true);
+      setRender(true)
     } else {
-      alert("刪除失敗");
+      alert('刪除失敗')
     }
-  };
+  }
 
   useEffect(() => {
-    allPostsShow();
-    setRender(false);
-  }, [render]);
+    allPostsShow()
+    setRender(false)
+  }, [render])
 
   return (
     <>
       {postsList ? (
-        <ul className="bg-sky-300 flex justify-center">
+        <ul className="bg-sky-300 flex justify-center mt-[90px]">
           {Array(10)
             .fill(1)
             .map((v, i) => {
-              const p = postsList.page - 5 + i;
+              const p = postsList.page - 5 + i
               // const p = i;
-              if (p < 1 || p > postsList.totalPostsRows) return null;
+              if (p < 1 || p > postsList.totalPostsRows) return null
               return (
                 <li key={p} className="mx-5">
                   <Link
@@ -83,17 +83,17 @@ export default function MainContent() {
                     {/* <a href={`?page=${p}`}>{p}</a> */}
                   </Link>
                 </li>
-              );
-            })}{" "}
+              )
+            })}{' '}
         </ul>
       ) : selectedPosts ? (
-        <ul className="bg-sky-400 flex justify-center">
+        <ul className="bg-sky-400 flex justify-center mt-[90px]">
           {Array(10)
             .fill(1)
             .map((v, i) => {
-              const p = selectedPosts.page - 5 + i;
+              const p = selectedPosts.page - 5 + i
               // const p = i;
-              if (p < 1 || p > selectedPosts.selectedBdPostsRows) return null;
+              if (p < 1 || p > selectedPosts.selectedBdPostsRows) return null
               return (
                 <li key={p} className="mx-5">
                   <Link
@@ -105,11 +105,11 @@ export default function MainContent() {
                     {p}
                   </Link>
                 </li>
-              );
-            })}{" "}
+              )
+            })}{' '}
         </ul>
       ) : (
-        ""
+        ''
       )}
       {(postsList.totalPostsRows || selectedPosts.selectedBdPostsRows).map(
         (v, i) => {
@@ -121,7 +121,6 @@ export default function MainContent() {
                 className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
                 key={v.post_id}
               >
-                {" "}
                 <div className="px-2 flex text-center absolute left-0">
                   {removeBox ? (
                     <label className="flex-col">
@@ -129,11 +128,12 @@ export default function MainContent() {
                       <RiDeleteBinLine />
                     </label>
                   ) : (
-                    ""
+                    ''
                   )}
                 </div>
                 <div className="w-[70%]">
                   <Link
+                    name="postId"
                     onClick={() => handlePush(v.post_id)}
                     href={`/community/main-post?postId=${v.post_id}`}
                     className="cursor-pointer"
@@ -187,9 +187,9 @@ export default function MainContent() {
                 </Link>
               </div>
             </main>
-          );
+          )
         }
       )}
     </>
-  );
+  )
 }

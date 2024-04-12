@@ -1,15 +1,15 @@
-import React from "react";
-import { RiSearchLine } from "@remixicon/react";
-import Image from "next/image";
-import profileImg from "./img/16.jpg";
-import { useToggles } from "@/contexts/use-toggles";
+import React from 'react'
+import { RiSearchLine } from '@remixicon/react'
+import Image from 'next/image'
+import profileImg from './img/16.jpg'
+import { useToggles } from '@/contexts/use-toggles'
 
 export default function FollowsBar() {
-  const { toggles, setToggles } = useToggles();
+  const { toggles, setToggles } = useToggles()
 
   return (
     <>
-      <section className="fixed right-0 mt-[40px] pt-[10px] w-[260px] hidden bargone:block h-[600px] overflow-scroll pb-20 mr-10 pl-5 bg-black z-10">
+      <section className="fixed right-0 mt-[40px] pt-[10px] w-[260px] hidden bargone:block h-[600px] overflow-scroll pb-20 mr-10 pl-5 bg-black z-[1002]">
         <div className="mb-5">
           <div></div>
           <div className="text-white py-1 text-[20px] ">FOLLOWS</div>
@@ -63,7 +63,7 @@ export default function FollowsBar() {
                 ...toggles,
                 notification: false,
                 follows: true,
-              });
+              })
             }}
           >
             SEE ALL
@@ -124,7 +124,7 @@ export default function FollowsBar() {
                 ...toggles,
                 notification: true,
                 follows: false,
-              });
+              })
             }}
           >
             SEE ALL
@@ -132,5 +132,5 @@ export default function FollowsBar() {
         </div>
       </section>
     </>
-  );
+  )
 }

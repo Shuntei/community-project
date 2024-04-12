@@ -1,8 +1,8 @@
-import React, { useContext, useEffect, useState } from "react";
-import { useBoards } from "@/contexts/use-boards";
-import { RiArrowDropDownLine } from "@remixicon/react";
-import { SN_BOARDS } from "./config/api-path";
-import { useRouter } from "next/router";
+import React, { useContext, useEffect, useState } from 'react'
+import { useBoards } from '@/contexts/use-boards'
+import { RiArrowDropDownLine } from '@remixicon/react'
+import { SN_BOARDS } from './config/api-path'
+import { useRouter } from 'next/router'
 
 export default function Topics() {
   const {
@@ -12,21 +12,21 @@ export default function Topics() {
     setSelectedPosts,
     allPostsShow,
     handleBdPosts,
-  } = useBoards();
+  } = useBoards()
 
   useEffect(() => {
     try {
       fetch(`${SN_BOARDS}`)
         .then((r) => r.json())
-        .then((data) => setBoards(data));
+        .then((data) => setBoards(data))
     } catch (err) {
-      console.log("boards error");
+      console.log('boards error')
     }
-  }, []);
+  }, [])
 
   return (
     <>
-      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] bg-black overflow-scroll z-10">
+      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] bg-black overflow-scroll z-[1002]">
         <div className="text-white px-10 pt-3 pb-1 text-[20px]  cursor-pointer">
           TOPICS
         </div>
@@ -49,10 +49,10 @@ export default function Topics() {
                 {v.board_name}
                 <RiArrowDropDownLine />
               </li>
-            );
+            )
           })}
         </ul>
       </section>
     </>
-  );
+  )
 }
