@@ -64,29 +64,29 @@ export default function MainContent() {
 
   return (
     <>
-      {postsList ? (
-        <ul className="bg-sky-300 flex justify-center mt-[90px]">
-          {Array(10)
-            .fill(1)
-            .map((v, i) => {
-              const p = postsList.page - 5 + i
-              // const p = i;
-              if (p < 1 || p > postsList.totalPostsRows) return null
-              return (
-                <li key={p} className="mx-5">
-                  <Link
-                    href={`?page=${p}`}
-                    onClick={() => handlePage(p)}
-                    className="btn btn-primary"
-                  >
-                    {p}
-                    {/* <a href={`?page=${p}`}>{p}</a> */}
-                  </Link>
-                </li>
-              )
-            })}{' '}
-        </ul>
-      ) : selectedPosts ? (
+      {/* {postsList ? ( */}
+      <ul className="bg-sky-300 flex justify-center mt-[90px]">
+        {Array(10)
+          .fill(1)
+          .map((v, i) => {
+            const p = postsList.page - 5 + i
+            // const p = i;
+            if (p < 1 || p > postsList.totalPostsRows) return null
+            return (
+              <li key={p} className="mx-5">
+                <Link
+                  href={`?page=${p}`}
+                  onClick={() => handlePage(p)}
+                  className="btn btn-primary"
+                >
+                  {p}
+                  {/* <a href={`?page=${p}`}>{p}</a> */}
+                </Link>
+              </li>
+            )
+          })}{' '}
+      </ul>
+      {/*}) : selectedPosts ? (
         <ul className="bg-sky-400 flex justify-center mt-[90px]">
           {Array(10)
             .fill(1)
@@ -110,7 +110,7 @@ export default function MainContent() {
         </ul>
       ) : (
         ''
-      )}
+      )}*/}
       {(postsList.totalPostsRows || selectedPosts.selectedBdPostsRows).map(
         (v, i) => {
           return (
