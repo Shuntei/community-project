@@ -20,9 +20,17 @@ export default function HomeSidebar() {
           </div>
           <div className="self-stretch h-full py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">SHOP</div>
-            <div className="self-stretch pl-5 text-sm font-medium">
+            <Link
+              href="/shop/my-order"
+              onClick={(e) => {
+                handleLinkClick("Order History");
+              }}
+              className={`self-stretch pl-5 text-sm font-medium ${
+                activeLink === "Order History" ? "bg-white text-black" : ""
+              }`}
+            >
               Order History
-            </div>{" "}
+            </Link>
             <div className="self-stretch pl-5 text-sm font-medium">
               Favorite Products
             </div>

@@ -1,12 +1,12 @@
-import React from "react";
-import { RiSearchLine } from "@remixicon/react";
-import Image from "next/image";
-import profileImg from "./img/72.jpg";
+import React from 'react'
+import { RiSearchLine } from '@remixicon/react'
+import Image from 'next/image'
+import profileImg from './img/72.jpg'
 
 export default function MessengerFollows() {
   return (
     <>
-      <section className="fixed right-0 mr-10 pl-5 mt-[50px] w-[260px] hidden bargone:block h-[600px] overflow-scroll pb-20 bg-292929 z-10">
+      <section className="fixed right-0 mr-10 pl-5 mt-[50px] w-[260px] hidden bargone:block h-[600px] overflow-scroll pb-20 bg-292929">
         <div className="mb-5">
           <div className="text-white py-1 text-[20px] ">FOLLOWS</div>
           <div className="border-b-2 mb-2 w-[200px]"></div>
@@ -29,7 +29,7 @@ export default function MessengerFollows() {
                     />
                     Name
                   </li>
-                );
+                )
               })}
           </ul>
           <div className="text-white flex justify-end mr-5 text-[14px] font-semibold ">
@@ -38,5 +38,5 @@ export default function MessengerFollows() {
         </div>
       </section>
     </>
-  );
+  )
 }

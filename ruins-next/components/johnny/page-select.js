@@ -15,7 +15,7 @@ export default function PageSelect({
   return (
     <>
       <div
-        className={`${bgColor} flex justify-center items-center  h-[40px] fixed w-full z-10 `}
+        className={`${bgColor} flex justify-center items-center  h-[40px] fixed w-full z-[1001] `}
       >
         <Link
           href="./main-page"

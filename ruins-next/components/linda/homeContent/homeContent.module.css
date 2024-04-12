@@ -156,7 +156,7 @@ p.item-name {
   right: 35px;
 }
 
-@media (max-width: 375px) {
+@media (max-width: 768px) {
   .card1 {
     right: 21px;
     bottom: 30%;
