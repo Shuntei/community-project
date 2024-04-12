@@ -16,7 +16,7 @@ export default function CentralContent() {
           {toggles.follows || toggles.notification ? (
             ''
           ) : (
-            <div className="w-full  pc:flex justify-between items-center h-[100px] mt-[50px] fixed pc:w-[800px] pc:px-20 px-10 bg-neutral-300 z-[1001]">
+            <div className="w-full  pc:flex justify-between items-center h-[100px] mt-[50px] fixed pc:w-[800px] pc:px-20 px-10 bg-neutral-300 z-[997]">
               <div className=" text-[32px] flex justify-center">
                 [COMMUNITY]
               </div>

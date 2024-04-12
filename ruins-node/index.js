@@ -2,13 +2,12 @@ import express from "express";
 import multer from "multer";
 import johnnyRouter from "./routes/johnny/community-one.js";
 import memberRouter from "./routes/linda/member.js";
-import productRouter from "./routes/kevin/product.js";
+import productRouter from "./routes/kevin/product.js"
+import tourRouter from "./routes/tony/tour.js"
 import db from "./utils/mysql2-connect.js";
 import tourRouter from "./routes/tony/tour.js"
 import cors from "cors"
 import gameRouter from "./routes/ellie/game.js"
-
-
 
 const upload = multer({ dest: "profile_uploads/" });
 
@@ -28,6 +27,7 @@ app.use(cors(corsOptions));
 app.use("/member", memberRouter);
 app.use("/product", productRouter);
 app.use("/game", gameRouter);
+app.use("/tour", tourRouter);
 app.use("/johnny", johnnyRouter);
 app.use("/tour", tourRouter);
 
