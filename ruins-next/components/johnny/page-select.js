@@ -1,21 +1,21 @@
-import React from "react";
-import Link from "next/link";
-import { useToggles } from "@/contexts/use-toggles";
+import React from 'react'
+import Link from 'next/link'
+import { useToggles } from '@/contexts/use-toggles'
 
 export default function PageSelect({
-  bgColor = "bg-black",
-  paddingBG = "bg-black",
+  bgColor = 'bg-black',
+  paddingBG = 'bg-black',
   optionsStyle,
 }) {
-  const { toggles, setToggles } = useToggles();
+  const { toggles, setToggles } = useToggles()
 
   optionsStyle =
-    "text-white w-full text-center border-style1 h-[40px] leading-[40px] hover:hover1";
+    'text-white w-full text-center border-style1 h-[40px] leading-[40px] hover:hover1'
 
   return (
     <>
       <div
-        className={`${bgColor} flex justify-center items-center  h-[40px] fixed w-full z-[1001] `}
+        className={`${bgColor} flex justify-center items-center  h-[40px] fixed w-full z-[998]`}
       >
         <Link
           href="./main-page"
@@ -50,5 +50,5 @@ export default function PageSelect({
         className={`mt-[40px] h-[10px] fixed w-full z-10 ${paddingBG}`}
       ></div>
     </>
-  );
+  )
 }
