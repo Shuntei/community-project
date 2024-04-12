@@ -8,7 +8,7 @@ import Footer from "@/components/linda/footer/footer";
 export default function ConfirmDoc() {
   return (
     <>
-      <div className=" bg-gray-100 flex flex-col justify-center items-center pt-28">
+      <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28">
         {/* header開始 */}
         <Navbar navColor={""} />
         {/* header結束 */}
@@ -19,7 +19,7 @@ export default function ConfirmDoc() {
           <Process2 name1={"購物車　"} name2={"填寫資料"} name3={"確認訂單"} />
           {/* 進度條結束 */}
           {/* 內頁開始 */}
-          <div className="md:w-9/12 w-full md:p-10 p-3 m-10 flex flex-col bg-white items-center space-y-12">
+          <div className="md:w-9/12 w-full md:p-10 p-3 m-10 flex flex-col bg-white items-center md:space-y-12 space-y-7">
             {/* title */}
             <div className="text-black text-xl font-semibold font-['Noto Sans TC'] border-b border-b-black ">
               確認訂單

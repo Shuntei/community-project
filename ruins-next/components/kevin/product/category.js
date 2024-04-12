@@ -73,8 +73,11 @@ export default function Category() {
             戶外
           </div>
         </div>
-        <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-black cursor-pointer">
-          <div className="text-center text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans TC'] tracking-[2.80px]">
+        <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-black cursor-pointer" name="main_category"
+          data-value="4"
+          onClick={handleChange}>
+          <div className="text-center text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans TC'] tracking-[2.80px]"
+          >
             直播
           </div>
         </div>

@@ -34,7 +34,7 @@ export default function Index() {
   }, [router])
   return (
     <>
-      <div className=" bg-gray-100 flex flex-col justify-center items-center w-full  pt-28">
+      <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-8 md:pt-28">
         {/* header開始 */}
         <Navbar navColor={''} />
         {/* header結束 */}

@@ -12,7 +12,7 @@ export default function Cart() {
   const {totalItems, totalPrice} = useCart()
   return (
     <>
-      <div className=" bg-gray-100 flex flex-col justify-center items-center pt-28">
+      <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28">
         {/* header開始 */}
         <Navbar navColor={""} />
         {/* header結束 */}

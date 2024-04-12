@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 // 1. 建立context
-const CartContext = createContext(null);
+const CartContext = createContext();
 
 // 2. 建立一個Context Provider元件
 // 提供給最上層元件(_app.js)使用，把所需狀態都在這元件集中管理
