@@ -151,8 +151,8 @@ export default function AchievementsPopup({ onClose }) {
               <div className='w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center'>1</div>
               </div>
             <div className='gap-2'>
-                <div className="text-base font-regular font-['IBM Plex Mono'] text-white ">XX is done.  </div>
-                <div className="text-sm font-light font-['IBM Plex Mono'] text-white ">Lorem ipsum dolor sit amet consectetur.</div>
+                <div className="text-base font-regular font-['IBM Plex Mono'] text-white ">{AchievementsData[0].description}</div>
+                <div className="text-sm font-light font-['IBM Plex Mono'] text-white ">{AchievementsData[0].description}</div>
             </div>
           </div>
           <div className='gap-2 content-center flex flex-row'>
