@@ -5,7 +5,7 @@ export default function LoginModal({isVisible}) {
   return (
     <>
       {/* mobile pop up login */}
-      <div className="md:hidden absolute top-[47px] left-0 w-full px-2 py-3.5 bg-black flex-col justify-start items-center gap-[13px] inline-flex">
+      <div className="md:hidden text-white absolute top-[47px] left-0 w-full px-2 py-3.5 bg-black flex-col justify-start items-center gap-[13px] inline-flex">
         <div className="pb-[15px] border-b border-white justify-start items-start">
           <Link href="/member/account/login">LOGIN</Link>
         </div>

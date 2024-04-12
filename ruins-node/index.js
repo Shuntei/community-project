@@ -6,6 +6,7 @@ import productRouter from "./routes/kevin/product.js";
 import db from "./utils/mysql2-connect.js";
 import cors from "cors";
 
+
 const upload = multer({ dest: "profile_uploads/" });
 
 const app = express();

@@ -1,23 +1,25 @@
 import React from 'react'
 import styles from '@/styles/streaming.module.css'
-import { RiSearchLine, RiCloseLine, RiArrowRightSLine, RiMoneyDollarCircleFill, RiStoreLine, RiDonutChartFill, RiArrowLeftSLine, RiGift2Line, RiUserFill, RiArrowDownSLine, RiArrowUpSLine, RiCornerUpLeftFill, RiReplyFill } from "@remixicon/react";
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-// import { Peer } from "peerjs";
+import { RiSearchLine, RiCloseLine, RiArrowRightSLine, RiMoneyDollarCircleFill, RiStoreLine, RiDonutChartFill, RiArrowLeftSLine, RiGift2Line, RiUserFill, RiArrowDownSLine, RiArrowUpSLine, RiCornerUpLeftFill, RiReplyFill, RiPushpinFill, RiSpam3Line, RiCloseFill, RiCoinFill } from "@remixicon/react";
+import Level from '@/components/level/level';
+import Member from '@/components/member/member';
 
-// 連線後端socket
-import { io } from 'socket.io-client'
-const socket = io(`http://localhost:4020`, {
-  auth: { token: "tyler" }
-});
+// 去除 server-side rendering
+import dynamic from 'next/dynamic'
+const StreamContent = dynamic(() => import('@/components/stream/stream'), {
+  ssr: false,
+})
 
-// FIXME: 留言需要與暱稱同一條線
-// FIXME: 縮小後框變很擠
-// FIXME: 手機版人員無法scroll
+// 導入socket.io-client
+import io from 'socket.io-client';
+const socket = io.connect('http://localhost:3001');
 
 export default function Streaming() {
 
+  // 手機上顯示
   const [onPhone, setOnPhone] = useState(false);
 
   useEffect(() => {
@@ -29,59 +31,11 @@ export default function Streaming() {
     window.addEventListener('resize', sizeChange)
   })
 
-  // 圖像元件
-  const Member = () => {
-    return (
-      <div className={styles['member-container']}>
-        <div className={styles['circle-container']}>
-          <div className={styles['small-circle']}></div>
-          <div className={styles['big-circle']}>
-            <img src="" alt="" />
-          </div>
-        </div>
-        <div>陳泰勒正在做專題</div>
-      </div>
-    )
-  }
-
-  const Level = () => {
-    return (
-      <>
-        <div>Lv.1</div>
-        <hr className="border-dotted" />
-        <hr className="mt-1 mb-1 border-dotted" />
-      </>
-    )
-  }
-
-  const Gift = () => {
-    return (
-      <>
-        <div className={styles['gift']}>
-          <div className={styles['circle']}></div>
-          <div>煙火</div>
-        </div>
-      </>
-    )
-  }
-
-  // 留言
-  const Comment = () => {
-    return (
-      <div className={styles['comment-chat']} >
-        <div className={styles['chat-circle']}></div>
-        <span className={styles['chat-name']}>五條物</span>
-        <span>他的聊天紀錄他的聊天紀錄他的聊天紀錄他的聊天紀錄</span>
-      </div>
-    )
-  }
-
   // 標題敘述
   const initDetail = {
     title: "直播標題標題標題標題",
     detail: "直播詳細敘述，限50字直播詳細敘述，限50字直播詳細敘述，限50字"
   }
-
   const [streamDetail, setstreamDetail] = useState(initDetail)
 
   // 顯示聊天室（桌機）
@@ -120,60 +74,17 @@ export default function Streaming() {
     console.log(showMember);
   }
 
-
-
-  // 直播功能
-
-  // const socket_stream = io('http://localhost:3030');
-
-  //   const myPeer = Peer(undefined, {
-  //     host: "/05-streaming/",
-  //     port: "3031",
-  //   });
-
-  //   const myVid = document.createElement('video');
-  //   myVid.muted = true;
-
-  //   const room = window.location.pathname.split('/')[1];
-
-  //   myPeer.on('open', id => {
-  //     socket_stream.emit('join-room', room, id)
-  //   })
-
-  //   navigator.mediaDevices.getUserMedia({
-  //     video: true,
-  //     audio: true,
-  //   }).then(stream => {
-  //     addStream(myVid, stream)
-
-  //     myPeer.on('call', call => {
-  //       call.answer(stream)
-  //       const video = document.createElement('video')
-  //       call.on('stream', userStream => {
-  //         addStream(video, userStream)
-  //       })
-  //     })
-  //   })
-
-  //   const addStream = (video, stream) => {
-  //     video.srcObject = stream;
-  //     video.addEventListener('loadedmetadata', () => {
-  //       video.play()
-  //     })
-  //     const streamBlock = document.querySelector('#stream-block')
-  //     streamBlock.append(video)
-  //   }
-
-  const [replyTarget, setreplyTarget] = useState("")
-
   // 留言功能
-  const [comment, setComment] = useState([{
-    name: "陳泰勒",
-    profile: "/images/face-id.png",
-    comment: "測試文字",
-  }])
+  const [replyTarget, setreplyTarget] = useState("")
+  const [replyTargetName, setreplyTargetName] = useState("")
+  const room = "liveChatRoom"
+
+  const [comment, setComment] = useState([])
 
   useEffect(() => {
+
+    socket.emit("joinRoom", room);
+
     socket.on('receiveComment', (receiveComment) => {
       setComment(prevComment => [...prevComment, {
         name: receiveComment.name,
@@ -197,23 +108,74 @@ export default function Streaming() {
           comment: inputComment,
           reply: replyTarget,
         }
-        socket.emit('sendComment', newComment)
+        socket.emit('sendComment', { newComment, room })
         e.target.value = ""
       }
       setreplyTarget("")
     }
   }
 
+  const giftList = [
+    {
+      name: "鑿子",
+      src: "/images/axe.png",
+      price: "100",
+    }, {
+      name: "便當",
+      src: "/images/bento.png",
+      price: "300",
+    }, {
+      name: "燈光",
+      src: "/images/flashlight.png",
+      price: "200",
+    }, {
+      name: "鬼魂",
+      src: "/images/ghost.png",
+      price: "500",
+    }, {
+      name: "繩索",
+      src: "/images/lasso.png",
+      price: "100",
+    }, {
+      name: "開鎖",
+      src: "/images/padlock.png",
+      price: "600",
+    }, {
+      name: "石塊",
+      src: "/images/stone.png",
+      price: "1",
+    }, {
+      name: "寶藏",
+      src: "/images/treasure-chest.png",
+      price: "1000",
+    }, {
+      name: "水瓶",
+      src: "/images/water.png",
+      price: "300",
+    },
+  ]
+
+  const [totalBonus, setTotalBonus] = useState(0)
+
+  const handleGiveGift = (price) => {
+    let gift = Number(price)
+    setTotalBonus(prevTotal => prevTotal + gift)
+  }
+
+
   // 回覆功能
 
-  const handleClickIcon = (e) => {
-    const target = e.target.previousElementSibling?.textContent;
+  const handleClickIcon = (comment, name) => {
+    const target = comment;
+    const targetName = name;
     console.log(target);
     setreplyTarget(target)
+    setreplyTargetName(targetName)
   }
 
   const handleReply = () => {
     setreplyTarget("")
+    setreplyTargetName("")
   }
 
   const [blockComment, setBlockComment] = useState(true)
@@ -222,7 +184,6 @@ export default function Streaming() {
   const handleBlockComment = () => {
     setBlockComment(!blockComment)
   }
-
 
   const handleBlockWord = (e) => {
     setBlockWord(e.target.value.split(","))
@@ -259,7 +220,32 @@ export default function Streaming() {
     setPin(false)
   }
 
+  // 點數功能
 
+  const [points, setPoints] = useState(0)
+  const [clickedIds, setClickedIds] = useState([])
+
+  useEffect(() => {
+    let p = 0
+    const getPoints = setInterval(() => {
+      const newComment = {
+        id: p++,
+        name: "系統",
+        profile: "/images/treasure.png",
+        comment: "點頭貼，領點數！",
+      }
+      socket.emit('sendComment', newComment)
+    }, 100000);
+
+    return () => clearInterval(getPoints)
+  }, [])
+
+  const handleGetPoints = (profile, id) => {
+    if (profile == "/images/treasure.png" && !clickedIds.includes(id)) {
+      setPoints(prevPoint => prevPoint + 100)
+      setClickedIds(prevIds => [...prevIds, id])
+    }
+  }
 
   return (
     <>
@@ -268,14 +254,14 @@ export default function Streaming() {
       <div className={styles['container']}>
 
         {/* 左欄 */}
-        <div className={`${styles['sidebar']} ${showSidebar ? '' : styles.hidden_left} ${!onPhone ? "" : showMember ? styles.show_up : styles.hidden_down} `}>
+        <div className={`${styles['sidebar']} ${showSidebar ? '' : styles.hidden_left} ${!onPhone ? "" : showMember ? styles.show_up : styles.hidden_down}`}>
 
           {!onPhone ? "" : !showMember ? "" : <RiCornerUpLeftFill
             className='absolute top-2 left-2 cursor-pointer z-50'
             onClick={handleShowMemberlist}
           />}
 
-          <div className={styles['sidebar-container']}>
+          <div className={`${styles['sidebar-container']}`}>
 
             {/* 搜尋框 */}
             <div className='relative'>
@@ -288,36 +274,37 @@ export default function Streaming() {
                 className={styles['search-icon']}
               ></RiSearchLine>
             </div>
-            <div className='text-left mt-5 mb-1'>觀看人數: 1000</div>
-            <hr className={styles['line']} />
-            <hr className={`${styles['line']} mt-1 mb-5 border-dotted`} />
+            <div className='text-left mt-5 mb-1'>直播總打賞: {totalBonus}</div>
+            <hr className="border-2" />
+            <hr className={`${styles['line']} mt-1 border-dotted`} />
 
             <div className={styles['member-list']}>
               {/* 成員排序內容 */}
-              <Level></Level>
+              <Level name="探險王" amount="5,000+"></Level>
               <Member></Member>
               <Member></Member>
               <Member></Member>
               <Member></Member>
 
-              <Level></Level>
+              <Level name="製圖師" amount="3,000+"></Level>
               <Member></Member>
               <Member></Member>
               <Member></Member>
 
-              <Level></Level>
+              <Level name="鑑賞員" amount="1,000+"></Level>
               <Member></Member>
               <Member></Member>
               <Member></Member>
               <Member></Member>
+
+              <Level name="駝獸" amount="500+"></Level>
               <Member></Member>
               <Member></Member>
+
+              <Level name="新手村"></Level>
               <Member></Member>
               <Member></Member>
-              <Member></Member>
-              <Member></Member>
-              <Member></Member>
-              <Member></Member>
+
             </div>
           </div>
         </div>
@@ -368,20 +355,31 @@ export default function Streaming() {
           </div>
 
           {/* 直播框 */}
-          <div className={styles['streaming-content']}>
-          </div>
+          <StreamContent></StreamContent>
 
           {/* 禮物框 */}
           <div className={`${styles['gift-bar']} ${!onPhone ? "" : showGift ? "" : styles.hide} `}>
-            <Gift></Gift>
-            <Gift></Gift>
-            <Gift></Gift>
-            <Gift></Gift>
-            <Gift></Gift>
-            <Gift></Gift>
-            <Gift></Gift>
-            <Gift></Gift>
-            <Gift></Gift>
+            {giftList.map((c, i) => {
+              return (
+                <div className="flex flex-col items-center justify-center gap-0.5 cursor-pointer " key={i}>
+
+                  <Image
+                    width={44}
+                    height={44}
+                    src={c.src}
+                    className={styles['circle']}
+                    alt={c.name}
+                    onClick={() => { handleGiveGift(c.price) }}
+                  ></Image>
+
+                  <div className='text-sm'>{c.name}</div>
+                  <div className="flex gap-0.5 items-center">
+                    <RiCoinFill style={{ color: "#fff400" }} className='mt-1 h-4'></RiCoinFill>
+                    <div className='mr-2 text-sm'>{c.price}</div>
+                  </div>
+                </div>
+              )
+            })}
           </div>
         </div>
 
@@ -390,73 +388,110 @@ export default function Streaming() {
           <div className={styles['chatbar-content']}>
             {onPhone ? "" : <>
               <div className='text-xl'>聊天室</div>
-              <hr className={styles['line']} />
+              <hr className="mt-2" />
             </>}
 
             {/* 聊天內容 */}
-            <div className={`${styles['chat']} `}>
+            <div className={styles.chat}>
               {comment.map((c, i) => {
                 return (
-                  <div key={i} className='flex gap-1.5 items-start mb-2'>
-                    <Image width={30} height={30} alt='大頭貼' src={c.profile} className='bg-white rounded-full p-1' />
-                    <div className='w-2/12 shrink-0'>{c.name}</div>
-                    <div className='w-7/12 break-words'>{c.comment}</div>
-                    <RiReplyFill
-                      className={styles.icon_reply}
-                      onClick={handleClickIcon}
-                    />
-                    <div onClick={() => { handlePin(c.profile, c.name, c.comment) }}>0</div>
-                    <div>{c.reply}</div>
+                  <div key={i} className='flex flex-col items-start mb-3'>
+
+                    {c.reply && (
+                      <div className={`flex text-sm ml-6 mb-1`}>
+                        <RiReplyFill className="h-4" />
+                        <div className='w-[200px] break-words'>{c.reply}</div>
+                      </div>)}
+
+                    <div className='flex justify-between w-full text-center'>
+                      <div className='flex w-6/12 gap-2 items-center justify-start'>
+                        <Image width={27} height={27} alt='大頭貼' src={c.profile}
+                          onClick={() => handleGetPoints(c.profile, c.id)}
+                          className='bg-white rounded-full p-1' />
+                        <div className='shrink-0'>{c.name}</div>
+                      </div>
+                      <div className='flex w-6/12 justify-end'>
+                        <RiPushpinFill className={styles.icon_reply} onClick={() => { handlePin(c.profile, c.name, c.comment) }} />
+                        <RiReplyFill
+                          className={styles.icon_reply}
+                          onClick={() => { handleClickIcon(c.comment, c.name) }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className='w-[200px] ml-9 break-words'>{c.comment}</div>
+
                   </div>)
               })}
             </div>
 
+            {/* 置頂文字 */}
+            <div className={`flex flex-col items-start mb-2 ${pin ? "" : "hidden"}`}>
+              <div className='flex justify-between w-full text-center'>
+                <div className='flex w-6/12 gap-2 items-center justify-start'>
+                  <Image width={30} height={30} alt='大頭貼' src={pinnedProfile} className='bg-white rounded-full p-1' />
+                  <div className='shrink-0'>{pinnedName}</div>
+                </div>
+                <div className='w-6/12 flex justify-end items-center'>
+                  <RiCloseFill className=' cursor-pointer  h-5' onClick={handleUnpin}></RiCloseFill>
+                </div>
+              </div>
 
-            <div className={`flex gap-1.5 items-start mb-2 ${pin ? "" : "hidden"}`}>
-              <Image width={30} height={30} alt='大頭貼' src={pinnedProfile} className='bg-white rounded-full p-1' />
-              <div className='w-2/12 shrink-0'>{pinnedName}</div>
-              <div className='w-7/12 break-words'>{pinnedComment}</div>
-              <button onClick={handleUnpin}>x</button>
+              <div className='w-[210px] ml-9 break-words'>{pinnedComment}</div>
+
             </div>
 
-            <hr className={"border-dotted mb-1"} />
-            <hr className={"border-dotted"} />
+            <hr className="border-dotted mb-1" />
+            <hr className="border-dotted" />
 
-            <div className='flex justify-between'>
-              <span className={styles.repliedTarget}>{replyTarget}</span>
-              <button className='mr-2' onClick={handleReply}>{replyTarget ? "x" : ""}</button>
+            {/* 回覆哪個訊息 */}
+            <div className={`flex justify-between ${replyTarget ? "" : "hidden"}`}>
+              <span className={`${styles.repliedTarget} w-[200px] text-sm break-words`}>回覆 @{replyTargetName}: {replyTarget}</span>
+              <button className='mr-2' onClick={handleReply}>{replyTarget ? <RiCloseFill className='h-5'></RiCloseFill> : ""}</button>
             </div>
 
-            {/* 留言框 */}
+            {/* 發訊息 */}
             <div className={styles['comment-bar']}>
               <input type="text" placeholder='輸入內容' className='w-full p-1 pl-2 rounded text-black'
                 onKeyDown={handleKeyDown}
                 maxLength={100}
               />
 
-              <button className={styles['sticker-comment']}>{onPhone ? <RiGift2Line
-                onClick={handleShowGift}
-              /> : "送出"}</button>
+              <button className={styles['sticker-comment']}>{onPhone ? "送出" : ""}</button>
             </div>
 
             {/* 點數與禮物框 */}
-            <div className={styles['chat-bottom']}>
-              <div className='flex '>
-                <RiMoneyDollarCircleFill></RiMoneyDollarCircleFill>
-                <div>123 pts</div>
+            <div className="mt-3 flex justify-between items-center">
+              <div className='flex gap-1 '>
+                <RiMoneyDollarCircleFill className='cursor-pointer'></RiMoneyDollarCircleFill>
+                <div>{points} pts</div>
               </div>
               <div className='flex gap-2'>
-                <RiUserFill className={styles.iconstore}
-                  onClick={handleShowMemberlist}
-                ></RiUserFill>
-                <RiStoreLine className={styles.iconstore}></RiStoreLine>
-                <div id='block' onClick={handleBlockComment}>x</div>
-                <input type="text" id='block' className={`${blockComment ? "hidden" : ""} text-black`} value={blockWord} onChange={handleBlockWord} maxLength={20} />
+                {onPhone ? <>
+                  <RiGift2Line
+                    className={styles.iconstore}
+                    onClick={handleShowGift}
+                  />
+                  <RiUserFill
+                    className={styles.iconstore}
+                    onClick={handleShowMemberlist}
+                  ></RiUserFill>
+                  <RiStoreLine
+                    className={styles.iconstore}
+                  ></RiStoreLine></>
+                  : ""}
+
+                <RiSpam3Line className={styles.iconstore} id='block' onClick={handleBlockComment}></RiSpam3Line>
+                <input type="text" id='block'
+                  className={` transition-width duration-300 ease-in-out ${blockComment ? "w-0" : "w-[160px]"} text-black`}
+                  value={blockWord}
+                  onChange={handleBlockWord}
+                  maxLength={20} />
               </div>
             </div>
           </div>
         </div>
-      </div >
+      </div>
     </>
   )
 }

@@ -20,9 +20,17 @@ export default function HomeSidebar() {
           </div>
           <div className="self-stretch h-full py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">SHOP</div>
-            <div className="self-stretch pl-5 text-sm font-medium">
+            <Link
+              href="/shop/my-order"
+              onClick={(e) => {
+                handleLinkClick("Order History");
+              }}
+              className={`self-stretch pl-5 text-sm font-medium ${
+                activeLink === "Order History" ? "bg-white text-black" : ""
+              }`}
+            >
               Order History
-            </div>{" "}
+            </Link>
             <div className="self-stretch pl-5 text-sm font-medium">
               Favorite Products
             </div>
@@ -30,7 +38,7 @@ export default function HomeSidebar() {
           <div className="self-stretch h-auto py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">TOUR</div>
             <Link
-              href="/member/account-settings/myTrips"
+              href="/member/account-settings/my-trips"
               onClick={(e) => {
                 handleLinkClick("My Trips");
               }}
@@ -41,7 +49,7 @@ export default function HomeSidebar() {
               My Trips
             </Link>
             <Link
-              href="/member/account-settings/favTours"
+              href="/member/account-settings/fav-tours"
               onClick={(e) => {
                 handleLinkClick("Favorite Tours");
               }}
@@ -52,7 +60,7 @@ export default function HomeSidebar() {
               Favorite Tours
             </Link>
             <Link
-              href="/member/account-settings/myPosts"
+              href="/member/account-settings/my-posts"
               onClick={(e) => {
                 handleLinkClick("My Posts");
               }}
@@ -91,7 +99,7 @@ export default function HomeSidebar() {
               Profile
             </Link>
             <Link
-              href="/member/account-settings/emailAndPassword"
+              href="/member/account-settings/email-and-password"
               onClick={(e) => {
                 handleLinkClick("emailAndPassword");
               }}

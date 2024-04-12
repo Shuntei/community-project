@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 
-export default function ProfileModal({isVisible}) {
+export default function ProfileModal({isVisible, logout}) {
     if (!isVisible) return null
   return (
     <>
@@ -23,7 +23,7 @@ export default function ProfileModal({isVisible}) {
                 </div>
               </div>
             </div>
-            <div className="self-stretch h-28 pt-[3px] pb-[26px] flex-col justify-start items-start gap-2.5 flex">
+            <div className=" text-white self-stretch h-28 pt-[3px] pb-[26px] flex-col justify-start items-start gap-2.5 flex">
               <Link href={"/member/account-settings/account"} className="text-base">
                 PROFILE
               </Link>
@@ -31,7 +31,8 @@ export default function ProfileModal({isVisible}) {
                 SETTINGS
               </Link>
               <Link
-                href={"/member/account/logout"}
+                href="#"
+                onClick={logout}
                 className="text-rose-400 text-base uppercase"
               >
                 LOGOUT

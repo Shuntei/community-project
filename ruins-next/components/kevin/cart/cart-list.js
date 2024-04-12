@@ -1,15 +1,15 @@
-import React, { useState } from "react";
-import { RiAddFill } from "@remixicon/react";
-import { RiSubtractFill } from "@remixicon/react";
-import Image from "next/image";
-import { useCart } from "@/hooks/use-cart";
+import React, { useState } from 'react'
+import { RiAddFill } from '@remixicon/react'
+import { RiSubtractFill } from '@remixicon/react'
+import Image from 'next/image'
+import { useCart } from '@/hooks/use-cart'
 
 export default function CartList() {
-  const { items,onDecreaseItem, onIncreaseItem, onRemoveItem } = useCart();
+  const { items, onDecreaseItem, onIncreaseItem, onRemoveItem } = useCart()
 
   return (
     <>
-    {/* <button onClick={()=>{console.log(items)}}>log</button> */}
+      {/* <button onClick={()=>{console.log(items)}}>log</button> */}
       {items.map((v, i) => {
         return (
           <div key={v.pid} className="flex md:w-10/12 w-full justify-between">
@@ -19,7 +19,7 @@ export default function CartList() {
                 alt="Picture of camp"
                 width={100}
                 height={100}
-                className="aspect-square rounded-xl"
+                className="aspect-square rounded-sm"
                 unoptimized={true}
               />
             </div>
@@ -42,14 +42,24 @@ export default function CartList() {
                     <RiSubtractFill
                       color="black"
                       size="1em"
-                      onClick={() => {onDecreaseItem(v.pid)}}
+                      className='cursor-pointer'
+                      onClick={() => {
+                        onDecreaseItem(v.pid)
+                      }}
                     />
-                    {/* The default size is 24 */}{" "}
+                    {/* The default size is 24 */}{' '}
                     <div className="text-black text-[13px] font-light font-['IBM Plex Mono']">
                       {v.qty}
                     </div>
                     {/* This sets the icon size to the current font size */}
-                    <RiAddFill color="black" size="1em" onClick={() => {onIncreaseItem(v.pid)}} />
+                    <RiAddFill
+                      color="black"
+                      size="1em"
+                      className='cursor-pointer'
+                      onClick={() => {
+                        onIncreaseItem(v.pid)
+                      }}
+                    />
                   </div>
                 </div>
                 <div className="text-black text-base font-normal font-['IBM Plex Mono']">
@@ -58,8 +68,8 @@ export default function CartList() {
               </div>
             </div>
           </div>
-        );
+        )
       })}
     </>
-  );
+  )
 }

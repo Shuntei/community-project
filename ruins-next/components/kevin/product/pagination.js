@@ -2,13 +2,12 @@ import React from 'react'
 import styles from './pagination.module.css'
 import { useRouter } from 'next/router'
 
-
 export default function Pagination({ products }) {
   const router = useRouter()
   return (
     <>
       <ul className={styles['pagination']}>
-        <li >
+        <li>
           {products.page === 1 ? (
             <div className={styles['page-disable']} href={'/shop/product/list'}>
               PREV
@@ -67,7 +66,7 @@ export default function Pagination({ products }) {
                 )
               })
           : null}
-        <li >
+        <li>
           {products.page === products.totalPages ? (
             <div
               className={styles['page-disable']}

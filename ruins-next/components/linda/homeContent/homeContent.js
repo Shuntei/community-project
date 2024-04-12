@@ -62,7 +62,7 @@ export default function HomeContent() {
         <div>
           <div className={styles.rowThreeContainer}>
             <div className={styles["sec3-img-container"]}>
-              <Image src={home3} className="rounded-xl" />
+              <Image alt="" src={home3} className="rounded-xl" />
             </div>
             <div className={styles.sec3TextContainer}>
               <div className={styles["sec3-text"]}>
@@ -86,7 +86,7 @@ export default function HomeContent() {
             <div className={styles["cards-container"]}>
               <div>
                 <div className="max-h=[315px]">
-                <Image src={product1}  className={styles.cards}/>
+                <Image alt="" src={product1}  className={styles.cards}/>
                 </div>
                 <div className={styles["item-info"]}>
                   <p className={styles["item-name"]}>Item Name</p>
@@ -95,7 +95,7 @@ export default function HomeContent() {
               </div>
               <div>
                 <div className="max-h=[315px]">
-                <Image src={product1} className={styles.cards}/>
+                <Image alt="" src={product1} className={styles.cards}/>
 
                 </div>
                 <div className={styles["item-info"]}>
@@ -105,7 +105,7 @@ export default function HomeContent() {
               </div>
               <div>
                 <div className="max-h=[315px]">
-                <Image src={product1} className={styles.cards}/>
+                <Image alt="" src={product1} className={styles.cards}/>
 
                 </div>
                 <div className={styles["item-info"]}>
@@ -115,7 +115,7 @@ export default function HomeContent() {
               </div>
               <div>
                 <div className="max-h=[315px]">
-                 <Image src={product1} className={styles.cards}/>
+                 <Image alt="" src={product1} className={styles.cards}/>
 
                 </div>
                 <div className={styles["item-info"]}>
@@ -123,7 +123,7 @@ export default function HomeContent() {
                   <p className={styles["item-price"]}>$12</p>
                 </div>
               </div>
-              <Image src={arrowPng} className={`${styles['arrow-png']} z-50`}
+              <Image alt="" src={arrowPng} className={`${styles['arrow-png']} z-50`}
                />
             </div>
           </div>

@@ -26,17 +26,17 @@ function CartModal() {
 
   return (
     <div>
-      <button onClick={openModal}>CARTwww</button>
+      <button onClick={openModal}>CART</button>
       {isOpen && (
-        <div className="modal flex justify-end items-start fixed top-0 left-0 w-full h-full  bg-black/50 z-40 ">
+        <div className=" flex justify-end items-start fixed top-0 left-0 w-full h-full  bg-black/50 z-40 ">
           <div className="modal-content bg-white  rounded  z-50 md:w-[447px] w-[320px] h-[700px] me-2 mt-2 px-10 py-5 relative">
             <div className="flex flex-col">
               <div className="flex justify-end">
-                <button className="close text-[30px] " onClick={closeModal}>
+                <button className="close text-[30px] text-black cursor-pointer" onClick={closeModal}>
                 <RiCloseLargeLine />
                 </button>
               </div>
-              <div className="text-[13px] font-semibold font-['IBM Plex Mono']  border-b border-black">cart</div>
+              <div className="text-[13px] font-semibold font-['IBM Plex Mono'] text-black border-b border-black">cart</div>
               <div className="h-[500px] overflow-auto">
               
               {items.map((v, i) => {
@@ -48,12 +48,12 @@ function CartModal() {
                         alt="Picture of camp"
                         width={100}
                         height={100}
-                        className="aspect-square rounded-xl"
+                        className="aspect-square rounded-sm"
                         unoptimized={true}
                       />
                     </div>
                     <div className=" w-full md:px-5 px-2  space-y-5">
-                      <div className="text-base font-semibold font-['Noto Sans TC']">
+                      <div className="text-base font-semibold text-black font-['Noto Sans TC']">
                         {v.name}
                       </div>
                       <div className="flex justify-between">
@@ -71,6 +71,7 @@ function CartModal() {
                             <RiSubtractFill
                               color="black"
                               size="1em"
+                              className="cursor-pointer"
                               onClick={() => {
                                 onDecreaseItem(v.pid);
                               }}
@@ -83,6 +84,7 @@ function CartModal() {
                             <RiAddFill
                               color="black"
                               size="1em"
+                              className="cursor-pointer"
                               onClick={() => {
                                 onIncreaseItem(v.pid);
                               }}
