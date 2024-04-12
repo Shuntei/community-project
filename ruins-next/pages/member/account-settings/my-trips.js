@@ -11,6 +11,32 @@ export default function MyTrips() {
             <div className="md:text-[30px] text-[24px] font-semibold">
               你的探險行程
             </div>
+            {/* go to search */}
+            <div
+              id="gotoSearch"
+              className=" flex rounded-lg md:bg-black bg-none md:border-none border border-white overflow-hidden justify-between"
+            >
+              <div className="md:w-fit w-full md:pl-[30px] px-5 py-5 md:space-y-7 space-y-4 md:content-center">
+                <div>
+                  <div className="md:text-xl pb-1">還沒報名任何探險行程</div>
+                  <div className="md:text-[13px] text-[10px]">
+                    廢墟的神秘在呼喚你，去看看有誰和你一樣渴望冒險吧！
+                  </div>
+                </div>
+                <div>
+                  <Link href="/tour/all-search" className="">
+                    <button className="bg-white text-black font-semibold rounded md:w-fit w-full px-5 py-[10px]">
+                      開始搜尋
+                    </button>
+                  </Link>
+                </div>
+              </div>
+              <img
+                src="/images/tempuse.jpg"
+                alt=""
+                className="w-3/5 h-[200px] md:block hidden object-cover"
+              />
+            </div>
             {/* ready to go */}
             <div id="tourBox" className="flex flex-col gap-[14px]">
               <div className="font-medium text-xl md:text-[26px]">已報名</div>
@@ -82,7 +108,9 @@ export default function MyTrips() {
             </div>
             {/* finished tour */}
             <div id="tourBox" className="flex flex-col gap-[14px]">
-              <div className="font-medium text-xl md:text-[26px]">去過的地方</div>
+              <div className="font-medium text-xl md:text-[26px]">
+                去過的地方
+              </div>
               <div className="md:flex flex-wrap gap-[53px]">
                 <div id="tourCard" className="md:w-[30%]">
                   <Link
@@ -256,7 +284,9 @@ export default function MyTrips() {
             </div>
             {/* cancelled tour */}
             <div id="tourBox" className="flex flex-col gap-[14px]">
-              <div className="font-medium text-xl md:text-[26px]">已取消的行程</div>
+              <div className="font-medium text-xl md:text-[26px]">
+                已取消的行程
+              </div>
               <div className="md:flex flex-wrap gap-[53px]">
                 <div id="tourCard" className="md:w-[30%]">
                   <Link
@@ -349,9 +379,9 @@ export default function MyTrips() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
 MyTrips.getLayout = function getLayout(page) {
   return <AccountLayout>{page}</AccountLayout>
-};
+}
