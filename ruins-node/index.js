@@ -5,6 +5,7 @@ import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js"
 import db from "./utils/mysql2-connect.js";
 import cors from "cors"
+import gameRouter from "./routes/ellie/game.js"
 
 const upload = multer({ dest: "profile_uploads/" });
 
@@ -25,6 +26,8 @@ app.use(cors(corsOptions))
 
 app.use("/member", memberRouter);
 app.use("/product", productRouter);
+app.use("/game", gameRouter);
+
 
 
 

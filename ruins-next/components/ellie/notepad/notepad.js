@@ -3,10 +3,10 @@ import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
 
 
-export default function Notepad() {
+export default function Notepad({ onClose }) {
   return (
     <>
-  <div className="container">
+  <div className="container notepad absolute left-1/4 top-1/6">
     <div className="notepad">
       <div className="notepad-bar">
         <div className="bar">
@@ -41,9 +41,9 @@ export default function Notepad() {
               </div>
             </div>
             
-            <div className="notepad-exit">
+            <button onClick={onClose} className="notepad-exit">
               <div className="button-exit">&#10060;</div>
-            </div>
+            </button>
           </div>
         </div>
         
@@ -327,9 +327,9 @@ export default function Notepad() {
 	border-top: 1px solid white; */}
 }
 
-.relative {
+{/* .relative {
 	position: relative;
-}
+} */}
 .trashbin {
 	width: 29px; 
 	height: 29px; 
