@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { RiSearchLine, RiCloseLine, RiArrowRightSLine, RiMoneyDollarCircleFill, RiStoreLine, RiDonutChartFill, RiArrowLeftSLine, RiGift2Line, RiUserFill, RiArrowDownSLine, RiArrowUpSLine, RiCornerUpLeftFill, RiReplyFill, RiPushpinFill, RiSpam3Line, RiCloseFill, RiCoinFill } from "@remixicon/react";
-import Level from '@/components/level/level';
-import Member from '@/components/member/member';
+import Level from '@/components/tyler/level/level';
+import Member from '@/components/tyler/member/member';
 
 // 去除 server-side rendering
 import dynamic from 'next/dynamic'
-const StreamContent = dynamic(() => import('@/components/stream/stream'), {
+const StreamContent = dynamic(() => import('@/components/tyler/stream/stream'), {
   ssr: false,
 })
 

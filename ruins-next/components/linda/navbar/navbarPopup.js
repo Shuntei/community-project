@@ -24,11 +24,8 @@ export default function NavbarPopup() {
           <p className="font-['IBM Plex Mono']"><a href="#">MEMBERSHIP</a></p>
         </div>
         <div className={styles["titleMagintop"]}>
-          <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">LIVE</a></p>
-          <p className="font-['IBM Plex Mono']"><a href="#">HOME</a></p>
-          <p className="font-['IBM Plex Mono']"><a href="#">ALL GOODS</a></p>
-          <p className="font-['IBM Plex Mono']"><a href="#">ARCHIVE</a></p>
-          <p className="font-['IBM Plex Mono']"><a href="#">MEMBERSHIP</a></p>
+          <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="/chat/01-check-role">線上聊天室</a></p>
+          <p className="font-['IBM Plex Mono']"><a href="/chat/01-check-role">立即進入</a></p>
         </div>
         <div className={styles["titleMagintop"]}>
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">TOUR</a></p>

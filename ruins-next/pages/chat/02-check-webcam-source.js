@@ -1,5 +1,5 @@
-import Sidebar from '@/components/sidebar/sidebar';
-import StepMap from '@/components/step-map/step-map';
+import Sidebar from '@/components/common/sidebar/sidebar';
+import StepMap from '@/components/tyler/step-map/step-map';
 import { RiCloseLine, RiMicFill, RiRecordCircleFill } from "@remixicon/react";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
