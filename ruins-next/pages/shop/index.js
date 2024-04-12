@@ -92,7 +92,7 @@ export default function Index() {
                       <Link href={`/shop/product/${v.pid}`}>
                         <img
                           className="w-full aspect-square  rounded-xl"
-                          src={v.img}
+                          src={`/images/product/${v.img.split(',')[0]}`}
                           alt="pic"
                         />
                       </Link>
