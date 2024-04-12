@@ -4,7 +4,7 @@ import styles from "./navbarPopup.module.css";
 
 export default function NavbarPopup() {
   return (
-    <nav className={`absolute z-20 top-0 left-0 bg-black w-full flex-col items-center py-9`}>
+    <nav className={`fixed z-20 top-0 left-0 bg-black w-full flex-col items-center py-9`}>
       <div className={styles["nav"]}>
       <div id="headerReplace" className={styles["headerReplace"]}></div>
       <div
@@ -14,7 +14,7 @@ export default function NavbarPopup() {
         <div className={styles["title"]}>
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">SHOP</a></p>
           <p className="font-['IBM Plex Mono']"><Link href="/shop">ALL GOODS</Link></p>
-          <p className="font-['IBM Plex Mono']"><a href="#">ORDER LIST</a></p>
+          <p className="font-['IBM Plex Mono']"><Link href="/shop/my-order">ORDER LIST</Link></p>
         </div>
         <div className={styles["title"]}>
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">COMMUNITIES</a></p>

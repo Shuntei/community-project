@@ -1,4 +1,3 @@
-
 import multer from "multer";
 import { v4 } from "uuid";
 
@@ -14,10 +13,13 @@ const fileFilter = (req, file, callback) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, callback) => {
-    callback(null, "routes/johnny/img");
+    // callback(null, "../ruins-next/components/johnny/upload"); 前端位置
+    callback(null, "routes/johnny/upload");
   },
   filename: (req, file, callback) => {
-    const f = v4() + exts[file.mimetype];
+    // const f = v4() + exts[file.mimetype];
+    const f = Date.now() + file.originalname;
+
     callback(null, f);
   },
 });

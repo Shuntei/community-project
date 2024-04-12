@@ -6,7 +6,7 @@ import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import { useCart } from '@/hooks/use-cart'
 
-export default function FillDoc() {
+export default function JoinTour() {
   const { items, onDecreaseItem, onIncreaseItem, totalPrice } = useCart()
 
   return (
@@ -28,24 +28,27 @@ export default function FillDoc() {
               填寫資料
             </div>
             {/* 填寫資料 */}
-            <div className="w-full">
-              <div>
-                <div>行程資訊</div>
-                <div id="articleCard" className="w-fit pb-10">
-                  <Link href="/tour/tour-post" className="md:flex md:space-x-8 md:space-y-0 space-y-3">
+            <div className="w-full space-y-5">
+              <div className="space-y-5">
+                <div id="articleCard" className="w-fit">
+                  <Link
+                    href="/tour/tour-post"
+                    className="md:flex md:space-x-8 md:space-y-0 space-y-3"
+                  >
                     <img
                       src="/images/borou/dry01.jpg"
-                      className="md:w-[250px] w-full aspect-square rounded object-cover "
+                      className="md:w-[150px] w-full md:h-[150px] rounded object-cover"
                       alt=""
                     />
-                    <div className="relative space-y-2.5">
-                      <div className="md:text-xl text-[15px]">
-                        Grace Hill麗庭莊園
+                    <div className="space-y-2.5 text-neutral-400">
+                      <div className="md:text-[15px] font-semibold">Grace Hill麗庭莊園</div>
+                      <div className="md:text-[15px]">
+                        探險達人：Constantine
                       </div>
-                      <div className="md:text-base text-[13px]">
+                      <div className="md:text-[15px]">
                         出團時間：2024年10月25日
                       </div>
-                      <p className="md:text-base text-[13px] md:h-[120px] h-[151px] text-ellipsis overflow-hidden">
+                      <p className="md:text-[15px] text-ellipsis overflow-hidden">
                         麗庭莊園位於台北內湖的工業園區，前身為婚禮場地。
                         該酒店於 2005
                         年開業，由長興婚禮事業有限公司管理，該公司熱衷於為婚禮和其他活動提供更大、更奢華的空間，顛覆當地市場。
@@ -57,48 +60,128 @@ export default function FillDoc() {
                   </Link>
                 </div>
                 <hr />
+                <div className="md:text-xl font-semibold text-neutral-500">
+                  行程資訊
+                </div>
+                <div className="space-y-2 px-7 font-semibold text-neutral-500">
+                  <div>目前參加人數：10/15 人</div>
+                  <div>出發時間：2024/06/09, 上午 11 點</div>
+                  <div>時長：6小時</div>
+                  <div>探索難易度：中等</div>
+                  <div>交通方式：開車</div>
+                  <div>集合地點：松山捷運站</div>
+                </div>
+                <hr />
               </div>
-              <div>
-                <div>聯絡資料</div>
-                <i class="ri-add-line"></i>
-                <div id="infoCard" className="w-1/2 bg-zinc-300 uppercase px-4 py-4 space-y-1">
-                  <div>
-                    <label>user name</label>
-                    <input type="text" />
+              <div className="space-y-5 text-neutral-500">
+                <div className="flex items-center gap-5 justify-between">
+                  <div className="md:text-xl font-semibold font-['IBM Plex Mono']">
+                    聯絡資料
                   </div>
-                  <div>
-                    <label>name</label>
-                    <input type="text" />
+                  <button>
+                    <i class="ri-add-line ri-xl"></i>
+                    <span className="pl-1">新增報名人數</span>
+                  </button>
+                </div>
+                <div className="md:flex flex-wrap md:space-y-0 space-y-5">
+                  <div className="md:w-1/2 w-full space-y-4">
+                    <div className="flex flex-col px-7 space-y-5">
+                      <div className="flex flex-wrap">
+                        {' '}
+                        <input type="checkbox" name="" id="" />
+                        <div className=" pl-2 text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                          同會員資料
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                          參加者姓名
+                        </div>
+                        <input
+                          type="text"
+                          name="name"
+                          className="w-full bg-zinc-100 rounded"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                          電子信箱
+                        </div>
+                        <input
+                          type="text"
+                          name="email"
+                          className="w-full bg-zinc-100 rounded"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                          手機號碼
+                        </div>
+                        <input
+                          type="text"
+                          name="mobile"
+                          className="w-full bg-zinc-100 rounded"
+                        />
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <label>birthday</label>
-                    <input type="date" />
-                  </div>
-                  <div>
-                    <label>phone</label>
-                    <input type="text" />
-                  </div>
-                  <div>
-                    <label>email</label>
-                    <input type="text" />
+                  <div className="md:w-1/2 w-full space-y-4">
+                    <div className="flex flex-col px-7 space-y-5">
+                      <div className="flex">
+                        {' '}
+                        
+                        <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                          額外參加者：
+                        </div>
+                      </div>
+                      <div className="space-y-1">
+                        <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                          參加者姓名
+                        </div>
+                        <input
+                          type="text"
+                          name="name"
+                          className="w-full bg-zinc-100 rounded"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                          電子信箱
+                        </div>
+                        <input
+                          type="text"
+                          name="email"
+                          className="w-full bg-zinc-100 rounded"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                          手機號碼
+                        </div>
+                        <input
+                          type="text"
+                          name="mobile"
+                          className="w-full bg-zinc-100 rounded"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <hr />
               </div>
-              <div>
-                <div>注意事項</div>
+              <div className="space-y-5 text-neutral-500">
                 <div>
-                  <div>年齡限制</div>
-                  <input type="radio" />
-                  <label htmlFor="">我已滿 18 歲</label>
+                  <Link href="" className="md:text-xl font-semibold">
+                    探險禮儀
+                  </Link>
                 </div>
-                <div>
-                  <div><Link href="">探險禮儀</Link></div>
-                  <input type="radio" />
-                  <label htmlFor="">已詳細閱讀並同意遵守</label>
+                <div className="px-7">
+                  <input type="checkbox" name="" id="" />
+                  <label htmlFor="" className="pl-2">
+                    已詳細閱讀並同意遵守
+                  </label>
                 </div>
               </div>
-
             </div>
 
             <Link

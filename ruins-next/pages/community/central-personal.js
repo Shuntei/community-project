@@ -1,22 +1,22 @@
-import React, { useState } from "react";
-import "tailwindcss/tailwind.css";
-import { RiSettings3Fill, RiEqualizerLine, RiAddLine } from "@remixicon/react";
-import MainContent from "@/components/johnny/content-list";
-import PostModal from "@/components/johnny/modal-post";
-import PersonalBackground from "@/components/johnny/ps-background";
-import Profile from "@/components/johnny/ps-profile";
-import SeeMoreFollows from "@/components/johnny/seemore-follows";
-import SeeMoreNotification from "@/components/johnny/seemore-notification";
-import { useToggles } from "@/contexts/use-toggles";
+import React, { useState } from 'react'
+import 'tailwindcss/tailwind.css'
+import { RiSettings3Fill, RiEqualizerLine, RiAddLine } from '@remixicon/react'
+import PostModal from '@/components/johnny/modal-post'
+import PersonalBackground from '@/components/johnny/ps-background'
+import Profile from '@/components/johnny/ps-profile'
+import SeeMoreFollows from '@/components/johnny/seemore-follows'
+import SeeMoreNotification from '@/components/johnny/seemore-notification'
+import { useToggles } from '@/contexts/use-toggles'
+import PersonalContent from '@/components/johnny/content-list-ps'
 
 export default function CentralContentP() {
   const { postModal, setPostModal, toggles, removeBox, setRemoveBox } =
-    useToggles();
+    useToggles()
 
   return (
     <>
       {/* 依據navbar 加mt-[88px] pc:mt-[113px] */}
-      <div className="w-full flex justify-center pt-[50px] bg-black mt-[88px] pc:mt-[113px]">
+      <div className="w-full flex justify-center pc:pt-[50px] bg-black mt-[50px] pc:mt-[112px]">
         {/* <!-- 中間內容 --> */}
         <section className="w-full pc:w-[800px]">
           {/* <div> */}
@@ -29,7 +29,7 @@ export default function CentralContentP() {
             <button
               className="items-center flex justify-center leading-10 w-[100%] hover:hover2 text-[20px]"
               onClick={() => {
-                setPostModal(!postModal);
+                setPostModal(!postModal)
               }}
             >
               <RiAddLine />
@@ -39,7 +39,7 @@ export default function CentralContentP() {
           {postModal && <PostModal />}
           {/* <!-- 貼文列表 --> */}
           {toggles.follows || toggles.notification ? (
-            ""
+            ''
           ) : (
             <div className="  px-10 bg-neutral-500 flex-col my-5 rounded-t-lg text-white mb-0">
               <div className="flex items-center justify-between py-2">
@@ -63,10 +63,10 @@ export default function CentralContentP() {
           ) : toggles.notification ? (
             <SeeMoreNotification />
           ) : (
-            <MainContent />
+            <PersonalContent />
           )}
         </section>
       </div>
     </>
-  );
+  )
 }

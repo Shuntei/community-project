@@ -8,7 +8,7 @@ export default function NavbarMobile() {
       title: 'general',
       items: [
         { label: 'Profile', href: '/member/account-settings/account' },
-        { label: 'Email & Password', href: '/member/account-settings/emailAndPassword' },
+        { label: 'Email & Password', href: '/member/account-settings/email-and-password' },
       ],
     },
     {
@@ -21,16 +21,16 @@ export default function NavbarMobile() {
     {
       title: 'shop',
       items: [
-        { label: 'history order', href: '#order' },
+        { label: 'history order', href: '/product/my-order' },
         { label: 'favorite products', href: '#products' },
       ],
     },
     {
       title: 'tour',
       items: [
-        { label: 'my trips', href: '#trips' },
-        { label: 'favorite tours', href: '#tours' },
-        { label: 'my posts', href: '#posts' },
+        { label: 'my trips', href: '/member/account-settings/my-trips' },
+        { label: 'favorite tours', href: '/member/account-settings/fav-tours' },
+        { label: 'my posts', href: '/member/account-settings/my-posts' },
       ],
     },
     {
@@ -49,24 +49,10 @@ export default function NavbarMobile() {
   const handleArrowLR = () => {
     setIsLeftIcon(!isLeftIcon)
     setSelectedDropdown(null) // 將 dropdown 重置收起
-    if (!isLeftIcon) {
-      // 關閉 menu 時, title 重置回初始順序
-      setDropdownList(initialDropdownList)
-    }
   }
 
   const handleDropdown = (title) => {
     setSelectedDropdown(title)
-
-    const clickedIndex = dropdownList.findIndex(
-      (dropdown) => dropdown.title === title,
-    )
-    const reorderedDropdownList = [
-      dropdownList[clickedIndex],
-      ...dropdownList.slice(clickedIndex + 1),
-      ...dropdownList.slice(0, clickedIndex),
-    ]
-    setDropdownList(reorderedDropdownList)
   }
 
   return (

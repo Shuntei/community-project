@@ -27,7 +27,9 @@ export default function Search() {
         role="search"
         onSubmit={(e) => {
           e.preventDefault()
-          router.push(`?keyword=` + e.currentTarget.keyword.value)
+          router.push(`?keyword=` + e.currentTarget.keyword.value,
+                  undefined,
+                  { scroll: false })
         }}
       >
         <input
@@ -37,7 +39,7 @@ export default function Search() {
           aria-label="Search"
           name="keyword"
         />
-        <button class="btn btn-outline-success" type="submit">
+        <button className="btn btn-outline-success" type="submit">
           <RiSearchLine />
         </button>
       </form>
