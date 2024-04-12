@@ -152,6 +152,9 @@ router.post("/google-login", async (req, res) => {
       username: "",
       token: "",
     },
+    profile: {
+      profileUrl: ""
+    }
   };
 
   const { account, username, photoUrl } = req.body;
@@ -195,6 +198,10 @@ router.post("/google-login", async (req, res) => {
               username: rows[0].username,
               token,
             };
+
+            output.profile = {
+              profileUrl: photoUrl,
+            }
           }
         }
       }
@@ -219,6 +226,10 @@ router.post("/google-login", async (req, res) => {
       username: row.username,
       token,
     };
+
+    output.profile = {
+      profileUrl: photoUrl,
+    }
   }
 
   res.json(output);

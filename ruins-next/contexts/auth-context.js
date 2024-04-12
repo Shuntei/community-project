@@ -15,10 +15,25 @@ const defaultAuth = {
   username: '',
   token: '',
 }
+
+const defaultProfile = {
+  profile_id: 0,
+  user_id: 0,
+  profileUrl: '',
+  coverUrl: '',
+  aboutMe: '',
+  showContactInfo: false,
+  ytLink: '',
+  fbLink: '',
+  igLink: '',
+  gmailLink: '',
+}
+
 const storageKey = 'ruins-auth'
 
 export function AuthContextProvider({ children }) {
   const googleAuth = new GoogleAuthProvider()
+  const [profile, setProfile] = useState(defaultProfile)
   const [auth, setAuth] = useState(defaultAuth)
   const { user, setUser } = useAuthState(firebaseAuth)
 
@@ -86,6 +101,7 @@ export function AuthContextProvider({ children }) {
         if (res.success) {
           localStorage.setItem(storageKey, JSON.stringify(res.data))
           setAuth(res.data)
+          setProfile({ ...profile, profileUrl: res.profile.profileUrl });
           return true
         } else {
           return false
@@ -123,7 +139,7 @@ export function AuthContextProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ login, logout, signup, auth, googleLogin }}>
+    <AuthContext.Provider value={{ login, logout, signup, auth, profile, googleLogin }}>
       {children}
     </AuthContext.Provider>
   )
