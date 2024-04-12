@@ -8,7 +8,6 @@ export default function Category() {
   const router = useRouter()
   const handleChange = (e) => {
     const cateValue = e.currentTarget.getAttribute('data-value')
-    console.log(cateValue)
     setCate(cateValue)
     router.push(
       {
@@ -25,8 +24,6 @@ export default function Category() {
       <div className="w-full md:gap-[36px]  gap-[20px]  justify-between   md:px-24 px-4 items-center  flex ">
         <div
           onClick={() => {
-            console.log('aaa')
-
             router.push(
               {
                 pathname: '/shop/product/list',
