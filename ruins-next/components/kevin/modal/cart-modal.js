@@ -44,7 +44,7 @@ function CartModal() {
                   <div key={v.pid} className="flex w-full justify-between py-3">
                     <div className="md:w-1/5  ">
                       <Image
-                        src={v.img}
+                        src={`/images/product/${v.img.split(',')[0]}`}
                         alt="Picture of camp"
                         width={100}
                         height={100}
