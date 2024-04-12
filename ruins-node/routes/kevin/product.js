@@ -23,12 +23,12 @@ const getListData = async (req, res) => {
       : "";
       let categoryEsc = db.escape(`${main_category}`);
 
-  // 分類篩選
-  let category =
-    req.query.category && typeof req.query.category === "string"
-      ? req.query.category
+  // 副分類篩選
+  let sub_category =
+    req.query.sub_category && typeof req.query.sub_category === "string"
+      ? req.query.sub_category
       : "";
-  let categoryEsc2 = db.escape(`${category}`);
+  let sub_categoryEsc = db.escape(`${sub_category}`);
 
   // 價格由高到低、低到高、最新上架
   let sortBy =
@@ -43,6 +43,11 @@ const getListData = async (req, res) => {
   if (main_category) {
     qs.main_category = main_category;
     where += ` AND (category_id = ${categoryEsc})`;
+  }
+
+  if (sub_category) {
+    qs.sub_category = sub_category;
+    where += ` AND (sub_category_id = ${sub_categoryEsc})`;
   }
 
   if (sortBy) {
