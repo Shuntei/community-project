@@ -36,7 +36,7 @@ export default function JoinTour() {
                     className="md:flex md:space-x-8 md:space-y-0 space-y-3"
                   >
                     <img
-                      src="/images/borou/dry01.jpg"
+                      src="/images/gracehill0.jpg"
                       className="md:w-[150px] w-full md:h-[150px] rounded object-cover"
                       alt=""
                     />
@@ -131,7 +131,7 @@ export default function JoinTour() {
                         {' '}
                         
                         <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
-                          額外參加者：
+                          ◆ 額外參加者：
                         </div>
                       </div>
                       <div className="space-y-1">
@@ -185,7 +185,7 @@ export default function JoinTour() {
             </div>
 
             <Link
-              href=""
+              href="/tour/join-confirm"
               className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex "
             >
               <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
