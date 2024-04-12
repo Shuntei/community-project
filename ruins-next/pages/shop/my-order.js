@@ -6,7 +6,7 @@ import AccountLayout from '@/components/linda/accountLayout'
 export default function MyOrder() {
   return (
     <>
-      <AccountLayout>
+  
         <div className="w-full flex flex-col px-4 md:px-20 py-5 md:py-12 md:gap-12 gap-5 ">
           <Modal />
           {/* 訂單完成/未完成超連結 &&我的訂單標題*/}
@@ -156,7 +156,12 @@ export default function MyOrder() {
             </div>
           </div>
         </div>
-      </AccountLayout>
+
     </>
   )
 }
+
+
+MyOrder.getLayout = function getLayout(page) {
+  return <AccountLayout>{page}</AccountLayout>;
+};

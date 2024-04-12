@@ -64,7 +64,7 @@ export default function Pid() {
           </div>
           <div className="md:order-2 order-1 ">
             <Image
-              src={product.img.split(',')[0]}
+              src={`/images/product/${product.img.split(',')[0]}`}
               alt="Picture of camp"
               width={500}
               height={500}
@@ -154,18 +154,30 @@ export default function Pid() {
             </div>
             {/* 右-圖片 */}
             <div className="md:px-5 md:py-10 py-5 space-y-3">
-              <img
-                className=" aspect-square rounded-xl"
-                src={product.img.split(',')[1]}
-              />
-              <img
-                className="aspect-square  rounded-xl"
-                src={product.img.split(',')[2]}
-              />
-              <img
-                className="aspect-square  rounded-xl"
-                src={product.img.split(',')[3]}
-              />
+            <Image
+              src={`/images/product/${product.img.split(',')[1]}`}
+              alt="Picture of camp"
+              width={1000}
+              height={1000}
+              className="rounded-xl"
+              unoptimized={true}
+            />
+            <Image
+              src={`/images/product/${product.img.split(',')[2]}`}
+              alt="Picture of camp"
+              width={1000}
+              height={1000}
+              className="rounded-xl"
+              unoptimized={true}
+            />
+            <Image
+              src={`/images/product/${product.img.split(',')[3]}`}
+              alt="Picture of camp"
+              width={1000}
+              height={1000}
+              className="rounded-xl"
+              unoptimized={true}
+            />
             </div>
           </div>
         </div>
