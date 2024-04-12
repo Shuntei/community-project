@@ -94,22 +94,21 @@ export default function MainPost() {
 
             {/* <!-- 圖片 --> */}
             <div className="mb-2">
-              {getPost[0].image_url && (
-                <Image
-                  src={getPost[0].image_url}
-                  width={0}
-                  height={0}
-                  // sizes="100vw"
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    maxHeight: '517px',
-                    objectFit: 'contain',
-                  }}
-                  alt=""
-                  unoptimized={true}
-                />
-              )}
+              <Image
+                src={getPost[0].image_url}
+                width={0}
+                height={0}
+                // sizes="100vw"
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  maxHeight: '517px',
+                  objectFit: 'contain',
+                }}
+                alt=""
+                unoptimized={true}
+              />
+              {/* <Image src={postImg} /> */}
             </div>
             {/* <!-- 留言按鈕 --> */}
             <div
@@ -139,7 +138,12 @@ export default function MainPost() {
                 </div>
               </div>
               <div>
-                <div>輸入的內容</div>
+                <div>
+                  在這個現代化的世界中，我們常常著眼於高樓大廈和繁忙的街道，但往往忽略了城市中蘊藏的另一種美——廢墟。走進這些被遺棄的建築物，你會感受到一種截然不同的氛圍，
+                  伴隨著曾經熱鬧的歷史和靜靜的荒廢。廢墟不僅僅是城市的遺忘之地，更是一個充滿著神秘和探險的世界。
+                  在廢墟中，你可以發現被遺忘的故事。墻壁上褪色的塗鴉，斑駁的地板上殘留的痕跡，這些都是過去的痕跡，記錄著這個地方的生活和歷史。
+                  每一個廢墟都有著屬於自己的故事，等待著有心人的探索和發現。
+                </div>
               </div>
             </div>
             {/* <!-- 留言回覆 --> */}
