@@ -7,7 +7,6 @@ import tourRouter from "./routes/tony/tour.js"
 import db from "./utils/mysql2-connect.js";
 import cors from "cors"
 import gameRouter from "./routes/ellie/game.js"
-import cors from "cors";
 
 const upload = multer({ dest: "profile_uploads/" });
 

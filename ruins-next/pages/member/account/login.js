@@ -5,17 +5,7 @@ import { IoMdEyeOff } from 'react-icons/io'
 import { FaGoogle } from 'react-icons/fa'
 import AccountBtn from '@/components/linda/buttons/accountBtn'
 import { useAuth } from '@/contexts/auth-context'
-import { z } from 'zod'
 import { useRouter } from 'next/router'
-
-const nameRe = new RegExp(/^[a-zA-Z0-9]+$/)
-const schemaName = z
-  .string()
-  .min(3, { message: '' })
-  .regex(nameRe, { message: '' })
-const passwordRe = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
-const schemaPassword = z.string().regex(passwordRe, { message: '' })
-const schemaEmail = z.string().email({ message: '' })
 
 export default function Login() {
   const { login, auth, googleLogin } = useAuth()
