@@ -1,7 +1,21 @@
-import React from 'react'
+import React, { useState} from 'react'
 import { RiSubtractLine, RiArrowDownWideFill, } from "@remixicon/react";
+import AchievementsPopup from '../popup/popupachievements';
+import Notepad from '../notepad/notepad';
 
 export default function Dropdown() {
+  const [showPopup, setShowPopup] = useState(false);
+
+  const togglePopup = () => {
+    setShowPopup(!showPopup);
+  }
+
+  const [ showNotepad, setShowNotepad ] = useState(false);
+
+  const toggleNotepad = () => {
+    setShowNotepad(!showNotepad);
+  }
+
   return (
     <>
 <div className='absolute'>
@@ -46,7 +60,7 @@ export default function Dropdown() {
                   </div>
                   <div className='w-7 h-7 flex items-center justify-center bg-gray-800 text-white font-light'>+6</div>
                 </div>
-                <div className="mt-2 text-xs font-extralight font-['IBM Plex Mono'] flex flex-row-reverse">View All</div>
+                <div className="mt-2 text-xs font-extralight font-['IBM Plex Mono'] flex flex-row-reverse"><button onClick={togglePopup}>View All</button></div>
               </div>
 
               <div className='inline-flex gap-32 border-b-2 border-black'>
@@ -58,7 +72,7 @@ export default function Dropdown() {
                 <div className="ml-1 mb-1 text-xs font-light font-['IBM Plex Mono'] border-b border-black inline-block">to do ...</div>
                 <div className="ml-1  text-xs font-light font-['IBM Plex Mono'] border-b border-black inline-block">some thoughts</div> 
                 </div>
-                <div className="mt-2 text-xs font-extralight font-['IBM Plex Mono'] flex flex-row-reverse">New Note</div>
+                <div className="mt-2 text-xs font-extralight font-['IBM Plex Mono'] flex flex-row-reverse"><button onClick={toggleNotepad}>New Note</button></div>
               </div> 
               <div className='inline-flex gap-30 border-b-2 border-black'>
               <div className="flex-1 text-sm font-regular font-['IBM Plex Mono'] ">SCREENSHOTS</div>
@@ -87,5 +101,7 @@ export default function Dropdown() {
           <RiArrowDownWideFill className='w-16 h-16 ml-16'/>
         </div>
       </div>
+      {showPopup && <AchievementsPopup onClose={togglePopup} />}
+      {showNotepad && <Notepad onClose={toggleNotepad}/>}
       </>
   )}

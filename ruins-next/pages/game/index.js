@@ -16,10 +16,10 @@ export default function Index() {
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
       </Head>
-      <Navbar/>
+      <Navbar />
       {/* <Notepad/> */}
       {/* <Deletenote /> */}
-      <Main/>
+      <Main />
       <Footer />
     </>
   )

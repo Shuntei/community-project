@@ -4,6 +4,8 @@ import johnnyRouter from "./routes/johnny/community-one.js";
 import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js";
 import db from "./utils/mysql2-connect.js";
+import cors from "cors"
+import gameRouter from "./routes/ellie/game.js"
 import cors from "cors";
 
 
@@ -24,6 +26,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use("/member", memberRouter);
 app.use("/product", productRouter);
+app.use("/game", gameRouter);
 app.use("/johnny", johnnyRouter);
 
 app.use((req, res) => {
