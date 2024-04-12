@@ -11,29 +11,32 @@ export default function NavbarPopup() {
         id="catalogueBox"
         className={styles["catalogueBox"]}
       >
-        <div className={styles["title"]}>
+        <div className={`${styles["title"]} space-y-1`}>
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">SHOP</a></p>
-          <p className="font-['IBM Plex Mono']"><Link href="/shop">ALL GOODS</Link></p>
-          <p className="font-['IBM Plex Mono']"><Link href="/shop/my-order">ORDER LIST</Link></p>
+          <p className="font-['IBM Plex Mono'] "><Link href="/shop">ALL GOODS</Link></p>
+          <p className="font-['IBM Plex Mono'] "><Link href="/shop/my-order">ORDER LIST</Link></p>
         </div>
-        <div className={styles["title"]}>
+        <div className={`${styles["title"]} space-y-1`}>
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">COMMUNITIES</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">HOME</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">ALL GOODS</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">ARCHIVE</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">MEMBERSHIP</a></p>
         </div>
-        <div className={styles["titleMagintop"]}>
-          <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="/chat/01-check-role">線上聊天室</a></p>
-          <p className="font-['IBM Plex Mono']"><a href="/chat/01-check-role">立即進入</a></p>
+        <div className={`${styles["title"]} space-y-1`}>
+          <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">LIVE</a></p>
+          <p className="font-['IBM Plex Mono']"><a href="#">HOME</a></p>
+          <p className="font-['IBM Plex Mono']"><a href="#">ALL GOODS</a></p>
+          <p className="font-['IBM Plex Mono']"><a href="#">ARCHIVE</a></p>
+          <p className="font-['IBM Plex Mono']"><a href="#">MEMBERSHIP</a></p>
         </div>
-        <div className={styles["titleMagintop"]}>
+        <div className={`${styles["title"]} space-y-1`}>
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="#">TOUR</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">SEARCH FOR TRIPS</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">FAVORITE TOURS</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">MY POSTS</a></p>
         </div>
-        <div className={styles["titleMagintop"]}>
+        <div className={`${styles["title"]} space-y-1`}>
           <p className="border-b mb-5 font-['IBM Plex Mono']"><a href="/ruins-next/pages/game/indexGame.js">GAME</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">ACHIEVEMENT</a></p>
           <p className="font-['IBM Plex Mono']"><a href="#">NOTE</a></p>
