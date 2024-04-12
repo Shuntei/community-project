@@ -4,20 +4,23 @@ import { useAuth } from '@/contexts/auth-context'
 import Image from 'next/image'
 
 export default function LogoutModal({ isVisible }) {
-  const { logout, auth } = useAuth()
+  const { logout, auth, profile } = useAuth()
   if (!isVisible) return null
   return (
     <>
       {/* mobile pop up logout */}
       <div className="md:hidden w-full absolute top-[47px] left-0 bg-black flex-col items-center">
         <div className="flex flex-col py-[20px] gap-[10px] items-center justify-center">
+        {profile.profileUrl ? 
           <Image
             width={50}
             className="rounded-full"
             height={50}
-            src="https://lh3.googleusercontent.com/a/ACg8ocI4VUmpEMt9lXmuUU6IGPtHQ6DfAX7DthWshGUN4Hi7vVqq7A=s96-c"
+            src={profile.profileUrl}
             alt=""
           />
+        : ''
+        }
           <div>{auth.username}</div>
         </div>
         <div className="flex-col text-xs items-center flex">

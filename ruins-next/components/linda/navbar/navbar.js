@@ -20,7 +20,7 @@ import CartModal from '@/components/kevin/modal/cart-modal'
 import { useAuth } from '@/contexts/auth-context'
 
 export default function Navbar({ className, navColor = 'white' }) {
-  const { auth, logout } = useAuth()
+  const { auth, profile, logout } = useAuth()
   const [showModal, setShowModal] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
@@ -83,14 +83,17 @@ export default function Navbar({ className, navColor = 'white' }) {
                 >
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
                   <a href="" className="absolute top-[-4px] left-[-35px]">
-                    {/* <CgProfile className="text-[25px]" /> */}
-                    <Image
-                      width={25}
-                      className="rounded-full"
-                      height={25}
-                      src="https://lh3.googleusercontent.com/a/ACg8ocI4VUmpEMt9lXmuUU6IGPtHQ6DfAX7DthWshGUN4Hi7vVqq7A=s96-c"
-                      alt=""
-                    />
+                    {profile.profileUrl ? (
+                      <Image
+                        width={25}
+                        className="rounded-full"
+                        height={25}
+                        src={profile.profileUrl}
+                        alt=""
+                      />
+                    ) : (
+                      <CgProfile className="text-[25px]" />
+                    )}
                   </a>
                   <div className="tracking-wide before:py-[10px]">
                     {auth.username}
@@ -148,7 +151,15 @@ export default function Navbar({ className, navColor = 'white' }) {
             href=""
             className={styles['profile-icon']}
           >
-            {navColor === 'white' ? (
+            {profile.profileUrl ? (
+              <Image
+                width={20}
+                className="rounded-full"
+                height={20}
+                src={profile.profileUrl}
+                alt=""
+              />
+            ) : navColor === 'white' ? (
               <Image alt="" src={ProfileIcon} />
             ) : (
               <Image alt="" src={ProfileIconBlack} />

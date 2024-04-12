@@ -159,19 +159,19 @@ router.get("/posts/:post_id?", async (req, res) => {
 
     let totalPostsRows = [];
     let totalPages = 0;
-
+    
     if (totalRows) {
       totalPages = Math.ceil(totalRows / perPage);
       if (page > totalPages) {
         const newQuery = { ...req.query, page: totalPages };
         const qs = new URLSearchParams(newQuery).toString();
+        console.log("qs--", qs);
         return { success: false, redirect: `?` + qs };
       }
     }
 
-    const totalPostsSql = ` SELECT * FROM sn_posts ${where} ORDER BY post_id DESC LIMIT ${
-      (page - 1) * perPage
-    }, ${perPage}`;
+    const totalPostsSql = ` SELECT * FROM sn_posts ${where} 
+    ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
 
     // console.log(req.query);
