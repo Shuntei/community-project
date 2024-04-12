@@ -238,7 +238,7 @@ export default function TourPost() {
                 如果你正在尋找與他人或你自己共度美好時光的小事，這是一個獨特、可愛的體驗。
               </p>
             </div>
-            {/* <div className="md:w-[46%] w-full px-2 py-6 space-y-5">
+            <div className="md:w-[46%] w-full px-2 py-6 space-y-5">
               <div className="flex space-x-3 items-center">
                 <Link href="">
                   <img
@@ -312,7 +312,7 @@ export default function TourPost() {
               <p>
                 如果你正在尋找與他人或你自己共度美好時光的小事，這是一個獨特、可愛的體驗。
               </p>
-            </div> */}
+            </div>
           </div>
           <button className="md:w-fit w-full text-xl px-5 py-4 border rounded-md  hover:bg-black">
             顯示全部評價
@@ -348,26 +348,6 @@ export default function TourPost() {
                 <div className="text-[15px]">出團時間 : 3月29日</div>
               </div>
             </div>
-            {/* <div className="bg-white md:w-1/4 w-full rounded overflow-hidden space-y-5 pb-4">
-              <img
-                class="h-auto max-w-full"
-                src="/images/tempuse.jpg"
-                alt=""
-              />
-              <div className="flex justify-between px-5">
-                <span className="text-[15px] content-center">
-                  <i class="ri-star-fill ri-lg pr-1"></i>4.69
-                </span>
-                <span className="space-x-1">
-                  <i class="ri-heart-3-line ri-lg"></i>
-                  <i class="ri-share-forward-fill ri-lg"></i>
-                </span>
-              </div>
-              <div className="px-5 space-y-1">
-                <div className="text-xl font-semibold">台北監獄圍牆</div>
-                <div className="text-[15px]">出團時間 : 3月29日</div>
-              </div>
-            </div>
             <div className="bg-white md:w-1/4 w-full rounded overflow-hidden space-y-5 pb-4">
               <img
                 class="h-auto max-w-full"
@@ -407,7 +387,27 @@ export default function TourPost() {
                 <div className="text-xl font-semibold">台北監獄圍牆</div>
                 <div className="text-[15px]">出團時間 : 3月29日</div>
               </div>
-            </div> */}
+            </div>
+            <div className="bg-white md:w-1/4 w-full rounded overflow-hidden space-y-5 pb-4">
+              <img
+                class="h-auto max-w-full"
+                src="/images/tempuse.jpg"
+                alt=""
+              />
+              <div className="flex justify-between px-5">
+                <span className="text-[15px] content-center">
+                  <i class="ri-star-fill ri-lg pr-1"></i>4.69
+                </span>
+                <span className="space-x-1">
+                  <i class="ri-heart-3-line ri-lg"></i>
+                  <i class="ri-share-forward-fill ri-lg"></i>
+                </span>
+              </div>
+              <div className="px-5 space-y-1">
+                <div className="text-xl font-semibold">台北監獄圍牆</div>
+                <div className="text-[15px]">出團時間 : 3月29日</div>
+              </div>
+            </div>
             <button className="md:block hidden">
               <i class="ri-arrow-right-s-line ri-2x bg-white px-2 py-2 rounded-md"></i>
             </button>
