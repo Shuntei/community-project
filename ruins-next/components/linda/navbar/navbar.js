@@ -131,16 +131,16 @@ export default function Navbar({ className, navColor = 'white' }) {
         <div
           className={`${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
-          <a href="" className={`${styles['nav-cart-mobile']}`}>
-            <div>CART</div>
+          <div className={`${styles['nav-cart-mobile']}`}>
+          <CartModal />
 
             {navColor === 'white' ? (
               <Image alt="" src={CartLine} />
             ) : (
               <Image alt="" src={CartLineB} />
             )}
-            <div className={styles['cart-number']}>0</div>
-          </a>
+            <div className={styles['cart-number']}>{totalItems}</div>
+          </div>
           <button
             onClick={() => {
               setShowModal(!showModal)

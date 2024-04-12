@@ -11,7 +11,7 @@ export default function FillDoc() {
 
   return (
     <>
-      <div className=" bg-gray-100 flex flex-col justify-center items-center pt-28">
+      <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28">
         {/* header開始 */}
         <Navbar navColor={""} />
         {/* header結束 */}
@@ -179,7 +179,7 @@ export default function FillDoc() {
                     <div className="flex w-full justify-between pb-4">
                       <div className="w-1/5  ">
                         <Image
-                          src={v.img}
+                          src={`/images/product/${v.img.split(',')[0]}`}
                           alt="Picture of camp"
                           width={100}
                           height={50}

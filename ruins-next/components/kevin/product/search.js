@@ -33,7 +33,7 @@ export default function Search() {
         }}
       >
         <input
-          className="form-control me-2 p-2 bg-transparent"
+          className="form-control me-2 p-2 bg-transparent w-40"
           type="search"
           placeholder="Search"
           aria-label="Search"

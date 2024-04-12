@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import 'remixicon/fonts/remixicon.css'
 import Link from 'next/link'
+import { useCart } from '@/hooks/use-cart'
 
 export default function NavbarMobile() {
+  const { totalItems } = useCart()
   const initialDropdownList = [
     {
       title: 'general',

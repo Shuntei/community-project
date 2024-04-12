@@ -7,7 +7,6 @@ const router = express.Router();
 const getListData = async (req, res) => {
   let page = +req.query.page || 1; //用戶要求查看第幾頁
   let where = " WHERE 1 "; //後面不確定有幾個搜尋條件
-  let qs = {}; //把querystring的設定傳給template
 
   // 關鍵字搜尋
   let keyword =
@@ -21,7 +20,7 @@ const getListData = async (req, res) => {
     req.query.main_category && typeof req.query.main_category === "string"
       ? req.query.main_category
       : "";
-      let categoryEsc = db.escape(`${main_category}`);
+  let categoryEsc = db.escape(`${main_category}`);
 
   // 副分類篩選
   let sub_category =
@@ -37,21 +36,17 @@ const getListData = async (req, res) => {
       : "";
 
   if (keyword) {
-    qs.keyword = keyword; // 如果有qs 就給keyword屬性，設定到keyword
     where += ` AND ( \`name\` LIKE ${keywordEsc})`;
   }
   if (main_category) {
-    qs.main_category = main_category;
     where += ` AND (category_id = ${categoryEsc})`;
   }
 
   if (sub_category) {
-    qs.sub_category = sub_category;
     where += ` AND (sub_category_id = ${sub_categoryEsc})`;
   }
 
   if (sortBy) {
-    qs.sortBy = sortBy;
     if (sortBy === "priceFromHighToLow") {
       where += ` ORDER BY \`price\` DESC `;
     } else if (sortBy === "priceFromLowToHigh") {
@@ -59,8 +54,8 @@ const getListData = async (req, res) => {
     } else if (sortBy === "latest") {
       where += ` ORDER BY \`create_at\` ASC `;
     }
-  }else{
-    where += ` ORDER BY \`pid\` DESC `;
+  } else {
+    where += ` ORDER BY \`create_at\` ASC `;
   }
 
   if (page < 1) {
@@ -90,7 +85,6 @@ const getListData = async (req, res) => {
     perPage,
     rows,
     query: req.query,
-    qs:qs,
   };
 };
 

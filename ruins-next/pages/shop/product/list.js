@@ -13,6 +13,7 @@ import Search from '@/components/kevin/product/search'
 import SortBy from '@/components/kevin/product/sort-by'
 import SubCategory from '@/components/kevin/product/sub-category'
 import { PRODUCT_LIST } from '@/components/config/api-path'
+import Items from '@/components/kevin/product/items'
 
 export default function List() {
   const router = useRouter()
@@ -56,7 +57,7 @@ export default function List() {
   }, [router.query.main_category, router.query.sortBy, router.query.keyword])
   return (
     <>
-      <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-28">
+      <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-8 md:pt-28">
         {/* header開始 */}
         {/* header開始 */}
         <Navbar navColor={''} />
@@ -93,38 +94,7 @@ export default function List() {
 
           <div className="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
             {' '}
-            {products.rows &&
-              products.rows.map((v, i) => {
-                return (
-                  <div className=" flex-col  gap-5 flex " key={v.pid}>
-                    <Link href={`/shop/product/${v.pid}`}>
-                      <img
-                        className="w-full aspect-square  rounded-xl"
-                        src={`/images/product/${v.img.split(',')[0]}`}
-                        alt="pic"
-                      />
-                    </Link>
-                    <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                      <Link
-                        href={`/shop/product/${v.pid}`}
-                        className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']"
-                      >
-                        {v.name}
-                      </Link>
-                      <div className="text-zinc-500 md:w-full md:text-sm text-xs font-medium font-['IBM Plex Mono'] flex justify-between">
-                        <div>{v.price}</div>
-                        <button
-                          onClick={() => {
-                            onAddItem(v)
-                          }}
-                        >
-                          +
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
+            <Items />
           </div>
           {/* 商品欄結束 */}
           {/* 頁碼開始 */}
