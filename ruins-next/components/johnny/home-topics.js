@@ -26,7 +26,7 @@ export default function Topics() {
 
   return (
     <>
-      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] bg-black overflow-scroll z-[1002]">
+      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] bg-black overflow-scroll z-[998] rounded-b-3xl">
         <div className="text-white px-10 pt-3 pb-1 text-[20px]  cursor-pointer">
           TOPICS
         </div>
