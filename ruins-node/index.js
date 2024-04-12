@@ -28,6 +28,8 @@ app.use("/product", productRouter);
 app.use("/game", gameRouter);
 app.use("/tour", tourRouter);
 app.use("/johnny", johnnyRouter);
+app.use("/tour", tourRouter);
+
 
 app.use((req, res) => {
   res.status(404).send(`<h2>404 wrong path</h2>`);

@@ -8,7 +8,6 @@ export default function Category() {
   const router = useRouter()
   const handleChange = (e) => {
     const cateValue = e.currentTarget.getAttribute('data-value')
-    console.log(cateValue)
     setCate(cateValue)
     router.push(
       {
@@ -25,8 +24,6 @@ export default function Category() {
       <div className="w-full md:gap-[36px]  gap-[20px]  justify-between   md:px-24 px-4 items-center  flex ">
         <div
           onClick={() => {
-            console.log('aaa')
-
             router.push(
               {
                 pathname: '/shop/product/list',
@@ -59,16 +56,18 @@ export default function Category() {
             手作
           </div>
         </div>
-        <div className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-cover bg-center bg-no-repeat bg-camp relative cursor-pointer">
+        <div
+          className="w-full aspect-square md:rounded-[20px] rounded-[7px] flex-col justify-center items-center  flex bg-cover bg-center bg-no-repeat bg-camp relative cursor-pointer"
+          name="main_category"
+          data-value="3"
+          onClick={handleChange}
+        >
           <Image
             src="/images/camp.jpg"
             alt="Picture of camp"
             width={500}
             height={500}
             className="aspect-square rounded-xl"
-            name="main_category"
-            data-value="3"
-            onClick={handleChange}
           />
           <div className=" text-white text-[12px] md:text-[28px] font-bold font-['Noto Sans TC'] tracking-[2.80px] absolute">
             戶外

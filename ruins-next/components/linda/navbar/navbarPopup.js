@@ -5,7 +5,7 @@ import styles from './navbarPopup.module.css'
 export default function NavbarPopup() {
   return (
     <nav
-      className={`fixed z-20 top-0 left-0 bg-black w-full flex-col items-center py-9`}
+      className={`fixed z-[999] top-0 left-0 bg-black w-full flex-col items-center py-9`}
     >
       <div className={styles['nav']}>
         <div id="headerReplace" className={styles['headerReplace']}></div>
@@ -29,7 +29,7 @@ export default function NavbarPopup() {
               <a href="/community/main-personal">PERSONAL</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="community/main-messenger">MESSENGER</a>
+              <a href="/community/main-messenger">MESSENGER</a>
             </p>
           </div>
           <div className={`${styles['title']} space-y-1`}>
@@ -48,7 +48,9 @@ export default function NavbarPopup() {
               <a href="/member/account-settings/my-trips">MY TRIPS</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="/member/account-settings/fav-tour-lists">FAVORITE TOURS</a>
+              <a href="/member/account-settings/fav-tour-lists">
+                FAVORITE TOURS
+              </a>
             </p>
             <p className="font-['IBM Plex Mono']">
               <a href="/member/account-settings/my-posts">MY POSTS</a>
