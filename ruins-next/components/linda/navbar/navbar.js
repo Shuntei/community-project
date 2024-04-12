@@ -82,12 +82,12 @@ export default function Navbar({ className, navColor = 'white' }) {
                   }}
                 >
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
-                  <a href="" className="absolute top-[-4px] left-[-35px]">
+                  <a href="" className="absolute top-[-6px] left-[-35px]">
                     {profile.profileUrl ? (
                       <Image
-                        width={25}
+                        width={30}
                         className="rounded-full"
-                        height={25}
+                        height={30}
                         src={profile.profileUrl}
                         alt=""
                       />
