@@ -1,9 +1,9 @@
-import React, { useRef, useState, useEffect } from 'react'
 import { Peer } from "peerjs";
+import { useEffect, useRef, useState } from 'react';
 import io from 'socket.io-client';
+import { v4 as uuidV4 } from 'uuid';
 const socket = io.connect('http://localhost:3001')
 const myPeer = new Peer();
-import { v4 as uuidV4 } from 'uuid';
 
 export default function Stream() {
 
