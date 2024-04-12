@@ -3,6 +3,7 @@ import multer from "multer";
 import johnnyRouter from "./routes/johnny/community-node.js";
 import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js"
+import tourRouter from "./routes/tony/tour.js"
 import cors from "cors"
 
 const upload = multer({ dest: "profile_uploads/" });
@@ -24,7 +25,7 @@ app.use(cors(corsOptions))
 
 app.use("/member", memberRouter);
 app.use("/product", productRouter);
-
+app.use("/tour", tourRouter);
 
 
 app.use((req, res) => {

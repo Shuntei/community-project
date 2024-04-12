@@ -41,7 +41,7 @@ export default function HomeSidebar() {
               My Trips
             </Link>
             <Link
-              href="/member/account-settings/fav-tours"
+              href="/member/account-settings/fav-tour-lists"
               onClick={(e) => {
                 handleLinkClick("Favorite Tours");
               }}
@@ -91,7 +91,7 @@ export default function HomeSidebar() {
               Profile
             </Link>
             <Link
-              href="/member/account-settings/email-and-password"
+              href="/member/account-settings/emailAndPassword"
               onClick={(e) => {
                 handleLinkClick("emailAndPassword");
               }}
