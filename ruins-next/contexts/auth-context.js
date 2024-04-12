@@ -65,32 +65,36 @@ export function AuthContextProvider({ children }) {
   }
 
   const googleLogin = async () => {
-    const result = await signInWithPopup(firebaseAuth, googleAuth)
-    const { user } = result
-
-    let account = user.email
-    let username = user.displayName
-    let photoUrl = user.photoURL
-
-    if (account && username) {
-      const r = await fetch(MB_GOOGLE_LOGIN, {
-        method: 'post',
-        body: JSON.stringify({ account, username, photoUrl }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-
-      const res = await r.json()
-      if (res.success) {
-        localStorage.setItem(storageKey, JSON.stringify(res.data))
-        setAuth(res.data)
-        return true
+    try {
+      const result = await signInWithPopup(firebaseAuth, googleAuth)
+      const { user } = result
+  
+      let account = user.email
+      let username = user.displayName
+      let photoUrl = user.photoURL
+  
+      if (account && username) {
+        const r = await fetch(MB_GOOGLE_LOGIN, {
+          method: 'post',
+          body: JSON.stringify({ account, username, photoUrl }),
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+  
+        const res = await r.json()
+        if (res.success) {
+          localStorage.setItem(storageKey, JSON.stringify(res.data))
+          setAuth(res.data)
+          return true
+        } else {
+          return false
+        }
       } else {
-        return false
+        console.log(user)
       }
-    } else {
-      console.log(user)
+    } catch(ex){
+      console.log(ex);
     }
   }
 

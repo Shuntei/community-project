@@ -146,6 +146,7 @@ router.post("/google-login", async (req, res) => {
     success: false,
     code: 0,
     error: "",
+    body: req.body,
     data: {
       id: 0,
       username: "",
@@ -154,35 +155,48 @@ router.post("/google-login", async (req, res) => {
   };
 
   const { account, username, photoUrl } = req.body;
+  console.log({ account, username, photoUrl });
 
   const emailSql = `SELECT * FROM mb_user WHERE email LIKE ?`;
   const [emailRows] = await db.query(emailSql, [`%${account}%`]);
 
   if (!emailRows.length) {
-    const sql = `INSERT INTO mb_user
+    const userSql = `INSERT INTO mb_user
     (username, 
     email, 
     created_at) 
-    VALUES (?, ?, NOW())`;
+    VALUES (?, ?, NOW());`;
 
     try {
-      const [rows] = await db.query(sql, [username, account]);
-      output.success = !!rows.affectedRows;
+      const [userRows] = await db.query(userSql, [username, account]);
+      output.success = !!userRows.affectedRows;
 
       if (output.success) {
+        
         const sql = "SELECT * FROM mb_user WHERE username=?";
         const [rows] = await db.query(sql, username);
 
-        const token = jwt.sign(
-          { id: rows[0].id, username: rows[0].username },
-          process.env.JWT_SECRET
-        );
+        if(rows.length){
 
-        output.data = {
-          id: rows[0].id,
-          username: rows[0].username,
-          token,
-        };
+          const profileSql = `INSERT INTO mb_user_profile (user_id, profile_pic_url) 
+          VALUES (?, ?)`;
+
+          const [profileSqlResult] = await db.query(profileSql, [rows[0].id, photoUrl]);
+          output.success = !!profileSqlResult.affectedRows
+
+          if(output.success){
+            const token = jwt.sign(
+              { id: rows[0].id, username: rows[0].username },
+              process.env.JWT_SECRET
+            );
+    
+            output.data = {
+              id: rows[0].id,
+              username: rows[0].username,
+              token,
+            };
+          }
+        }
       }
     } catch (ex) {
       console.log(ex);

@@ -65,7 +65,10 @@ export default function Navbar({ className, navColor = 'white' }) {
             </Link>
           </div>
         </div>
-        <Link href="/" className="md:text-[40px] text-[20px] font-medium justify-center flex w-1/3">
+        <Link
+          href="/"
+          className="md:text-[40px] text-[20px] font-medium justify-center flex w-1/3"
+        >
           Ruins
         </Link>
         <div className={`${styles['navlink-container']} relative w-1/3`}>
@@ -122,7 +125,7 @@ export default function Navbar({ className, navColor = 'white' }) {
           className={`${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
           <a href="" className={`${styles['nav-cart-mobile']}`}>
-            {/* <div>CART</div>             */}
+            <div>CART</div>            
 
             {navColor === 'white' ? (
               <Image alt="" src={CartLine} />
