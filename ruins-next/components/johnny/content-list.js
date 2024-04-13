@@ -10,13 +10,14 @@ import {
 import Image from 'next/image'
 import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
-import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
 import { SN_DELETE_POST } from './config/api-path'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import toast, { Toaster } from 'react-hot-toast'
 
 export default function MainContent() {
-  const router = useRouter()
   const {
     postsList,
     selectedPosts,
@@ -50,19 +51,39 @@ export default function MainContent() {
   }
 
   const removePost = async (postId) => {
-    const r = await fetch(`${SN_DELETE_POST}/${postId}`, {
-      method: 'DELETE',
-      body: JSON.stringify(postId),
+    const MySwal = withReactContent(Swal)
+    await MySwal.fire({
+      icon: 'warning',
+      title: '確認刪除貼文?',
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonColor: '#006400',
+      cancelButtonColor: '#8B0000',
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+    }).then((rst) => {
+      if (rst.isConfirmed) {
+        MySwal.fire({
+          title: '刪除成功',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 1500,
+        })
+        fetch(`${SN_DELETE_POST}/${postId}`, {
+          method: 'DELETE',
+          body: JSON.stringify(postId),
+        })
+          .then((r) => r.json())
+          .then((result) => {
+            console.log(result)
+            if (result.success) {
+              setRender(true)
+            } else {
+              toast.error('刪除失敗')
+            }
+          })
+      }
     })
-    const result = await r.json()
-    console.log(result)
-    if (result.success) {
-      // router.reload();
-      // router.push(location.search);
-      setRender(true)
-    } else {
-      alert('刪除失敗')
-    }
   }
 
   return (
@@ -131,12 +152,14 @@ export default function MainContent() {
       {(postsList.totalPostsRows || selectedPosts.selectedBdPostsRows).map(
         (v, i) => {
           return (
-            <main className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative">
+            <main
+              className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative"
+              key={v.post_id}
+            >
               {/*relative用於toggle垃圾桶*/}
               <div
                 // onClick={() => handlePush(v.post_id)} // href={`/community/main-post`}
                 className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
-                key={v.post_id}
               >
                 <div className="px-2 flex text-center absolute left-0">
                   {removeBox ? (

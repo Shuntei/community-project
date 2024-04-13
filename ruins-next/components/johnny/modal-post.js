@@ -32,13 +32,6 @@ export default function PostModal() {
   })
 
   const [previewUrl, setPreviewUrl] = useState('')
-  const [errors, setErrors] = useState({
-    hasErrors: false,
-    title: '',
-    content: '',
-    photo: '',
-    boardId: '',
-  })
   const { render, setRender, allPostsShow } = useBoards()
 
   const changeHandler = (e) => {
@@ -58,7 +51,7 @@ export default function PostModal() {
 
   //  { message: '使用toast代替' }
   const schemaTitle = z.string().min(1)
-  // const schemaContent = z.string().min(2, {})
+  const schemaContent = z.string().min(3)
 
   const submitHandler = async (e) => {
     e.preventDefault()
@@ -73,45 +66,33 @@ export default function PostModal() {
     const MySwal = withReactContent(Swal)
     const confirmNotify = (msg) => {
       MySwal.fire({
-        icon: 'info',
-        title: msg,
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonColor: '#006400',
-        cancelButtonColor: '#8B0000',
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-      }).then((rst) => {
-        if (rst.isConfirmed) {
-          MySwal.fire({
-            title: '發文成功',
-            icon: 'success',
-            showConfirmButton: false,
-            timer: 1500,
+        title: '發文成功',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        try {
+          fetch(SN_ADD_POST, {
+            method: 'POST',
+            body: formData,
           })
-
-          try {
-            fetch(SN_ADD_POST, {
-              method: 'POST',
-              body: formData,
+            .then((rst) => rst.json())
+            .then((result) => {
+              if (result.success) {
+                setRender(true)
+                setPostModal(!postModal)
+              } else {
+                toast.error('發文失敗')
+              }
             })
-              .then((rst) => rst.json())
-              .then((result) => {
-                if (result.success) {
-                  setRender(true)
-                  setPostModal(!postModal)
-                } else {
-                  toast.error('發文失敗')
-                }
-              })
-          } catch (err) {
-            console.error('Error submitting form:', err)
-          }
+        } catch (err) {
+          console.error('Error submitting form:', err)
         }
       })
     }
     let initErrors = {
-      hasErrors: false,
+      hasTitleErrors: false,
+      hasContentErrors: false,
       title: '',
       content: '',
       photo: '',
@@ -122,14 +103,23 @@ export default function PostModal() {
     if (!r1.success) {
       initErrors = {
         ...initErrors,
-        hasErrors: true,
+        hasTitleErrors: true,
         title: r1.error.issues[0].message,
       }
     }
-    if (initErrors.hasErrors) {
-      setErrors(initErrors)
+    const r2 = schemaContent.safeParse(postForm.content)
+    if (!r2.success) {
+      initErrors = {
+        ...initErrors,
+        hasContentErrors: true,
+        content: r2.error.issues[0].message,
+      }
+    }
+    if (initErrors.hasTitleErrors) {
       toast.error('請輸入標題')
-      console.log(errors.title)
+      return
+    } else if (initErrors.hasContentErrors) {
+      toast.error('內容請輸入三個字以上')
       return
     }
 
