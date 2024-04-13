@@ -4,6 +4,8 @@ import {
   RiEyeFill,
   RiDeleteBinLine,
   RiMoreFill,
+  RiArrowRightDoubleLine,
+  RiArrowLeftDoubleLine,
 } from '@remixicon/react'
 import Image from 'next/image'
 import img from './img/1868140_screenshots_20240115034222_1.jpg'
@@ -11,30 +13,46 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST } from './config/api-path'
+import { SN_DELETE_POST, SN_PSPOSTS } from './config/api-path'
 
 export default function PersonalContent() {
   const router = useRouter()
-  const {
-    postsList,
-    selectedPosts,
-    allPostsShow,
-    handlePostId,
-    handlePage,
-    handleBdPostsPage,
-    render,
-    setRender,
-  } = useBoards()
+  const { handlePostId, render, setRender } = useBoards()
 
   const { removeBox, setRemoveBox } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
+  const [psPosts, setPsPosts] = useState('')
+
+  const allPsPostsShow = async (currentPage = '?page=1') => {
+    // currentPage是?page=哪一頁
+    try {
+      const r = await fetch(`${SN_PSPOSTS}${currentPage}`)
+      const data = await r.json()
+      setPsPosts(data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const handlePsPage = async (p) => {
+    try {
+      const r = await fetch(`${SN_PSPOSTS}?page=${p}`)
+      const data = await r.json()
+      setPsPosts(data)
+      console.log(psPosts)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   useEffect(() => {
-    const currentPage = location.search
-    // allPostsShow(currentPage);
-    allPostsShow()
-    // console.log('location.search: ', location.search)
+    allPsPostsShow()
   }, [])
+
+  useEffect(() => {
+    allPsPostsShow()
+    setRender(false)
+  }, [render])
 
   const handlePush = (postId) => {
     // router.push(`/community/main-post?postId=${postId}`);
@@ -57,38 +75,44 @@ export default function PersonalContent() {
     }
   }
 
-  useEffect(() => {
-    allPostsShow()
-    setRender(false)
-  }, [render])
-
-  // console.log(postsList.totalPostsRows)
+  // console.log(psPosts.totalPostsRows)
 
   return (
     <>
-      <ul className="bg-sky-300 flex justify-center">
-        {Array(10)
-          .fill(1)
-          .map((v, i) => {
-            const p = postsList.page - 5 + i
-            // const p = i;
-            if (p < 1 || p > postsList.totalPostsRows) return null
-            return (
-              <li key={p} className="mx-5">
-                <Link
-                  href={`?page=${p}`}
-                  onClick={() => handlePage(p)}
-                  className="btn btn-primary"
-                >
-                  {p}
-                  {/* <a href={`?page=${p}`}>{p}</a> */}
-                </Link>
-              </li>
-            )
-          })}{' '}
+      <ul className="bg-neutral-300 flex justify-center text-xl py-2">
+        <li className="border-s-2 px-3 py-3 flex items-center hover:hover1">
+          <RiArrowLeftDoubleLine />
+        </li>
+        {
+          psPosts &&
+          psPosts.totalPages &&
+          Array(10)
+            .fill(1)
+            .map((v, i) => {
+              const p = psPosts.page - 5 + i
+              // const p = i;
+              if (p < 1 || p > psPosts.totalPages) return null
+              return (
+                <li key={p}>
+                  <Link
+                    href={`?page=${p}`}
+                    onClick={() => handlePsPage(p)}
+                    className="border-s-2 px-5 flex py-3 hover:hover1"
+                  >
+                    {p}
+                    {/* <a href={`?page=${p}`}>{p}</a> */}
+                  </Link>
+                </li>
+              )
+            })}
+        <li className="border-x-2 px-3 py-3 flex items-center hover:hover1">
+          {/* <Link href={`?page=${page}`}> */}
+          <RiArrowRightDoubleLine />
+          {/* </Link> */}
+        </li>
       </ul>
-      {postsList &&
-        postsList.totalPostsRows
+      {psPosts.totalPostsRows &&
+        psPosts.totalPostsRows
           .filter((v) => v.post_type === 'yours')
           .map((v, i) => {
             return (

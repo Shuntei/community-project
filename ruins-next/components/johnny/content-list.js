@@ -4,6 +4,8 @@ import {
   RiEyeFill,
   RiDeleteBinLine,
   RiMoreFill,
+  RiArrowRightDoubleLine,
+  RiArrowLeftDoubleLine,
 } from '@remixicon/react'
 import Image from 'next/image'
 import img from './img/1868140_screenshots_20240115034222_1.jpg'
@@ -36,6 +38,12 @@ export default function MainContent() {
     console.log('location.search: ', location.search)
   }, [])
 
+  useEffect(() => {
+    allPostsShow()
+    // 發送後會設成true用於重整,這裡設回false
+    setRender(false)
+  }, [render])
+
   const handlePush = (postId) => {
     // router.push(`/community/main-post?postId=${postId}`);
     handlePostId(postId)
@@ -57,60 +65,69 @@ export default function MainContent() {
     }
   }
 
-  useEffect(() => {
-    allPostsShow()
-    setRender(false)
-  }, [render])
-
   return (
     <>
-      {/* {postsList ? ( */}
-      <ul className="bg-sky-300 flex justify-center mt-[90px]">
-        {Array(10)
-          .fill(1)
-          .map((v, i) => {
-            const p = postsList.page - 5 + i
-            // const p = i;
-            if (p < 1 || p > postsList.totalPostsRows) return null
-            return (
-              <li key={p} className="mx-5">
-                <Link
-                  href={`?page=${p}`}
-                  onClick={() => handlePage(p)}
-                  className="btn btn-primary"
-                >
-                  {p}
-                  {/* <a href={`?page=${p}`}>{p}</a> */}
-                </Link>
-              </li>
-            )
-          })}{' '}
-      </ul>
-      {/*}) : selectedPosts ? (
-        <ul className="bg-sky-400 flex justify-center mt-[90px]">
+      {postsList ? (
+        <ul className="bg-neutral-300 flex justify-center mt-[90px] text-xl">
+          <li className="border-s-2 px-3 py-3 flex items-center hover:hover1">
+            <RiArrowLeftDoubleLine />
+          </li>
+          {Array(20)
+            .fill(1)
+            .map((v, i) => {
+              const p = postsList.page - 5 + i
+              // const p = i;
+              if (p < 1 || p > postsList.totalPages) return null
+              return (
+                <li key={p}>
+                  <Link
+                    href={`?page=${p}`}
+                    onClick={() => handlePage(p)}
+                    className="border-s-2 px-5 flex py-3 hover:hover1"
+                  >
+                    {p}
+                    {/* <a href={`?page=${p}`}>{p}</a> */}
+                  </Link>
+                </li>
+              )
+            })}
+          <li className="border-x-2 px-3 py-3 flex items-center hover:hover1">
+            {/* <Link href={`?page=${page}`}> */}
+            <RiArrowRightDoubleLine />
+            {/* </Link> */}
+          </li>
+        </ul>
+      ) : selectedPosts ? (
+        <ul className=" flex justify-center mt-[90px] text-xl">
+          <li className="border-s-2 px-3 py-3 flex items-center hover:hover1">
+            <RiArrowLeftDoubleLine />
+          </li>
           {Array(10)
             .fill(1)
             .map((v, i) => {
               const p = selectedPosts.page - 5 + i
               // const p = i;
-              if (p < 1 || p > selectedPosts.selectedBdPostsRows) return null
+              if (p < 1 || p > selectedPosts.totalPages) return null
               return (
-                <li key={p} className="mx-5">
+                <li key={p}>
                   <Link
                     href={`?page=${p}`}
                     // onClick={handleBdPostsPage(location.search)}
                     onClick={() => handleBdPostsPage(p)}
-                    className="btn btn-primary"
+                    className="border-s-2 px-5 flex py-3 hover:hover1"
                   >
                     {p}
                   </Link>
                 </li>
               )
-            })}{' '}
+            })}
+          <li className="border-x-2 px-3 py-3 flex items-center hover:hover1">
+            <RiArrowRightDoubleLine />
+          </li>
         </ul>
       ) : (
         ''
-      )}*/}
+      )}
       {(postsList.totalPostsRows || selectedPosts.selectedBdPostsRows).map(
         (v, i) => {
           return (

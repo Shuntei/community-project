@@ -1,9 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
 import img from './img/90.jpg'
-import postImg from './img/1868140_screenshots_20240117160639_1.jpg'
 import { z } from 'zod'
 import { useToggles } from '@/contexts/use-toggles'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import toast, { Toaster } from 'react-hot-toast'
 
 import {
   RiVideoOnFill,
@@ -18,9 +20,7 @@ import {
   RiArrowDropDownLine,
 } from '@remixicon/react'
 import { SN_ADD_POST, SN_BOARDS } from './config/api-path'
-import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'
-import { API_SERVER } from '../config/api-path'
 
 export default function PostModal() {
   const { postModal, setPostModal } = useToggles()
@@ -30,9 +30,15 @@ export default function PostModal() {
     photo: '',
     boardId: '',
   })
-  // const [selectedFile, setSelectedFile] = useState(null)
-  const [previewUrl, setPreviewUrl] = useState('')
 
+  const [previewUrl, setPreviewUrl] = useState('')
+  const [errors, setErrors] = useState({
+    hasErrors: false,
+    title: '',
+    content: '',
+    photo: '',
+    boardId: '',
+  })
   const { render, setRender, allPostsShow } = useBoards()
 
   const changeHandler = (e) => {
@@ -50,6 +56,10 @@ export default function PostModal() {
     }
   }
 
+  //  { message: '使用toast代替' }
+  const schemaTitle = z.string().min(1)
+  // const schemaContent = z.string().min(2, {})
+
   const submitHandler = async (e) => {
     e.preventDefault()
 
@@ -58,24 +68,72 @@ export default function PostModal() {
     formData.append('content', postForm.content)
     formData.append('photo', postForm.photo)
     formData.append('boardId', postForm.boardId)
-    console.log(postForm)
+    // console.log(postForm)
     // http:localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg
+    const MySwal = withReactContent(Swal)
+    const confirmNotify = (msg) => {
+      MySwal.fire({
+        icon: 'info',
+        title: msg,
+        showConfirmButton: true,
+        showCancelButton: true,
+        confirmButtonColor: '#006400',
+        cancelButtonColor: '#8B0000',
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+      }).then((rst) => {
+        if (rst.isConfirmed) {
+          MySwal.fire({
+            title: '發文成功',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 1500,
+          })
 
-    try {
-      const response = await fetch(SN_ADD_POST, {
-        method: 'POST',
-        body: formData,
+          try {
+            fetch(SN_ADD_POST, {
+              method: 'POST',
+              body: formData,
+            })
+              .then((rst) => rst.json())
+              .then((result) => {
+                if (result.success) {
+                  setRender(true)
+                  setPostModal(!postModal)
+                } else {
+                  toast.error('發文失敗')
+                }
+              })
+          } catch (err) {
+            console.error('Error submitting form:', err)
+          }
+        }
       })
-      const result = await response.json()
-      if (result.success) {
-        setRender(true)
-        setPostModal(!postModal)
-      } else {
-        alert('發文失敗')
-      }
-    } catch (error) {
-      console.error('Error submitting form:', error)
     }
+    let initErrors = {
+      hasErrors: false,
+      title: '',
+      content: '',
+      photo: '',
+      boardId: '',
+    }
+
+    const r1 = schemaTitle.safeParse(postForm.title)
+    if (!r1.success) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        title: r1.error.issues[0].message,
+      }
+    }
+    if (initErrors.hasErrors) {
+      setErrors(initErrors)
+      toast.error('請輸入標題')
+      console.log(errors.title)
+      return
+    }
+
+    confirmNotify('是否確定發文?')
   }
 
   const [bdChoose, setBdChoose] = useState([])
@@ -94,17 +152,6 @@ export default function PostModal() {
     allPostsShow()
     setRender(false)
   }, [render])
-
-  // useEffect(() => {
-  //   if (!selectedFile) {
-  //     setPreviewUrl('')
-  //     return
-  //   }
-  //   const objectUrl = URL.createObjectURL(selectedFile)
-  //   setPreviewUrl(objectUrl)
-  //   console.log(objectUrl)
-  //   // return () => URL.revokeObjectURL(objectUrl)
-  // }, [selectedFile])
 
   return (
     <>
@@ -254,6 +301,7 @@ export default function PostModal() {
           </div>
         </div>
       </form>
+      <Toaster position="top-center" reverseOrder={false} />
     </>
   )
 }

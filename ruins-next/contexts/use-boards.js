@@ -22,7 +22,7 @@ export default function BoardsContextProvider({ children }) {
   const [getPost, setGetPost] = useState([])
   const [render, setRender] = useState(false)
   {
-    /*render, setRender用於新增及刪除post不刷新頁面useEffect */
+    /*render, setRender用於解決新增及刪除post等變更時不刷新頁面useEffect依賴 */
   }
 
   // 初始載入posts, 預設第一頁用於點全部按鈕
