@@ -29,10 +29,10 @@ export default function Items() {
         products.rows.map((v, i) => {
           return (
             <>
-              <div className=" flex-col  gap-5 flex " key={v.pid}>
-                <Link href={`/shop/product/${v.pid}`}>
+              <div className=" flex-col  gap-5 flex transition duration-200 hover:scale-105 hover:skew-y-2" key={v.pid}>
+                <Link href={`/shop/product/${v.pid}`} className='flex justify-center items-center'>
                   <img
-                    className="w-full aspect-square  rounded-xl"
+                    className="w-full aspect-square  rounded-xl "
                     src={`/images/product/${v.img.split(',')[0]}`}
                     alt="pic"
                   />
