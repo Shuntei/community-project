@@ -57,6 +57,7 @@ export default function List() {
   }, [router.query.main_category, router.query.sortBy, router.query.keyword])
   return (
     <>
+      {console.log(products.totalRows)}
       <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-8 md:pt-28">
         {/* header開始 */}
         {/* header開始 */}
@@ -78,15 +79,20 @@ export default function List() {
             </div>
           </div>
           {/* 搜尋與排序欄開始 */}
-          <div className="w-full justify-between flex md:px-24 px-4 ">
-            <div className="w-5 h-[19.50px] relative">
-              {/* 搜尋 */}
-              <Search />
-            </div>
-            <div className="justify-start items-center gap-[15px] flex">
-              <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
-                <SortBy />
+          <div className='w-full'>
+            <div className="w-full justify-between flex md:px-24 px-4 ">
+              <div className="w-5 h-[19.50px] relative">
+                {/* 搜尋 */}
+                <Search />
               </div>
+              <div className="justify-start items-center gap-[15px] flex">
+                <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
+                  <SortBy />
+                </div>
+              </div>
+            </div>
+            <div className="text-gray-500 md:pt-3 text-sm font-medium font-['IBM Plex Mono'] w-full justify-end flex md:px-24 px-4 ">
+              {products.totalRows}項商品,共{products.totalPages}頁
             </div>
           </div>
           {/* 搜尋與排序欄結束 */}
