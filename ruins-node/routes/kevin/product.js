@@ -107,4 +107,36 @@ router.get("/api/getProduct/:pid", async (req, res) => {
   res.json({ success: true, row });
 });
 
+//取得商品評價
+const getComment = async (req) => {
+  let pid = +req.params.pid
+  let where = ` WHERE 1 AND pid = ?`
+  let totalRows = 0
+  let rows = []
+
+  let output = {
+    success: false,
+    rows,
+    totalRows,
+    redirect: '',
+    info: '',
+  }
+
+  const t_sql = `SELECT COUNT(1) totalRows FROM ca_product_comment  ${where} `
+
+  ;[[{ totalRows }]] = await db.query(t_sql, [pid])
+
+  if (totalRows > 0) {
+    const sql = `SELECT * FROM ca_product_comment ${where}`
+    ;[rows] = await db.query(sql, [pid])
+    output = { ...output, success: true, rows, totalRows }
+  }
+
+  return output
+}
+router.get('/api/getProductComment/:pid', async (req, res) => {
+  res.json(await getComment(req))
+})
+
+
 export default router;

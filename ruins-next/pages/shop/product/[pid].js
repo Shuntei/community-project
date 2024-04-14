@@ -1,6 +1,7 @@
 import Image from 'next/image'
-import { PRODUCT_ONE } from '@/components/config/api-path'
-import { RiStarFill, RiStarLine } from '@remixicon/react'
+import { PRODUCT_ONE, PRODUCT_COMMENT } from '@/components/config/api-path'
+import StarRate from '@/components/kevin/star/star-rate'
+import { RiStarFill } from 'react-icons/ri'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import Navbar from '@/components/linda/navbar/navbar'
@@ -11,6 +12,10 @@ import { useCart } from '@/hooks/use-cart'
 export default function Pid() {
   const router = useRouter()
   const { onAddMutiItem, onAddItem, items } = useCart()
+  const [comment, setComment] = useState([])
+  // 一載入頁面顯示幾筆評論
+  const [visibleComments, setVisibleComments] = useState(3)
+
   const [product, setProduct] = useState({
     pid: '',
     img: '',
@@ -19,7 +24,6 @@ export default function Pid() {
   })
   const getProductById = async (pid) => {
     const url = `${PRODUCT_ONE}/${pid}`
-
     // 用 try...catch語法來作例外處理
     try {
       const res = await fetch(url)
@@ -34,6 +38,25 @@ export default function Pid() {
     }
   }
 
+  const getProductComment = async (pid) => {
+    const url = `${PRODUCT_COMMENT}/${pid}`
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      // 設定到狀態中 ===> 觸發重新渲染(re-render)
+      // 要設定到狀態前，最好先檢查資料類型是否一致
+      if (typeof data === 'object' && data !== null) {
+        setComment(data.rows)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  // 顯示更多評論一次增加幾筆
+  const handleLoadMore = () => {
+    setVisibleComments(visibleComments + 3)
+  }
+
   // 2. 在useEffet中監聽isReady值為true時，才能得到網址上的pid和伺服器獲取資料
   useEffect(() => {
     if (router.isReady) {
@@ -42,12 +65,13 @@ export default function Pid() {
       console.log(pid)
       // 有pid後，向伺服器要求資料
       getProductById(pid)
+      getProductComment(pid)
     }
   }, [router.isReady])
 
   return (
     <>
-      {console.log(product.img.split(',')[0])}
+      {console.log(comment)}
       <div className=" bg-gray-100 flex flex-col justify-center items-center relative pt-28">
         {/* header開始 */}
         <Navbar navColor={''} />
@@ -89,7 +113,7 @@ export default function Pid() {
           <div className="flex  flex-col md:w-4/5">
             {/* 右-商品數量&moreInfo&addToCart */}
             <div className="flex flex-col md:flex-row ">
-              <div className="md:w-1/3 w-11/12  md:ms-6 md:space-y-7 fixed bottom-20 md:static bg-gray-100">
+              <div className="md:w-1/3 w-11/12  md:ms-6 md:space-y-7 fixed bottom-[73px] md:static bg-gray-100">
                 <div className=" text-black bg-gray-100 border-black border-b-2 text-[13px] font-semibold font-['Noto Sans TC'] ">
                   數量
                 </div>
@@ -104,17 +128,17 @@ export default function Pid() {
                     .map((v, i) => {
                       const n = i + 1
                       return (
-                        <li key={n} className="hidden md:flex">
+                        <li key={n} className="flex justify-between w-full">
                           <button
                             onClick={(e) => {
                               e.preventDefault()
-                              setProduct({ ...product, qty: n||1 })
+                              setProduct({ ...product, qty: n || 1 })
                               console.log(product.qty)
                             }}
                             className={
                               product.qty === n
-                                ? `md:text-[26px] text-sm font-semibold font-['IBM Plex Mono'] border-black border-b`
-                                : `text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono'] ` // 條件式的 className
+                                ? `md:text-[26px] text-[20px] font-semibold font-['IBM Plex Mono'] border-black border-b`
+                                : `text-neutral-400 md:text-[26px] text-[18px] font-semibold font-['IBM Plex Mono'] ` // 條件式的 className
                             }
                           >
                             {n}
@@ -129,11 +153,11 @@ export default function Pid() {
                   more info
                 </div>
                 <div className="w-full text-black text-[15px] font-normal">
-                  採用鈕扣一鍵式扣環，可快速裝上、快速拆下
+                  任意購買兩件商品即享免運！
                   <br />
-                  適用市面上各種類型相機
+                  穩固、安全的品質
                   <br />
-                  穩固、安全的與攝影設備連接
+                  如有商品詳細問題,請洽客服
                 </div>
               </div>
               <div className="md:w-1/3  md:ms-6 md:space-y-7  fixed bottom-1 md:static">
@@ -183,12 +207,13 @@ export default function Pid() {
         </div>
         {/* 商品內容結束 */}
         {/* 評論開始 */}
-        <div className="w-full flex flex-col items-center md:px-24  md:py-5 md:space-y-10 space-y-5">
+        <div className="w-full flex flex-col items-center md:px-24  md:py-5 ">
           <div className=" w-full text-black text-[26px] text-center font-medium font-['IBM Plex Mono']">
             Reviews
           </div>
           {/* 第一則評論 */}
-          <div className="flex flex-col md:flex-row w-11/12 md:w-full px-[40px] md:px-0 border-black border-b py-[20px] gap-3">
+          {/* 評論範本開始 */}
+          <div className="flex flex-col md:flex-row w-11/12 md:w-full px-[40px] md:px-0 border-black border-b py-[20px] md:py-[40px] gap-3">
             {/* 評論左側 */}
             <div className="flex flex-col md:mx-6 md:w-1/5 space-y-3">
               <div className="flex md:border-b md:border-black md:text-black">
@@ -196,7 +221,7 @@ export default function Pid() {
                   Kevin lai
                 </div>
                 <div className="text-black text-[12px] font-['IBM Plex Mono']">
-                  01/03/24
+                  {/* 01/03/24 */}
                 </div>
               </div>
               <div className="flex space-x-1 justify-between">
@@ -218,76 +243,71 @@ export default function Pid() {
               </div>
             </div>
           </div>
-          {/* 第一則評論 */}
-          <div className="flex flex-col md:flex-row w-11/12 md:w-full px-[40px] md:px-0 border-black border-b py-[20px] gap-3">
-            {/* 評論左側 */}
-            <div className="flex flex-col md:mx-6 md:w-1/5 space-y-3">
-              <div className="flex md:border-b md:border-black md:text-black">
-                <div className="w-full  text-[15px]  font-['IBM Plex Mono'] ">
-                  Sarah N.
-                </div>
-                <div className="text-black text-[12px] font-['IBM Plex Mono']">
-                  01/03/24
-                </div>
-              </div>
-              <div className="flex space-x-1 justify-between">
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-              </div>
-            </div>
-            {/* 評論右側 */}
-            <div className="flex flex-col md:w-3/5 md:mx-6 mx-0 space-y-3">
-              <div className="md:w-1/3 border-b text-[15px]  font-['IBM Plex Mono'] border-black text-black">
-                not bad!
-              </div>
+          {/* 評論範本結束 */}
+          {comment &&
+            comment.slice(0, visibleComments).map((v, i) => {
+              return (
+                <>
+                  <div
+                    key={v.comment_id}
+                    className="flex flex-col md:flex-row w-11/12 md:w-full px-[40px] md:px-0 border-black border-b py-[20px] md:py-[40px] gap-3"
+                  >
+                    {/* 評論左側 */}
+                    <div className="flex flex-col md:mx-6 md:w-1/5 space-y-3">
+                      <div className="flex md:border-b md:border-black md:text-black">
+                        <div className="w-full text-[15px] font-['IBM Plex Mono']">
+                          {v.member_id}
+                        </div>
+                        <div className="text-black text-[12px] font-['IBM Plex Mono']">
+                          {/* 01/03/24 */}
+                        </div>
+                      </div>
+                      <div className="flex space-x-1 justify-between">
+                        {Array(5)
+                          .fill(1)
+                          .map((_, i) => {
+                            const filled = i < v.score // 判斷該星星是否填充
+                            return (
+                              <RiStarFill
+                                key={i}
+                                color={filled ? 'black' : 'gray'} // 填充為黑色，不填充為灰色
+                                size="32px"
+                              />
+                            )
+                          })}
+                      </div>
+                    </div>
+                    {/* 評論右側 */}
+                    <div className="flex flex-col md:w-3/5 md:mx-6 mx-0 space-y-3">
+                      <div className="md:w-1/3 border-b text-[15px]  font-['IBM Plex Mono'] border-black text-black">
+                        {v.create_at.split('T')[0]}
+                      </div>
 
-              <div className="text-black text-[15px] font-normal font-['notosans tc']">
-                非常棒的商品！推推！包裝得很小心寄出貨超快與圖片相符，很喜歡，謝出貨速度非常的快，非常棒的賣家非常棒的商品！推推！包裝得很小心寄出貨超快與圖片相符，很喜歡，謝出貨速度非常的快，非常棒的賣家非常棒的商品！推推！包裝得很小心寄出貨超快與圖片相符，很喜歡，謝出貨速度非常的快，非常棒的賣家
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col md:flex-row w-11/12 md:w-full px-[40px] md:px-0 border-black border-b py-[20px] gap-3">
-            {/* 評論左側 */}
-            <div className="flex flex-col md:mx-6 md:w-1/5 space-y-3">
-              <div className="flex md:border-b md:border-black md:text-black">
-                <div className="w-full  text-[15px]  font-['IBM Plex Mono'] ">
-                  Sarah N.
-                </div>
-                <div className="text-black text-[12px] font-['IBM Plex Mono']">
-                  01/03/24
-                </div>
-              </div>
-              <div className="flex space-x-1 justify-between">
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="#999" size="32px" />
-              </div>
-            </div>
-            {/* 評論右側 */}
-            <div className="flex flex-col md:w-3/5 md:mx-6 mx-0 space-y-3">
-              <div className="md:w-1/3 border-b text-[15px]  font-['IBM Plex Mono'] border-black text-black">
-                not bad!
-              </div>
-
-              <div className="text-black text-[15px] font-normal font-['notosans tc']">
-                內容商品也完整，品質很棒，很好的一次購物體驗!謝謝。
-                出貨快速的好賣家!一下訂很快就出貨了，今天就收到貨，打開包裝後內容商品也完整，品質很棒，很好的一次購物體驗!謝謝。
-              </div>
-            </div>
-          </div>
+                      <div className="text-black text-[15px] font-normal font-['notosans tc']">
+                        {v.comment}
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )
+            })}
 
           {/* 載入按鈕 */}
-          <div className="md:w-[196px] md:h-[108px]   py-[25px] w-[138px] h-[35px] border border-black justify-center items-center flex">
+          <button
+            onClick={handleLoadMore}
+            className={
+              //可見評論大於商品評論時,隱藏按鈕
+              visibleComments >= comment.length
+                ? 'hidden'
+                : 'md:w-[196px] md:h-[108px]   py-[25px] w-[138px] h-[35px] border border-black justify-center items-center flex my-[20px] md:my-[40px]'
+            }
+          >
             <div className="text-black font-semibold text-xs md:text-[15px] font-['Noto Sans Tc'] ">
               載入更多留言
             </div>
-          </div>
+          </button>
         </div>
+
         {/* 評論結束 */}
 
         {/* 更多推薦商品開始 */}
