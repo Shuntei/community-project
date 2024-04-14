@@ -28,9 +28,9 @@ export default function CartList() {
                 {v.name}
               </div>
               <div className="flex justify-between">
-                <div className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
-                  深空灰
-                </div>
+                <button onClick={()=>{onRemoveItem(v.pid)}} className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
+                  移除商品
+                </button>
                 <div className="t text-neutral-300 text-xs font-extralight font-['IBM Plex Mono']">
                   {v.price}
                 </div>

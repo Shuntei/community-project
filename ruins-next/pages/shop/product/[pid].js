@@ -1,56 +1,56 @@
-import Image from "next/image";
-import { PRODUCT_ONE } from "@/components/config/api-path";
-import { RiStarFill, RiStarLine } from "@remixicon/react";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import Navbar from "@/components/linda/navbar/navbar";
-import Footer from "@/components/linda/footer/footer";
-import { useRouter } from "next/router";
-import { useCart } from "@/hooks/use-cart";
+import Image from 'next/image'
+import { PRODUCT_ONE } from '@/components/config/api-path'
+import { RiStarFill, RiStarLine } from '@remixicon/react'
+import Link from 'next/link'
+import React, { useEffect, useState } from 'react'
+import Navbar from '@/components/linda/navbar/navbar'
+import Footer from '@/components/linda/footer/footer'
+import { useRouter } from 'next/router'
+import { useCart } from '@/hooks/use-cart'
 
 export default function Pid() {
-  const router = useRouter();
-  const { addMutiItem,onAddItem,items} = useCart();
+  const router = useRouter()
+  const { onAddMutiItem, onAddItem, items } = useCart()
   const [product, setProduct] = useState({
-    pid: "",
-    img: "",
-    name: "",
+    pid: '',
+    img: '',
+    name: '',
     price: 0,
-  });
+  })
   const getProductById = async (pid) => {
-    const url = `${PRODUCT_ONE}/${pid}`;
+    const url = `${PRODUCT_ONE}/${pid}`
 
     // 用 try...catch語法來作例外處理
     try {
-      const res = await fetch(url);
-      const data = await res.json();
+      const res = await fetch(url)
+      const data = await res.json()
       // 設定到狀態中 ===> 觸發重新渲染(re-render)
       // 要設定到狀態前，最好先檢查資料類型是否一致
-      if (typeof data === "object" && data !== null) {
-        setProduct(data.row);
+      if (typeof data === 'object' && data !== null) {
+        setProduct(data.row)
       }
     } catch (e) {
-      console.log(e);
+      console.log(e)
     }
-  };
+  }
 
   // 2. 在useEffet中監聽isReady值為true時，才能得到網址上的pid和伺服器獲取資料
   useEffect(() => {
     if (router.isReady) {
       //確保能得到pid
-      const { pid } = router.query;
-      console.log(pid);
+      const { pid } = router.query
+      console.log(pid)
       // 有pid後，向伺服器要求資料
-      getProductById(pid);
+      getProductById(pid)
     }
-  }, [router.isReady]);
+  }, [router.isReady])
 
   return (
     <>
-    {console.log(product.img.split(',')[0])}
+      {console.log(product.img.split(',')[0])}
       <div className=" bg-gray-100 flex flex-col justify-center items-center relative pt-28">
         {/* header開始 */}
-        <Navbar navColor={""} />
+        <Navbar navColor={''} />
         {/* header結束 */}
         {/* 標題&首圖開始 */}
         <div className="w-full flex flex-col md:flex-row justify-between md:px-24 px-4 py-5">
@@ -94,33 +94,34 @@ export default function Pid() {
                   數量
                 </div>
                 <div className="w-full flex gap-6 md:gap-0 md:justify-between">
-                  <div className="text-black md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
-                    1{" "}
+                  {/* <div className="text-black md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
+                    1{' '}
                   </div>
                   <div className="text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
-                    2
-                  </div>
-                  <div className="text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
-                    3
-                  </div>
-                  <div className="text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
-                    4
-                  </div>
-                  <div className="text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
-                    5
-                  </div>
-                  <div className="text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
-                    6
-                  </div>
-                  <div className="text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
-                    7
-                  </div>
-                  <div className="text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
-                    8
-                  </div>
-                  <div className="text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono']">
-                    9
-                  </div>
+                    */}
+                  {Array(9)
+                    .fill(1)
+                    .map((v, i) => {
+                      const n = i + 1
+                      return (
+                        <li key={n} className="hidden md:flex">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault()
+                              setProduct({ ...product, qty: n||1 })
+                              console.log(product.qty)
+                            }}
+                            className={
+                              product.qty === n
+                                ? `md:text-[26px] text-sm font-semibold font-['IBM Plex Mono'] border-black border-b`
+                                : `text-neutral-400 md:text-[26px] text-sm font-semibold font-['IBM Plex Mono'] ` // 條件式的 className
+                            }
+                          >
+                            {n}
+                          </button>
+                        </li>
+                      )
+                    })}
                 </div>
               </div>
               <div className="md:w-1/3  md:ms-6  md:space-y-7 space-y-2 ">
@@ -138,11 +139,10 @@ export default function Pid() {
               <div className="md:w-1/3  md:ms-6 md:space-y-7  fixed bottom-1 md:static">
                 <button
                   onClick={() => {
-
-                    console.log(product.pid)
-                    console.log(items)
-
-                    onAddItem(product);
+                    const quantityToAdd = product.qty || 1
+                    // Add the selected quantity of items to the cart
+                    console.log(quantityToAdd)
+                    onAddMutiItem({ ...product, qty: quantityToAdd })
                   }}
                   className="px-[80px] md:px-[46px] md:py-[43px] py-[18px] border border-black bg-black justify-center items-center flex"
                 >
@@ -154,30 +154,30 @@ export default function Pid() {
             </div>
             {/* 右-圖片 */}
             <div className="md:px-5 md:py-10 py-5 space-y-3">
-            <Image
-              src={`/images/product/${product.img.split(',')[1]}`}
-              alt="Picture of camp"
-              width={1000}
-              height={1000}
-              className="rounded-xl"
-              unoptimized={true}
-            />
-            <Image
-              src={`/images/product/${product.img.split(',')[2]}`}
-              alt="Picture of camp"
-              width={1000}
-              height={1000}
-              className="rounded-xl"
-              unoptimized={true}
-            />
-            <Image
-              src={`/images/product/${product.img.split(',')[3]}`}
-              alt="Picture of camp"
-              width={1000}
-              height={1000}
-              className="rounded-xl"
-              unoptimized={true}
-            />
+              <Image
+                src={`/images/product/${product.img.split(',')[1]}`}
+                alt="Picture of camp"
+                width={1000}
+                height={1000}
+                className="rounded-xl"
+                unoptimized={true}
+              />
+              <Image
+                src={`/images/product/${product.img.split(',')[2]}`}
+                alt="Picture of camp"
+                width={1000}
+                height={1000}
+                className="rounded-xl"
+                unoptimized={true}
+              />
+              <Image
+                src={`/images/product/${product.img.split(',')[3]}`}
+                alt="Picture of camp"
+                width={1000}
+                height={1000}
+                className="rounded-xl"
+                unoptimized={true}
+              />
             </div>
           </div>
         </div>
@@ -366,5 +366,5 @@ export default function Pid() {
         {/* FOOTER結束 */}
       </div>
     </>
-  );
+  )
 }
