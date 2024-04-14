@@ -12,3 +12,7 @@ export const PRODUCT_LIST = `${API_SERVER}/product/api`
 
 //單一商品
 export const PRODUCT_ONE = `${API_SERVER}/product/api/getProduct`
+
+//產品評論
+export const PRODUCT_COMMENT = `${API_SERVER}/product/api/getProductComment`
+
