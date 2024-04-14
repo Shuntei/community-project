@@ -44,7 +44,7 @@ export default function Cart() {
             </div>
             <Link
               href="/shop/cart/fill-doc"
-              className="md:w-[280px] md:h-[75px] w-[315px] h-[47px] bg-black border justify-center items-center gap-2.5 flex "
+              className="md:w-[280px] md:h-[75px] w-[315px] h-[47px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
             >
               <div className="text-white text:[15px] md:text-2xl font-semibold font-['IBM Plex Mono']">
                 CONFIRM

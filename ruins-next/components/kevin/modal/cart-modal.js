@@ -119,8 +119,8 @@ function CartModal() {
               </div>
               <div className="flex justify-center">
                 <Link href="/shop/cart" className="py-3 ">
-                  <div className=" px-[98px] py-[18px] bg-black border border-black justify-center items-center gap-2.5 inline-flex">
-                    <div className="text-white text-[15px] font-normal font-['IBM Plex Mono']">
+                  <div className=" px-[98px] py-[18px] bg-black border border-black justify-center items-center gap-2.5 inline-flex hover:bg-neutral-500 hover:border-white">
+                    <div className="text-white text-[15px] font-normal font-['IBM Plex Mono'] ">
                       CHECKOUT{/* <Link href="/shop/cart">CART</Link> */}
                     </div>
                   </div>

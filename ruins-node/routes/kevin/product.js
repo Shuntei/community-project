@@ -138,5 +138,19 @@ router.get('/api/getProductComment/:pid', async (req, res) => {
   res.json(await getComment(req))
 })
 
+// 相關商品區：取得 10 筆同類別商品 row.sub_category
+router.get('/api/relatedProducts', async (req, res) => {
+  const sub_category = +req.query.sub_category || 2
+  const pid = +req.query.pid || 1
+  const sql =
+    'SELECT * FROM `ca_products` WHERE `sub_category_id` = ? AND `pid` != ? LIMIT 10 '
+
+  const [rows] = await db.query(sql, [sub_category, pid])
+  if (!rows.length) {
+    return res.json({ success: false })
+  }
+
+  res.json({ success: true, rows })
+})
 
 export default router;

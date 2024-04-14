@@ -61,7 +61,7 @@ export default function ConfirmDoc() {
             {/* 分隔線 */}
             <div className="w-10/12 border-dotted border-black border-b border-t h-1"></div>
 
-            <div className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex ">
+            <div className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white">
               <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
                 PAY NOW
               </div>

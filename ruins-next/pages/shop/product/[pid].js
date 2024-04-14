@@ -1,6 +1,9 @@
 import Image from 'next/image'
-import { PRODUCT_ONE, PRODUCT_COMMENT } from '@/components/config/api-path'
-import StarRate from '@/components/kevin/star/star-rate'
+import {
+  PRODUCT_ONE,
+  PRODUCT_COMMENT,
+  PRODUCT_RELATED,
+} from '@/components/config/api-path'
 import { RiStarFill } from 'react-icons/ri'
 import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
@@ -8,6 +11,8 @@ import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import { useRouter } from 'next/router'
 import { useCart } from '@/hooks/use-cart'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import 'swiper/css'
 
 export default function Pid() {
   const router = useRouter()
@@ -15,7 +20,7 @@ export default function Pid() {
   const [comment, setComment] = useState([])
   // 一載入頁面顯示幾筆評論
   const [visibleComments, setVisibleComments] = useState(3)
-
+  const [relatedProducts, setRelatedProducts] = useState([])
   const [product, setProduct] = useState({
     pid: '',
     img: '',
@@ -56,6 +61,17 @@ export default function Pid() {
   const handleLoadMore = () => {
     setVisibleComments(visibleComments + 3)
   }
+  // 取得相關商品
+  const getRelatedProduct = async () => {
+    const url = `${PRODUCT_RELATED}/?sub_category=${product.sub_category_id}&pid=${product.pid}`
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      setRelatedProducts(data.rows)
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
 
   // 2. 在useEffet中監聽isReady值為true時，才能得到網址上的pid和伺服器獲取資料
   useEffect(() => {
@@ -67,11 +83,15 @@ export default function Pid() {
       getProductById(pid)
       getProductComment(pid)
     }
-  }, [router.isReady])
-
+  }, [router.isReady,router.query.pid])
+  useEffect(() => {
+    if (product.pid) {
+      getRelatedProduct()
+    }
+  }, [product.pid])
   return (
     <>
-      {console.log(comment)}
+      {console.log(relatedProducts)}
       <div className=" bg-gray-100 flex flex-col justify-center items-center relative pt-28">
         {/* header開始 */}
         <Navbar navColor={''} />
@@ -168,7 +188,7 @@ export default function Pid() {
                     console.log(quantityToAdd)
                     onAddMutiItem({ ...product, qty: quantityToAdd })
                   }}
-                  className="px-[80px] md:px-[46px] md:py-[43px] py-[18px] border border-black bg-black justify-center items-center flex"
+                  className="px-[80px] md:px-[46px] md:py-[43px] py-[18px] border border-black bg-black justify-center items-center flex hover:bg-neutral-500 hover:border-white"
                 >
                   <div className="text-white italic text-[26px] font-semibold font-['IBM Plex Mono']">
                     ADD TO CART
@@ -247,48 +267,46 @@ export default function Pid() {
           {comment &&
             comment.slice(0, visibleComments).map((v, i) => {
               return (
-                <>
-                  <div
-                    key={v.comment_id}
-                    className="flex flex-col md:flex-row w-11/12 md:w-full px-[40px] md:px-0 border-black border-b py-[20px] md:py-[40px] gap-3"
-                  >
-                    {/* 評論左側 */}
-                    <div className="flex flex-col md:mx-6 md:w-1/5 space-y-3">
-                      <div className="flex md:border-b md:border-black md:text-black">
-                        <div className="w-full text-[15px] font-['IBM Plex Mono']">
-                          {v.member_id}
-                        </div>
-                        <div className="text-black text-[12px] font-['IBM Plex Mono']">
-                          {/* 01/03/24 */}
-                        </div>
+                <div
+                  key={v.comment_id}
+                  className="flex flex-col md:flex-row w-11/12 md:w-full px-[40px] md:px-0 border-black border-b py-[20px] md:py-[40px] gap-3"
+                >
+                  {/* 評論左側 */}
+                  <div className="flex flex-col md:mx-6 md:w-1/5 space-y-3">
+                    <div className="flex md:border-b md:border-black md:text-black">
+                      <div className="w-full text-[15px] font-['IBM Plex Mono']">
+                        {v.member_id}
                       </div>
-                      <div className="flex space-x-1 justify-between">
-                        {Array(5)
-                          .fill(1)
-                          .map((_, i) => {
-                            const filled = i < v.score // 判斷該星星是否填充
-                            return (
-                              <RiStarFill
-                                key={i}
-                                color={filled ? 'black' : 'gray'} // 填充為黑色，不填充為灰色
-                                size="32px"
-                              />
-                            )
-                          })}
+                      <div className="text-black text-[12px] font-['IBM Plex Mono']">
+                        {/* 01/03/24 */}
                       </div>
                     </div>
-                    {/* 評論右側 */}
-                    <div className="flex flex-col md:w-3/5 md:mx-6 mx-0 space-y-3">
-                      <div className="md:w-1/3 border-b text-[15px]  font-['IBM Plex Mono'] border-black text-black">
-                        {v.create_at.split('T')[0]}
-                      </div>
-
-                      <div className="text-black text-[15px] font-normal font-['notosans tc']">
-                        {v.comment}
-                      </div>
+                    <div className="flex space-x-1 justify-between">
+                      {Array(5)
+                        .fill(1)
+                        .map((_, i2) => {
+                          const filled = i2 < v.score // 判斷該星星是否填充
+                          return (
+                            <RiStarFill
+                              key={i2}
+                              color={filled ? 'black' : 'gray'} // 填充為黑色，不填充為灰色
+                              size="32px"
+                            />
+                          )
+                        })}
                     </div>
                   </div>
-                </>
+                  {/* 評論右側 */}
+                  <div className="flex flex-col md:w-3/5 md:mx-6 mx-0 space-y-3">
+                    <div className="md:w-1/3 border-b text-[15px]  font-['IBM Plex Mono'] border-black text-black">
+                      {v.create_at.split('T')[0]}
+                    </div>
+
+                    <div className="text-black text-[15px] font-normal font-['notosans tc']">
+                      {v.comment}
+                    </div>
+                  </div>
+                </div>
               )
             })}
 
@@ -299,10 +317,10 @@ export default function Pid() {
               //可見評論大於商品評論時,隱藏按鈕
               visibleComments >= comment.length
                 ? 'hidden'
-                : 'md:w-[196px] md:h-[108px]   py-[25px] w-[138px] h-[35px] border border-black justify-center items-center flex my-[20px] md:my-[40px]'
+                : 'md:w-[196px] md:h-[108px]   py-[25px] w-[138px] h-[35px] border border-black justify-center items-center flex my-[20px] md:my-[40px] hover:bg-black hover:border-white hover:text-white group'
             }
           >
-            <div className="text-black font-semibold text-xs md:text-[15px] font-['Noto Sans Tc'] ">
+            <div className="text-black font-semibold text-xs md:text-[15px] font-['Noto Sans Tc'] group-hover:text-white">
               載入更多留言
             </div>
           </button>
@@ -315,67 +333,33 @@ export default function Pid() {
           <div className="text-black  text-[16px] font-semibold font-['IBM Plex Mono']">
             MORE RECOMMENDED PRODUCTS
           </div>
-          <div className="flex md:gap-10 gap-5  justify-center">
-            <div className="md:w-1/5 flex-col  gap-5 flex">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 flex-col  gap-1 flex">
-                <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
-                  球型泡泡花瓶
-                </div>
-                <div className="text-zinc-500 text-[15px] font-medium font-['IBM Plex Mono']">
-                  220
-                </div>
-              </div>
-            </div>
-            <div className="md:w-1/5 flex-col  gap-5 flex">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 flex-col  gap-1 flex">
-                <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
-                  原石擺設
-                </div>
-                <div className="text-zinc-500 text-[15px] font-medium font-['IBM Plex Mono']">
-                  78000
-                </div>
-              </div>
-            </div>
-            <div className="w-1/5 flex-col  gap-5 md:flex hidden">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 flex-col  gap-1 flex">
-                <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
-                  4人快開防曬遮陽帳篷
-                </div>
-                <div className="text-zinc-500 text-[15px] font-medium font-['IBM Plex Mono']">
-                  1499
-                </div>
-              </div>
-            </div>
-            <div className="w-1/5 flex-col  gap-5 md:flex hidden">
-              <img
-                className="w-full aspect-square  rounded-xl"
-                src="https://via.placeholder.com/305x313"
-                alt="pic"
-              />
-              <div className="md:px-10 flex-col  gap-1 flex">
-                <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
-                  咖啡豆擺飾
-                </div>
-                <div className="text-zinc-500 text-[15px] font-medium font-['IBM Plex Mono']">
-                  5000
-                </div>
-              </div>
-            </div>
+          <div className="flex md:gap-10 gap-5  overflow-auto">
+            {console.log(relatedProducts)}
+            {relatedProducts &&
+              relatedProducts.map((v, i) => {
+                return (
+                  <Link
+                    key={v.pid}
+                    href={`/shop/product/${v.pid}`}
+                    className="md:w-1/5  flex-col  gap-5 flex transition duration-200 hover:skew-y-2"
+                    style={{ minWidth: '20%' }} 
+                  >
+                    <img
+                      className="w-full aspect-square  rounded-xl"
+                      src={`/images/product/${v.img.split(',')[0]}`}
+                      alt="pic"
+                    />
+                    <div className="md:px-10 flex-col  gap-1 flex">
+                      <div className="text-black text-sm font-medium font-['IBM Plex Mono']">
+                        {v.name}
+                      </div>
+                      <div className="text-zinc-500 text-[15px] font-medium font-['IBM Plex Mono']">
+                        {v.price}
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
           </div>
         </div>
 
