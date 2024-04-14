@@ -16,3 +16,5 @@ export const PRODUCT_ONE = `${API_SERVER}/product/api/getProduct`
 //產品評論
 export const PRODUCT_COMMENT = `${API_SERVER}/product/api/getProductComment`
 
+// 相關商品10筆
+export const PRODUCT_RELATED = `${API_SERVER}/product/api/relatedProducts`

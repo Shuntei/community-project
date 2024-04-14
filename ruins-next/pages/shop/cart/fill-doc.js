@@ -223,7 +223,7 @@ export default function FillDoc() {
 
             <Link
               href="/shop/cart/confirm-doc"
-              className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex "
+              className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
             >
               <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
                 CONFIRM

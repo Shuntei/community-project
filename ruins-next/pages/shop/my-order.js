@@ -53,16 +53,16 @@ export default function MyOrder() {
                 </div>
                 <div className="w-full flex justify-between">
                   <div className="flex gap-5">
-                    <div className="py-2 px-7 bg-white border border-black justify-center items-center flex absolute bottom-11 md:static">
-                      <div className="text-black text-xs  font-['Noto Sans TC']">
+                    <button className="py-2 px-7 bg-white border border-black justify-center items-center flex absolute bottom-11 md:static hover:bg-black hover:border-white group">
+                      <div className="text-black group-hover:text-white text-xs  font-['Noto Sans TC']">
                         評價商品
                       </div>
-                    </div>
-                    <div className=" py-2 px-7 bg-black border border-black justify-center items-center flex absolute bottom-0 md:static">
+                    </button>
+                    <button className=" py-2 px-7 bg-black border border-black justify-center items-center flex absolute bottom-0 md:static hover:bg-neutral-500 hover:border-white">
                       <div className="text-white text-xs  font-['Noto Sans TC']">
                         再買一次
                       </div>
-                    </div>
+                    </button>
                   </div>
                   <div className="text-white text-base font-['IBM Plex Mono']">
                     $ 1,998
