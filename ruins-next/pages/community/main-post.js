@@ -31,7 +31,7 @@ export default function MainPost() {
   useEffect(() => {
     const postId = router.query.postId
 
-    const test = async () => {
+    const isPostId = async () => {
       const postIdExist = postId
         ? localStorage.setItem('postId', postId)
         : localStorage.getItem('postId')
@@ -42,14 +42,14 @@ export default function MainPost() {
       const result = await r.json()
       setGetPost(result)
     }
-    test()
+    isPostId()
   }, [])
 
   if (!getPost[0]) {
     console.log('data not ready to load')
     return
   }
-
+  console.log(getPost[0])
   return (
     <>
       {getPost && (

@@ -146,8 +146,9 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
   // console.log("postId_log:", postId);
 
   if (!postId) {
-    // 這裡是主頁所有文章
     let page = +req.query.page || 1;
+
+    // 這裡是主頁所有文章
     // console.log(page);
     // let keyword = req.query.keyword || "";
     let where = "  WHERE post_type = 'yours' ";
@@ -165,7 +166,7 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
     const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts ${where}`;
     // console.log(t_sql);
     const [[{ totalRows }]] = await db.query(t_sql);
-    console.log("totalRows:", totalRows);
+    // console.log("totalRows:", totalRows);
 
     let totalPostsRows = [];
     let totalPages = 0;
@@ -185,7 +186,6 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
     [totalPostsRows] = await db.query(totalPostsSql);
 
     // console.log(req.query);
-
     res.json({
       success: true,
       totalPages,
@@ -238,7 +238,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
     if (req.file) {
       // console.log("來到圖片區但是沒有圖片");
       const newFilePath =
-        "http://localhost:3005/johnny/" + req.file.path.slice(21);
+        "http://localhost:3005/community/" + req.file.path.slice(21);
       console.log("newFilePath", newFilePath);
       // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中

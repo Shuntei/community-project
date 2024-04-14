@@ -64,7 +64,7 @@ export default function PostModal() {
     // console.log(postForm)
     // http:localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg
     const MySwal = withReactContent(Swal)
-    const confirmNotify = (msg) => {
+    const confirmNotify = () => {
       MySwal.fire({
         title: '發文成功',
         icon: 'success',
@@ -123,7 +123,7 @@ export default function PostModal() {
       return
     }
 
-    confirmNotify('是否確定發文?')
+    confirmNotify()
   }
 
   const [bdChoose, setBdChoose] = useState([])
@@ -169,16 +169,14 @@ export default function PostModal() {
                 </option>
                 {bdChoose.map((v, i) => {
                   return (
-                    <>
-                      <option key={v.board_id} value={v.board_id}>
-                        {v.board_name}
-                      </option>
-                    </>
+                    <option key={v.board_id} value={v.board_id}>
+                      {v.board_name}
+                    </option>
                   )
                 })}
               </select>
             </div>
-            <button onclick="closeModal()">
+            <button>
               <RiCloseLargeLine onClick={() => setPostModal(!postModal)} />
             </button>
           </div>

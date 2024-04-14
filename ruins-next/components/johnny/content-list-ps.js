@@ -12,7 +12,7 @@ import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST, SN_PSPOSTS } from './config/api-path'
+import { SN_DELETE_POST, SN_POSTS, SN_PSPOSTS } from './config/api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast, { Toaster } from 'react-hot-toast'
@@ -20,13 +20,14 @@ import { useRouter } from 'next/router'
 
 export default function PersonalContent() {
   const router = useRouter()
-  const { handlePostId, render, setRender } = useBoards()
-  const { removeBox, setRemoveBox } = useToggles()
+  const { handlePostId, render, setRender, editOne, setEditOne } = useBoards()
+  const { removeBox, setRemoveBox, editModal, setEditModal } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
   const [psPosts, setPsPosts] = useState('')
 
-  const allPsPostsShow = async (currentPage = '?page=1') => {
+  const allPsPostsShow = async () => {
     // currentPage是?page=哪一頁
+    const currentPage = location.search
     try {
       const r = await fetch(`${SN_PSPOSTS}${currentPage}`)
       const data = await r.json()
@@ -41,15 +42,26 @@ export default function PersonalContent() {
       const r = await fetch(`${SN_PSPOSTS}?page=${p}`)
       const data = await r.json()
       setPsPosts(data)
-      console.log(psPosts)
+      // console.log(psPosts)
     } catch (err) {
       console.log(err)
     }
   }
 
+  // 本本不使用[postId]
+  // const sendPostIdForEdit = (postId) => {
+  //   setEditModal(!editModal)
+  //   console.log('checkPostId', postId)
+  //   fetch(`${SN_POSTS}?postId=${postId}`)
+  //     .then((r) => r.json())
+  //     .then((data) => {
+  //       setEditOne(data)
+  //     })
+  // }
+
   useEffect(() => {
     const currentPage = router.query.page
-    console.log(currentPage)
+
     handlePsPage(currentPage)
   }, [router.query.page])
 
@@ -122,7 +134,11 @@ export default function PersonalContent() {
               return (
                 <li key={p}>
                   <Link
-                    href={`?page=${p}`}
+                    // href={`?page=${p}`}
+                    href={{
+                      pathname: '/community/main-personal',
+                      query: { page: `${p}` },
+                    }}
                     // onClick={() => handlePsPage(router.query.page)} 已在useEffect依賴
                     className="border-s-2 px-5 flex py-3 hover:hover1"
                   >
@@ -165,7 +181,10 @@ export default function PersonalContent() {
                   <Link
                     name="postId"
                     onClick={() => handlePush(v.post_id)}
-                    href={`/community/main-post?postId=${v.post_id}`}
+                    href={{
+                      pathname: `/community/main-post`,
+                      query: { postId: `${v.post_id}` },
+                    }}
                     className="cursor-pointer"
                   >
                     <div className="text-[20px] font-semibold">{v.title}</div>
@@ -199,7 +218,12 @@ export default function PersonalContent() {
                                 <a>remove</a>
                               </li>
                               <li>
-                                <a>edit</a>
+                                <Link
+                                  href={`/community/edit/${v.post_id}`}
+                                  onClick={() => setEditModal(true)}
+                                >
+                                  edit
+                                </Link>
                               </li>
                             </ul>
                           )}

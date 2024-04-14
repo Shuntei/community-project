@@ -1,6 +1,6 @@
 // export const API_SERVER = "http://192.168.35.200:3001";
 const port = 3005 || 3002 //3002備用 與server相同
-export const API_SERVER = `http://localhost:${port}/johnny`
+export const API_SERVER = `http://localhost:${port}/community`
 //localhost:3005/johnny/posts
 // 取得列表資料
 export const SN_POSTS = `${API_SERVER}/posts`
@@ -13,6 +13,9 @@ export const SN_ADD_POST = `${API_SERVER}/psadd`
 
 //方法delete, `${API_SERVER}/${post_id}`
 export const SN_DELETE_POST = `${API_SERVER}`
+
+// // `${API_SERVER}/${postId}`, 方法: PUT
+export const SN_EDIT_POST = `${API_SERVER}/edit`
 
 // // 新增資料 POST
 // export const AB_ADD_POST = `${API_SERVER}/address-book/add`;
