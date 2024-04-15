@@ -42,21 +42,7 @@ export function CartProvider({ children }) {
         if (v.pid === id) {
           // 如果商品數量減少到零時，彈出 SweetAlert 提示
           if (v.qty === 1) {
-            Swal.fire({
-              title: '商品數量減少到零',
-              text: '是否要移除該商品？',
-              icon: 'question',
-              showCancelButton: true,
-              confirmButtonText: '是',
-              cancelButtonText: '否',
-              confirmButtonColor: 'black',
-              cancelButtonColor: 'gray',
-            }).then((result) => {
-              if (result.isConfirmed) {
-                // 如果選擇是，則移除該商品
-                onRemoveItem(id)
-              }
-            })
+            onRemoveItem(id)
           } else {
             // 如果商品數量不是零，則直接減少數量
             return { ...v, qty: v.qty - 1 }
@@ -133,8 +119,22 @@ export function CartProvider({ children }) {
   }
 
   const onRemoveItem = (id) => {
-    setItems(remove(items, id))
-    saveToLocalStorage(remove(items, id))
+    Swal.fire({
+      title: '確認刪除商品',
+      text: '是否確定要從購物車中刪除該商品？',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: '是',
+      cancelButtonText: '否',
+      confirmButtonColor: 'black',
+      cancelButtonColor: 'gray',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // 如果選擇是，則從購物車中移除該商品
+        setItems(remove(items, id))
+        saveToLocalStorage(remove(items, id))
+      }
+    })
   }
 
   const onAddMutiItem = (item) => {

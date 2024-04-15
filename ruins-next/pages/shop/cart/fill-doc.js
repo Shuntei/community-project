@@ -1,24 +1,31 @@
-import Image from "next/image";
-import React from "react";
-import Process1 from "@/components/common/process1";
-import Link from "next/link";
-import Navbar from "@/components/linda/navbar/navbar";
-import Footer from "@/components/linda/footer/footer";
-import { useCart } from "@/hooks/use-cart";
+import Image from 'next/image'
+import React from 'react'
+import Process1 from '@/components/common/process1'
+import Link from 'next/link'
+import Navbar from '@/components/linda/navbar/navbar'
+import Footer from '@/components/linda/footer/footer'
+import { useCart } from '@/hooks/use-cart'
+import { useShip711StoreOpener } from '@/hooks/use-ship-711-store'
 
 export default function FillDoc() {
-  const { items, onDecreaseItem, onIncreaseItem, totalPrice} = useCart();
+  const { items, onDecreaseItem, onIncreaseItem, totalPrice } = useCart()
 
+  // useShip711StoreOpener的第一個傳入參數是"伺服器7-11運送商店用Callback路由網址"
+  // 指的是node(express)的對應api路由。
+  const { store711, openWindow, closeWindow } = useShip711StoreOpener(
+    'http://localhost:3001/cart/711',
+    { autoCloseMins: 3 } // x分鐘沒完成選擇會自動關閉，預設5分鐘。
+  )
   return (
     <>
-      <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28">
+      <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28 text-black">
         {/* header開始 */}
-        <Navbar navColor={""} />
+        <Navbar navColor={''} />
         {/* header結束 */}
 
         <div className="md:w-10/12  w-full flex  flex-col justify-center items-center bg-gradient-to-t from-gray-400 to-gray-100 md:px-24 px-4 py-5 mb-5">
           {/* 進度條開始 */}
-          <Process1 name1={"購物車　"} name2={"填寫資料"} name3={"確認訂單"} />
+          <Process1 name1={'購物車　'} name2={'填寫資料'} name3={'確認訂單'} />
           {/* 進度條結束 */}
           {/* 內頁開始 */}
           <form
@@ -36,11 +43,11 @@ export default function FillDoc() {
                 {/* 訂購人資料 */}
                 <div className="w-full space-y-4">
                   <div className="w-full text-neutral-500 text-base font-semibold font-['IBM Plex Mono']">
-                    訂購人資訊{" "}
+                    訂購人資訊{' '}
                   </div>
                   <div className="flex flex-col px-7  space-y-5">
                     <div className="flex">
-                      {" "}
+                      {' '}
                       <input type="checkbox" name="" id="" />
                       <div className=" pl-2 text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
                         同會員資料
@@ -83,7 +90,7 @@ export default function FillDoc() {
                 {/* 運送資料 */}
                 <div className="w-full space-y-4 ">
                   <div className="w-full text-neutral-500 text-base font-semibold font-['IBM Plex Mono'] ">
-                    運送資料{" "}
+                    運送資料{' '}
                   </div>
                   <div className="flex flex-col px-7  space-y-5">
                     <div className="space-y-1">
@@ -95,8 +102,46 @@ export default function FillDoc() {
                         className="w-full bg-zinc-100 rounded"
                       ></select>
                     </div>
+                    {/* 選擇711門市 */}
+                    <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                      <div className="flex flex-col  space-y-5 w-full">
+                        <button
+                          className="border border-black justify-center items-center flex hover:bg-black hover:border-white hover:text-white group "
+                          onClick={() => {
+                            openWindow()
+                          }}
+                        >
+                          選擇7-11門市
+                        </button>
+                        <div className="space-y-1">
+                          <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                            7-11門市名稱:
+                          </div>
+                          <input
+                            className="w-full bg-zinc-100 rounded"
+                            type="text"
+                            value={store711.storename}
+                            disabled
+                          />
+                        </div>
+
+                        <div className="space-y-1">
+                          <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                            7-11門市地址:
+                          </div>
+                          <input
+                            className="w-full bg-zinc-100 rounded"
+                            type="text"
+                            value={store711.storeaddress}
+                            disabled
+                          />
+                        </div>
+                      </div>
+                    </div>
+                    {/* 選擇711門市結束 */}
+
                     <div className="flex">
-                      {" "}
+                      {' '}
                       <input type="checkbox" name="" id="" />
                       <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']  pl-2">
                         同訂購人資料
@@ -129,7 +174,7 @@ export default function FillDoc() {
                 {/* 付款方式 */}
                 <div className="w-full space-y-4 ">
                   <div className="w-full text-neutral-500 text-base font-semibold font-['IBM Plex Mono'] ">
-                    付款方式{" "}
+                    付款方式{' '}
                   </div>
                   <div className="flex flex-col px-7  space-y-5">
                     <div className="space-y-1">
@@ -172,40 +217,42 @@ export default function FillDoc() {
               {/* 右側 */}
               <div className="flex md:w-6/12 flex-col space-y-10 sticky h-min  top-20 ">
                 <div>
-                  {" "}
+                  {' '}
                   {/* 購物細項 */}
                   {items.map((v, i) => {
-                    return(
-                    <div className="flex w-full justify-between pb-4">
-                      <div className="w-1/5  ">
-                        <Image
-                          src={`/images/product/${v.img.split(',')[0]}`}
-                          alt="Picture of camp"
-                          width={100}
-                          height={50}
-                          className="aspect-square rounded-xl"
-                          unoptimized={true}
-                        />
+                    return (
+                      <div
+                        className="flex w-full justify-between pb-4"
+                        key={v.pid}
+                      >
+                        <div className="w-1/5  ">
+                          <Image
+                            src={`/images/product/${v.img.split(',')[0]}`}
+                            alt="Picture of camp"
+                            width={100}
+                            height={50}
+                            className="aspect-square rounded-xl"
+                            unoptimized={true}
+                          />
+                        </div>
+                        <div className="w-4/5 px-5 space-y-5">
+                          <div className="text-black text-small font-semibold font-['Noto Sans Tc']">
+                            {v.name}
+                          </div>
+                          <div className="flex justify-between">
+                            <div className="text-neutral-400 text-xs font-medium font-['Noto Sans']"></div>
+                            <div className="t text-neutral-400 text-xs font-extralight font-['IBM Plex Mono']">
+                              x {v.qty}
+                            </div>
+                          </div>
+                          <div className="flex justify-end">
+                            <div className="text-black text-base font-normal font-['IBM Plex Mono']">
+                              $ {v.price}
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                      <div className="w-4/5 px-5 space-y-5">
-                        <div className="text-black text-small font-semibold font-['Noto Sans Tc']">
-                          {v.name}
-                        </div>
-                        <div className="flex justify-between">
-                          <div className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
-                            深空灰
-                          </div>
-                          <div className="t text-neutral-400 text-xs font-extralight font-['IBM Plex Mono']">
-                            {v.qty}
-                          </div>
-                        </div>
-                        <div className="flex justify-end">
-                          <div className="text-black text-base font-normal font-['IBM Plex Mono']">
-                            {v.price}
-                          </div>
-                        </div>
-                      </div>
-                    </div>)
+                    )
                   })}
                   {/* 分隔線 */}
                   <div className="w-full border-dotted border-gray border-b  h-1"></div>
@@ -238,5 +285,5 @@ export default function FillDoc() {
         {/* FOOTER結束 */}
       </div>
     </>
-  );
+  )
 }

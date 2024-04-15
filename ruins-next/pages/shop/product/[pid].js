@@ -11,8 +11,7 @@ import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import { useRouter } from 'next/router'
 import { useCart } from '@/hooks/use-cart'
-import { Swiper, SwiperSlide } from 'swiper/react'
-import 'swiper/css'
+
 
 export default function Pid() {
   const router = useRouter()
@@ -157,7 +156,7 @@ export default function Pid() {
                             }}
                             className={
                               product.qty === n
-                                ? `md:text-[26px] text-[20px] font-semibold font-['IBM Plex Mono'] border-black border-b`
+                                ? `md:text-[26px] text-[20px] text-black font-semibold font-['IBM Plex Mono'] border-black border-b`
                                 : `text-neutral-400 md:text-[26px] text-[18px] font-semibold font-['IBM Plex Mono'] ` // 條件式的 className
                             }
                           >

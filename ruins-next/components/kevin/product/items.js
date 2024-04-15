@@ -28,35 +28,39 @@ export default function Items() {
       {products.rows &&
         products.rows.map((v, i) => {
           return (
-            <>
-              <div className=" flex-col  gap-5 flex transition duration-200 hover:scale-105 hover:skew-y-2" key={v.pid}>
-                <Link href={`/shop/product/${v.pid}`} className='flex justify-center items-center'>
-                  <img
-                    className="w-full aspect-square  rounded-xl "
-                    src={`/images/product/${v.img.split(',')[0]}`}
-                    alt="pic"
-                  />
+            <div
+              className=" flex-col  gap-5 flex transition duration-200 hover:scale-105 hover:skew-y-2"
+              key={v.pid}
+            >
+              <Link
+                href={`/shop/product/${v.pid}`}
+                className="flex justify-center items-center"
+              >
+                <img
+                  className="w-full aspect-square  rounded-xl "
+                  src={`/images/product/${v.img.split(',')[0]}`}
+                  alt="pic"
+                />
+              </Link>
+              <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
+                <Link
+                  href={`/shop/product/${v.pid}`}
+                  className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']"
+                >
+                  {v.name}
                 </Link>
-                <div className="md:px-10 w-full items-center md:items-start flex-col  gap-1 flex">
-                  <Link
-                    href={`/shop/product/${v.pid}`}
-                    className="text-black md:text-sm text-xs font-medium font-['IBM Plex Mono']"
+                <div className="text-zinc-500 md:w-full md:text-sm text-xs font-medium font-['IBM Plex Mono'] flex justify-between">
+                  <div>{v.price}</div>
+                  <button
+                    onClick={() => {
+                      onAddItem(v)
+                    }}
                   >
-                    {v.name}
-                  </Link>
-                  <div className="text-zinc-500 md:w-full md:text-sm text-xs font-medium font-['IBM Plex Mono'] flex justify-between">
-                    <div>{v.price}</div>
-                    <button
-                      onClick={() => {
-                        onAddItem(v)
-                      }}
-                    >
-                      +
-                    </button>
-                  </div>
+                    +
+                  </button>
                 </div>
               </div>
-            </>
+            </div>
           )
         })}
     </>
