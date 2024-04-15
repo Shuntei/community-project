@@ -100,7 +100,6 @@ export function AuthContextProvider({ children }) {
         if (res.success) {
           localStorage.setItem(storageKey, JSON.stringify(res.data))
           setAuth(res.data)
-          setProfile({ ...profile, profileUrl: res.profile.profileUrl });
           return true
         } else {
           return false
