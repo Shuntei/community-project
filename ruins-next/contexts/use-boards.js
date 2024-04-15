@@ -57,7 +57,7 @@ export default function BoardsContextProvider({ children }) {
       console.log(err)
     }
   }
-
+  
   const handleBdPosts = async (boardId) => {
     const r = await fetch(`${SN_BOARDS}/${boardId}`)
     const data = await r.json()
