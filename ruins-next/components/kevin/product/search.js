@@ -15,15 +15,15 @@ export default function Search() {
   }
   return (
     <div>
-      <RiSearchLine
+      <RiSearchLine 
         onClick={() => {
           toggleForm()
           toggleSer()
         }}
-        className={showSer ? 'flex' : 'hidden'}
+        className={showSer ? 'flex text-black' : 'hidden'}
       />
       <form
-        className={showForm ? 'flex' : 'hidden'}
+        className={showForm ? 'flex text-black' : 'hidden'}
         role="search"
         onSubmit={(e) => {
           e.preventDefault()
@@ -39,7 +39,7 @@ export default function Search() {
           aria-label="Search"
           name="keyword"
         />
-        <button className="btn btn-outline-success" type="submit">
+        <button className="" type="submit">
           <RiSearchLine />
         </button>
       </form>

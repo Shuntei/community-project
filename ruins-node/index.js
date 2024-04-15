@@ -4,6 +4,7 @@ import communityRouter from "./routes/johnny/community-one.js";
 import communityRouterTwo from "./routes/johnny/community-two.js";
 import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js";
+import cartRouter from "./routes/kevin/cart.js";
 import tourRouter from "./routes/tony/tour.js";
 import db from "./utils/mysql2-connect.js";
 import cors from "cors";
@@ -25,7 +26,10 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use("/member", memberRouter);
+//產品路由
 app.use("/product", productRouter);
+//購物車路由
+app.use("/cart", cartRouter);
 app.use("/game", gameRouter);
 app.use("/tour", tourRouter);
 app.use("/community", communityRouter);
