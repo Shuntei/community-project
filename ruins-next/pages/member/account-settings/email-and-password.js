@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import shieldSvg from '@/public/icons/shield.svg'
 import { RiKey2Line } from 'react-icons/ri'
 import Image from 'next/image'
@@ -6,11 +6,24 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
 import { PiWarningFill } from 'react-icons/pi'
 import AccountLayout from '@/components/linda/accountLayout'
 import Link from 'next/link'
+import ChangeEmailPopup from '@/components/linda/modals/changeEmailModal'
+import ChangePasswordPopup from '@/components/linda/modals/changePasswordModal'
+import OTPModal from '@/components/linda/modals/OTPModal'
 
 export default function EmailAndPassword() {
+  const [showEmailModal, setShowEmailModal] = useState(false)
+  const [showPasswordModal, setShowPasswordModal] = useState(false)
+  const [showOTPModal, setShowOTPModal] = useState(false)
+
+ useEffect(()=>{
+  if(showOTPModal) {
+    setShowEmailModal(false)
+  }
+ }, [showOTPModal])
+
   return (
     <>
-      <div className="flex w-full flex-col md:p-0 p-[30px] gap-[37px]">
+      <div className="flex w-full flex-col md:p-0 p-[30px] md:gap-0 gap-[37px]">
         <div className="pt-[50px] md:px-[80px] flex w-full">
           <div className="flex flex-col gap-[30px] w-full">
             <div className="md:text-[30px] text-[24px] font-medium">
@@ -31,14 +44,14 @@ export default function EmailAndPassword() {
         </div>
         <div className="gap-[37px] md:px-[80px] flex md:w-3/5 w-full flex-col">
           <div className="flex flex-col gap-[23px]">
-            <Link
-              href="/member/account-settings/edit-email"
+            <div
+            onClick={()=>{setShowEmailModal(true)}}
               className="flex px-[24px] py-[15px] justify-between items-center text-[#A7A7A7] text-[20px] bg-[#191919] hover:bg-black rounded"
             >
               <div className="text-[12px] md:text-base w-[10%]">Email</div>
               <div className="text-[12px] md:text-base">example@gmail.com</div>
               <MdOutlineKeyboardArrowRight />
-            </Link>
+            </div>
             <div className="flex flex-col w-full justify-start md:flex-row gap-[12px] items-start">
               <div className="flex gap-[12px] w-auto justify-start items-center">
                 <PiWarningFill className="text-[#959595]" />
@@ -51,8 +64,9 @@ export default function EmailAndPassword() {
               </a>
             </div>
           </div>
-          <Link
-            href="/member/account-settings/edit-password"
+          <div
+            // href="/member/account-settings/edit-password"
+            onClick={()=>{setShowPasswordModal(true)}}
             className="flex px-[24px] py-[15px] items-center justify-between text-[#A7A7A7] text-[20px] bg-[#191919] hover:bg-black rounded"
           >
             <div className="w-[10%] text-[12px] md:text-base">Password</div>
@@ -60,9 +74,12 @@ export default function EmailAndPassword() {
               not modified yet
             </div>
             <MdOutlineKeyboardArrowRight />
-          </Link>
+          </div>
         </div>
       </div>
+      <ChangeEmailPopup setShowOTPModal={setShowOTPModal} isVisible={showEmailModal} onClose={()=>{setShowEmailModal(false)}} />
+      <ChangePasswordPopup isVisible={showPasswordModal} onClose={()=>{setShowPasswordModal(false)}} />
+      <OTPModal isVisible={showOTPModal} onClose={()=>{setShowOTPModal(false)}}/>
     </>
   )
 }

@@ -10,7 +10,7 @@ export default function NavbarPopup() {
       <div className={styles['nav']}>
         <div id="headerReplace" className={styles['headerReplace']}></div>
         <div id="catalogueBox" className={styles['catalogueBox']}>
-          <div className={`${styles['title']} space-y-1`}>
+          <div className={`${styles['title']} space-y-1 mb-[50px] md:mb-0`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
               <a href="/shop">SHOP</a>
             </p>
@@ -40,7 +40,7 @@ export default function NavbarPopup() {
               <a href="/chat/01-check-role">START NOW</a>
             </p>
           </div>
-          <div className={`${styles['title']} space-y-1`}>
+          <div className={`${styles['title']} space-y-1 mb-[50px] md:mb-0`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
               <a href="/tour/main-search">TOUR</a>
             </p>

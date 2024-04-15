@@ -13,8 +13,8 @@ import { createRoot } from 'react-dom/client'
 export default function App({ Component, pageProps }) {
   const getLayout = Component.getLayout ?? ((page) => page)
   return (
-    <ProfileContextProvider>
-      <AuthContextProvider>
+    <AuthContextProvider>
+      <ProfileContextProvider>
         <CartProvider>
           <BoardsContextProvider>
             <TogglesContextProvider>
@@ -22,8 +22,8 @@ export default function App({ Component, pageProps }) {
             </TogglesContextProvider>
           </BoardsContextProvider>
         </CartProvider>
-      </AuthContextProvider>
-    </ProfileContextProvider>
+      </ProfileContextProvider>
+    </AuthContextProvider>
   )
 }
 

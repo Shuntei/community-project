@@ -48,7 +48,6 @@ export function AuthContextProvider({ children }) {
       })
 
       const result = await r.json()
-      console.log(result)
       if (result.success) {
         localStorage.setItem(storageKey, JSON.stringify(result.data))
         setAuth(result.data)
@@ -123,10 +122,6 @@ export function AuthContextProvider({ children }) {
       console.error('Error logging out:', error)
     }
   }
-
-  useEffect(() => {
-    console.log(user)
-  }, [user])
 
   useEffect(() => {
     const str = localStorage.getItem(storageKey)

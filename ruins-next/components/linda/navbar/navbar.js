@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './navbar.module.css'
 import CartSvg from '@/public/icons/cart.svg'
 import CartLine from '@/public/icons/cart-line.svg'
@@ -18,9 +18,11 @@ import NavbarMobile from './navbar-mobile'
 import { useCart } from '@/hooks/use-cart'
 import CartModal from '@/components/kevin/modal/cart-modal'
 import { useAuth } from '@/contexts/auth-context'
+import { useProfile } from '@/contexts/profile-context'
 
 export default function Navbar({ className, navColor = 'white' }) {
-  const { auth, profile, logout } = useAuth()
+  const { auth, logout } = useAuth()
+  const {profile} = useProfile()
   const [showModal, setShowModal] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
@@ -82,12 +84,12 @@ export default function Navbar({ className, navColor = 'white' }) {
                   }}
                 >
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
-                  <a href="" className="absolute top-[-4px] left-[-35px]">
+                  <a href="" className="absolute top-[-6px] left-[-35px]">
                     {profile.profileUrl ? (
                       <Image
-                        width={25}
+                        width={30}
                         className="rounded-full"
-                        height={25}
+                        height={30}
                         src={profile.profileUrl}
                         alt=""
                       />
