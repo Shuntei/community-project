@@ -4,7 +4,7 @@ module.exports = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3005',
+        port: '3001',
         pathname: '/community/**',
       },
     ],

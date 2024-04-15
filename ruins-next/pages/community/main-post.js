@@ -7,6 +7,7 @@ import { useRouter } from 'next/router'
 import CommentModal from '@/components/johnny/modal-comment'
 import { useToggles } from '@/contexts/use-toggles'
 import { useBoards } from '@/contexts/use-boards'
+import LikeButton from './like-button'
 import {
   RiMapPinFill,
   RiPriceTag3Fill,
@@ -23,7 +24,6 @@ import { SN_LIKES, SN_POSTS } from '@/components/johnny/config/api-path'
 
 export default function MainPost() {
   const router = useRouter()
-  const [clickLike, setClickLike] = useState(false)
   const handleBack = () => {
     router.back()
   }
@@ -53,15 +53,7 @@ export default function MainPost() {
     return
   }
 
-  const toggleLike = async (likeId) => {
-    // const r = await fetch(`${SN_LIKES}/${likeId}`)
-    // const rst = await rst.json()
-    // const newGetPost = { ...getPost[0], likeId: false }
-    // setNewGetPost({ ...getPost[0], likeId: !likeId })
-    setClickLike(!clickLike)
-  }
-
-  // console.log(getPost[0])
+  console.log(getPost[0])
   return (
     <>
       {getPost && (
@@ -132,19 +124,20 @@ export default function MainPost() {
                 <RiChat4Fill className="pr-1" />
                 85
               </span>
-              <span
+              {/* <span
                 className=" flex cursor-pointer"
                 onClick={() => {
-                  toggleLike()
+                  toggleLike(567)
                 }}
               >
-                {clickLike ? (
+                {isLike && isLike[0] ? (
                   <RiHeartFill className="pr-1" />
                 ) : (
                   <RiHeartLine className="pr-1" />
                 )}
                 85
-              </span>
+              </span> */}
+              <LikeButton postId={getPost[0].post_id} />
             </div>
             {/* <!-- 留言按鈕 --> */}
             <div

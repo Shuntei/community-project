@@ -1,5 +1,5 @@
 // export const API_SERVER = "http://192.168.35.200:3001";
-const port = 3005 || 3002 //3002備用 與server相同
+const port = 3001 || 3002 //3002備用 與server相同
 export const API_SERVER = `http://localhost:${port}/community`
 //localhost:3005/johnny/posts
 // 取得列表資料
@@ -17,8 +17,10 @@ export const SN_DELETE_POST = `${API_SERVER}`
 // `${API_SERVER}/${postId}`, 方法: PUT
 export const SN_EDIT_POST = `${API_SERVER}/edit`
 
-// `${API_SERVER}/${什麼id}`, 方法: GET
-export const SN_LIKES = `${API_SERVER}/toggle-likes`
+// `${API_SERVER}/${postId}`, 方法: GET
+export const SN_LIKES_STATE = `${API_SERVER}/like-state`
+export const SN_LIKES_CHANGE = `${API_SERVER}/toggle-like`
+
 
 // // 新增資料 POST
 // export const AB_ADD_POST = `${API_SERVER}/address-book/add`;

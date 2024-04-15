@@ -14,7 +14,7 @@ export default function TogglesContextProvider({ children }) {
     notification: false,
     mainContent: true,
   })
-
+  
   return (
     <TogglesContext.Provider
       value={{
