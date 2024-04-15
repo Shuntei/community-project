@@ -237,7 +237,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
     if (req.file) {
       // console.log("來到圖片區但是沒有圖片");
       const newFilePath =
-        "http://localhost:3005/community/" + req.file.path.slice(21);
+        "http://localhost:3001/community/" + req.file.path.slice(21);
       console.log("newFilePath", newFilePath);
       // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
