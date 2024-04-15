@@ -18,7 +18,7 @@ export default function App({ Component, pageProps }) {
         <CartProvider>
           <BoardsContextProvider>
             <TogglesContextProvider>
-              {getLayout(<Component {...pageProps} />)}/
+              {getLayout(<Component {...pageProps} />)}
             </TogglesContextProvider>
           </BoardsContextProvider>
         </CartProvider>

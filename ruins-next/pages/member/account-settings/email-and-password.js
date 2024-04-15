@@ -15,11 +15,11 @@ export default function EmailAndPassword() {
   const [showPasswordModal, setShowPasswordModal] = useState(false)
   const [showOTPModal, setShowOTPModal] = useState(false)
 
- useEffect(()=>{
-  if(showOTPModal) {
-    setShowEmailModal(false)
-  }
- }, [showOTPModal])
+  useEffect(() => {
+    if (showOTPModal) {
+      setShowEmailModal(false)
+    }
+  }, [showOTPModal])
 
   return (
     <>
@@ -45,7 +45,9 @@ export default function EmailAndPassword() {
         <div className="gap-[37px] md:px-[80px] flex md:w-3/5 w-full flex-col">
           <div className="flex flex-col gap-[23px]">
             <div
-            onClick={()=>{setShowEmailModal(true)}}
+              onClick={() => {
+                setShowEmailModal(true)
+              }}
               className="flex px-[24px] py-[15px] justify-between items-center text-[#A7A7A7] text-[20px] bg-[#191919] hover:bg-black rounded"
             >
               <div className="text-[12px] md:text-base w-[10%]">Email</div>
@@ -66,7 +68,9 @@ export default function EmailAndPassword() {
           </div>
           <div
             // href="/member/account-settings/edit-password"
-            onClick={()=>{setShowPasswordModal(true)}}
+            onClick={() => {
+              setShowPasswordModal(true)
+            }}
             className="flex px-[24px] py-[15px] items-center justify-between text-[#A7A7A7] text-[20px] bg-[#191919] hover:bg-black rounded"
           >
             <div className="w-[10%] text-[12px] md:text-base">Password</div>
@@ -77,9 +81,25 @@ export default function EmailAndPassword() {
           </div>
         </div>
       </div>
-      <ChangeEmailPopup setShowOTPModal={setShowOTPModal} isVisible={showEmailModal} onClose={()=>{setShowEmailModal(false)}} />
-      <ChangePasswordPopup isVisible={showPasswordModal} onClose={()=>{setShowPasswordModal(false)}} />
-      <OTPModal isVisible={showOTPModal} onClose={()=>{setShowOTPModal(false)}}/>
+      <ChangeEmailPopup
+        setShowOTPModal={setShowOTPModal}
+        isVisible={showEmailModal}
+        onClose={() => {
+          setShowEmailModal(false)
+        }}
+      />
+      <ChangePasswordPopup
+        isVisible={showPasswordModal}
+        onClose={() => {
+          setShowPasswordModal(false)
+        }}
+      />
+      <OTPModal
+        isVisible={showOTPModal}
+        onClose={() => {
+          setShowOTPModal(false)
+        }}
+      />{' '}
     </>
   )
 }

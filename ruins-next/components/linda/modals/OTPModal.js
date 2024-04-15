@@ -31,9 +31,7 @@ export default function OTPModal({ isVisible, onClose }) {
           </div>
         </div>
         <div className="gap-[25px] flex w-full flex-col">
-          <form
-            className="flex gap-4 items-center"
-          >
+          <form className="flex gap-4 items-center">
             <input
               type="text"
               className="flex w-1/5 bg-[#121517] text-white text-center text-base p-2 h-16 rounded focus:outline-none focus:border border-white"
@@ -60,11 +58,21 @@ export default function OTPModal({ isVisible, onClose }) {
               maxLength="1"
             />
           </form>
-          <button 
-        //   onClick={verifyOTP}
-          className="bg-black hover:bg-[#7A7A7A] flex items-center justify-center w-full py-[18px] italic border border-white">
+          <button
+            //   onClick={verifyOTP}
+            className="bg-black hover:bg-[#7A7A7A] flex items-center justify-center w-full py-[18px] italic border border-white"
+          >
             VERIFY OTP
           </button>
+
+          <div className="text-[14px]">
+            If you haven't received an email, check your spam folder
+          </div>
+          <div className="flex justify-center">
+            <a href="#" className="underline hover:text-white text-[#9F9F9F]">
+              Resend code
+            </a>
+          </div>
         </div>
       </div>
     </div>

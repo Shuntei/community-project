@@ -36,16 +36,17 @@ export default function LogoutModal({ isVisible }) {
             PROFILE
           </Link>
           <Link
-            href="#"
-            onClick={() => {
-              e.preventDefault()
-              logout()
-            }}
+            href="/member/account-settings/email-and-password"
             className="text-base"
           >
             SETTINGS
           </Link>
-          <Link href="#" onClick={logout} className="text-rose-400 text-base">
+          <Link href="#" 
+           onClick={(e) => {
+              e.preventDefault()
+              logout()
+            }}
+          className="text-rose-400 text-base">
             LOGOUT
           </Link>
         </div>
