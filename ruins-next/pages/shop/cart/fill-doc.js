@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import Process1 from '@/components/common/process1'
 import Link from 'next/link'
 import Navbar from '@/components/linda/navbar/navbar'
@@ -9,7 +9,7 @@ import { useShip711StoreOpener } from '@/hooks/use-ship-711-store'
 
 export default function FillDoc() {
   const { items, onDecreaseItem, onIncreaseItem, totalPrice } = useCart()
-
+  const [shipping, setShipping] = useState('')
   // useShip711StoreOpener的第一個傳入參數是"伺服器7-11運送商店用Callback路由網址"
   // 指的是node(express)的對應api路由。
   const { store711, openWindow, closeWindow } = useShip711StoreOpener(
@@ -48,7 +48,12 @@ export default function FillDoc() {
                   <div className="flex flex-col px-7  space-y-5">
                     <div className="flex">
                       {' '}
-                      <input type="checkbox" name="" id="" />
+                      <input
+                        type="checkbox"
+                        name=""
+                        id=""
+                        className="bg-white"
+                      />
                       <div className=" pl-2 text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
                         同會員資料
                       </div>
@@ -98,11 +103,21 @@ export default function FillDoc() {
                         請選擇運送方式
                       </div>
                       <select
-                        name="transition"
-                        className="w-full bg-zinc-100 rounded"
-                      ></select>
+                        className="w-full bg-zinc-100 rounded  text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']"
+                        name="shipping"
+                        id="shipping"
+                        value={shipping}
+                        onChange={(e) => setShipping(e.target.value)}
+                      >
+                        <option  value="運送方式">運送方式</option>
+                        <option  value="7-11店到店">7-11店到店</option>
+                        <option  value="宅配">宅配</option>
+                      </select>
                     </div>
                     {/* 選擇711門市 */}
+                    {shipping === '7-11店到店' &&
+                    (
+                    
                     <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
                       <div className="flex flex-col  space-y-5 w-full">
                         <button
@@ -137,7 +152,7 @@ export default function FillDoc() {
                           />
                         </div>
                       </div>
-                    </div>
+                    </div>)}
                     {/* 選擇711門市結束 */}
 
                     <div className="flex">
