@@ -15,20 +15,21 @@ import {
   RiArrowDropDownLine,
   RiAddLine,
   RiHeartLine,
+  RiHeartFill,
   RiEyeFill,
   RiChat4Fill,
 } from '@remixicon/react'
-import { SN_POSTS } from '@/components/johnny/config/api-path'
+import { SN_LIKES, SN_POSTS } from '@/components/johnny/config/api-path'
 
 export default function MainPost() {
   const router = useRouter()
+  const [clickLike, setClickLike] = useState(false)
   const handleBack = () => {
     router.back()
   }
 
   const { commentModal, setCommentModal } = useToggles()
-  const { getPost, setGetPost, handlePostId, handlePush } = useBoards()
-  const [loadImg, setLoadImg] = useState('')
+  const { getPost, setGetPost } = useBoards()
 
   useEffect(() => {
     const postId = router.query.postId
@@ -51,7 +52,16 @@ export default function MainPost() {
     console.log('data not ready to load')
     return
   }
-  console.log(getPost[0])
+
+  const toggleLike = async (likeId) => {
+    // const r = await fetch(`${SN_LIKES}/${likeId}`)
+    // const rst = await rst.json()
+    // const newGetPost = { ...getPost[0], likeId: false }
+    // setNewGetPost({ ...getPost[0], likeId: !likeId })
+    setClickLike(!clickLike)
+  }
+
+  // console.log(getPost[0])
   return (
     <>
       {getPost && (
@@ -122,8 +132,17 @@ export default function MainPost() {
                 <RiChat4Fill className="pr-1" />
                 85
               </span>
-              <span className=" flex">
-                <RiHeartLine className="pr-1" />
+              <span
+                className=" flex cursor-pointer"
+                onClick={() => {
+                  toggleLike()
+                }}
+              >
+                {clickLike ? (
+                  <RiHeartFill className="pr-1" />
+                ) : (
+                  <RiHeartLine className="pr-1" />
+                )}
                 85
               </span>
             </div>
