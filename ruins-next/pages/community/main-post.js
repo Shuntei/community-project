@@ -15,6 +15,8 @@ import {
   RiArrowDropDownLine,
   RiAddLine,
   RiHeartLine,
+  RiEyeFill,
+  RiChat4Fill,
 } from '@remixicon/react'
 import { SN_POSTS } from '@/components/johnny/config/api-path'
 
@@ -58,7 +60,7 @@ export default function MainPost() {
             {/* <!-- 標題區 --> */}
             <div className="flex justify-between mb-5">
               <div>
-                <div className="text-[20px] border-b-2">{getPost[0].title}</div>
+                <div className="text-[24px] border-b-2">{getPost[0].title}</div>
                 <div>Feb 27, 2024</div>
               </div>
             </div>
@@ -74,7 +76,7 @@ export default function MainPost() {
               NameHere@ccmail.com
             </div>
             {/* <!-- 文章 --> */}
-            <div className="flex mb-2 gap-5">
+            <div className="flex mb-2 pc:my-5 gap-5 text-gray-400">
               <div className="flex">
                 <RiMapPinFill className="mr-2" />
                 <span className="hidden pc:inline-block">待老坑山</span>
@@ -90,7 +92,7 @@ export default function MainPost() {
                 <span className="hidden pc:inline-block">覺得新奇</span>
               </div>
             </div>
-            <div className="mb-2">{getPost[0].content}</div>
+            <div className="mb-2 text-[20px] pc:py-5">{getPost[0].content}</div>
 
             {/* <!-- 圖片 --> */}
             <div className="mb-2">
@@ -110,6 +112,20 @@ export default function MainPost() {
                   unoptimized={true}
                 />
               )}
+            </div>
+            <div className="flex gap-2 my-3 pc:mx-20 pc:my-5 justify-end">
+              <span className=" pr-2 flex">
+                <RiEyeFill className="pr-1" />
+                297
+              </span>
+              <span className=" pr-2 flex">
+                <RiChat4Fill className="pr-1" />
+                85
+              </span>
+              <span className=" flex">
+                <RiHeartLine className="pr-1" />
+                85
+              </span>
             </div>
             {/* <!-- 留言按鈕 --> */}
             <div

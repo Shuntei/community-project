@@ -104,7 +104,7 @@ export default function MainContent() {
                   <Link
                     href={`?page=${p}`}
                     onClick={() => handlePage(p)}
-                    className="border-s-2 px-5 flex py-3 hover:hover1"
+                    className={`border-s-2 px-5 flex py-3 hover:hover1 active:bg-white ${p === postsList.page ? 'bg-white' : ''}`}
                   >
                     {p}
                     {/* <a href={`?page=${p}`}>{p}</a> */}
@@ -135,7 +135,7 @@ export default function MainContent() {
                     href={`?page=${p}`}
                     // onClick={handleBdPostsPage(location.search)}
                     onClick={() => handleBdPostsPage(p)}
-                    className="border-s-2 px-5 flex py-3 hover:hover1"
+                    className={`border-s-2 px-5 flex py-3 hover:hover1 active:bg-white ${p === selectedPosts.page ? 'bg-white' : ''}`}
                   >
                     {p}
                   </Link>

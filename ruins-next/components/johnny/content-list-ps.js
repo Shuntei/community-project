@@ -48,22 +48,12 @@ export default function PersonalContent() {
     }
   }
 
-  // 本本不使用[postId]
-  // const sendPostIdForEdit = (postId) => {
-  //   setEditModal(!editModal)
-  //   console.log('checkPostId', postId)
-  //   fetch(`${SN_POSTS}?postId=${postId}`)
-  //     .then((r) => r.json())
-  //     .then((data) => {
-  //       setEditOne(data)
-  //     })
-  // }
-
   useEffect(() => {
-    const currentPage = router.query.page
-
-    handlePsPage(currentPage)
-  }, [router.query.page])
+    if (router.isReady) {
+      const currentPage = router.query.page
+      handlePsPage(currentPage)
+    }
+  }, [router.query.page, router.isReady])
 
   useEffect(() => {
     // 首次渲染及調用render都會執行
@@ -115,6 +105,12 @@ export default function PersonalContent() {
     })
   }
 
+  const handlePageClick = (p) => {
+    router.push({
+      pathname: '/community/main-personal',
+      query: { page: `${p}` },
+    })
+  }
   // console.log(psPosts.totalPostsRows)
 
   return (
@@ -133,25 +129,31 @@ export default function PersonalContent() {
               if (p < 1 || p > psPosts.totalPages) return null
               return (
                 <li key={p}>
-                  <Link
+                  <span
                     // href={`?page=${p}`}
-                    href={{
-                      pathname: '/community/main-personal',
-                      query: { page: `${p}` },
+                    onClick={() => {
+                      // router.push({
+                      //   pathname: '/community/main-personal',
+                      //   query: { page: `${p}` },
+                      // })
+                      handlePageClick(p)
                     }}
+                    className={`border-s-2 px-5 flex py-3 hover:hover1 cursor-pointer
+                     active:bg-white ${p === psPosts.page ? 'bg-white' : ''} `}
+
+                    // href={{
+                    //   pathname: '/community/main-personal',
+                    //   query: { page: `${p}` },
+                    // }}
                     // onClick={() => handlePsPage(router.query.page)} 已在useEffect依賴
-                    className="border-s-2 px-5 flex py-3 hover:hover1"
                   >
                     {p}
-                    {/* <a href={`?page=${p}`}>{p}</a> */}
-                  </Link>
+                  </span>
                 </li>
               )
             })}
         <li className="border-x-2 px-3 py-3 flex items-center hover:hover1">
-          {/* <Link href={`?page=${page}`}> */}
           <RiArrowRightDoubleLine />
-          {/* </Link> */}
         </li>
       </ul>
       {psPosts.totalPostsRows &&
@@ -166,7 +168,6 @@ export default function PersonalContent() {
                 // onClick={() => handlePush(v.post_id)} // href={`/community/main-post`}
                 className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
               >
-                {' '}
                 <div className="px-2 flex text-center absolute left-0">
                   {removeBox ? (
                     <label className="flex-col">
@@ -178,19 +179,23 @@ export default function PersonalContent() {
                   )}
                 </div>
                 <div className="w-[70%]">
-                  <Link
+                  {/* 改span或div用router push改 */}
+                  <span
                     name="postId"
-                    onClick={() => handlePush(v.post_id)}
-                    href={{
-                      pathname: `/community/main-post`,
-                      query: { postId: `${v.post_id}` },
+                    onClick={() => {
+                      const href = {
+                        pathname: `/community/main-post`,
+                        query: { postId: `${v.post_id}` },
+                      }
+                      handlePush(v.post_id)
+                      router.push(href)
                     }}
                     className="cursor-pointer"
                   >
                     <div className="text-[20px] font-semibold">{v.title}</div>
                     <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
                     <span>{v.content}</span>
-                  </Link>
+                  </span>
                   <div className="text-[14px] text-292929">
                     <div className="flex gap-2">
                       <span className="text-575757 pr-2 flex">

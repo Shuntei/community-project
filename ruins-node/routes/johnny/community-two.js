@@ -3,7 +3,6 @@ import cors from "cors";
 import db from "../../utils/johnny/mysql2-connect.js";
 import uploadImgs from "../../utils/johnny/upload-imgs.js";
 import bodyParser from "body-parser";
-import multer from "multer";
 
 // 這個檔案用於做comment,編輯貼文
 
