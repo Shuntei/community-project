@@ -105,12 +105,6 @@ export default function PersonalContent() {
     })
   }
 
-  const handlePageClick = (p) => {
-    router.push({
-      pathname: '/community/main-personal',
-      query: { page: `${p}` },
-    })
-  }
   // console.log(psPosts.totalPostsRows)
 
   return (
@@ -132,19 +126,13 @@ export default function PersonalContent() {
                   <span
                     // href={`?page=${p}`}
                     onClick={() => {
-                      // router.push({
-                      //   pathname: '/community/main-personal',
-                      //   query: { page: `${p}` },
-                      // })
-                      handlePageClick(p)
+                      router.push({
+                        pathname: '/community/main-personal',
+                        query: { page: `${p}` },
+                      })
                     }}
                     className={`border-s-2 px-5 flex py-3 hover:hover1 cursor-pointer
                      active:bg-white ${p === psPosts.page ? 'bg-white' : ''} `}
-
-                    // href={{
-                    //   pathname: '/community/main-personal',
-                    //   query: { page: `${p}` },
-                    // }}
                     // onClick={() => handlePsPage(router.query.page)} 已在useEffect依賴
                   >
                     {p}

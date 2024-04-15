@@ -14,8 +14,11 @@ export const SN_ADD_POST = `${API_SERVER}/psadd`
 //方法delete, `${API_SERVER}/${post_id}`
 export const SN_DELETE_POST = `${API_SERVER}`
 
-// // `${API_SERVER}/${postId}`, 方法: PUT
+// `${API_SERVER}/${postId}`, 方法: PUT
 export const SN_EDIT_POST = `${API_SERVER}/edit`
+
+// `${API_SERVER}/${什麼id}`, 方法: GET
+export const SN_LIKES = `${API_SERVER}/toggle-likes`
 
 // // 新增資料 POST
 // export const AB_ADD_POST = `${API_SERVER}/address-book/add`;
