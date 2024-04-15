@@ -6,6 +6,8 @@ export const MB_SIGNUP = `${API_SERVER}/member/signup`
 export const MB_LOGIN = `${API_SERVER}/member/login`
 // google
 export const MB_GOOGLE_LOGIN = `${API_SERVER}/member/google-login`
+// get profile info
+export const MB_PROFILE_INFO = `${API_SERVER}/member/profile-data`
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`

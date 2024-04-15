@@ -99,7 +99,7 @@ export default function HomeSidebar() {
               Profile
             </Link>
             <Link
-              href="/member/account-settings/emailAndPassword"
+              href="/member/account-settings/email-and-password"
               onClick={(e) => {
                 handleLinkClick("emailAndPassword");
               }}

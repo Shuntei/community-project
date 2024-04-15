@@ -152,9 +152,6 @@ router.post("/google-login", async (req, res) => {
       username: "",
       token: "",
     },
-    profile: {
-      profileUrl: ""
-    }
   };
 
   const { account, username, photoUrl } = req.body;
@@ -175,33 +172,30 @@ router.post("/google-login", async (req, res) => {
       output.success = !!userRows.affectedRows;
 
       if (output.success) {
-        
         const sql = "SELECT * FROM mb_user WHERE username=?";
         const [rows] = await db.query(sql, username);
 
-        if(rows.length){
-
+        if (rows.length) {
           const profileSql = `INSERT INTO mb_user_profile (user_id, profile_pic_url) 
           VALUES (?, ?)`;
 
-          const [profileSqlResult] = await db.query(profileSql, [rows[0].id, photoUrl]);
-          output.success = !!profileSqlResult.affectedRows
+          const [profileSqlResult] = await db.query(profileSql, [
+            rows[0].id,
+            photoUrl,
+          ]);
+          output.success = !!profileSqlResult.affectedRows;
 
-          if(output.success){
+          if (output.success) {
             const token = jwt.sign(
               { id: rows[0].id, username: rows[0].username },
               process.env.JWT_SECRET
             );
-    
+
             output.data = {
               id: rows[0].id,
               username: rows[0].username,
               token,
             };
-
-            output.profile = {
-              profileUrl: photoUrl,
-            }
           }
         }
       }
@@ -211,7 +205,7 @@ router.post("/google-login", async (req, res) => {
   } else {
     output.success = true;
 
-    const row = emailRows[0]
+    const row = emailRows[0];
     const token = jwt.sign(
       {
         id: row.id,
@@ -229,10 +223,69 @@ router.post("/google-login", async (req, res) => {
 
     output.profile = {
       profileUrl: photoUrl,
-    }
+    };
   }
 
   res.json(output);
+});
+
+router.get("/profile-data/:id", async (req, res) => {
+  const output = {
+    success: false,
+    code: 0,
+    error: "",
+    data: {
+      profileId: 0,
+      userId: 0,
+      profileUrl: "",
+      coverUrl: "",
+      aboutMe: "",
+      showContactInfo: false,
+      ytLink: "",
+      fbLink: "",
+      igLink: "",
+      gmailLink: "",
+    },
+  };
+
+  const id = req.params.id;
+
+  if (!id) {
+    output.error = "There is no id";
+    return res.json(output);
+  }
+
+  try {
+    const sql = `SELECT * FROM mb_user_profile WHERE user_id=?`;
+    const [rows] = await db.query(sql, [id]);
+
+    if (!rows.length) {
+      output.error = "There is no info with this id";
+      return res.json(output);
+    }
+
+    const row = rows[0];
+    output.success = true;
+
+    output.data = {
+      profileId: row.profile_id,
+      userId: row.user_id,
+      profileUrl: row.profile_pic_url || "",
+      coverUrl: row.cover_pic_url || "",
+      aboutMe: row.about_me || "",
+      showContactInfo: row.allow_contact_info_visibility || false,
+      ytLink: row.youtube_link || "",
+      fbLink: row.facebook_link || "",
+      igLink: row.instagram_link || "",
+      gmailLink: row.gmail_link || "",
+    };
+
+    res.json(output);
+  } catch (ex) {
+    console.log(ex);
+    output.error = "Fetch data error";
+    return res.status(500).json(output);
+  }
 });
 
 // router.post("/edit-profile", upload.array("photos", 5), (req, res)=>{

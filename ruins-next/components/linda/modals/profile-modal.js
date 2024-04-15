@@ -1,8 +1,8 @@
-import React from "react";
-import Link from "next/link";
+import React from 'react'
+import Link from 'next/link'
 
-export default function ProfileModal({isVisible, logout}) {
-    if (!isVisible) return null
+export default function ProfileModal({ isVisible, logout }) {
+  if (!isVisible) return null
   return (
     <>
       <div className=" absolute top-[30px] right-0 w-[381px] h-[239px] pl-6 pr-[26px] py-[39px] bg-zinc-950 border border-white justify-start items-start gap-6 inline-flex">
@@ -24,10 +24,16 @@ export default function ProfileModal({isVisible, logout}) {
               </div>
             </div>
             <div className=" text-white self-stretch h-28 pt-[3px] pb-[26px] flex-col justify-start items-start gap-2.5 flex">
-              <Link href={"/member/account-settings/account"} className="text-base">
+              <Link
+                href={'/member/account-settings/account'}
+                className="text-base"
+              >
                 PROFILE
               </Link>
-              <Link href={"/member/account-settings/account"} className="text-base">
+              <Link
+                href={'/member/account-settings/email-and-password'}
+                className="text-base"
+              >
                 SETTINGS
               </Link>
               <Link
@@ -42,5 +48,5 @@ export default function ProfileModal({isVisible, logout}) {
         </div>
       </div>
     </>
-  );
+  )
 }

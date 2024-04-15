@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import home2 from '@/public/images/home2.jpg'
 import { MdOutlineFileUpload } from 'react-icons/md'
 import ProfileIcon from '@/public/icons/profileIcon.svg'
+import ProfileIconBold from '@/public/icons/profileIconBold.svg'
 import { FaYoutube } from 'react-icons/fa'
 import { FaFacebook } from 'react-icons/fa'
 import { AiFillInstagram } from 'react-icons/ai'
@@ -11,11 +12,15 @@ import Toggle from '@/components/linda/toggle'
 import { CgProfile } from 'react-icons/cg'
 import AccountLayout from '@/components/linda/accountLayout'
 import { useAuth } from '@/contexts/auth-context'
+import { FaCamera } from 'react-icons/fa'
+import { useProfile } from '@/contexts/profile-context'
 
 export default function Account() {
-  const { auth, profile } = useAuth()
+  const { auth } = useAuth()
+  const {profile} = useProfile()
   const [aboutMe, setAboutMe] = useState('')
   const [charCount, setCharCount] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
 
   const handleAboutMe = (e) => {
     const value = e.target.value
@@ -23,9 +28,7 @@ export default function Account() {
     setCharCount(value.length)
   }
 
-  const handleChange = () => {
-    
-  }
+  const handleChange = () => {}
 
   return (
     <>
@@ -46,7 +49,7 @@ export default function Account() {
           </div>
         </div>
         {/* Upload banner */}
-        <div className="md:h-72 h-52 relative w-full ">
+        <div className="md:h-72 h-52 relative w-full hover:brightness-50 cursor-pointer hover:shadow-[0_0_0_2px_rgba(255,255,255,1)]">
           <div className="absolute flex gap-1.5 top-1/2 md:left-[45%] left-[30%] z-10">
             <MdOutlineFileUpload />
             <div className="font-bold text-[15px]">Upload banner</div>
@@ -62,7 +65,26 @@ export default function Account() {
         </div>
         {/* Upload avatar */}
         <div className="flex md:flex-row flex-col md:gap-[37px] gap-[20px] md:items-start items-center md:border-b md:border-white w-full">
-          <Image alt="" src={ProfileIcon} className="w-[110px] stroke-1" />
+          <div className="hover:shadow-[0_0_0_4px_rgba(255,255,255,1)] relative rounded-full">
+            <Image
+              className="w-[110px]"
+              alt=""
+              src={isHovered ? ProfileIconBold : ProfileIcon}
+              onMouseEnter={() => {
+                setIsHovered(true)
+              }}
+              onMouseLeave={() => {
+                setIsHovered(false)
+              }}
+            />
+            {isHovered ? (
+              <div className="absolute rounded bg-white px-[8px] py-[4px] bottom-[10px] text-black right-0 text-[20px]">
+                <FaCamera />
+              </div>
+            ) : (
+              ''
+            )}
+          </div>
           <div className="flex flex-col md:gap-[50px] gap-[30px] w-full">
             <div className="flex flex-col gap-[24px]">
               <div className="flex w-1/3 flex-col gap-[6px] md:w-2/5 w-full">

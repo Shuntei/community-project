@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './navbar.module.css'
 import CartSvg from '@/public/icons/cart.svg'
 import CartLine from '@/public/icons/cart-line.svg'
@@ -18,9 +18,11 @@ import NavbarMobile from './navbar-mobile'
 import { useCart } from '@/hooks/use-cart'
 import CartModal from '@/components/kevin/modal/cart-modal'
 import { useAuth } from '@/contexts/auth-context'
+import { useProfile } from '@/contexts/profile-context'
 
 export default function Navbar({ className, navColor = 'white' }) {
-  const { auth, profile, logout } = useAuth()
+  const { auth, logout } = useAuth()
+  const {profile} = useProfile()
   const [showModal, setShowModal] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
