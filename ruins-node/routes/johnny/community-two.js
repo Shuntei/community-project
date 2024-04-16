@@ -1,10 +1,10 @@
-import express, { query } from "express";
+import express from "express";
 import cors from "cors";
 import db from "../../utils/johnny/mysql2-connect.js";
 import uploadImgs from "../../utils/johnny/upload-imgs.js";
 import bodyParser from "body-parser";
 
-// 這個檔案用於做comment,編輯貼文
+// 這個檔案用於做comment,編輯貼文,編輯留言,按讚
 
 const router = express.Router();
 
@@ -42,8 +42,8 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
     }
     if (req.file) {
       // console.log("來到圖片區但是沒有圖片");
-      const newFilePath =
-        "http://localhost:3001/community/" + req.file.path.slice(21);
+      const newFilePath = req.file.path.slice(21);
+      // "http://localhost:3001/community/" + req.file.path.slice(21);
       console.log("newFilePath", newFilePath);
       // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
@@ -84,15 +84,15 @@ router.get("/toggle-like/:postId?", async (req, res) => {
   } else {
     console.log(`postId: ${postId} came, keep going`);
   }
-  const sql1 = `SELECT pl.like_id, ps.post_id FROM sn_post_likes pl 
+  const isLikeRowsSql = `SELECT pl.like_id, ps.post_id FROM sn_post_likes pl 
   INNER JOIN sn_posts ps ON pl.post_id = ps.post_id WHERE ps.post_id=?`;
-  const [likeRows, field] = await db.query(sql1, [postId]);
+  const [likeRows, field] = await db.query(isLikeRowsSql, [postId]);
   console.log("start:", likeRows);
   console.log("field:", field);
 
   if (likeRows.length) {
-    const sql2 = `DELETE FROM sn_post_likes WHERE post_id=${postId}`;
-    const [result] = await db.query(sql2);
+    const unlikeSql = `DELETE FROM sn_post_likes WHERE post_id=${postId}`;
+    const [result] = await db.query(unlikeSql);
 
     if (result.affectedRows) {
       output.success = true;
@@ -106,8 +106,8 @@ router.get("/toggle-like/:postId?", async (req, res) => {
     }
   }
   if (!likeRows.length) {
-    const sql3 = `INSERT INTO sn_post_likes (post_id) VALUES (${postId})`;
-    const [result] = await db.query(sql3);
+    const likeSql = `INSERT INTO sn_post_likes (post_id) VALUES (${postId})`;
+    const [result] = await db.query(likeSql);
     if (result.affectedRows) {
       output.success = true;
       output.action = "add";
@@ -142,9 +142,9 @@ router.get("/like-state/:postId?", async (req, res) => {
   } else {
     console.log(`postId: ${postId} came, keep going`);
   }
-  const sql1 = `SELECT pl.like_id, ps.post_id FROM sn_post_likes pl 
+  const isLikeRowsSql = `SELECT pl.like_id, ps.post_id FROM sn_post_likes pl 
   INNER JOIN sn_posts ps ON pl.post_id = ps.post_id WHERE ps.post_id=?`;
-  const [likeRows, field] = await db.query(sql1, [postId]);
+  const [likeRows, field] = await db.query(isLikeRowsSql, [postId]);
   // console.log("start:", likeRows);
   // console.log("field:", field);
 
@@ -153,4 +153,158 @@ router.get("/like-state/:postId?", async (req, res) => {
   // console.log(output);
   res.json(output);
 });
+
+router.get("/comment/:postId?", async (req, res) => {
+  const output = {
+    success: false,
+    whatPostIdIs: +req.params.postId,
+    rows: [],
+  };
+  let postId = +req.params.postId;
+
+  if (postId) {
+    const sql = `SELECT sn_comments.* FROM sn_comments LEFT JOIN sn_posts USING(post_id) WHERE post_id=${postId}`;
+    const [result] = await db.query(sql);
+    if (result.length > 0) {
+      output.rows = result;
+      output.success = true;
+      res.json(output);
+    } else {
+      output.success = false;
+      res.json(output);
+    }
+  } else {
+    output.errors = "沒有postId";
+    res.json(output);
+  }
+});
+
+router.get("/selectedcm/:commentId", async (req, res) => {
+  let commentId = +req.params.commentId;
+
+  if (commentId) {
+    const sql = `SELECT * FROM sn_comments WHERE comment_id=${commentId}`;
+    const [result] = await db.query(sql);
+    res.json(result);
+  } else {
+    res.json("沒有 commentId");
+  }
+});
+
+router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
+  const output = {
+    success: false,
+    bodyData: { body: req.body },
+    errors: {},
+  };
+  // console.log("the bodyData: ", output.bodyData);
+
+  let result = {};
+  try {
+    console.log("this is photo:", req.file);
+
+    if (!req.file) {
+      const sql =
+        "INSERT INTO `sn_comments` ( `content`, `post_id`) VALUES ( ?, ? )";
+      [result] = await db.query(sql, [req.body.content, req.body.postId]);
+      output.success = true;
+    }
+
+    if (req.file) {
+      // 目前留言還沒有要上傳圖片
+      const newFilePath = req.file.path.slice(21);
+      // "http://localhost:3001/community/" + req.file.path.slice(21);
+      console.log("newFilePath", newFilePath);
+      // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
+      req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
+      const sql =
+        "INSERT INTO `sn_comments` ( `content`, `image_url`, `post_id`) VALUES ( ?, ?, ?)";
+      [result] = await db.query(sql, [
+        req.body.content,
+        req.body.image_url,
+        req.body.postId,
+      ]);
+
+      output.success = true;
+    }
+    // console.log("reqBody:", req.body);
+    output.success = !!result.affectedRows;
+  } catch (err) {
+    console.log(err);
+  }
+  console.log(output);
+  res.json(output);
+});
+
+router.delete("/cmremove/:commentId", async (req, res) => {
+  let commentId = +req.params.commentId || 0;
+  // console.log(post_id);
+  let output = {
+    success: false,
+    bodyData: req.body || "no body data",
+    errors: {},
+    commentId,
+  };
+
+  let result = {};
+  try {
+    if (commentId >= 1) {
+      const sql = "DELETE FROM `sn_comments` WHERE comment_id=?";
+      [result] = await db.query(sql, [commentId]);
+      output.success = !!result.affectedRows;
+    }
+  } catch (err) {
+    console.log(err);
+  }
+  res.json(output);
+});
+
+router.put("/cmedit/:commentId?",
+  uploadImgs.single("photo"),
+  async (req, res) => {
+    const output = {
+      success: false,
+      bodyData: { body: req.body, file: req.file },
+      errors: {},
+    };
+    // console.log("the bodyData: ", output.bodyData);
+
+    let commentId = +req.params.commentId || 0;
+    console.log(commentId);
+
+    if (!commentId) {
+      res.json("沒有 commentId");
+      return;
+    }
+
+    let result = {};
+    try {
+      // console.log("this is photo:", req.file);
+
+      if (!req.file) {
+        const sql = `UPDATE sn_comments SET content=? WHERE comment_id=${commentId}`;
+        [result] = await db.query(sql, [req.body.content]);
+      }
+      if (req.file) {
+        // console.log("來到圖片區但是沒有圖片");
+        // 留言圖片先不做
+        const newFilePath = req.file.path.slice(21);
+        // "http://localhost:3001/community/" + req.file.path.slice(21);
+        console.log("newFilePath", newFilePath);
+        // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
+        req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
+        const sql = `UPDATE sn_comments SET content=?, image_url=? WHERE comment_id=${commentId}`;
+        [result] = await db.query(sql, [req.body.content, req.body.image_url]);
+      }
+
+      // console.log("reqBody:", req.body);
+      output.success = !!result.affectedRows;
+    } catch (err) {
+      console.log(err);
+    }
+    console.log(output);
+    res.json(output);
+  }
+);
+
 export default router;
