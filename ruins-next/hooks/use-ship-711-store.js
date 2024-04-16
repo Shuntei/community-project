@@ -4,7 +4,7 @@ import {
   subscribe,
   unsubscribe,
   publish,
-} from '@/utils/popup-window'
+} from '@/utils/popup-window.js'
 import { useRouter } from 'next/router'
 import useInterval from '@/hooks/use-interval'
 import useLocalStorage from './use-localstorage'
@@ -142,7 +142,7 @@ export function useShip711StoreOpener(
   }
 }
 
-export function useShip711StoreCallback(keyLocalStorage = 'store711') {
+export function useShip711StoreCallback(keyLocalStorage = 'fyt-store711') {
   const [storedValue, setValue] = useLocalStorage(keyLocalStorage, {
     storeid: '',
     storename: '',

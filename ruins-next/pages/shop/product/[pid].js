@@ -90,7 +90,7 @@ export default function Pid() {
   }, [product.pid])
   return (
     <>
-      {console.log(relatedProducts)}
+     
       <div className=" bg-gray-100 flex flex-col justify-center items-center relative pt-28">
         {/* header開始 */}
         <Navbar navColor={''} />

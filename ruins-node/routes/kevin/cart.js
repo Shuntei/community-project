@@ -1,36 +1,160 @@
 import express from "express";
 import db from "../../utils/kevin/mysql2-connect.js";
 import dayjs from "dayjs";
+import { v4 as uuidv4 } from 'uuid'
 
 const router = express.Router();
 // 拿到會員資料
-router.get('/member-info/:mid', async (req, res) => {
-  const mid = req.params.mid || ''
+router.get("/member-info/:mid", async (req, res) => {
+  const mid = req.params.mid || "";
 
   try {
-    const sql = `SELECT * FROM mb_user WHERE id = ?`
-    const [rows] = await db.query(sql, [mid])
+    const sql = `SELECT * FROM mb_user WHERE id = ?`;
+    const [rows] = await db.query(sql, [mid]);
     if (!rows.length) {
-      return res.json({ success: false })
+      return res.json({ success: false });
     }
-    const row = rows[0]
-    res.json({ success: true, row })
+    const row = rows[0];
+    res.json({ success: true, row });
   } catch (ex) {
-    console.log(ex)
+    console.log(ex);
   }
-})
+});
 
-// 7-11 店到店：與資料庫無關，單純轉向使用
-const callback_url = process.env.SHIP_711_STORE_CALLBACK_URL
+// 訂單資訊
+router.get("/api/purchase-order", async (req, res) => {
+  const poid = req.query.poid || "";
+  // console.log(poid)
 
-router.post('/711', function (req, res) {
+  try {
+    const sql = `SELECT * FROM ca_purchase_order WHERE purchase_order_id = ?`;
+    const [rows] = await db.query(sql, [poid]);
+    if (!rows.length) {
+      return res.json({ success: false });
+    }
+    const row = rows[0];
+
+    res.json({ success: true, row });
+  } catch (ex) {
+    console.log(ex);
+  }
+});
+
+// 訂單明細
+router.get("/api/order-detail", async (req, res) => {
+  const poid = req.query.poid || "";
+  // console.log(poid)
+  try {
+    const sql = `SELECT * FROM ca_order_detail od
+    JOIN ca_purchase_order po ON po.sid = od.purchase_order_sid
+    JOIN ca_products p ON p.pid = od.pid
+    WHERE po.purchase_order_id = ?`;
+    const [rows] = await db.query(sql, [poid]);
+    if (!rows.length) {
+      return res.json({ success: false });
+    }
+
+    res.json({ success: true, rows });
+  } catch (ex) {
+    console.log(ex);
+  }
+});
+
+router.post('/add-purchase-order', async (req, res) => {
+  const output = {
+    success: false,
+    postData: req.body,
+    exception: '',
+    purchase_order_id: '',
+  }
   console.log(req.body)
-  res.redirect(callback_url + '?' + new URLSearchParams(req.body).toString())
+
+  const {
+    member_id,
+    recipient,
+    recipient_mobile,
+    store_id,
+    shipping_method,
+    shipping_fee,
+    total_amount,
+    payment_method,
+    products,
+  } = req.body
+
+  // Start a transaction: 操作兩個 sql 加入兩個資料表
+  const connection = await db.getConnection()
+  await connection.beginTransaction()
+
+  try {
+    // Start a transaction
+    const connection = await db.getConnection()
+    await connection.beginTransaction()
+
+    const purchaseOrderSql =
+      "INSERT INTO `ca_purchase_order`(`purchase_order_id`, `member_id`, `recipient`, `recipient_mobile`, `store_id`, `shipping_method`, `shipping_fee`, `total_amount`, `payment_method`, `payment_status`, `status`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '未付款', '訂單處理中', NOW())"
+
+    const PurchaseOrderId = uuidv4().replace(/-/g, '')
+
+    // 會拿到 promise 所以要用 await，加到資料庫會是陣列
+    const [result] = await connection.query(purchaseOrderSql, [
+      PurchaseOrderId,
+      member_id,
+      recipient,
+      recipient_mobile,
+      store_id,
+      shipping_method,
+      shipping_fee,
+      total_amount,
+      payment_method,
+    ])
+
+    // console.log('order 1'); // 如果無法新增成功就一步一步log看看，放上錯誤訊息
+
+    const purchaseOrderSid = result.insertId
+
+    const productOrderDetailSql =
+      'INSERT INTO `ca_order_detail`( `purchase_order_sid`, `pid`, `price`, `qty`, `total_price`, `is_comment`) VALUES ( ?, ?, ?, ?, ?, ?)'
+
+    for (let product of products) {
+      const { pid, qty, price } = product
+      const amount = qty * price
+
+      await connection.query(productOrderDetailSql, [
+        purchaseOrderSid,
+        pid,
+        price,
+        qty,
+        amount,
+        0,
+      ])
+    }
+
+    // Commit the transaction
+    await connection.commit()
+
+    output.result = result
+    output.success = !!result.affectedRows
+    output.purchase_order_id = PurchaseOrderId
+  } catch (ex) {
+    // Rollback the transaction in case of an error
+    await connection.rollback()
+    output.exception = ex
+  } finally {
+    // Release the connection
+    connection.release()
+  }
+
+  res.json(output)
+})
+// 7-11 店到店：與資料庫無關，單純轉向使用
+const callback_url = process.env.SHIP_711_STORE_CALLBACK_URL;
+
+router.post("/711", function (req, res) {
+  console.log(req.body);
+  res.redirect(callback_url + "?" + new URLSearchParams(req.body).toString());
   // const queryString = QueryString.stringify(req.body)
   // console.log(queryString)
   // res.redirect(callback_url + '?' + queryString)
-})
-
-
+});
 
 export default router;
