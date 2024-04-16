@@ -1,4 +1,4 @@
-import express, { query } from "express";
+import express from "express";
 import cors from "cors";
 import db from "../../utils/johnny/mysql2-connect.js";
 import uploadImgs from "../../utils/johnny/upload-imgs.js";
@@ -236,10 +236,10 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
     }
     if (req.file) {
       // console.log("來到圖片區但是沒有圖片");
-      const newFilePath =
-        "http://localhost:3001/community/" + req.file.path.slice(21);
+      const newFilePath = req.file.path.slice(21);
+      // "http://localhost:3001/community/" + req.file.path.slice(21);
       console.log("newFilePath", newFilePath);
-      // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
+      // http://localhost:3001/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
       const sql =
         "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `image_url`, `board_id`) VALUES ( ?, ?, ?, ?, ?)";
@@ -288,9 +288,5 @@ router.delete("/:post_id", async (req, res) => {
 //   // console.log(req.files);
 //   res.json(req.files);
 // });
-router.post("/try-uploads", uploadImgs.single("photo"), (req, res) => {
-  console.log(req.file);
-  res.json(req.file);
-});
 
 export default router;

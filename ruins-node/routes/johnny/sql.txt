@@ -1,0 +1,6 @@
+
+抓留言資料
+SELECT comment_id, sn_posts.post_id FROM `sn_comments` LEFT JOIN sn_posts USING(post_id) WHERE post_id=35
+
+新增留言
+"INSERT INTO `sn_comments` ( `content`, `post_id`) VALUES ( ?, ? )";

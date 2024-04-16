@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { BackendPortForImg } from '../../../components/johnny/config/api-path'
 import Link from 'next/link'
 import Image from 'next/image'
 import img from '../../../components/johnny/img/90.jpg'
@@ -41,10 +42,12 @@ export default function EditModal() {
   })
 
   const [previewUrl, setPreviewUrl] = useState('')
+  const [isFormChanged, setIsFormChanged] = useState(false)
   const { render, setRender, allPostsShow } = useBoards()
 
   const changeHandler = (e) => {
     setPostForm({ ...postForm, [e.target.name]: e.target.value })
+    setIsFormChanged(true)
   }
 
   const handleFileChange = (e) => {
@@ -56,6 +59,7 @@ export default function EditModal() {
     } else {
       setPreviewUrl('')
     }
+    setIsFormChanged(true)
   }
 
   //  { message: '使用toast代替' }
@@ -71,7 +75,7 @@ export default function EditModal() {
     formData.append('photo', postForm.photo)
     formData.append('boardId', postForm.boardId)
     // console.log(postForm)
-    // http:localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg
+    // http:localhost:3001/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg
     const MySwal = withReactContent(Swal)
     const confirmNotify = () => {
       MySwal.fire({
@@ -124,11 +128,16 @@ export default function EditModal() {
         content: r2.error.issues[0].message,
       }
     }
+
     if (initErrors.hasTitleErrors) {
       toast.error('請輸入標題')
       return
     } else if (initErrors.hasContentErrors) {
       toast.error('內容請輸入三個字以上')
+      return
+    }
+    if (!isFormChanged) {
+      toast.error('內容沒有變更，請繼續編輯')
       return
     }
 
@@ -155,10 +164,11 @@ export default function EditModal() {
       .then((r) => r.json())
       .then((rst) => {
         if (rst[0]) {
-          console.log(rst[0])
+          // console.log(rst[0])
           const { title, content, image_url, board_id } = rst[0]
           setPostForm({ title, content, image_url, board_id })
-          console.log({ title, content, image_url, board_id })
+          // console.log({ title, content, image_url, board_id })
+          // setPostForm(rst[0])
         } else {
           router.push(`/community/main-personal`)
         }
@@ -172,6 +182,7 @@ export default function EditModal() {
     setRender(false)
   }, [render])
 
+  // console.log(postForm)
   return (
     <>
       <EditLayout>
@@ -279,7 +290,6 @@ export default function EditModal() {
                             return (
                               <Image
                                 className="size-[150px] object-cover rounded-lg"
-                                // src={'postForm.image_url'}
                                 src={previewUrl}
                                 width={150}
                                 height={150}
@@ -295,7 +305,7 @@ export default function EditModal() {
                               return (
                                 <Image
                                   className="size-[150px] object-cover rounded-lg"
-                                  src={postForm.image_url}
+                                  src={`http://localhost:${BackendPortForImg}/community/${postForm.image_url}`}
                                   width={150}
                                   height={150}
                                   alt=""

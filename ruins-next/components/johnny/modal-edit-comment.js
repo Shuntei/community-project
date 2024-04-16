@@ -18,19 +18,27 @@ import {
   RiDraftLine,
   RiCloseLargeLine,
 } from '@remixicon/react'
-import { SN_ADD_COMMENT } from './config/api-path'
+import {
+  SN_ADD_COMMENT,
+  SN_EDIT_COMMENT,
+  SN_SELECTED_COMMENT,
+} from './config/api-path'
+import { useBoards } from '@/contexts/use-boards'
 
-export default function CommentModal({
-  postId,
+export default function CommentEditModal({
+  commentId,
   renderAfterCm,
   setRenderAfterCm,
+  commentsInit,
 }) {
-  console.log('postIdInCommentModal', postId)
-  const { commentModal, setCommentModal } = useToggles()
+  console.log('commentId in comment edit modal', commentId) //有抓到了
+
+  const [isFormChanged, setIsFormChanged] = useState(false)
+  const { commentEditModal, setCommentEditModal } = useToggles()
 
   const [postForm, setPostForm] = useState({
     content: '',
-    postId: postId,
+    commentId: commentId,
     // photo: '',
   })
   // 目前沒還要圖片
@@ -38,6 +46,7 @@ export default function CommentModal({
 
   const changeHandler = (e) => {
     setPostForm({ ...postForm, [e.target.name]: e.target.value })
+    setIsFormChanged(true)
   }
 
   // 目前沒還要圖片
@@ -60,29 +69,29 @@ export default function CommentModal({
 
     const formData = new FormData()
     formData.append('content', postForm.content)
-    formData.append('postId', postForm.postId)
+    // formData.append('commentId', postForm.commentId)
     // formData.append('photo', postForm.photo)
 
     const MySwal = withReactContent(Swal)
     const confirmNotify = () => {
       MySwal.fire({
-        title: '留言成功',
+        title: '留言編輯成功',
         icon: 'success',
         showConfirmButton: false,
         timer: 1500,
       }).then(() => {
         try {
-          fetch(SN_ADD_COMMENT, {
-            method: 'POST',
+          fetch(`${SN_EDIT_COMMENT}/${commentId}`, {
+            method: 'PUT',
             body: formData,
           })
             .then((rst) => rst.json())
             .then((result) => {
               if (result.success) {
                 setRenderAfterCm(!renderAfterCm)
-                setCommentModal(!commentModal)
+                setCommentEditModal(!commentEditModal)
               } else {
-                toast.error('留言失敗')
+                toast.error('留言編輯失敗')
               }
             })
         } catch (err) {
@@ -111,13 +120,34 @@ export default function CommentModal({
       toast.error('內容請輸入三個字以上')
       return
     }
+    if (!isFormChanged) {
+      toast.error('內容沒有變更，請繼續編輯')
+      return
+    }
 
     confirmNotify()
   }
-  // useEffect(() => {
-  //   allPostsShow()
-  //   setRender(false)
-  // }, [render])
+
+  // 先獲取原本留言資料
+  useEffect(() => {
+    fetch(`${SN_SELECTED_COMMENT}/${commentId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        const { comment_id, user_id, post_id, content, comment_timestamp } =
+          data[0]
+        setPostForm({
+          comment_id,
+          user_id,
+          post_id,
+          content,
+          comment_timestamp,
+        })
+      })
+  }, [])
+
+  useEffect(() => {
+    commentsInit()
+  }, [renderAfterCm])
 
   return (
     <>
@@ -131,10 +161,12 @@ export default function CommentModal({
       >
         <div className="bg-292929 w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl">
           <div className="flex justify-between pb-5 text-white">
-            <div className="text-[25px] flex items-center">Comment</div>
+            <div className="text-[25px] flex items-center">
+              Edit your Comment
+            </div>
             <button>
               <RiCloseLargeLine
-                onClick={() => setCommentModal(!commentModal)}
+                onClick={() => setCommentEditModal(!commentEditModal)}
               />
             </button>
           </div>

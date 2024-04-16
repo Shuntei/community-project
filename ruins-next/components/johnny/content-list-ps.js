@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { BackendPortForImg } from './config/api-path'
 import {
   RiChat4Fill,
   RiEyeFill,
@@ -205,7 +206,7 @@ export default function PersonalContent() {
                           {toggleMenu && (
                             <ul
                               tabIndex={0}
-                              className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-24"
+                              className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-lg w-24"
                             >
                               <li onClick={() => removePost(v.post_id)}>
                                 <a>remove</a>
@@ -249,7 +250,7 @@ export default function PersonalContent() {
                   {v.image_url && (
                     <Image
                       className="size-[100px] object-cover rounded-xl"
-                      src={v.image_url}
+                      src={`http://localhost:${BackendPortForImg}/community/${v.image_url}`}
                       width={100}
                       height={100}
                       alt="Description of image"

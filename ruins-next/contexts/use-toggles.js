@@ -7,6 +7,7 @@ export default function TogglesContextProvider({ children }) {
   const [postModal, setPostModal] = useState(false)
   const [editModal, setEditModal] = useState(false)
   const [commentModal, setCommentModal] = useState(false)
+  const [commentEditModal, setCommentEditModal] = useState(false)
   const [removeBox, setRemoveBox] = useState(false)
 
   const [toggles, setToggles] = useState({
@@ -14,7 +15,7 @@ export default function TogglesContextProvider({ children }) {
     notification: false,
     mainContent: true,
   })
-  
+
   return (
     <TogglesContext.Provider
       value={{
@@ -28,6 +29,8 @@ export default function TogglesContextProvider({ children }) {
         setRemoveBox,
         editModal,
         setEditModal,
+        commentEditModal,
+        setCommentEditModal,
       }}
     >
       {children}
