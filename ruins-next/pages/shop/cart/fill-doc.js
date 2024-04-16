@@ -1,23 +1,141 @@
 import Image from 'next/image'
-import React, { useState } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Process1 from '@/components/common/process1'
 import Link from 'next/link'
 import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import { useCart } from '@/hooks/use-cart'
 import { useShip711StoreOpener } from '@/hooks/use-ship-711-store'
-
+import Swal from 'sweetalert2'
+import { useRouter } from 'next/router'
+import { CART_MEMBER_INFO } from '@/components/config/api-path'
+import AuthContext from '@/contexts/auth-context'
 export default function FillDoc() {
   const { items, onDecreaseItem, onIncreaseItem, totalPrice } = useCart()
-  const [shipping, setShipping] = useState('')
+
+  // 一鍵填入使用
+  const [isSameAsMember, setIsSameAsMember] = useState(false)
+  const [isSameAsBuyer, setIsSameAsBuyer] = useState(false)
+
+  // 訂購人資料
+  const [memberName, setMemberName] = useState('')
+  const [memberEmail, setMemberEmail] = useState('')
+  const [memberMobile, setMemberMobile] = useState(0)
+
+  // 付款方式狀態
+  const paymentOptions = ['LinePay', '信用卡', '取貨付款']
+  const [paymentMethod, setPaymentMethod] = useState('')
+
+  // 運送方式狀態
+  const [storeid, setStoreid] = useState('')
+  const shippingOptions = ['7-11店到店(運費$60)', '宅配(運費$100)']
+  const [shippingMethod, setShippingMethod] = useState('')
+  const [shippingFee, setShippingFee] = useState(0)
+
+  // 收件人資料
+  const [recipientName, setRecipient] = useState('')
+  const [recipientMobile, setRecipientMobile] = useState(0)
+
+  // 合計的狀態
+  const [totalAmount, setTotalAmount] = useState(0)
+
+  // 用於欄位驗證
+  const [terms, setTerms] = useState(false)
+  const [isFormValid, setIsFormValid] = useState(false)
+
+  const router = useRouter()
+  const { auth } = useContext(AuthContext)
+  const memberId = auth.id
+
+  const getMemberInfo = async () => {
+    const mid = memberId
+    try {
+      const r = await fetch(CART_MEMBER_INFO + `/${mid}`)
+      const d = await r.json()
+      // console.log(d)
+      if (d.success) {
+        setMemberName(d.row.name)
+        setMemberEmail(d.row.email)
+        setMemberMobile(d.row.phone)
+      } else {
+        console.log('no member info')
+      }
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+  const memberFromAuth = {
+    member_id: memberId,
+    member_name: memberName,
+    member_email: memberEmail,
+    member_mobile: memberMobile,
+  }
+
+  // 一鍵填入會員資料
+  const handlecustomerInfo = (prev) => {
+    // 如果沒有登入就跳出提示
+    if (!memberId) {
+      Swal.fire({
+        toast: true,
+        width: 230,
+        position: 'top',
+        icon: 'warning',
+        iconColor: 'gray',
+        title: '請先登入會員',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      return
+    }
+    setIsSameAsMember((prev) => !prev)
+  }
+
+  // 一鍵填入訂購人
+  const handleRecipientInfo = (prev) => {
+    if (!memberId) {
+      Swal.fire({
+        toast: true,
+        width: 230,
+        position: 'top',
+        icon: 'warning',
+        iconColor: '#ff804a',
+        title: '請先登入會員',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      return
+    }
+    setIsSameAsBuyer((prev) => !prev)
+    if (!isSameAsBuyer) {
+      setRecipient(memberFromAuth.member_name)
+      setRecipientMobile(memberFromAuth.member_mobile)
+    } else {
+      setRecipient('')
+      setRecipientMobile(0)
+    }
+    // console.log(recipientName)
+  }
   // useShip711StoreOpener的第一個傳入參數是"伺服器7-11運送商店用Callback路由網址"
   // 指的是node(express)的對應api路由。
   const { store711, openWindow, closeWindow } = useShip711StoreOpener(
     'http://localhost:3001/cart/711',
     { autoCloseMins: 3 } // x分鐘沒完成選擇會自動關閉，預設5分鐘。
   )
+
+  useEffect(() => {
+    
+    setStoreid('')
+  }, [items])
+
+  // 一進來先將 localstorage store711 刪除
+  useEffect(() => {
+    localStorage.removeItem('store711')
+    setStoreid('')
+    getMemberInfo()
+  }, [memberId])
   return (
     <>
+    {console.log(memberId)}
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28 text-black">
         {/* header開始 */}
         <Navbar navColor={''} />
@@ -50,9 +168,11 @@ export default function FillDoc() {
                       {' '}
                       <input
                         type="checkbox"
-                        name=""
+                        name="sameAsMember"
                         id=""
-                        className="bg-white"
+                        checked={isSameAsMember}
+                        onChange={handlecustomerInfo}
+                        className=" enabled:bg-gray-300"
                       />
                       <div className=" pl-2 text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
                         同會員資料
@@ -64,7 +184,11 @@ export default function FillDoc() {
                       </div>
                       <input
                         type="text"
-                        name="name"
+                        name="member_name"
+                        value={isSameAsMember ? memberFromAuth.member_name : ''}
+                        onChange={(e) => {
+                          setMemberName(e.target.value)
+                        }}
                         className="w-full bg-zinc-100 rounded"
                       />
                     </div>
@@ -73,8 +197,15 @@ export default function FillDoc() {
                         電子信箱
                       </div>
                       <input
-                        type="text"
-                        name="email"
+                        type="email"
+                        name="member_email"
+                        id=""
+                        value={
+                          isSameAsMember ? memberFromAuth.member_email : ''
+                        }
+                        onChange={(e) => {
+                          setMemberEmail(e.target.value)
+                        }}
                         className="w-full bg-zinc-100 rounded"
                       />
                     </div>
@@ -83,8 +214,14 @@ export default function FillDoc() {
                         手機號碼
                       </div>
                       <input
-                        type="text"
-                        name="mobile"
+                        type="number"
+                        name="member_mobile"
+                        value={
+                          isSameAsMember ? memberFromAuth.member_mobile : ''
+                        }
+                        onChange={(e) => {
+                          setMemberMobile(e.target.value)
+                        }}
                         className="w-full bg-zinc-100 rounded"
                       />
                     </div>
@@ -106,58 +243,68 @@ export default function FillDoc() {
                         className="w-full bg-zinc-100 rounded  text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']"
                         name="shipping"
                         id="shipping"
-                        value={shipping}
-                        onChange={(e) => setShipping(e.target.value)}
+                        value={shippingMethod}
+                        onChange={(e) => setShippingMethod(e.target.value)}
                       >
-                        <option  value="運送方式">運送方式</option>
-                        <option  value="7-11店到店">7-11店到店</option>
-                        <option  value="宅配">宅配</option>
+                        <option value="">請選擇運送方式</option>
+                        {shippingOptions.map((v, i) => {
+                          return (
+                            <option value={v} key={v}>
+                              {v}
+                            </option>
+                          )
+                        })}
                       </select>
                     </div>
                     {/* 選擇711門市 */}
-                    {shipping === '7-11店到店' &&
-                    (
-                    
-                    <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
-                      <div className="flex flex-col  space-y-5 w-full">
-                        <button
-                          className="border border-black justify-center items-center flex hover:bg-black hover:border-white hover:text-white group "
-                          onClick={() => {
-                            openWindow()
-                          }}
-                        >
-                          選擇7-11門市
-                        </button>
-                        <div className="space-y-1">
-                          <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
-                            7-11門市名稱:
+                    {shippingMethod === '7-11店到店(運費$60)' && (
+                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                        <div className="flex flex-col  space-y-5 w-full">
+                          <button
+                            className="border border-black justify-center items-center flex hover:bg-black hover:border-white hover:text-white group "
+                            onClick={() => {
+                              openWindow()
+                            }}
+                          >
+                            選擇7-11門市
+                          </button>
+                          <div className="space-y-1">
+                            <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                              7-11門市名稱:
+                            </div>
+                            <input
+                              className="w-full bg-zinc-100 rounded"
+                              type="text"
+                              value={store711.storename}
+                              disabled
+                            />
                           </div>
-                          <input
-                            className="w-full bg-zinc-100 rounded"
-                            type="text"
-                            value={store711.storename}
-                            disabled
-                          />
-                        </div>
 
-                        <div className="space-y-1">
-                          <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
-                            7-11門市地址:
+                          <div className="space-y-1">
+                            <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                              7-11門市地址:
+                            </div>
+                            <input
+                              className="w-full bg-zinc-100 rounded"
+                              type="text"
+                              value={store711.storeaddress}
+                              disabled
+                            />
                           </div>
-                          <input
-                            className="w-full bg-zinc-100 rounded"
-                            type="text"
-                            value={store711.storeaddress}
-                            disabled
-                          />
                         </div>
                       </div>
-                    </div>)}
+                    )}
                     {/* 選擇711門市結束 */}
 
                     <div className="flex">
                       {' '}
-                      <input type="checkbox" name="" id="" />
+                      <input
+                        type="checkbox"
+                        name=""
+                        id=""
+                        checked={isSameAsBuyer}
+                        onChange={handleRecipientInfo}
+                      />
                       <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']  pl-2">
                         同訂購人資料
                       </div>
@@ -168,7 +315,11 @@ export default function FillDoc() {
                       </div>
                       <input
                         type="text"
-                        name="name"
+                        name=""
+                        value={isSameAsBuyer ? memberFromAuth.member_name : ''}
+                        onChange={(e) => {
+                          setRecipient(e.target.value)
+                        }}
                         className="w-full bg-zinc-100 rounded"
                       />
                     </div>
@@ -177,8 +328,12 @@ export default function FillDoc() {
                         收件人手機
                       </div>
                       <input
-                        type="text"
-                        name="email"
+                        type="number"
+                    name=""
+                    value={isSameAsBuyer ? memberFromAuth.member_mobile : ''}
+                    onChange={(e) => {
+                      setRecipientMobile(e.target.value)
+                    }}
                         className="w-full bg-zinc-100 rounded"
                       />
                     </div>

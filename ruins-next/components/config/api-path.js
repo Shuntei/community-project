@@ -20,3 +20,6 @@ export const PRODUCT_COMMENT = `${API_SERVER}/product/api/getProductComment`
 
 // 相關商品10筆
 export const PRODUCT_RELATED = `${API_SERVER}/product/api/relatedProducts`
+
+// 購物車 - 取得會員資料
+export const CART_MEMBER_INFO = `${API_SERVER}/cart/member-info`
