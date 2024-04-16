@@ -8,7 +8,7 @@ import { useCart } from '@/hooks/use-cart'
 import { useShip711StoreOpener } from '@/hooks/use-ship-711-store'
 import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
-import { CART_MEMBER_INFO } from '@/components/config/api-path'
+import { CART_MEMBER_INFO, CART_CREATEPO } from '@/components/config/api-path'
 import AuthContext from '@/contexts/auth-context'
 export default function FillDoc() {
   const { items, onDecreaseItem, onIncreaseItem, totalPrice } = useCart()
@@ -122,8 +122,53 @@ export default function FillDoc() {
     { autoCloseMins: 3 } // x分鐘沒完成選擇會自動關閉，預設5分鐘。
   )
 
+  // 送出訂單給後端
+  const creactPO = async (e) => {
+    e.preventDefault()
+    const storeidValue = store711.storeid || ''
+
+    // 總訂單資訊
+    const orderData = {
+      member_id: memberId,
+      recipient: recipientName,
+      recipient_mobile: recipientMobile,
+      store_id: storeidValue,
+      shipping_method: shippingMethod,
+      shipping_fee: shippingFee,
+      total_amount: totalAmount,
+      payment_method: paymentMethod,
+      products: items,
+    }
+    // console.log('orderDate:', orderData)
+
+    try {
+      const r = await fetch(CART_CREATEPO, {
+        method: 'POST',
+        body: JSON.stringify(orderData),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const d = await r.json()
+      console.log(d)
+      if (d.success) {
+        console.log(d.purchase_order_id)
+        const newOrderId = d.purchase_order_id
+        console.log(newOrderId)
+
+        router.push(
+          `http://localhost:3000/shop/cart/confirm-doc?poid=${newOrderId}`
+        )
+      } else if (!d.success) {
+        // 錯誤訊息:資料未填寫，導致無法新增訂單成功
+        console.log('資料未填寫，導致無法新增訂單成功')
+      }
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+
   useEffect(() => {
-    
     setStoreid('')
   }, [items])
 
@@ -132,10 +177,11 @@ export default function FillDoc() {
     localStorage.removeItem('store711')
     setStoreid('')
     getMemberInfo()
+    setTotalAmount(totalPrice)
   }, [memberId])
+  
   return (
     <>
-    {console.log(memberId)}
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28 text-black">
         {/* header開始 */}
         <Navbar navColor={''} />
@@ -236,7 +282,7 @@ export default function FillDoc() {
                   </div>
                   <div className="flex flex-col px-7  space-y-5">
                     <div className="space-y-1">
-                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono'] mb-2">
                         請選擇運送方式
                       </div>
                       <select
@@ -258,11 +304,12 @@ export default function FillDoc() {
                     </div>
                     {/* 選擇711門市 */}
                     {shippingMethod === '7-11店到店(運費$60)' && (
-                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono'] ">
                         <div className="flex flex-col  space-y-5 w-full">
                           <button
                             className="border border-black justify-center items-center flex hover:bg-black hover:border-white hover:text-white group "
-                            onClick={() => {
+                            onClick={(e) => {
+                              e.preventDefault()
                               openWindow()
                             }}
                           >
@@ -329,11 +376,13 @@ export default function FillDoc() {
                       </div>
                       <input
                         type="number"
-                    name=""
-                    value={isSameAsBuyer ? memberFromAuth.member_mobile : ''}
-                    onChange={(e) => {
-                      setRecipientMobile(e.target.value)
-                    }}
+                        name=""
+                        value={
+                          isSameAsBuyer ? memberFromAuth.member_mobile : ''
+                        }
+                        onChange={(e) => {
+                          setRecipientMobile(e.target.value)
+                        }}
                         className="w-full bg-zinc-100 rounded"
                       />
                     </div>
@@ -343,18 +392,30 @@ export default function FillDoc() {
                 <div className="w-full border-dotted border-gray border-b  h-1"></div>
                 {/* 付款方式 */}
                 <div className="w-full space-y-4 ">
-                  <div className="w-full text-neutral-500 text-base font-semibold font-['IBM Plex Mono'] ">
+                  <div className="w-full text-neutral-500 text-base font-semibold font-['IBM Plex Mono']  ">
                     付款方式{' '}
                   </div>
                   <div className="flex flex-col px-7  space-y-5">
                     <div className="space-y-1">
-                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono'] mb-2">
                         請選擇付款方式
                       </div>
                       <select
-                        name="transition"
-                        className="w-full bg-zinc-100 rounded"
-                      ></select>
+                        name="payment"
+                        id="payment"
+                        value={paymentMethod}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                        className="w-full bg-zinc-100 rounded text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']"
+                      >
+                        <option  value="">付款方式</option>
+                        {paymentOptions.map((v, i) => {
+                          return (
+                            <option value={v} key={v}>
+                              {v}
+                            </option>
+                          )
+                        })}
+                      </select>
                       <div className=" text-neutral-400 text-[12px] font-normal font-['Noto Sans TC']">
                         支援LINE PAY,信用卡,貨到付款等之支付方式
                       </div>
@@ -370,7 +431,7 @@ export default function FillDoc() {
                   </div>
                   <div className="flex flex-col px-7  space-y-5">
                     <div className="space-y-1">
-                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono'] mb-2">
                         選擇票券
                       </div>
                       <select
@@ -438,14 +499,14 @@ export default function FillDoc() {
               </div>
             </div>
 
-            <Link
-              href="/shop/cart/confirm-doc"
+            <button
+              onClick={creactPO}
               className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
             >
               <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
-                CONFIRM
+                SUBMIT
               </div>
-            </Link>
+            </button>
           </form>
           {/* 內頁結束 */}
         </div>

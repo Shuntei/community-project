@@ -23,3 +23,6 @@ export const PRODUCT_RELATED = `${API_SERVER}/product/api/relatedProducts`
 
 // 購物車 - 取得會員資料
 export const CART_MEMBER_INFO = `${API_SERVER}/cart/member-info`
+
+// 購物車 - 建立訂單
+export const CART_CREATEPO = `${API_SERVER}/cart/add-purchase-order`
