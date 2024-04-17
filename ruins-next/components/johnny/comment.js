@@ -5,11 +5,7 @@ import {
   RiArrowDropDownLine,
   RiArrowDropUpLine,
 } from '@remixicon/react'
-import {
-  SN_COMMENTS,
-  SN_DELETE_COMMENT,
-  SN_EDIT_COMMENT,
-} from './config/api-path'
+import { SN_COMMENTS, SN_DELETE_COMMENT } from './config/api-path'
 import Link from 'next/link'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
@@ -34,10 +30,6 @@ export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
         }
       })
   }
-
-  useEffect(() => {
-    commentsInit()
-  }, [postId, renderAfterCm])
 
   const removeComment = async (commentId) => {
     const MySwal = withReactContent(Swal)
@@ -82,6 +74,10 @@ export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
     setSelectedCmId(commentId)
     // console.log('inside', commentId)
   }
+
+  useEffect(() => {
+    commentsInit()
+  }, [postId, renderAfterCm])
 
   return (
     <>

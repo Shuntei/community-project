@@ -29,7 +29,7 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
   // const sql = "INSERT INTO `sn_posts` SET ? ";
   try {
     req.body.post_type = "yours";
-    console.log("this is photo:", req.file);
+    // console.log("this is photo:", req.file);
 
     if (!req.file) {
       const sql = `UPDATE sn_posts SET title=? , content=?, post_type=?, board_id=? WHERE post_id=${postId}`;
@@ -82,7 +82,7 @@ router.get("/toggle-like/:postId?", async (req, res) => {
   if (!postId) {
     return;
   } else {
-    console.log(`postId: ${postId} came, keep going`);
+    // console.log(`postId: ${postId} came, keep going`);
   }
   const isLikeRowsSql = `SELECT pl.like_id, ps.post_id FROM sn_post_likes pl 
   INNER JOIN sn_posts ps ON pl.post_id = ps.post_id WHERE ps.post_id=?`;
@@ -140,7 +140,7 @@ router.get("/like-state/:postId?", async (req, res) => {
   if (!postId) {
     return;
   } else {
-    console.log(`postId: ${postId} came, keep going`);
+    // console.log(`postId: ${postId} came, keep going`);
   }
   const isLikeRowsSql = `SELECT pl.like_id, ps.post_id FROM sn_post_likes pl 
   INNER JOIN sn_posts ps ON pl.post_id = ps.post_id WHERE ps.post_id=?`;
@@ -154,31 +154,38 @@ router.get("/like-state/:postId?", async (req, res) => {
   res.json(output);
 });
 
+// 初始化留言列表&留言數量
 router.get("/comment/:postId?", async (req, res) => {
   const output = {
     success: false,
     whatPostIdIs: +req.params.postId,
     rows: [],
+    totalRows: "",
   };
   let postId = +req.params.postId;
 
   if (postId) {
-    const sql = `SELECT sn_comments.* FROM sn_comments LEFT JOIN sn_posts USING(post_id) WHERE post_id=${postId}`;
+    const sql = `SELECT sn_comments.* FROM sn_comments LEFT JOIN sn_posts USING(post_id) WHERE post_id=${postId} ORDER BY sn_comments.comment_id DESC`;
     const [result] = await db.query(sql);
     if (result.length > 0) {
       output.rows = result;
       output.success = true;
-      res.json(output);
     } else {
       output.success = false;
-      res.json(output);
     }
   } else {
     output.errors = "沒有postId";
-    res.json(output);
   }
+  // 留言數統計數,只在單篇中顯示(非列表)
+  const totalRowsSql = `SELECT COUNT(1) FROM sn_comments LEFT JOIN sn_posts USING(post_id) WHERE post_id=${postId} ORDER BY sn_comments.comment_id;`;
+  const [totalRows] = await db.query(totalRowsSql);
+  console.log(totalRows);
+  output.totalRows = totalRows;
+
+  res.json(output);
 });
 
+// 顯示留言內容(用於編輯)
 router.get("/selectedcm/:commentId", async (req, res) => {
   let commentId = +req.params.commentId;
 
@@ -190,7 +197,7 @@ router.get("/selectedcm/:commentId", async (req, res) => {
     res.json("沒有 commentId");
   }
 });
-
+// 新增留言
 router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
   const output = {
     success: false,
@@ -201,7 +208,7 @@ router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
 
   let result = {};
   try {
-    console.log("this is photo:", req.file);
+    // console.log("this is photo:", req.file);
 
     if (!req.file) {
       const sql =
@@ -259,7 +266,8 @@ router.delete("/cmremove/:commentId", async (req, res) => {
   res.json(output);
 });
 
-router.put("/cmedit/:commentId?",
+router.put(
+  "/cmedit/:commentId?",
   uploadImgs.single("photo"),
   async (req, res) => {
     const output = {

@@ -45,9 +45,20 @@ router.get("/boards/:board_id?", async (req, res) => {
     }
   }
 
-  const selectedBdPosts = `SELECT * FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id = ? ORDER BY p.post_id DESC LIMIT ${
-    (page - 1) * perPage
-  }, ${perPage} `;
+  // 評論數量前SQL
+  // const selectedBdPosts = `SELECT * FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id = ? ORDER BY p.post_id DESC LIMIT ${
+  //   (page - 1) * perPage
+  // }, ${perPage} `;
+  // 評論數量後SQL
+  const selectedBdPosts = `SELECT p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count
+    FROM sn_public_boards AS b 
+    JOIN sn_posts AS p USING(board_id) 
+    LEFT JOIN 
+        ( SELECT post_id, COUNT(comment_id) AS comment_count FROM sn_comments GROUP BY post_id)
+        AS comment_counts ON p.post_id = comment_counts.post_id
+    WHERE b.board_id = ? 
+    ORDER BY p.post_id DESC 
+    LIMIT ${(page - 1) * perPage}, ${perPage}`;
   // const selectedBdPosts = `SELECT * FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id = ? ORDER BY p.post_id DESC`;
 
   const [selectedBdPostsRows] = await db.query(selectedBdPosts, [board_id]);
@@ -58,7 +69,7 @@ router.get("/boards/:board_id?", async (req, res) => {
       success: true,
       page: 1,
       totalPages: 1,
-      selectedBdPostsRows: [{ title: "無任何貼文" }],
+      selectedBdPostsRows: [{ title: "無任何貼文", comment_count: 0 }],
     });
   }
 
@@ -111,10 +122,18 @@ router.get("/posts/:post_id?", async (req, res) => {
       }
     }
 
-    const totalPostsSql = ` SELECT * FROM sn_posts ${where} 
-    ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
-    [totalPostsRows] = await db.query(totalPostsSql);
+    // 加入留言統計前sql
+    // const totalPostsSql = ` SELECT * FROM sn_posts ${where}
+    // ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
 
+    // 加入留言統計後sql
+    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
+    LEFT JOIN ( SELECT post_id, 
+    COUNT(comment_id) AS comment_count 
+    FROM  sn_comments 
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id
+    ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+    [totalPostsRows] = await db.query(totalPostsSql);
     // console.log(req.query);
 
     res.json({
@@ -135,7 +154,7 @@ router.get("/posts/:post_id?", async (req, res) => {
   const chosenPostSql = " SELECT * FROM sn_posts WHERE post_id=? ";
   const [chosenPost] = await db.query(chosenPostSql, [postId]);
   // console.log(postId);
-  console.log("chosenPost", chosenPost);
+  // console.log("chosenPost", chosenPost);
   res.json(chosenPost);
 });
 

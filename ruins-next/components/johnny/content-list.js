@@ -12,10 +12,10 @@ import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST } from './config/api-path'
+import { SN_COMMENTS, SN_DELETE_POST } from './config/api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 
 export default function MainContent() {
   const {
@@ -33,14 +33,8 @@ export default function MainContent() {
   const [toggleMenu, setToggleMenu] = useState(false)
 
   useEffect(() => {
-    const currentPage = location.search
-    // allPostsShow(currentPage);
     allPostsShow()
-    console.log('location.search: ', location.search)
-  }, [])
 
-  useEffect(() => {
-    allPostsShow()
     // 發送後會設成true用於重整,這裡設回false
     setRender(false)
   }, [render])
@@ -188,9 +182,9 @@ export default function MainContent() {
                         <RiEyeFill className="pr-1" />
                         297
                       </span>
-                      <span className="text-575757 flex">
+                      <span className="text-575757 flex cursor-pointer">
                         <RiChat4Fill className="pr-1" />
-                        85
+                        {v.comment_count}
                       </span>
                       <div className="dropdown dropdown-right dropdown-end">
                         <div
