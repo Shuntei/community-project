@@ -180,6 +180,11 @@ export function CartProvider({ children }) {
       saveToLocalStorage([...items, newItem])
     }
   }
+  //加入清單後清除購物車
+  const removeAll = () => {
+    setItems([])
+    localStorage.removeItem('ruins-cart')
+  }
   // 事件處理函式: 包含狀態更動共通三個步驟 --- END ---
 
   // const calcTotalItems = () => {
@@ -215,6 +220,7 @@ export function CartProvider({ children }) {
         onIncreaseItem,
         onRemoveItem,
         onAddMutiItem,
+        removeAll
       }}
     >
       {children}
