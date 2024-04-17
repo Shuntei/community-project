@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 import { CART_MEMBER_INFO, CART_CREATEPO } from '@/components/config/api-path'
 import AuthContext from '@/contexts/auth-context'
 export default function FillDoc() {
-  const { items, onDecreaseItem, onIncreaseItem, totalPrice } = useCart()
+  const { items, onDecreaseItem, removeAll, totalPrice } = useCart()
 
   // 一鍵填入使用
   const [isSameAsMember, setIsSameAsMember] = useState(false)
@@ -159,6 +159,7 @@ export default function FillDoc() {
         router.push(
           `http://localhost:3000/shop/cart/confirm-doc?poid=${newOrderId}`
         )
+        removeAll()
       } else if (!d.success) {
         // 錯誤訊息:資料未填寫，導致無法新增訂單成功
         console.log('資料未填寫，導致無法新增訂單成功')
