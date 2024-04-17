@@ -199,8 +199,18 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
       }
     }
 
-    const totalPostsSql = ` SELECT * FROM sn_posts ${where} 
-    ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+    // 加入留言統計前sql
+    // const totalPostsSql = ` SELECT * FROM sn_posts ${where}
+    // ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+    // [totalPostsRows] = await db.query(totalPostsSql);
+
+    // 加入留言統計後sql
+    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
+    LEFT JOIN ( SELECT post_id, 
+    COUNT(comment_id) AS comment_count 
+    FROM  sn_comments 
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id WHERE p.post_type = 'yours'
+    ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
 
     // console.log(req.query);

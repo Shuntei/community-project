@@ -179,7 +179,7 @@ router.get("/comment/:postId?", async (req, res) => {
   // 留言數統計數,只在單篇中顯示(非列表)
   const totalRowsSql = `SELECT COUNT(1) FROM sn_comments LEFT JOIN sn_posts USING(post_id) WHERE post_id=${postId} ORDER BY sn_comments.comment_id;`;
   const [totalRows] = await db.query(totalRowsSql);
-  console.log(totalRows);
+  // console.log(totalRows);
   output.totalRows = totalRows;
 
   res.json(output);

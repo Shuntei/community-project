@@ -5,7 +5,6 @@ import { SN_COMMENTS } from '@/components/johnny/config/api-path'
 export default function CommentCount({ postId }) {
   const [commentCount, setCommentCount] = useState('')
   // 獲得評論數
-  // showCommentCount(postIdCmCount)
   fetch(`${SN_COMMENTS}/${postId}`)
     .then((r) => r.json())
     .then((data) => {
