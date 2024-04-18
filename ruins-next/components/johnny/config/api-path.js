@@ -36,8 +36,11 @@ export const SN_DELETE_COMMENT = `${API_SERVER}/cmremove`
 //`${SN_SELECTED_COMMENT}/${commentId}` 方法GET
 export const SN_SELECTED_COMMENT = `${API_SERVER}/selectedcm`
 
-// `${API_SERVER}/${commentId}`, 方法: PUT
+// `${SN_EDIT_COMMENT}/${commentId}`, 方法: PUT
 export const SN_EDIT_COMMENT = `${API_SERVER}/cmedit`
+
+// `${SN_POST_VIEWS}/${postId}`, 方法: GET
+export const SN_POST_VIEWS = `${API_SERVER}/updateviewcount`
 
 // // 新增資料 POST
 // export const AB_ADD_POST = `${API_SERVER}/address-book/add`;

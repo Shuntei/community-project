@@ -204,7 +204,7 @@ export default function PersonalContent() {
                     <div className="flex gap-2">
                       <span className="text-575757 pr-2 flex">
                         <RiEyeFill className="pr-1" />
-                        297
+                        {v.view_count}
                       </span>
                       <span className="text-575757 flex">
                         <RiChat4Fill className="pr-1" />

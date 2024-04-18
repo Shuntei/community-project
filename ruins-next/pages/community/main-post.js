@@ -6,8 +6,9 @@ import { useRouter } from 'next/router'
 import CommentModal from '@/components/johnny/modal-comment'
 import { useToggles } from '@/contexts/use-toggles'
 import { useBoards } from '@/contexts/use-boards'
-import LikeButton from './like-button'
-import CommentCount from './comment-count'
+import LikeButton from './interactive-like'
+import CommentCount from './interactive-cm-count'
+import Views from './interactive-views'
 import Comment from '@/components/johnny/comment'
 import {
   RiMapPinFill,
@@ -39,7 +40,6 @@ export default function MainPost() {
 
     const r = await fetch(`${SN_POSTS}?postId=${postIdExist}`)
     const result = await r.json()
-    console.log(result)
     setGetPost(result)
   }
 
@@ -115,10 +115,7 @@ export default function MainPost() {
               )}
             </div>
             <div className="flex gap-2 my-3 pc:mx-20 pc:my-5 justify-end">
-              <span className=" pr-2 flex">
-                <RiEyeFill className="pr-1" />
-                297
-              </span>
+              <Views postId={getPost[0].post_id} />
               <CommentCount postId={getPost[0].post_id} />
               <LikeButton postId={getPost[0].post_id} />
             </div>

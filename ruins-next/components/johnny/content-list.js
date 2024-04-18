@@ -12,7 +12,7 @@ import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_COMMENTS, SN_DELETE_POST } from './config/api-path'
+import { SN_DELETE_POST } from './config/api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
@@ -193,7 +193,7 @@ export default function MainContent() {
                     <div className="flex gap-2">
                       <span className="text-575757 pr-2 flex">
                         <RiEyeFill className="pr-1" />
-                        297
+                        {v.view_count}
                       </span>
                       <span className="text-575757 flex cursor-pointer">
                         <RiChat4Fill className="pr-1" />

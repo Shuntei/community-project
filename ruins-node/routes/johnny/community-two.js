@@ -315,4 +315,35 @@ router.put(
   }
 );
 
+router.get("/updateviewcount/:postId?", async (req, res) => {
+  let postId = +req.params.postId;
+
+  const output = {
+    success: false,
+    message: "",
+    errors: {},
+  };
+
+  try {
+    // 更新觀看次數
+    if (postId) {
+      const sql =
+        "UPDATE sn_posts SET view_count = view_count + 1 WHERE post_id =?";
+      const [counter] = await db.query(sql, [postId]);
+      console.log(counter);
+      if (!!counter.affectedRows) {
+        output.message = "觀看次數已更新";
+      } else {
+        output.errors = "沒有該篇postId文章";
+      }
+    } else {
+      output.message = "沒有postId";
+    }
+  } catch (err) {
+    console.error("更新觀看次數時出錯：", err);
+    output.message = "更新觀看次數時出錯";
+  }
+  res.json(output);
+});
+
 export default router;
