@@ -33,6 +33,7 @@ export default function PersonalContent() {
       const r = await fetch(`${SN_PSPOSTS}${currentPage}`)
       const data = await r.json()
       setPsPosts(data)
+      console.log(data)
     } catch (err) {
       console.log(err)
     }
@@ -48,19 +49,6 @@ export default function PersonalContent() {
       console.log(err)
     }
   }
-
-  useEffect(() => {
-    if (router.isReady) {
-      const currentPage = router.query.page
-      handlePsPage(currentPage)
-    }
-  }, [router.query.page, router.isReady])
-
-  useEffect(() => {
-    // 首次渲染及調用render都會執行
-    allPsPostsShow()
-    setRender(false)
-  }, [render])
 
   const handlePush = (postId) => {
     // router.push(`/community/main-post?postId=${postId}`);
@@ -105,18 +93,36 @@ export default function PersonalContent() {
       }
     })
   }
+  useEffect(() => {
+    if (router.isReady) {
+      const currentPage = router.query.page
+      handlePsPage(currentPage)
+    }
+  }, [router.query.page, router.isReady])
 
+  useEffect(() => {
+    // 首次渲染及調用render都會執行
+    allPsPostsShow()
+    setRender(false)
+  }, [render])
   // console.log(psPosts.totalPostsRows)
 
   return (
     <>
-      <ul className="bg-neutral-300 flex justify-center text-xl py-2">
-        <li className="border-s-2 px-3 py-3 flex items-center hover:hover1">
-          <RiArrowLeftDoubleLine />
-        </li>
-        {psPosts &&
-          psPosts.totalPages &&
-          Array(10)
+      {psPosts && psPosts.totalPages && (
+        <ul className="bg-neutral-300 flex justify-center text-xl py-2">
+          <span
+            className="border-s-2 px-3 py-3 flex items-center hover:hover1"
+            onClick={() => {
+              router.push({
+                pathname: '/community/main-personal',
+                query: { page: `${1}` },
+              })
+            }}
+          >
+            <RiArrowLeftDoubleLine />
+          </span>
+          {Array(10)
             .fill(1)
             .map((v, i) => {
               const p = psPosts.page - 5 + i
@@ -141,10 +147,19 @@ export default function PersonalContent() {
                 </li>
               )
             })}
-        <li className="border-x-2 px-3 py-3 flex items-center hover:hover1">
-          <RiArrowRightDoubleLine />
-        </li>
-      </ul>
+          <span
+            className="border-x-2 px-3 py-3 flex items-center hover:hover1"
+            onClick={() => {
+              router.push({
+                pathname: '/community/main-personal',
+                query: { page: `${psPosts.totalPages}` },
+              })
+            }}
+          >
+            <RiArrowRightDoubleLine />
+          </span>
+        </ul>
+      )}
       {psPosts.totalPostsRows &&
         psPosts.totalPostsRows.map((v, i) => {
           return (
@@ -189,11 +204,11 @@ export default function PersonalContent() {
                     <div className="flex gap-2">
                       <span className="text-575757 pr-2 flex">
                         <RiEyeFill className="pr-1" />
-                        297
+                        {v.view_count}
                       </span>
                       <span className="text-575757 flex">
                         <RiChat4Fill className="pr-1" />
-                        85
+                        {v.comment_count}
                       </span>
                       <div className="relative">
                         <div

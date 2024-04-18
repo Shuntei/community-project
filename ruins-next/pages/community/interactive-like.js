@@ -37,7 +37,6 @@ export default function LikeButton({ postId }) {
       ) : (
         <RiHeartLine className="pr-1" />
       )}
-      85
     </span>
   )
 }
