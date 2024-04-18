@@ -38,3 +38,6 @@ export const CART_LINEPAY = `${API_SERVER}/cart/createLinePayOrder` // POST
 
 // 購物車 - 與 LINE Pay 確認訂單
 export const CART_LINEPAYCONFIRM = `${API_SERVER}/cart/linePay/confirm`
+
+// 揪團貼文
+export const TOUR_POST =  `${API_SERVER}/tour/api`
