@@ -30,6 +30,8 @@ export default function FillDoc() {
   const couponOptions = ['免運費']
   // 運送方式狀態
   const [storeid, setStoreid] = useState('')
+  const [storename, setStorename] = useState('')
+
   const shippingOptions = ['7-11店到店(運費$60)', '宅配(運費$100)']
   const [shippingMethod, setShippingMethod] = useState('')
   const [shippingFee, setShippingFee] = useState(0)
@@ -133,17 +135,16 @@ export default function FillDoc() {
       paymentMethod !== '' &&
       shippingMethod !== '' &&
       store711.storeid !== ''
-      // terms !== false
-  
-    console.log('isValid', isValid)
-  
+    // terms !== false
+
     setIsFormValid(isValid)
-  }, 300); // 300 毫秒是 debounce 的延遲時間，可以根據需要進行調整
+  }, 300) // 300 毫秒是 debounce 的延遲時間，可以根據需要進行調整
 
   // 送出訂單給後端
   const creactPO = async (e) => {
     e.preventDefault()
     const storeidValue = store711.storeid || ''
+    const storeName = store711.storename || ''
 
     // 總訂單資訊
     const orderData = {
@@ -151,6 +152,7 @@ export default function FillDoc() {
       recipient: recipientName,
       recipient_mobile: recipientMobile,
       store_id: storeidValue,
+      store_name:storeName,
       shipping_method: shippingMethod,
       shipping_fee: shippingFee,
       total_amount: totalAmount,
@@ -189,6 +191,7 @@ export default function FillDoc() {
 
   useEffect(() => {
     setStoreid('')
+    setStorename('')
   }, [items])
 
   useEffect(() => {
@@ -352,7 +355,7 @@ export default function FillDoc() {
                       <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono'] ">
                         <div className="flex flex-col  space-y-5 w-full">
                           <button
-                            className="border border-black justify-center items-center flex hover:bg-black hover:border-white hover:text-white group "
+                            className="border border-black py-3 justify-center items-center flex hover:bg-black hover:border-white hover:text-white group "
                             onClick={(e) => {
                               e.preventDefault()
                               openWindow()
@@ -574,14 +577,19 @@ export default function FillDoc() {
                 </div>
               </button>
             ) : (
-              <button disabled
-                onClick={creactPO}
-                className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
-              >
-                <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
-                  SUBMIT
-                </div>
-              </button>
+              <>
+                <button
+                  disabled
+                  className="w-[280px] h-[75px] bg-gray-200 border justify-center items-center gap-2.5 flex hover:bg-gray-200 hover:border-white"
+                >
+                  <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
+                    SUBMIT
+                  </div>
+                </button>
+                <p className="text-[12px] text-red-500 font-['IBM Plex Mono']">
+                  請填寫完整資料
+                </p>
+              </>
             )}
           </form>
           {/* 內頁結束 */}

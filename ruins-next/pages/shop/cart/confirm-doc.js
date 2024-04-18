@@ -159,7 +159,7 @@ export default function ConfirmDoc() {
                     收件人手機:{purchaseOrder.row.recipient_mobile}
                   </div>{' '}
                   <div className=" text-black text-[15px] font-normal font-['IBM Plex Mono']">
-                    收件人信箱:aa@gmail.com
+                    取貨商店:{purchaseOrder.row.store_name}
                   </div>
                   <div className=" text-black text-[15px] font-normal font-['IBM Plex Mono']">
                     付款方式:{purchaseOrder.row.payment_method}
