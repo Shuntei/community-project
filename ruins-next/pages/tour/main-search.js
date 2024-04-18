@@ -28,7 +28,7 @@ export default function MainSearch() {
         <div className="flex justify-between">
           <div className="md:flex md:space-x-3 font-['Noto Sans TC'] text-[13px] font-semibold">
             <button className="rounded bg-white px-2.5 py-[5px] md:inline-block hidden ">
-              更多主題<i class="ri-arrow-down-s-line"></i>
+              更多主題<i className="ri-arrow-down-s-line"></i>
             </button>
             <div className="md:space-x-3 space-x-2 flex flex-nowrap">
               <button className="rounded bg-white px-2.5 py-[5px]">戲院</button>
@@ -45,7 +45,7 @@ export default function MainSearch() {
           </div>
           <div className="md:relative absolute -top-[60px] right-4 md:top-0 md:right-0">
             <button className="font-['Noto Sans TC'] md:text-[13px] text-xl me:font-semibold md:rounded rounded-full bg-white md:opacity-100 opacity-90 px-2.5 py-[5px]">
-              <i class="ri-equalizer-line"></i>
+              <i className="ri-equalizer-line"></i>
               <span className="md:inline hidden">篩選</span>
             </button>
           </div>
@@ -73,8 +73,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -95,8 +95,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -117,8 +117,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -139,8 +139,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -169,8 +169,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -191,8 +191,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -213,8 +213,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -235,8 +235,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -267,8 +267,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -289,8 +289,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -311,8 +311,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -333,8 +333,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -363,8 +363,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -385,8 +385,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -407,8 +407,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
@@ -429,8 +429,8 @@ export default function MainSearch() {
                     <i className="ri-star-fill ri-lg pr-1"></i>4.51
                   </span>
                   <span className="space-x-1">
-                    <i class="ri-heart-3-line ri-lg"></i>
-                    <i class="ri-share-forward-fill ri-lg"></i>
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
                   </span>
                 </div>
                 <div className="px-5 space-y-1">

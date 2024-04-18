@@ -12,3 +12,6 @@ export const PRODUCT_LIST = `${API_SERVER}/product/api`
 
 //單一商品
 export const PRODUCT_ONE = `${API_SERVER}/product/api/getProduct`
+
+// 揪團貼文
+export const TOUR_POST =  `${API_SERVER}/tour/api`
