@@ -1,57 +1,98 @@
+import { socket } from '@/src/socket';
+import { useRouter } from "next/router";
 import { Peer } from "peerjs";
 import { useEffect, useRef, useState } from 'react';
-import io from 'socket.io-client';
-import { v4 as uuidV4 } from 'uuid';
-const socket = io.connect('http://localhost:3001')
-const myPeer = new Peer();
 
 export default function Stream() {
-
+  const router = useRouter()
+  const [role, setRole] = useState("")
+  const [streamerRoom, setStreamerRoom] = useState(null);
   const myVidsRef = useRef(null)
-  const [peerid, setPeerId] = useState()
-  const room = uuidV4().toString()
+  const [streamId, setStreamId] = useState('');
+  const [viewerId, setViewerId] = useState("")
 
   useEffect(() => {
-    try {
+    if (router.isReady) {
+      const room = router.query.streamerPath;
+      console.log({ room });
+      setStreamerRoom(room);
+      const newRole = room ? "isStreamer" : "isViewer";
+      setRole(newRole);
+    }
+  }, [router.isReady, router.query.streamerPath]);
+
+  useEffect(() => {
+    const myPeer = new Peer();
+
+    myPeer.on('open', id => {
+      socket.emit('join-room', streamerRoom, id, role);
+      console.log(`我的ID是${id}`);
+      console.log(`我的身份是${role}`);
+    });
+
+    socket.on('streamerStart', (id) => {
+      setStreamId(id)
+    })
+
+    socket.on('viewerGo', (id) => {
+      setViewerId(id)
+    })
+
+    if (role === "isStreamer") {
       navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: true,
-      }).then(myStream => {
-        addStream(myVidsRef.current, myStream)
-
-        myPeer.on('open', id => {
-          setPeerId(id)
-          socket.emit('join-room', room, id);
-        });
-
-        myPeer.on('call', call => {
-          call.answer(myStream)
-          addStream(myVidsRef.current, myStream)
-        })
-
-        socket.on('user-connected', id => {
-          callPeer(id, myStream);
-        });
-
+        audio: true
       })
+        .then(myStream => {
+          addStream(myVidsRef.current, myStream)
+          myPeer.on('call', call => {
+            call.answer(myStream)
+          })
+        })
     }
-    catch (e) {
-      console.log('連不到設備', e)
+
+    const call = (streamerId) => {
+      if (role === 'isViewer' && streamerId) {
+        const call = myPeer.call(streamerId, null)
+        call.on('stream', stream => {
+          addStream(myVidsRef, stream)
+        })
+      }
     }
+
+    //   const skip=()={
+    //   // const getMedia = async () => {
+    //   //   const myStream = await navigator.mediaDevices.getUserMedia({
+    //   //     video: true,
+    //   //     audio: true
+    //   //   });
+
+    //   //   addStream(myVidsRef.current, myStream);
+    //   //   const call = myPeer.call(viewerId, myStream)
+    //   //   call.answer(myStream)
+    //   //   call.on('stream', (myStream) =>
+    //   //     addStream(myVidsRef.current, myStream)
+    //   //   );
+    //   // };
+
+    //   // if (role === "isStreamer") {
+    //   //   getMedia()
+    //   // }
+    // }
 
     return () => {
       myPeer.destroy();
+      socket.off('streamerStart');
+      socket.off('viewerGo');
     };
-  }, [])
 
-  const callPeer = (id, myStream) => {
-    const call = myPeer.call(id, myStream);
-  }
+  }, [role, streamerRoom]);
 
-  const addStream = (video, stream) => {
-    video.srcObject = stream;
+  const addStream = (video, myStream) => {
+    video.srcObject = myStream;
     video.playsInline = true;
-    video.muted = true;
+    video.autoplay = true;
+    video.muted = (role === "isStreamer");
 
     video.addEventListener('loadedmetadata', () => {
       video.play()
@@ -64,10 +105,14 @@ export default function Stream() {
   }
 
   return (
-    <div
-      id='stream-block'
-      className=' bg-black w-full flex flex-col mt-2 mb-2 max-h-[75vh]'>
-      <video ref={myVidsRef} className='aspect-video object-contain max-h-[75vh]'></video>
-    </div>
+    <>
+      <input value={streamId} onChange={e => setStreamId(e.target.value)} className="text-black" />
+      <button onClick={() => { () => call(streamId) }}>text</button>
+      <div
+        id='stream-block'
+        className=' bg-black w-full flex flex-col mt-2 mb-2 max-h-[75vh] max-md:mt-10'>
+        <video ref={myVidsRef} className='aspect-video object-contain max-h-[75vh] '></video>
+      </div>
+    </>
   )
 }
