@@ -18,6 +18,8 @@
     "dayjs": "^1.11.10",
     "fbxloader": "^0.0.1-security",
     "firebase": "^10.10.0",
+    "lodash": "^4.17.21",
+    "lodash.debounce": "^4.0.8",
     "html2canvas": "^1.4.1",
     "leva": "^0.9.35",
     "next": "14.1.4",
