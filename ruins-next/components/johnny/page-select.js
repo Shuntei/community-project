@@ -10,7 +10,7 @@ export default function PageSelect({
   const { toggles, setToggles } = useToggles()
 
   optionsStyle =
-    'text-white w-full text-center border-style1 h-[40px] leading-[40px] hover:hover1'
+    'text-white w-full text-center h-[40px] leading-[40px] hover:hover1 bg-zinc-900'
 
   return (
     <>
@@ -19,7 +19,7 @@ export default function PageSelect({
       >
         <Link
           href="./main-page"
-          className={`${optionsStyle}`}
+          className={`${optionsStyle} `}
           onClick={() =>
             setToggles({ ...toggles, follows: false, notification: false })
           }
@@ -28,7 +28,7 @@ export default function PageSelect({
         </Link>
         <Link
           href="./main-personal"
-          className={`${optionsStyle}`}
+          className={`${optionsStyle} `}
           onClick={() =>
             setToggles({ ...toggles, follows: false, notification: false })
           }

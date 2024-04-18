@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './navbar.module.css'
 import CartSvg from '@/public/icons/cart.svg'
 import CartLine from '@/public/icons/cart-line.svg'
@@ -18,9 +18,11 @@ import NavbarMobile from './navbar-mobile'
 import { useCart } from '@/hooks/use-cart'
 import CartModal from '@/components/kevin/modal/cart-modal'
 import { useAuth } from '@/contexts/auth-context'
+import { useProfile } from '@/contexts/profile-context'
 
 export default function Navbar({ className, navColor = 'white' }) {
   const { auth, logout } = useAuth()
+  const {profile} = useProfile()
   const [showModal, setShowModal] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
@@ -36,8 +38,8 @@ export default function Navbar({ className, navColor = 'white' }) {
         } relative`}
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
-          <div className="flex cursor-pointer md:justify-start gap-[15px]">
-            <div onClick={toggleNav} className="pt-[2px]">
+          <div className="flex md:justify-start select-none gap-[15px]">
+            <div onClick={toggleNav} className="pt-[2px] cursor-pointer">
               <div
                 id="nav-icon4"
                 className="md:w-[30px] w-[23px] h-auto absolute"
@@ -60,9 +62,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                 ></div>
               </div>
             </div>
-            <Link href="#" className="md:block hidden text-[15px] pl-[40px]">
-              MAIN
-            </Link>
+            <span className="md:block hidden text-[15px] pl-[40px]">MAIN</span>
           </div>
         </div>
         <Link
@@ -82,15 +82,18 @@ export default function Navbar({ className, navColor = 'white' }) {
                   }}
                 >
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
-                  <a href="" className="absolute top-[-4px] left-[-35px]">
-                    {/* <CgProfile className="text-[25px]" /> */}
-                    <Image
-                      width={25}
-                      className="rounded-full"
-                      height={25}
-                      src="https://lh3.googleusercontent.com/a/ACg8ocI4VUmpEMt9lXmuUU6IGPtHQ6DfAX7DthWshGUN4Hi7vVqq7A=s96-c"
-                      alt=""
-                    />
+                  <a href="" className="absolute top-[-6px] left-[-35px]">
+                    {profile.profileUrl ? (
+                      <Image
+                        width={30}
+                        className="rounded-full"
+                        height={30}
+                        src={profile.profileUrl}
+                        alt=""
+                      />
+                    ) : (
+                      <CgProfile className="text-[25px]" />
+                    )}
                   </a>
                   <div className="tracking-wide before:py-[10px]">
                     {auth.username}
@@ -131,16 +134,16 @@ export default function Navbar({ className, navColor = 'white' }) {
         <div
           className={`${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
-          <a href="" className={`${styles['nav-cart-mobile']}`}>
-            <div>CART</div>
+          <div className={`${styles['nav-cart-mobile']}`}>
+          <CartModal />
 
             {navColor === 'white' ? (
               <Image alt="" src={CartLine} />
             ) : (
               <Image alt="" src={CartLineB} />
             )}
-            <div className={styles['cart-number']}>0</div>
-          </a>
+            <div className={styles['cart-number']}>{totalItems}</div>
+          </div>
           <button
             onClick={() => {
               setShowModal(!showModal)
@@ -148,7 +151,15 @@ export default function Navbar({ className, navColor = 'white' }) {
             href=""
             className={styles['profile-icon']}
           >
-            {navColor === 'white' ? (
+            {profile.profileUrl ? (
+              <Image
+                width={20}
+                className="rounded-full"
+                height={20}
+                src={profile.profileUrl}
+                alt=""
+              />
+            ) : navColor === 'white' ? (
               <Image alt="" src={ProfileIcon} />
             ) : (
               <Image alt="" src={ProfileIconBlack} />

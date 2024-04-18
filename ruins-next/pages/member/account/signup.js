@@ -6,7 +6,6 @@ import Checkbox from '@/public/icons/checkbox.svg'
 import CheckboxEmpty from '@/public/icons/CheckboxEmpty.svg'
 import CheckboxEmptyRed from '@/public/icons/CheckboxEmptyRed.svg'
 import Image from 'next/image'
-import GoogleBtn from '@/components/linda/buttons/googleBtn'
 import AccountBtn from '@/components/linda/buttons/accountBtn'
 import { z } from 'zod'
 import Router, { useRouter } from 'next/router'
@@ -222,12 +221,7 @@ export default function Signup() {
       }
 
       if (result.success) {
-        if (
-          router.back().includes('login') ||
-          router.back().includes('signup')
-        ) {
-          router.push('/')
-        }
+          router.back()
       }
     }
   }
@@ -268,7 +262,7 @@ export default function Signup() {
                 <div className="flex flex-col border-b self-stretch border-[#9F9F9F]">
                   <div className="flex gap-[30px] font-medium text-xl">
                     <div className="bg-white px-2 text-black">1</div>
-                    <div className="text-[#9F9F9F] text-base">EMAIL</div>
+                    <label htmlFor='email' className="text-[#9F9F9F] text-base">EMAIL</label>
                   </div>
                   <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
                     {errors.email}
@@ -278,6 +272,7 @@ export default function Signup() {
                     <input
                       type="text"
                       name="email"
+                      id='email'
                       value={myForm.email}
                       onChange={(e) => {
                         handleChange(e)
@@ -291,7 +286,7 @@ export default function Signup() {
                 <div className="flex flex-col border-b self-stretch border-[#9F9F9F]">
                   <div className="flex gap-[30px] font-medium text-xl">
                     <div className="bg-white px-2 text-black">2</div>
-                    <div className="text-[#9F9F9F] text-base">PASSWORD</div>
+                    <label htmlFor='password' className="text-[#9F9F9F] text-base">PASSWORD</label>
                   </div>
                   <div
                     className={`h-[24px] ${
@@ -304,6 +299,7 @@ export default function Signup() {
                     {' '}
                     <input
                       type={showPass ? 'text' : 'password'}
+                    id='password'
                       name="password"
                       value={myForm.password}
                       onChange={handleChange}
@@ -323,7 +319,7 @@ export default function Signup() {
                   <div className="flex flex-col flex-1 border-b self-stretch border-[#9F9F9F]">
                     <div className="flex gap-[30px] font-medium text-xl">
                       <div className="bg-white px-2 text-black">3</div>
-                      <div className="text-[#9F9F9F] text-base">USERNAME</div>
+                      <label htmlFor='username' className="text-[#9F9F9F] text-base">USERNAME</label>
                     </div>
                     <div className="h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
                       {errors.username}
@@ -333,6 +329,7 @@ export default function Signup() {
                       <input
                         type="text"
                         name="username"
+                        id='username'
                         value={myForm.username}
                         onChange={(e) => {
                           handleChange(e)
@@ -346,7 +343,7 @@ export default function Signup() {
                   <div className="flex flex-col flex-1 border-b self-stretch border-[#9F9F9F]">
                     <div className="flex gap-[30px] font-medium text-xl">
                       <div className="bg-white px-2 text-black">4</div>
-                      <div className="text-[#9F9F9F] text-base">PHONE</div>
+                      <label htmlFor='phone' className="text-[#9F9F9F] text-base">PHONE</label>
                     </div>
                     <div className="h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
                       {errors.phone}
@@ -356,6 +353,7 @@ export default function Signup() {
                       <input
                         type="text"
                         name="phone"
+                        id='phone'
                         value={myForm.phone}
                         onChange={handleChange}
                         className="bg-inherit focus:outline-none text-base text-white flex self-stretch w-full flex-1 text-base"
@@ -368,7 +366,7 @@ export default function Signup() {
                   <div className="flex flex-col border-b self-stretch border-[#9F9F9F]">
                     <div className="flex gap-[30px] font-medium text-xl">
                       <div className="bg-white px-2 text-black">5</div>
-                      <div className="text-[#9F9F9F] text-base">BIRTHDAY</div>
+                      <label htmlFor='birthday' className="text-[#9F9F9F] text-base">BIRTHDAY</label>
                     </div>
                     <div className="h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
                       {errors.birthday}
@@ -379,6 +377,7 @@ export default function Signup() {
                         placeholder="YYYY/MM/DD"
                         type="date"
                         name="birthday"
+                        id='birthday'
                         max={today}
                         value={myForm.birthday}
                         onChange={handleChange}

@@ -4,8 +4,8 @@ module.exports = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '3005',
-        pathname: '/johnny/**',
+        port: '3001',
+        pathname: '/community/**',
       },
     ],
     domains: ['lh3.googleusercontent.com'],

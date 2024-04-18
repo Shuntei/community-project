@@ -5,17 +5,7 @@ import { IoMdEyeOff } from 'react-icons/io'
 import { FaGoogle } from 'react-icons/fa'
 import AccountBtn from '@/components/linda/buttons/accountBtn'
 import { useAuth } from '@/contexts/auth-context'
-import { z } from 'zod'
 import { useRouter } from 'next/router'
-
-const nameRe = new RegExp(/^[a-zA-Z0-9]+$/)
-const schemaName = z
-  .string()
-  .min(3, { message: '' })
-  .regex(nameRe, { message: '' })
-const passwordRe = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
-const schemaPassword = z.string().regex(passwordRe, { message: '' })
-const schemaEmail = z.string().email({ message: '' })
 
 export default function Login() {
   const { login, auth, googleLogin } = useAuth()
@@ -116,7 +106,7 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <div className="flex md:h-[500px] md:pt-0 pt-[175px] justify-center">
+      <div className="flex md:h-[500px] md:pt-0 pt-[100px] justify-center">
         <div className="flex md:w-1/2 md:py-0 px-[24px] pb-[36px] md:h-lvh h-auto flex-col justify-center items-center gap-y-2.5 ">
           <div className="flex flex-col self-stretch items-center pb-[34px]">
             <div className="flex self-stretch border-b-[3px] text-white">
@@ -137,7 +127,7 @@ export default function Login() {
               {/* username input */}
               <div className="flex flex-col flex-1 border-b self-stretch border-[#9F9F9F]">
                 <div className="flex gap-[30px] font-medium text-xl">
-                  <div className="text-[#9F9F9F] text-base">ACCOUNT</div>
+                  <label htmlFor='account' className="text-[#9F9F9F] text-base" >ACCOUNT</label>
                 </div>
                 <div
                   className={`h-[24px] ${errors.account ? 'text-[#EA7E7E]' : 'text-white'}  font-medium py-1 text-xs uppercase`}
@@ -149,6 +139,7 @@ export default function Login() {
                   <input
                     type="text"
                     name="account"
+                    id='account'
                     onChange={handleChange}
                     className="bg-inherit placeholder:uppercase focus:outline-none text-base text-white flex self-stretch w-full flex-1 text-base"
                   />{' '}
@@ -157,7 +148,7 @@ export default function Login() {
               {/* Password input */}
               <div className="flex flex-col border-b self-stretch border-[#9F9F9F]">
                 <div className="flex gap-[30px] font-medium text-xl">
-                  <div className="text-[#9F9F9F] text-base">PASSWORD</div>
+                  <label htmlFor="password" className="text-[#9F9F9F] text-base">PASSWORD</label>
                 </div>
                 <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
                   {errors.password}
@@ -167,6 +158,7 @@ export default function Login() {
                   <input
                     type={showPass ? 'text' : 'password'}
                     name="password"
+                    id='password'
                     onChange={handleChange}
                     className="bg-inherit focus:outline-none text-base text-white flex self-stretch w-full flex-1 text-base"
                   />{' '}

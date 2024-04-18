@@ -10,7 +10,7 @@ export default function NavbarPopup() {
       <div className={styles['nav']}>
         <div id="headerReplace" className={styles['headerReplace']}></div>
         <div id="catalogueBox" className={styles['catalogueBox']}>
-          <div className={`${styles['title']} space-y-1`}>
+          <div className={`${styles['title']} space-y-1 mb-[50px] md:mb-0`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
               <a href="/shop">SHOP</a>
             </p>
@@ -29,7 +29,7 @@ export default function NavbarPopup() {
               <a href="/community/main-personal">PERSONAL</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="community/main-messenger">MESSENGER</a>
+              <a href="/community/main-messenger">MESSENGER</a>
             </p>
           </div>
           <div className={`${styles['title']} space-y-1`}>
@@ -40,7 +40,7 @@ export default function NavbarPopup() {
               <a href="/chat/01-check-role">START NOW</a>
             </p>
           </div>
-          <div className={`${styles['title']} space-y-1`}>
+          <div className={`${styles['title']} space-y-1 mb-[50px] md:mb-0`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
               <a href="/tour/main-search">TOUR</a>
             </p>
@@ -48,7 +48,9 @@ export default function NavbarPopup() {
               <a href="/member/account-settings/my-trips">MY TRIPS</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="/member/account-settings/fav-tour-lists">FAVORITE TOURS</a>
+              <a href="/member/account-settings/fav-tour-lists">
+                FAVORITE TOURS
+              </a>
             </p>
             <p className="font-['IBM Plex Mono']">
               <a href="/member/account-settings/my-posts">MY POSTS</a>

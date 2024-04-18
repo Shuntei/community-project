@@ -1,7 +1,11 @@
-import React from "react";
-// import img from "./img/90.jpg";
-import Image from "next/image";
-import img from "./img/90.jpg";
+import React, { useEffect, useState } from 'react'
+import Image from 'next/image'
+import img from './img/90.jpg'
+import { z } from 'zod'
+import { useToggles } from '@/contexts/use-toggles'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import toast, { Toaster } from 'react-hot-toast'
 
 import {
   RiVideoOnFill,
@@ -13,24 +17,122 @@ import {
   RiSendPlane2Fill,
   RiDraftLine,
   RiCloseLargeLine,
-} from "@remixicon/react";
-import { useToggles } from "@/contexts/use-toggles";
+} from '@remixicon/react'
+import { SN_ADD_COMMENT } from './config/api-path'
 
-export default function CommentModal() {
-  const { commentModal, setCommentModal } = useToggles();
+export default function CommentModal({
+  postId,
+  renderAfterCm,
+  setRenderAfterCm,
+}) {
+  console.log('postIdInCommentModal', postId)
+  const { commentModal, setCommentModal } = useToggles()
+
+  const [postForm, setPostForm] = useState({
+    content: '',
+    postId: postId,
+    // photo: '',
+  })
+  // 目前沒還要圖片
+  // const [previewUrl, setPreviewUrl] = useState('')
+
+  const changeHandler = (e) => {
+    setPostForm({ ...postForm, [e.target.name]: e.target.value })
+  }
+
+  // 目前沒還要圖片
+  // const handleFileChange = (e) => {
+  //   const file = e.target.files[0]
+  //   setPostForm({ ...postForm, photo: file })
+  //   if (file) {
+  //     const fileUrl = URL.createObjectURL(file)
+  //     setPreviewUrl(fileUrl)
+  //   } else {
+  //     setPreviewUrl('')
+  //   }
+  // }
+
+  //  { message: '使用toast代替' }
+  const schemaContent = z.string().min(3)
+
+  const submitHandler = async (e) => {
+    e.preventDefault()
+
+    const formData = new FormData()
+    formData.append('content', postForm.content)
+    formData.append('postId', postForm.postId)
+    // formData.append('photo', postForm.photo)
+
+    const MySwal = withReactContent(Swal)
+    const confirmNotify = () => {
+      MySwal.fire({
+        title: '留言成功',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        try {
+          fetch(SN_ADD_COMMENT, {
+            method: 'POST',
+            body: formData,
+          })
+            .then((rst) => rst.json())
+            .then((result) => {
+              if (result.success) {
+                setRenderAfterCm(!renderAfterCm)
+                setCommentModal(!commentModal)
+              } else {
+                toast.error('留言失敗')
+              }
+            })
+        } catch (err) {
+          console.error('Error submitting form:', err)
+        }
+      })
+    }
+    let initErrors = {
+      hasTitleErrors: false,
+      hasContentErrors: false,
+      // title: '',
+      content: '',
+      // photo: '',
+    }
+
+    const r1 = schemaContent.safeParse(postForm.content)
+    if (!r1.success) {
+      initErrors = {
+        ...initErrors,
+        hasContentErrors: true,
+        content: r1.error.issues[0].message,
+      }
+    }
+
+    if (initErrors.hasContentErrors) {
+      toast.error('內容請輸入三個字以上')
+      return
+    }
+
+    confirmNotify()
+  }
+  // useEffect(() => {
+  //   allPostsShow()
+  //   setRender(false)
+  // }, [render])
 
   return (
     <>
-      {" "}
+      {' '}
       {/* <!-- 發文框 --> */}
       <form
-        className="    bg-gray-500 bg-opacity-50 fixed backdrop-blur-sm inset-0 flex justify-center items-center z-40"
+        name="form1"
+        className=" bg-gray-400 bg-opacity-50 fixed backdrop-blur-sm inset-0 flex justify-center items-center z-[1003]"
         id="postModal"
+        onSubmit={submitHandler}
       >
         <div className="bg-292929 w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl">
           <div className="flex justify-between pb-5 text-white">
             <div className="text-[25px] flex items-center">Comment</div>
-            <button onclick="closeModal()">
+            <button>
               <RiCloseLargeLine
                 onClick={() => setCommentModal(!commentModal)}
               />
@@ -42,12 +144,12 @@ export default function CommentModal() {
                 <Image className="size-[35px] rounded-full" src={img} alt="" />
                 <span className="text-white text-[20px]">John Doe</span>
               </div>
-
+              {/* 操作按鈕區 */}
               <div className="text-white flex gap-10">
-                <button>
+                <button type="button">
                   <RiEqualizerLine />
                 </button>
-                <button>
+                <button type="button">
                   <RiDraftLine />
                 </button>
                 <button type="submit">
@@ -58,19 +160,22 @@ export default function CommentModal() {
 
             <div className="w-full h-full">
               {/* <!-- title --> */}
-              <div className="flex justify-center mb-5 text-black">
+              {/* <div className="flex justify-center mb-5">
                 <input
-                  className="justify-center w-full text-[20px] leading-10 px-10 py-1 rounded-lg outline-none"
+                  className="justify-center w-full text-[20px] leading-10 px-10 py-1 rounded-lg outline-none text-black"
                   placeholder="Title Here"
-                ></input>
-              </div>
-              <div className="rounded-lg bg-slate-300">
-                <div className="flex justify-center gap-2 pc:gap-5 py-3 text-black">
+                  name="title"
+                  onChange={changeHandler}
+                  value={postForm.title}
+                />
+              </div> */}
+              <div className="rounded-lg bg-slate-300 text-black">
+                <div className="flex justify-center gap-2 pc:gap-5 py-3">
                   <div className="text-[14px] pc:text-[16px] flex">
                     <RiPriceTag3Fill className="mr-2" />
                     黃曉桂
                   </div>
-                  <div className="text-[14px] pc:text-[16px] flex">
+                  <div className="text-[14px pc:text-[16px] flex">
                     <RiEmotionLaughFill className="mr-2" />
                     覺得興奮
                   </div>
@@ -82,25 +187,29 @@ export default function CommentModal() {
                 {/* <!-- 輸入區域 --> */}
                 <textarea
                   type="text"
-                  className="w-full h-[150px] outline-none p-10 text-black"
-                  placeholder="What are you thinking??"
-                ></textarea>
+                  className="w-full h-[150px] outline-none p-10"
+                  placeholder="What are you thinking ??"
+                  name="content"
+                  onChange={changeHandler}
+                  value={postForm.content}
+                ></textarea>{' '}
                 <div className="flex justify-center py-2 overflow-hidden gap-5">
-                  <img
-                    className="size-[150px] object-cover rounded-lg"
-                    src="../../../各種程式使用圖片/1868140_screenshots_20240117160639_1.jpg"
-                    alt=""
-                  />
-                  <img
-                    className="size-[150px] object-cover rounded-lg"
-                    src="../../../各種程式使用圖片/1868140_screenshots_20240117160639_1.jpg"
-                    alt=""
-                  />
-                  <img
-                    className="size-[150px] object-cover rounded-lg"
-                    src="../../../各種程式使用圖片/1868140_screenshots_20240117160639_1.jpg"
-                    alt=""
-                  />
+                  {/* {previewUrl
+                    ? Array(1)
+                        .fill(1)
+                        .map((v, i) => {
+                          return (
+                            <Image
+                              className="size-[150px] object-cover rounded-lg"
+                              src={previewUrl}
+                              width={150}
+                              height={150}
+                              alt=""
+                              key={i}
+                            />
+                          )
+                        })
+                    : 'Show your image'} */}
                 </div>
               </div>
             </div>
@@ -111,10 +220,18 @@ export default function CommentModal() {
               <RiVideoOnFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">VIDEO</span>
             </button>
-            <button className="flex items-center">
+            <label className="flex items-center cursor-pointer">
+              {/* <input
+                type="file"
+                hidden
+                onChange={handleFileChange}
+                multiple
+                accept="image/*"
+                name="photo"
+              /> */}
               <RiImageFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">PHOTO</span>
-            </button>
+            </label>
             <button className="flex items-center">
               <RiMapPinFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">LOCATION</span>
@@ -130,6 +247,7 @@ export default function CommentModal() {
           </div>
         </div>
       </form>
+      <Toaster position="top-center" reverseOrder={false} />
     </>
-  );
+  )
 }

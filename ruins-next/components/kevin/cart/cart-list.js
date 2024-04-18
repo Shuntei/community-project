@@ -15,7 +15,7 @@ export default function CartList() {
           <div key={v.pid} className="flex md:w-10/12 w-full justify-between">
             <div className="md:w-1/5  ">
               <Image
-                src={v.img}
+                src={`/images/product/${v.img.split(',')[0]}`}
                 alt="Picture of camp"
                 width={100}
                 height={100}
@@ -28,9 +28,9 @@ export default function CartList() {
                 {v.name}
               </div>
               <div className="flex justify-between">
-                <div className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
-                  深空灰
-                </div>
+                <button onClick={()=>{onRemoveItem(v.pid)}} className="text-neutral-400 text-xs font-medium font-['Noto Sans']">
+                  移除商品
+                </button>
                 <div className="t text-neutral-300 text-xs font-extralight font-['IBM Plex Mono']">
                   {v.price}
                 </div>

@@ -1,18 +1,20 @@
-import { createContext, useContext, useState } from "react";
-import React from "react";
+import { createContext, useContext, useState } from 'react'
+import React from 'react'
 
-const TogglesContext = createContext();
+const TogglesContext = createContext()
 
 export default function TogglesContextProvider({ children }) {
-  const [postModal, setPostModal] = useState(false);
-  const [commentModal, setCommentModal] = useState(false);
-  const [removeBox, setRemoveBox] = useState(false);
+  const [postModal, setPostModal] = useState(false)
+  const [editModal, setEditModal] = useState(false)
+  const [commentModal, setCommentModal] = useState(false)
+  const [commentEditModal, setCommentEditModal] = useState(false)
+  const [removeBox, setRemoveBox] = useState(false)
 
   const [toggles, setToggles] = useState({
     follows: false,
     notification: false,
     mainContent: true,
-  });
+  })
 
   return (
     <TogglesContext.Provider
@@ -25,11 +27,15 @@ export default function TogglesContextProvider({ children }) {
         setCommentModal,
         removeBox,
         setRemoveBox,
+        editModal,
+        setEditModal,
+        commentEditModal,
+        setCommentEditModal,
       }}
     >
       {children}
     </TogglesContext.Provider>
-  );
+  )
 }
 
-export const useToggles = () => useContext(TogglesContext);
+export const useToggles = () => useContext(TogglesContext)

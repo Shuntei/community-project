@@ -1,13 +1,14 @@
 import express from "express";
 import multer from "multer";
-import johnnyRouter from "./routes/johnny/community-one.js";
+import communityRouter from "./routes/johnny/community-one.js";
+import communityRouterTwo from "./routes/johnny/community-two.js";
 import memberRouter from "./routes/linda/member.js";
-import productRouter from "./routes/kevin/product.js"
-//import tourRouter from "./routes/tony/tour.js"
+import productRouter from "./routes/kevin/product.js";
+import cartRouter from "./routes/kevin/cart.js";
+import tourRouter from "./routes/tony/tour.js";
 import db from "./utils/mysql2-connect.js";
-import tourRouter from "./routes/tony/tour.js"
-import cors from "cors"
-import gameRouter from "./routes/ellie/game.js"
+import cors from "cors";
+import gameRouter from "./routes/ellie/game.js";
 
 const upload = multer({ dest: "profile_uploads/" });
 
@@ -25,12 +26,15 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use("/member", memberRouter);
+//產品路由
 app.use("/product", productRouter);
+//購物車路由
+app.use("/cart", cartRouter);
 app.use("/game", gameRouter);
 app.use("/tour", tourRouter);
-app.use("/johnny", johnnyRouter);
+app.use("/community", communityRouter);
+app.use("/community", communityRouterTwo);
 app.use("/tour", tourRouter);
-
 
 app.use((req, res) => {
   res.status(404).send(`<h2>404 wrong path</h2>`);
