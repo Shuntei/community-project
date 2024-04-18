@@ -10,8 +10,9 @@ import Swal from 'sweetalert2'
 import { useRouter } from 'next/router'
 import { CART_MEMBER_INFO, CART_CREATEPO } from '@/components/config/api-path'
 import AuthContext from '@/contexts/auth-context'
+import debounce from 'lodash.debounce'
 export default function FillDoc() {
-  const { items, onDecreaseItem, removeAll, totalPrice } = useCart()
+  const { items, removeAll, totalPrice } = useCart()
 
   // 一鍵填入使用
   const [isSameAsMember, setIsSameAsMember] = useState(false)
@@ -25,7 +26,8 @@ export default function FillDoc() {
   // 付款方式狀態
   const paymentOptions = ['LinePay', '信用卡', '取貨付款']
   const [paymentMethod, setPaymentMethod] = useState('')
-
+  const [coupon, selectedCoupon] = useState(0)
+  const couponOptions = ['免運費']
   // 運送方式狀態
   const [storeid, setStoreid] = useState('')
   const shippingOptions = ['7-11店到店(運費$60)', '宅配(運費$100)']
@@ -122,6 +124,22 @@ export default function FillDoc() {
     { autoCloseMins: 3 } // x分鐘沒完成選擇會自動關閉，預設5分鐘。
   )
 
+  // 欄位驗證
+  const validateForm = debounce(() => {
+    const isValid =
+      memberName.trim() !== '' &&
+      memberEmail.trim() !== '' &&
+      memberMobile !== 0 &&
+      paymentMethod !== '' &&
+      shippingMethod !== '' &&
+      store711.storeid !== ''
+      // terms !== false
+  
+    console.log('isValid', isValid)
+  
+    setIsFormValid(isValid)
+  }, 300); // 300 毫秒是 debounce 的延遲時間，可以根據需要進行調整
+
   // 送出訂單給後端
   const creactPO = async (e) => {
     e.preventDefault()
@@ -173,6 +191,17 @@ export default function FillDoc() {
     setStoreid('')
   }, [items])
 
+  useEffect(() => {
+    validateForm()
+  }, [
+    memberName,
+    memberEmail,
+    memberMobile,
+    paymentMethod,
+    shippingMethod,
+    store711.storeid,
+    // terms,
+  ])
   // 一進來先將 localstorage store711 刪除
   useEffect(() => {
     localStorage.removeItem('store711')
@@ -180,7 +209,22 @@ export default function FillDoc() {
     getMemberInfo()
     setTotalAmount(totalPrice)
   }, [memberId])
-  
+
+  useEffect(() => {
+    if (shippingMethod === '7-11店到店(運費$60)') {
+      setShippingFee(60)
+    } else if (shippingMethod === '宅配(運費$100)') {
+      setShippingFee(100)
+    } else if (!shippingMethod) {
+      setShippingFee(0)
+    }
+    if (coupon === '免運費') {
+      setShippingFee(0)
+    }
+    const totalAmountFinal = Math.max(totalPrice + shippingFee)
+
+    setTotalAmount(totalAmountFinal)
+  }, [totalPrice, coupon, shippingMethod, shippingFee])
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28 text-black">
@@ -219,7 +263,7 @@ export default function FillDoc() {
                         id=""
                         checked={isSameAsMember}
                         onChange={handlecustomerInfo}
-                        className=" enabled:bg-gray-300"
+                        className=""
                       />
                       <div className=" pl-2 text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
                         同會員資料
@@ -293,7 +337,7 @@ export default function FillDoc() {
                         value={shippingMethod}
                         onChange={(e) => setShippingMethod(e.target.value)}
                       >
-                        <option value="">請選擇運送方式</option>
+                        <option value="">運送方式</option>
                         {shippingOptions.map((v, i) => {
                           return (
                             <option value={v} key={v}>
@@ -408,7 +452,7 @@ export default function FillDoc() {
                         onChange={(e) => setPaymentMethod(e.target.value)}
                         className="w-full bg-zinc-100 rounded text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']"
                       >
-                        <option  value="">付款方式</option>
+                        <option value="">付款方式</option>
                         {paymentOptions.map((v, i) => {
                           return (
                             <option value={v} key={v}>
@@ -436,9 +480,21 @@ export default function FillDoc() {
                         選擇票券
                       </div>
                       <select
-                        name="transition"
-                        className="w-full bg-zinc-100 rounded"
-                      ></select>
+                        name="coupon"
+                        id="coupon"
+                        value={coupon}
+                        onChange={(e) => selectedCoupon(e.target.value)}
+                        className="w-full bg-zinc-100 rounded text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']"
+                      >
+                        <option value="">票券</option>
+                        {couponOptions.map((v, i) => {
+                          return (
+                            <option value={v} key={v}>
+                              {v}
+                            </option>
+                          )
+                        })}
+                      </select>
                     </div>
                   </div>
                 </div>
@@ -488,26 +544,45 @@ export default function FillDoc() {
                   })}
                   {/* 分隔線 */}
                   <div className="w-full border-dotted border-gray border-b  h-1"></div>
-                  <div className="flex w-full items-center justify-between py-5">
+                  <div className="flex w-full items-center justify-between py-1">
+                    <div className="text-gray-300 text-[13px] font-semibold font-['IBM Plex Mono']">
+                      運費 (TWD)
+                    </div>
+                    <div className="text-gray-300 text-[13px] font-semibold font-['IBM Plex Mono']">
+                      $ {shippingFee}
+                    </div>
+                  </div>
+                  <div className="flex w-full items-center justify-between py-2">
                     <div className="text-black text-[13px] font-semibold font-['IBM Plex Mono']">
                       合計 (TWD)
                     </div>
                     <div className="text-black text-xl font-semibold font-['IBM Plex Mono']">
-                      $ {totalPrice}
+                      $ {totalAmount}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <button
-              onClick={creactPO}
-              className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
-            >
-              <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
-                SUBMIT
-              </div>
-            </button>
+            {isFormValid ? (
+              <button
+                onClick={creactPO}
+                className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
+              >
+                <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
+                  SUBMIT
+                </div>
+              </button>
+            ) : (
+              <button disabled
+                onClick={creactPO}
+                className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
+              >
+                <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
+                  SUBMIT
+                </div>
+              </button>
+            )}
           </form>
           {/* 內頁結束 */}
         </div>
