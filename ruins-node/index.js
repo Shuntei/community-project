@@ -3,7 +3,7 @@ import multer from "multer";
 import johnnyRouter from "./routes/johnny/community-one.js";
 import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js"
-import tourRouter from "./routes/tony/tour.js"
+//import tourRouter from "./routes/tony/tour.js"
 import db from "./utils/mysql2-connect.js";
 import tourRouter from "./routes/tony/tour.js"
 import cors from "cors"
