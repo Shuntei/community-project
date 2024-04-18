@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react'
-import { Canvas, useFrame } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import { useFrame } from '@react-three/fiber'
 
-export default function Box(props) {
+export default function Box3(props) {
   // This reference gives us direct access to the THREE.Mesh object
   const ref = useRef()
   // Hold state for hovered and clicked events
@@ -20,7 +19,7 @@ export default function Box(props) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          achievedId: 1, // 更新 achieved_id 為 1 的資料
+          achievedId: 3, // 更新 achieved_id 為 1 的資料
           newValue: 1, // 新的 activate 值
         }),
       });
@@ -47,7 +46,7 @@ export default function Box(props) {
       onPointerOut={(event) => hover(false)}
     >
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+      <meshStandardMaterial color={hovered ? 'lightgreen' : 'orange'} />
     </mesh>
   )
 }
