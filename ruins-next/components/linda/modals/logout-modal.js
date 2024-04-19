@@ -1,24 +1,23 @@
 import React from 'react'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/auth-context'
-import { useProfile } from '@/contexts/profile-context'
 import Image from 'next/image'
+import { IMG_SERVER } from '@/components/config/api-path'
 
 export default function LogoutModal({ isVisible }) {
   const { logout, auth } = useAuth()
-  const { profile } = useProfile()
   if (!isVisible) return null
   return (
     <>
       {/* mobile pop up logout */}
       <div className="md:hidden w-full absolute top-[47px] left-0 bg-black flex-col items-center">
         <div className="flex flex-col py-[20px] gap-[10px] items-center justify-center">
-          {profile.profileUrl ? (
+          {auth.profileUrl ? (
             <Image
               width={50}
-              className="rounded-full"
+              className="rounded-full min-h-[50px] object-cover"
               height={50}
-              src={profile.profileUrl}
+              src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
               alt=""
             />
           ) : (

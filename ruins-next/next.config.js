@@ -1,3 +1,5 @@
+const { protocol } = require("socket.io-client");
+
 module.exports = {
   images: {
     remotePatterns: [
@@ -7,7 +9,14 @@ module.exports = {
         port: '3005',
         pathname: '/johnny/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'lh3.googleusercontent.com',
+      },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      }
     ],
-    domains: ['lh3.googleusercontent.com'],
   },
 }
