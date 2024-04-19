@@ -1,10 +1,17 @@
-import React from 'react'
+import {useState} from 'react'
 import { RiCloseLargeLine } from '@remixicon/react'
 import { IoMdEye } from 'react-icons/io'
 import { IoMdEyeOff } from 'react-icons/io'
+import { useAuth } from '@/contexts/auth-context'
 
-export default function ChangeEmailPopup({ isVisible, onClose, setShowOTPModal }) {
+export default function ChangeEmailPopup({
+  isVisible,
+  onClose,
+  setShowOTPModal,
+}) {
   if (!isVisible) return null
+  const { auth } = useAuth()
+  const [showPass, setShowPass] = useState(false)
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-[1000] flex justify-center items-center">
@@ -21,14 +28,14 @@ export default function ChangeEmailPopup({ isVisible, onClose, setShowOTPModal }
               </button>
             </div>
             <div className="flex flex-col gap-[14px]">
-              <div className="text-[14px]"> 
+              <div className="text-[14px]">
                 For your security, you will have to validate your request with a
                 code sent to your old email.
               </div>
               <div className="max-w-[300px] md:max-w-full flex gap-[10px] whitespace-nowrap items-center md:text-[14px] text-[12px] overflow-hidden">
                 Current email:
                 <span className="font-bold whitespace-normal overflow-hidden overflow-ellipsis text-[14px]">
-                  currentEmail@gmail.com
+                  {auth.email}
                 </span>
               </div>
             </div>
@@ -40,10 +47,16 @@ export default function ChangeEmailPopup({ isVisible, onClose, setShowOTPModal }
             <div className="flex relative">
               {' '}
               <input
-                type="password"
-                className="bg-[#191919] h-[44px] rounded focus:outline-none text-base text-white flex w-full p-[15px]"
+                type={showPass ? 'text' : 'password'}
+                className="bg-[#191919] h-[44px] rounded focus:outline-none text-[14px] text-white flex w-full p-[15px]"
               />{' '}
-              <IoMdEye className="absolute bottom-[10px] right-[15px] md:text-3xl text-xl text-white" />
+              <div className='absolute top-2 right-2' onClick={()=>{setShowPass(!showPass)}}>
+                {showPass ? (
+                  <IoMdEye className="md:text-2xl text-xl text-white" />
+                ) : (
+                  <IoMdEyeOff className="md:text-2xl text-xl text-white" />
+                )}
+              </div>
             </div>
           </div>
           <div className="flex w-full flex-col gap-[6px]">
@@ -51,13 +64,16 @@ export default function ChangeEmailPopup({ isVisible, onClose, setShowOTPModal }
             <div className="flex relative">
               <input
                 type="text"
-                className="bg-[#191919] h-[44px] rounded focus:outline-none text-base text-white flex w-full p-[15px]"
+                className="bg-[#191919] h-[44px] rounded focus:outline-none text-[14px] text-white flex w-full p-[15px]"
               />
             </div>
           </div>
-          <button 
-          onClick={()=>{setShowOTPModal(true)}}
-          className="bg-black hover:bg-[#7A7A7A] flex items-center justify-center w-full py-[18px] italic border border-white">
+          <button
+            onClick={() => {
+              setShowOTPModal(true)
+            }}
+            className="bg-black hover:bg-[#7A7A7A] flex items-center justify-center w-full py-[18px] italic border border-white"
+          >
             SEND CODE
           </button>
         </div>
