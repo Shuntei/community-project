@@ -9,19 +9,52 @@ import {
   CART_GETPO,
   CART_GETPODETAIL,
   PRODUCT_MYONGOINGPO,
-  PRODUCT_MYCOMPLETEDPO
+  PRODUCT_MYCOMPLETEDPO,
 } from '@/components/config/api-path'
 import { useRouter } from 'next/router'
 
 export default function MyOrder() {
-
   const router = useRouter()
   const { auth } = useContext(AuthContext)
   const memberId = auth.id
+  const [ongoingPo, setOngoingPo] = useState([])
+  const [completedPo, setCompletedPo] = useState([])
+  // 取得歷史訂單：訂單處理中
+  const getOngoingPo = async () => {
+    try {
+      const r = await fetch(PRODUCT_MYONGOINGPO + `/${memberId}`)
+      const d = await r.json()
+      setOngoingPo(d)
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
 
+  // 取得歷史訂單：已完成
+  const getCompletedPo = async () => {
+    try {
+      const r = await fetch(PRODUCT_MYCOMPLETEDPO + `/${memberId}`)
+      const d = await r.json()
+      setCompletedPo(d)
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+  
+  useEffect(() => {
+    // if (memberId) {
+      getOngoingPo()
+      getCompletedPo()
+    // } else {
+    //   // router.push('/member/login')
+    //   router.push('/store/product/my-order')
+    // }
+  }, [memberId])
 
   return (
     <>
+      {console.log(ongoingPo)}
+
       <div className="w-full flex flex-col px-4 md:px-20 py-5 md:py-12 md:gap-12 gap-5 ">
         <Modal />
         {/* 訂單完成/未完成超連結 &&我的訂單標題*/}
@@ -44,7 +77,7 @@ export default function MyOrder() {
         {/* 訂單內容列表 */}
         <div className="w-full flex flex-col md:gap-12 gap-5">
           {/* 一個內容 */}
-          
+
           <div className="w-full flex justify-between md:gap-12 gap-5 relative h-[150px] md:h-fit">
             <div className="md:w-1/12 w-1/4">
               <Image
@@ -87,15 +120,15 @@ export default function MyOrder() {
             </div>
           </div>
           {/* 一個內容 */}
-          <div className="collapse bg-base-200">
-  <input type="checkbox" /> 
-  <div className="collapse-title text-xl font-medium">
-    Click me to show/hide content
-  </div>
-  <div className="collapse-content"> 
-    <p>hello</p>
-  </div>
-</div>
+          <div className="collapse bg-292929">
+            <input type="checkbox" className="bg-292929" />
+            <div className="collapse-title text-xl font-medium bg-292929">
+              Click me to show/hide content
+            </div>
+            <div className="collapse-content bg-292929">
+              <p>hello</p>
+            </div>
+          </div>
           {/* 一個內容 */}
         </div>
       </div>
