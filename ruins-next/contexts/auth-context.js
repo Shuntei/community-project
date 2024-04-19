@@ -15,6 +15,7 @@ const defaultAuth = {
   id: 0,
   username: '',
   name: '',
+  email: '',
   profileUrl: '',
   coverUrl: '',
   googlePhoto:'',
