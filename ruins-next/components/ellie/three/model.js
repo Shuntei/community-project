@@ -4,7 +4,7 @@ import { useGLTF } from '@react-three/drei'
 export function Model(props) {
   const { nodes, materials } = useGLTF('/3Ddemo/gltf/try0001.glb')
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} scale={5}>
       <mesh
         castShadow
         receiveShadow

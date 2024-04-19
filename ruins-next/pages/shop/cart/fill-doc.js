@@ -49,12 +49,12 @@ export default function FillDoc() {
 
   const router = useRouter()
   const { auth } = useContext(AuthContext)
-  const memberId = auth.id
+  const memberId = auth.id  //獲得會員資料
 
   const getMemberInfo = async () => {
     const mid = memberId
     try {
-      const r = await fetch(CART_MEMBER_INFO + `/${mid}`)
+      const r = await fetch(CART_MEMBER_INFO + `/${mid}`) //fetch後端資料
       const d = await r.json()
       // console.log(d)
       if (d.success) {
