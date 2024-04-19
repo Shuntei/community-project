@@ -1,7 +1,6 @@
-import { io } from 'socket.io-client';
-import { API_SERVER } from '@/components/config/api-path';
+// import { io } from 'socket.io-client'
+// import { API_SERVER } from '@/components/config/api-path'
 
-const URL = `${API_SERVER}`;
+// const URL = `${API_SERVER}`
 
-export const socket = io(URL);
-
+// export const socket = io(URL)

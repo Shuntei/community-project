@@ -28,10 +28,10 @@ export default function BoardsContextProvider({ children }) {
   }
 
   // 初始載入posts, 預設第一頁用於點全部按鈕
-  const allPostsShow = async (currentPage = '?page=1') => {
+  const allPostsShow = async () => {
     // currentPage是?page=哪一頁
     try {
-      const r = await fetch(`${SN_POSTS}${currentPage}`)
+      const r = await fetch(`${SN_POSTS}`)
       const data = await r.json()
       setPostsLists(data)
     } catch (err) {

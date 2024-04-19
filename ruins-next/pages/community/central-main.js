@@ -14,19 +14,19 @@ export default function CentralContent() {
   const { render, setRender, allPostsShow, setPostsLists } = useBoards()
   const [sortBy, setSortBy] = useState('time')
   const [searchTerm, setSearchTerm] = useState('')
-  const [searchRender, setSearchTermRender] = useState(false)
+  // const [searchRender, setSearchTermRender] = useState(false)
 
   const router = useRouter()
 
-  const query = { ...router.query, term: searchTerm }
+  const query = { ...router.query, keyword: searchTerm }
   console.log(query)
 
-  const submitHandler = (e) => {
-    if (e) {
-      e.preventDefault()
-    }
-    // const formData = new FormData(document.form1)
+  const queryHandler = (e) => {
+    // if (e) {
+    //   e.preventDefault()
+    // }
     const queryString = new URLSearchParams(query).toString()
+    router.push({ pathname: '/community/main-page', query: queryString })
     console.log(queryString)
 
     const urlWithQuery = `${SN_POSTS}?${queryString}`
@@ -35,33 +35,33 @@ export default function CentralContent() {
       .then((r) => r.json())
       .then((data) => {
         console.log(data)
-        setSearchTermRender(!searchRender)
+        // setSearchTermRender(!searchRender)
         setPostsLists(data)
       })
   }
 
+  useEffect(() => {
+    allPostsShow()
+
+    // 發送後(刪除)會設成true用於重整,這裡設回false
+    setRender(false)
+  }, [render])
+
+  // // 刪除還沒做好
   // useEffect(() => {
-  //   allPostsShow()
+  //   // 初始化allPostsShow()
+  //   if (!render) {
+  //     allPostsShow()
+  //     setRender(true)
+  //   }
+  // }, [render, allPostsShow])
 
-  //   // 發送後(刪除)會設成true用於重整,這裡設回false
-  //   setRender(false)
-  // }, [render])
-
-  // 刪除還沒做好
-  useEffect(() => {
-    // 初始化allPostsShow()
-    if (!render) {
-      allPostsShow()
-      setRender(true)
-    }
-  }, [render, allPostsShow])
-
-  useEffect(() => {
-    // 確保submitHandler觸發在allPostsShow()之後
-    if (render) {
-      submitHandler()
-    }
-  }, [render]) // 只在initialized改變時觸發
+  // useEffect(() => {
+  //   // 確保submitHandler觸發在allPostsShow()之後
+  //   if (render) {
+  //     submitHandler()
+  //   }
+  // }, [render]) // 只在initialized改變時觸發
 
   return (
     <>
@@ -100,7 +100,7 @@ export default function CentralContent() {
                   />
                   <button
                     className="px-2 bg-white flex items-center h-[32px] p-[6px] translate-x-[-5px] pc:translate-x-0 pc:shadow1 rounded-r-lg"
-                    onClick={submitHandler}
+                    onClick={queryHandler}
                   >
                     <RiSearchLine />
                   </button>

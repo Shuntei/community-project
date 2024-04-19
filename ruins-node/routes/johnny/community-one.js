@@ -86,7 +86,7 @@ router.get("/posts/:post_id?", async (req, res) => {
   // const post_id = +req.params.post_id;
   let postId = +req.query.postId || 0;
   // console.log("postId_log:", postId);
-  let keyword = req.query.searchTerm || "";
+  let keyword = req.query.keyword || "";
   console.log(keyword);
   if (!postId) {
     // 這裡是主頁所有文章
@@ -111,7 +111,7 @@ router.get("/posts/:post_id?", async (req, res) => {
     }
 
     const perPage = 10;
-    const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts WHERE 1`;
+    const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts p ${where}`;
     // console.log(t_sql);
     const [[{ totalRows }]] = await db.query(t_sql);
     // console.log(totalRows);
@@ -141,8 +141,6 @@ router.get("/posts/:post_id?", async (req, res) => {
     GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id ${where}
     ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
-    console.log(totalPostsSql);
-    // console.log(req.query);
 
     res.json({
       success: true,

@@ -16,6 +16,7 @@ import { SN_DELETE_POST } from './config/api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
+import { useRouter } from 'next/router'
 
 export default function MainContent() {
   const {
@@ -28,6 +29,8 @@ export default function MainContent() {
     render,
     setRender,
   } = useBoards()
+
+  const router = useRouter()
 
   const { removeBox, setRemoveBox } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
@@ -87,7 +90,11 @@ export default function MainContent() {
           <Link
             className="border-s-2 px-3 py-3 flex items-center hover:hover1"
             onClick={() => handlePage(1)}
-            href={`?page=${1}`}
+            // href={`?page=${1}`}
+            href={{
+              pathname: '/community/main-page',
+              query: `page=${1}`,
+            }}
           >
             <RiArrowLeftDoubleLine />
           </Link>
