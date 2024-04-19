@@ -9,9 +9,10 @@ const io = new SocketIOServer(server, {
   },
 });
 
-app.use(express.json());
+const router = express.Router();
+router.use(express.json());
 
-import db from './utils/tyler/mysql2_connect.js';
+import db from '../../utils/tyler/mysql2_connect.js';
 import cors from "cors";
 const corsOptions = {
   credentials: true,
@@ -19,17 +20,17 @@ const corsOptions = {
     callback(null, true);
   },
 };
-app.use(cors(corsOptions));
+router.use(cors(corsOptions));
 
 // 確認有連線
-app.get('/try-connect', async (req, res) => {
+router.get('/try-connect', async (req, res) => {
   const sql = `SELECT * FROM mb_user`
   const [rows] = await db.query(sql)
   res.json(rows)
 })
 
 // 抓用戶資料
-app.get('/05-streaming/u-info/:pid', async (req, res) => {
+router.get('/05-streaming/u-info/:pid', async (req, res) => {
   let pid = req.params.pid
   const sql = `SELECT * FROM mb_user WHERE id=?`
   let [rows] = await db.query(sql, [pid])
@@ -37,7 +38,7 @@ app.get('/05-streaming/u-info/:pid', async (req, res) => {
 })
 
 // 抓用戶圖片
-app.get('/user-pic/:pid', async (req, res) => {
+router.get('/user-pic/:pid', async (req, res) => {
   let pid = req.params.pid
   const sql = `SELECT * FROM mb_user_profile WHERE user_id=?`
   let [rows] = await db.query(sql, [pid])
@@ -45,7 +46,7 @@ app.get('/user-pic/:pid', async (req, res) => {
 })
 
 // 計算所有點數
-app.get('/05-streaming/u-point/:pid', async (req, res) => {
+router.get('/05-streaming/u-point/:pid', async (req, res) => {
   let pid = req.params.pid
 
   // 共擁有多少點數
@@ -64,7 +65,7 @@ app.get('/05-streaming/u-point/:pid', async (req, res) => {
 })
 
 // 新增點數
-app.post('/add-point', async (req, res) => {
+router.post('/add-point', async (req, res) => {
 
   const { userId } = req.body
   let points = 100;
@@ -76,7 +77,7 @@ app.post('/add-point', async (req, res) => {
 })
 
 // 刪除點數
-app.post('/use-point', async (req, res) => {
+router.post('/use-point', async (req, res) => {
 
   const { userId, points, source } = req.body
   console.log(req.body);
@@ -146,8 +147,4 @@ io.on('connection', socket => {
   socket.on('join-room', handleJoinVideoRoom)
 })
 
-let port = process.env.WEB_PORT || 3306
-
-server.listen(port, () => {
-  console.log(`正在連線伺服器 ${port}`)
-})
+export default router
