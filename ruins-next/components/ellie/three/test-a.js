@@ -58,19 +58,19 @@ export default function TestA() {
         />
         <pointLight position={[-10, -10, -10]} decay={0} intensity={Math.PI} /> */}
         <color attach="background" args={["#dbecfb"]}/>
-        <fog attach="fog" args={["#dbecfb",30,40]}/>
+        {/* <fog attach="fog" args={["#dbecfb",30,40]}/> */}
         <Suspense>
           <Physics debug>
             <Experience/>
           </Physics>
           
-          <Model position={[0, 5, 0]} rotation={[0,230,0]}/>
+          <Model position={[0, 6, 0]} rotation={[0,230,0]}/>
         {/* <Environment preset="forest" background blur={0.8} /> */}
         <Environment files="./3Ddemo/hdr/150_hdrmaps_com_free_10K.exr" background blur={0.5} />
         <directionalLight position={[3.3, 1.0, 4.4]} intensity={4} />
-        <Box position={[-3.6, 0,5]} />
-        <Box2 position={[-1.2, 0,5]} />
-        <Box3 position={[1.2, 0, 5]} />
+        <Box position={[-8, 2,-4]} />
+        <Box2 position={[-1.2, 2, 9]} />
+        <Box3 position={[9, 2, -3]} />
         {/* <OrbitControls target={[0, 1, 0]}/> */}
         <OrbitControls
   // minAzimuthAngle={-Math.PI / 4}
