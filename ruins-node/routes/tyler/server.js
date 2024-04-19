@@ -149,7 +149,7 @@ io.on('connection', socket => {
   socket.on('join-room', handleJoinVideoRoom)
 })
 
-let port = process.env.WEB_PORT || 3010
+let port = process.env.WEB_PORT || 3306
 
 server.listen(port, () => {
   console.log(`正在連線伺服器 ${port}`)
