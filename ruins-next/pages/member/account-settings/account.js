@@ -176,17 +176,17 @@ export default function Account() {
         const str = localStorage.getItem(storageKey)
         const storageData = JSON.parse(str)
         try {
+          storageData.username = data.username
+          storageData.name = data.name
           storageData.aboutMe = data.about_me
+          storageData.profileUrl = data.profile_pic_url
           storageData.coverUrl = data.cover_pic_url
           storageData.googleLogin = data.google_login
           storageData.googlePhoto = data.google_photo
-          storageData.profileUrl = data.profile_pic_url
+          storageData.showContactInfo = data.allow_contact_info_visibility
           storageData.fbLink = data.facebook_link
           storageData.ytLink = data.youtube_link
-          storageData.showContactInfo = data.allow_contact_info_visibility
           storageData.igLink = data.instagram_link
-          storageData.username = data.username
-          storageData.name = data.name
           storageData.gmailLink = data.gmail_link
 
           localStorage.setItem(storageKey, JSON.stringify(storageData))
@@ -286,6 +286,7 @@ export default function Account() {
               style={{
                 backgroundImage: `url(${coverPreview ? coverPreview : auth.coverUrl ? `${IMG_SERVER}/${auth.coverUrl}` : home2.src})`,
                 width: '100%',
+                height: 'auto',
               }}
             ></div>
           </div>

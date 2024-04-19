@@ -9,11 +9,13 @@ import Link from 'next/link'
 import ChangeEmailPopup from '@/components/linda/modals/changeEmailModal'
 import ChangePasswordPopup from '@/components/linda/modals/changePasswordModal'
 import OTPModal from '@/components/linda/modals/OTPModal'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function EmailAndPassword() {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
   const [showOTPModal, setShowOTPModal] = useState(false)
+  const {auth} = useAuth()
 
   useEffect(() => {
     if (showOTPModal) {
@@ -48,11 +50,13 @@ export default function EmailAndPassword() {
               onClick={() => {
                 setShowEmailModal(true)
               }}
-              className="flex px-[24px] py-[15px] justify-between items-center text-[#A7A7A7] text-[20px] bg-[#191919] hover:bg-black rounded"
+              className="flex px-[24px] py-[15px] w-full items-center text-[#A7A7A7] text-[20px] bg-[#191919] hover:bg-black rounded"
             >
-              <div className="text-[12px] md:text-base w-[10%]">Email</div>
-              <div className="text-[12px] md:text-base">example@gmail.com</div>
-              <MdOutlineKeyboardArrowRight />
+              <div className="text-[12px] md:text-base w-1/3">Email</div>
+              <div className="text-[12px] md:text-base w-1/3">{auth.email}</div>
+              <div className='flex w-1/3 justify-end'>
+              <MdOutlineKeyboardArrowRight  />
+              </div>
             </div>
             <div className="flex flex-col w-full justify-start md:flex-row gap-[12px] items-start">
               <div className="flex gap-[12px] w-auto justify-start items-center">
@@ -73,11 +77,13 @@ export default function EmailAndPassword() {
             }}
             className="flex px-[24px] py-[15px] items-center justify-between text-[#A7A7A7] text-[20px] bg-[#191919] hover:bg-black rounded"
           >
-            <div className="w-[10%] text-[12px] md:text-base">Password</div>
-            <div className="flex flex-nowrap text-[12px] md:text-base">
-              not modified yet
+            <div className="w-1/3 text-[12px] md:text-base">Password</div>
+            <div className="flex flex-nowrap justify-start w-1/3 text-[12px] md:text-base">
+              ********
             </div>
+            <div className='flex w-1/3 justify-end'>
             <MdOutlineKeyboardArrowRight />
+            </div>
           </div>
         </div>
       </div>
