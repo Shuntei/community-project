@@ -34,10 +34,10 @@ export default function NavbarPopup() {
           </div>
           <div className={`${styles['title']} space-y-1`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">
-              <a href="#">CHATROOM</a>
+              <a href="/chat">CHATROOM</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="/chat/01-check-role">START NOW</a>
+              <a href="/chat">START NOW</a>
             </p>
           </div>
           <div className={`${styles['title']} space-y-1 mb-[50px] md:mb-0`}>

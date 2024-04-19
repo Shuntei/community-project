@@ -1,14 +1,16 @@
+import React from 'react'
+import styles from './step-map.module.css'
+import Link from 'next/link'
 import { RiArrowDownSLine, RiArrowUpSLine } from "@remixicon/react";
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/router'
 import { useState } from 'react';
-import styles from './step-map.module.css';
 
 export default function StepMap() {
 
   const router = useRouter()
 
   const [turnPage, setTurnPage] = useState([{
-    url: '/chat/01-check-role'
+    url: '/'
   }, {
     url: '/chat/02-check-webcam-source'
   }, {

@@ -3,6 +3,7 @@ import {
   MB_SIGNUP,
   MB_LOGIN,
   MB_GOOGLE_LOGIN,
+  IMG_SERVER,
 } from '@/components/config/api-path'
 import { firebaseAuth } from '@/components/config/firebase'
 import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth'
@@ -13,29 +14,24 @@ const AuthContext = createContext()
 const defaultAuth = {
   id: 0,
   username: '',
-  token: '',
-}
-
-const defaultProfile = {
-  profile_id: 0,
-  user_id: 0,
   profileUrl: '',
   coverUrl: '',
+  googlePhoto:'',
   aboutMe: '',
   showContactInfo: false,
   ytLink: '',
   fbLink: '',
   igLink: '',
   gmailLink: '',
+  googleLogin: false,
+  token: '',
 }
 
 const storageKey = 'ruins-auth'
 
 export function AuthContextProvider({ children }) {
   const googleAuth = new GoogleAuthProvider()
-  const [profile, setProfile] = useState(defaultProfile)
   const [auth, setAuth] = useState(defaultAuth)
-  const { user, setUser } = useAuthState(firebaseAuth)
 
   const signup = async (formData) => {
     try {
@@ -82,11 +78,11 @@ export function AuthContextProvider({ children }) {
     try {
       const result = await signInWithPopup(firebaseAuth, googleAuth)
       const { user } = result
-  
+
       let account = user.email
       let username = user.displayName
       let photoUrl = user.photoURL
-  
+
       if (account && username) {
         const r = await fetch(MB_GOOGLE_LOGIN, {
           method: 'post',
@@ -95,7 +91,7 @@ export function AuthContextProvider({ children }) {
             'Content-Type': 'application/json',
           },
         })
-  
+
         const res = await r.json()
         if (res.success) {
           localStorage.setItem(storageKey, JSON.stringify(res.data))
@@ -107,8 +103,8 @@ export function AuthContextProvider({ children }) {
       } else {
         console.log(user)
       }
-    } catch(ex){
-      console.log(ex);
+    } catch (ex) {
+      console.log(ex)
     }
   }
 
@@ -133,7 +129,7 @@ export function AuthContextProvider({ children }) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ login, logout, signup, auth, profile, googleLogin }}>
+    <AuthContext.Provider value={{ login, logout, signup, auth, googleLogin }}>
       {children}
     </AuthContext.Provider>
   )

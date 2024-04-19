@@ -77,7 +77,7 @@ export default function Mission() {
 
   return (
     <>
-    {console.log(MissionData[0].name)}
+    {/* {console.log(MissionData[0].name)} */}
       <div className='w-1/6 relative'>
         <div className='my-8 px-4'>
           <div className='w-full flex flex-col border-b border-dotted mb-1'></div>
