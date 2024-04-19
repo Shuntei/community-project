@@ -117,13 +117,19 @@ export default function OrderSuccess() {
             <div className="w-10/12 border-dotted border-black border-b border-t h-1"></div>
 
             <div className="flex w-full justify-center items-center gap-2 flex-col md:flex-row ">
-              <Link href="/shop" className="w-[280px] h-[75px] bg-white border justify-center items-center gap-2.5 flex hover:bg-black hover:border-white group">
+              <Link
+                href="/shop"
+                className="w-[280px] h-[75px] bg-white border justify-center items-center gap-2.5 flex hover:bg-black hover:border-white group"
+              >
                 <div className="text-black text-2xl font-semibold font-['IBM Plex Mono'] group-hover:text-white">
                   商品列表
                 </div>
               </Link>
 
-              <Link href="/shop/product/my-order" className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white">
+              <Link
+                href="/shop/product/my-order"
+                className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
+              >
                 <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
                   我的訂單
                 </div>
