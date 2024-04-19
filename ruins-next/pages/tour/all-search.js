@@ -14,57 +14,73 @@ export default function AllSearch() {
   const [category, setCategory] = useState('')  // 類別標籤
   const [totalRows, setTotalRows] = useState(0);  // 呈現資料筆數
 
-  // 抓取資料
-  const fetchTourData = (page, keyword, category) => {
-    fetch(
+  // 取得全部貼文資料
+  const fetchAllTourData = async (page) => {
+    const response = await fetch(`${TOUR_POST}?page=${page}`)
+    const result = await response.json()
+
+    // 若 result 或 result.rows undefined, 直接結束
+    if (!result || !result.rows) {
+      return
+    }
+
+    const newData = result.rows.map((item) => ({
+      ...item,
+      key: item.tour_id,
+    }))
+    setTourList((prevList) => [...prevList, ...newData]);
+    setPageNumber(page + 1)
+    setTotalRows(result.totalRows)
+  }
+
+  // 取得關鍵字結果,主題篩選結果
+  const fetchFilteredTourData = async (page, keyword, category) => {
+    const response = await fetch(
       `${TOUR_POST}?page=${page}&category=${category}&keyword=${encodeURIComponent(keyword)}`
     )
-      .then((r) => r.json())
-      .then((result) => {
-        console.log(result);
-        const newData = result.rows.map((item) => ({
-          ...item,
-          // 使用 tour_id 作為 key
-          key: item.tour_id,
-        }));
-        setTourList((prevList) => [...prevList, ...newData]); // 使載入更多文章會接續在後
-        setPageNumber(page + 1);
-        setTotalRows(result.totalRows); // Update total number of rows
-      })
-      .catch((error) => console.error('Error fetching tour data:', error));
-  };
+    const result = await response.json()
+    const newData = result.rows.map((item) => ({
+      ...item,
+      key: item.tour_id,
+    }))
+    setTourList((prevList) => [...prevList, ...newData]);
+    setPageNumber(page + 1)
+    setTotalRows(result.totalRows)
+  }
 
-  // 呈現後端文章資料
+  // Fetch all posts data on initial load
   useEffect(() => {
-    // 抓取沒有任何條件的初始資料
-    fetchTourData(pageNumber, keyword, category);
-  }, [category]);
+    fetchAllTourData(pageNumber)
+  }, [])
 
-  // 點擊載入更多文章
-  const handleLoadMore = () => {
-    fetchTourData(pageNumber, keyword, category);
-  };
+  // 關鍵字搜尋
+  const handleSearch = (e) => {
+    e.preventDefault()
+    setPageNumber(1)
+    setTourList([])
+    fetchFilteredTourData(1, keyword, category)
+  }
 
-  // 送出關鍵字功能
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Form submitted');
-    // Reset page number when submitting form to start from the first page
-    setPageNumber(1);
-    setTourList([]); // Clear existing tour list
-    fetchTourData(1, keyword, category);
-  };
-
-  // 類別按鈕點擊事件
+  // 主題類別篩選
   const handleCategoryClick = (cat) => {
-    // Toggle category filter
-    if (category === cat) {
-      setCategory(''); // 清除類別
-    } else {
-      setCategory(cat);
+    const newCategory = category === cat ? '' : cat
+    setCategory(newCategory)
+    console.log(category)
+    setPageNumber(1)
+    setTourList([])
+    fetchFilteredTourData(1, keyword, newCategory)
+  }
+
+  // 載入更多結果
+  const handleLoadMore = () => {
+    if (tourList.length < totalRows) {
+      if (category || keyword) {
+        fetchFilteredTourData(pageNumber, keyword, category)
+      } else {
+        fetchAllTourData(pageNumber)
+      }
     }
-    setPageNumber(1); // Reset pageNumber when category changes
-  };
+  }
 
   return (
     <>
@@ -75,7 +91,7 @@ export default function AllSearch() {
           <h1 className="text-white text-[26px] font-semibold">
             找尋你的精彩冒險
           </h1>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSearch}>
             <div className="relative">
               <input
                 type="text"
@@ -97,12 +113,14 @@ export default function AllSearch() {
             </button>
             <div className="md:space-x-3 space-x-2 flex flex-nowrap">
               <button
-                className={`rounded bg-white px-2.5 py-[5px] ${category == 4 ? 'bg-blue-500 text-white' : ''}`}
+                className={`rounded bg-white px-2.5 py-[5px] ${category === 4 ? 'bg-blue-500 text-red-900' : ''}`}
                 onClick={() => handleCategoryClick(4)}
               >
                 戲院
               </button>
-              <button className="rounded bg-white px-2.5 py-[5px]">
+              <button className={`rounded bg-white px-2.5 py-[5px] ${category === 11 ? 'bg-blue-500 text-red-900' : ''}`}
+                onClick={() => handleCategoryClick(11)}
+              >
                 工廠遺址
               </button>
               <button className="rounded bg-white px-2.5 py-[5px]">
