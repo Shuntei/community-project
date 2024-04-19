@@ -21,7 +21,7 @@ export default function HomeSidebar() {
           <div className="self-stretch h-full py-[11px] flex-col justify-start items-start gap-[11px] flex">
             <div className="text-xs font-bold">SHOP</div>
             <Link
-              href="/shop/my-order"
+              href="/shop/product/my-order"
               onClick={(e) => {
                 handleLinkClick("Order History");
               }}
