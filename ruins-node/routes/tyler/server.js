@@ -30,7 +30,7 @@ router.get('/05-streaming/u-info/:pid', async (req, res) => {
 // 抓用戶圖片
 router.get('/user-pic/:pid', async (req, res) => {
   let pid = req.params.pid
-  const sql = `SELECT * FROM mb_user_profile WHERE user_id=?`
+  const sql = `SELECT * FROM mb_user WHERE id=?`
   let [rows] = await db.query(sql, [pid])
   res.json(rows)
 })
