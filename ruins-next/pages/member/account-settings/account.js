@@ -303,11 +303,11 @@ export default function Account() {
               onClick={() => {
                 avatarInputRef.current.click()
               }}
-              className="relative rounded-full max-h-[110px] min-w-[110px] overflow-hidden flex justify-center items-center"
+              className="relative rounded-full max-h-[110px] min-w-[110px] flex justify-center items-center"
             >
               <Image
                 priority
-                className={`${avatarPreview ? 'max-h-[110px] min-h-[110px]' : ''} min-w-[110px] rounded-full hover:border`}
+                className={`${(avatarPreview || auth.profileUrl ) ? 'max-h-[110px] min-h-[110px]' : ''} object-cover min-w-[110px] rounded-full hover:border`}
                 alt=""
                 width={110}
                 height={110}
