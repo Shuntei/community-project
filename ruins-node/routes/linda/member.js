@@ -97,6 +97,7 @@ router.post("/login", async (req, res) => {
     data: {
       id: 0,
       username: "",
+      name: '',
       profileUrl: "",
       coverUrl: "",
       googlePhoto: false,
@@ -142,6 +143,7 @@ router.post("/login", async (req, res) => {
     output.data = {
       id: row.id,
       username: row.username,
+      name: row.name,
       profileUrl: row.profile_pic_url,
       coverUrl: row.cover_pic_url,
       googlePhoto: row.google_photo,
@@ -183,6 +185,7 @@ router.post("/google-login", async (req, res) => {
     return {
       id: rows[0].id,
       username: rows[0].username,
+      name: rows[0].name,
       profileUrl: rows[0].profile_pic_url,
       coverUrl: rows[0].cover_pic_url,
       googlePhoto: rows[0].google_login,
@@ -282,6 +285,7 @@ router.put(
       code: 0,
       error: "",
       message: "",
+      data: null,
     };
     const { name, username, aboutMe, allowShowContact, yt, fb, ig, email } =
       req.body;
@@ -334,8 +338,13 @@ router.put(
             id,
           ]);
           if (result.affectedRows) {
-            output.success = true;
-            output.message = "Updated successfully";
+            const sql = `SELECT * FROM mb_user WHERE id = ?`
+            const [rows] = await db.query(sql, id)
+            if(rows.length){
+              output.data = rows
+              output.success = true;
+              output.message = "Updated successfully";
+            }
           } else {
             output.success = false;
             output.code = 1;
