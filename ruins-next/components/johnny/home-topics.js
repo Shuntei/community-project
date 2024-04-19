@@ -6,6 +6,7 @@ import { useRouter } from 'next/router'
 
 export default function Topics() {
   const router = useRouter()
+  // const query = { ...router.query, page:  }
 
   const {
     boards,
