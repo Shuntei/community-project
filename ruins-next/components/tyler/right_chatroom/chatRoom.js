@@ -5,10 +5,12 @@ import { socket } from "@/src/socket";
 import { RiCloseFill, RiGift2Line, RiMoneyDollarCircleFill, RiPushpinFill, RiReplyFill, RiSpam3Line, RiStoreLine, RiUser3Fill, RiUserFill } from "@remixicon/react";
 import Image from 'next/image';
 import { useEffect, useRef, useState } from "react";
-import { API_SERVER } from "@/components/config/api-path";
+import { API_SERVER, IMG_SERVER } from "@/components/config/api-path";
 import styles from './chatRoom.module.css';
+import { useAuth } from "@/contexts/auth-context";
 
 export default function ChatRoom({ isConnected, comment, setComment }) {
+  const { auth } = useAuth()
   const { onPhone, showChatroom, handleShowGift, handleShowMemberlist } = useToggle()
   const { handleEffectTab } = useE()
   const [replyTarget, setreplyTarget] = useState("")
@@ -24,6 +26,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
     name: "",
   })
   const handleCommentFocus = useRef()
+
 
   useEffect(() => {
 
@@ -60,19 +63,19 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
   const [userProfile, setUserProfile] = useState("/images/face-id.png")
 
   const getUserProfile = async () => {
-    const r = await fetch(`${API_SERVER}/chat/user-pic/12`, {
+    const r = await fetch(`${API_SERVER}/chat/user-pic/${auth.id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
     const data = await r.json()
-    setUserProfile(data[0].profile_pic_url)
+    setUserProfile(data.profileUrl)
   }
+
   useEffect(() => {
     getUserProfile()
   }, [comment])
-
 
   const handleCommentSubmit = (e) => {
     if (e.key === "Enter" && !isComposing) {
@@ -83,7 +86,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
         const newComment = {
           id: newId,
           name: "陳泰勒",
-          profile: userProfile,
+          profile: userProfile ? (auth.googlePhoto ? userProfile : `${IMG_SERVER}/${userProfile}`) : "/images/face-id.png" ,
           comment: inputComment,
           reply: replyTarget,
         }

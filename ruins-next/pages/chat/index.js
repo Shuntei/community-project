@@ -48,7 +48,7 @@ export default function CheckRole() {
         <div className={styles['content-block']}>
 
           {/* 觀眾區 */}
-          <Link href="./05-streaming">
+          <Link href="./chat/05-streaming">
             <div
               className={!viewerHover && !streamerHover ? styles['viewer-block'] : viewerHover ? `${styles['viewer-block']}` : `${styles['unhover']}`}
               onMouseEnter={handleViewerMouseEnter}
