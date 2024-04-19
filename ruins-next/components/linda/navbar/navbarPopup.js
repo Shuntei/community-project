@@ -18,7 +18,7 @@ export default function NavbarPopup() {
               <Link href="/shop">ALL GOODS</Link>
             </p>
             <p className="font-['IBM Plex Mono'] ">
-              <Link href="/shop/my-order">ORDER LIST</Link>
+              <Link href="/shop/product/my-order">ORDER LIST</Link>
             </p>
           </div>
           <div className={`${styles['title']} space-y-1`}>

@@ -123,7 +123,7 @@ export default function OrderSuccess() {
                 </div>
               </Link>
 
-              <Link href="/shop/my-order" className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white">
+              <Link href="/shop/product/my-order" className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white">
                 <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
                   我的訂單
                 </div>
