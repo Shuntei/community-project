@@ -3,6 +3,7 @@ import multer from "multer";
 import db from "./../../utils/linda/mysql2-connect.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import upload from "./../../utils/linda/upload-imgs.js";
 
 const router = express.Router();
 
@@ -96,6 +97,16 @@ router.post("/login", async (req, res) => {
     data: {
       id: 0,
       username: "",
+      profileUrl: "",
+      coverUrl: "",
+      googlePhoto: false,
+      aboutMe: "",
+      showContactInfo: false,
+      ytLink: "",
+      fbLink: "",
+      igLink: "",
+      gmailLink: "",
+      googleLogin: false,
       token: "",
     },
   };
@@ -131,6 +142,16 @@ router.post("/login", async (req, res) => {
     output.data = {
       id: row.id,
       username: row.username,
+      profileUrl: row.profile_pic_url,
+      coverUrl: row.cover_pic_url,
+      googlePhoto: row.google_photo,
+      aboutMe: row.about_me,
+      showContactInfo: row.allow_contact_info_visibility,
+      ytLink: row.youtube_link,
+      fbLink: row.facebook_link,
+      igLink: row.instagram_link,
+      gmailLink: row.gmail_link,
+      googleLogin: row.google_login,
       token,
     };
   } else {
@@ -146,153 +167,192 @@ router.post("/google-login", async (req, res) => {
     success: false,
     code: 0,
     error: "",
+    message: "",
     body: req.body,
-    data: {
-      id: 0,
-      username: "",
-      token: "",
-    },
+    data: null,
   };
 
   const { account, username, photoUrl } = req.body;
-  console.log({ account, username, photoUrl });
 
-  const emailSql = `SELECT * FROM mb_user WHERE email LIKE ?`;
-  const [emailRows] = await db.query(emailSql, [`%${account}%`]);
-
-  if (!emailRows.length) {
-    const userSql = `INSERT INTO mb_user
-    (username, 
-    email, 
-    created_at) 
-    VALUES (?, ?, NOW());`;
-
-    try {
-      const [userRows] = await db.query(userSql, [username, account]);
-      output.success = !!userRows.affectedRows;
-
-      if (output.success) {
-        const sql = "SELECT * FROM mb_user WHERE username=?";
-        const [rows] = await db.query(sql, username);
-
-        if (rows.length) {
-          const profileSql = `INSERT INTO mb_user_profile (user_id, profile_pic_url) 
-          VALUES (?, ?)`;
-
-          const [profileSqlResult] = await db.query(profileSql, [
-            rows[0].id,
-            photoUrl,
-          ]);
-          output.success = !!profileSqlResult.affectedRows;
-
-          if (output.success) {
-            const token = jwt.sign(
-              { id: rows[0].id, username: rows[0].username },
-              process.env.JWT_SECRET
-            );
-
-            output.data = {
-              id: rows[0].id,
-              username: rows[0].username,
-              token,
-            };
-          }
-        }
-      }
-    } catch (ex) {
-      console.log(ex);
-    }
-  } else {
-    output.success = true;
-
-    const row = emailRows[0];
+  function generateOutputData(rows) {
     const token = jwt.sign(
-      {
-        id: row.id,
-        account: row.username,
-      },
+      { id: rows[0].id, username: rows[0].username },
       process.env.JWT_SECRET
     );
-
-    // TODO:
-    output.data = {
-      id: row.id,
-      username: row.username,
+  
+    return {
+      id: rows[0].id,
+      username: rows[0].username,
+      profileUrl: rows[0].profile_pic_url,
+      coverUrl: rows[0].cover_pic_url,
+      googlePhoto: rows[0].google_login,
+      aboutMe: rows[0].about_me,
+      showContactInfo: rows[0].allow_contact_info_visibility,
+      ytLink: rows[0].youtube_link,
+      fbLink: rows[0].facebook_link,
+      igLink: rows[0].instagram_link,
+      gmailLink: rows[0].gmail_link,
+      googleLogin: rows[0].google_login,
       token,
     };
+  }
 
-    output.profile = {
-      profileUrl: photoUrl,
-    };
+  try {
+    const emailSql = `SELECT * FROM mb_user WHERE email LIKE ?`;
+    const [emailRows] = await db.query(emailSql, [`%${account}%`]);
+
+    if (!emailRows.length) {
+      const userSql = `INSERT INTO mb_user
+      (username, 
+      email, 
+      google_photo,
+      created_at, 
+      google_login, 
+      profile_pic_url) 
+      VALUES (?, ?, ?, NOW(), ?, ?);`;
+
+      try {
+        const [userRows] = await db.query(userSql, [
+          username,
+          account,
+          true,
+          true,
+          photoUrl,
+        ]);
+        output.success = !!userRows.affectedRows;
+
+        if (output.success) {
+          const sql = "SELECT * FROM mb_user WHERE username=?";
+          const [rows] = await db.query(sql, username);
+
+          if (rows.length) {
+            output.data = generateOutputData(rows)
+            output.success = true;
+            output.message = "New info was inserted";
+          }
+        } else {
+          output.success = false;
+          output.code = 1;
+          output.message = "While selecting from mb_user, something went wrong";
+          return res.json(output);
+        }
+      } catch (ex) {
+        console.log(ex);
+      }
+    } else {
+      if (!emailRows[0].google_login) {
+        try {
+          const sql = `UPDATE mb_user SET google_login=? WHERE id=?`;
+          const [result] = await db.query(sql, [true, emailRows[0].id]);
+          if (result.affectedRows) {
+            output.success = true;
+            output.data = generateOutputData(emailRows)
+          } else {
+            output.success = false;
+            output.code = 2;
+            output.message =
+              "Something went wrong while updating the google_login";
+            return res.json(output);
+          }
+        } catch (ex) {
+          console.log("Something went wrong while updating google_login", ex);
+        }
+      } else if (emailRows[0].google_login) {
+        output.data = generateOutputData(emailRows)
+        output.success = true;
+        output.message = "Successfully logged in";
+      }
+    }
+  } catch (ex) {
+    console.log("Something went wrong", ex);
   }
 
   res.json(output);
 });
 
-router.get("/profile-data/:id", async (req, res) => {
-  const output = {
-    success: false,
-    code: 0,
-    error: "",
-    data: {
-      profileId: 0,
-      userId: 0,
-      profileUrl: "",
-      coverUrl: "",
-      aboutMe: "",
-      showContactInfo: false,
-      ytLink: "",
-      fbLink: "",
-      igLink: "",
-      gmailLink: "",
-    },
-  };
-
-  const id = req.params.id;
-
-  if (!id) {
-    output.error = "There is no id";
-    return res.json(output);
-  }
-
-  try {
-    const sql = `SELECT * FROM mb_user_profile WHERE user_id=?`;
-    const [rows] = await db.query(sql, [id]);
-
-    if (!rows.length) {
-      output.error = "There is no info with this id";
-      return res.json(output);
-    }
-
-    const row = rows[0];
-    output.success = true;
-
-    output.data = {
-      profileId: row.profile_id,
-      userId: row.user_id,
-      profileUrl: row.profile_pic_url || "",
-      coverUrl: row.cover_pic_url || "",
-      aboutMe: row.about_me || "",
-      showContactInfo: row.allow_contact_info_visibility || false,
-      ytLink: row.youtube_link || "",
-      fbLink: row.facebook_link || "",
-      igLink: row.instagram_link || "",
-      gmailLink: row.gmail_link || "",
+router.put(
+  "/edit-profile/:id",
+  upload.fields([
+    { name: "cover", maxCount: 1 },
+    { name: "avatar", maxCount: 1 },
+  ]),
+  async (req, res) => {
+    const output = {
+      success: false,
+      code: 0,
+      error: "",
+      message: "",
     };
+    const { name, username, aboutMe, allowShowContact, yt, fb, ig, email } =
+      req.body;
+    let allowContact = allowShowContact ? true : false;
+    const { avatar, cover } = req.files;
+    const hasAvatar = avatar && avatar[0].filename;
+    const hasCover = cover && cover[0].filename;
+    const googlePhoto = hasAvatar ? true : false;
+    let id = req.params.id;
 
-    res.json(output);
-  } catch (ex) {
-    console.log(ex);
-    output.error = "Fetch data error";
-    return res.status(500).json(output);
+    try {
+      const usernameSql = `SELECT * FROM mb_user WHERE username LIKE ? and id != ? `;
+      const [usernameRows] = await db.query(usernameSql, [`%${username}%`, id]);
+
+      if (usernameRows.length) {
+        output.success = false;
+        output.code = 1;
+        output.error = "Username is in use";
+        return res.json(output);
+      } else {
+        try {
+          const sql = `SELECT * FROM mb_user WHERE id = ? `;
+          const [rows] = await db.query(sql, id)
+          const userSql = `UPDATE mb_user 
+          SET 
+          name=?, 
+          username=?,
+          profile_pic_url=?,
+          cover_pic_url=?,
+          google_photo=?,
+          about_me=?,
+          allow_contact_info_visibility=?,
+          youtube_link=?,
+          facebook_link=?,
+          instagram_link=?,
+          gmail_link=? 
+          WHERE id=?`;
+          const [result] = await db.query(userSql, [
+            name,
+            username,
+            hasAvatar ? avatar[0].filename : rows[0].profile_pic_url ,
+            hasCover ? cover[0].filename : rows[0].cover_pic_url ,
+            googlePhoto,
+            aboutMe,
+            allowContact,
+            yt,
+            fb,
+            ig,
+            email,
+            id,
+          ]);
+          if (result.affectedRows) {
+            output.success = true;
+            output.message = "Updated successfully";
+          } else {
+            output.success = false;
+            output.code = 1;
+            output.message = "Update unsuccessful";
+          }
+        } catch (ex) {
+          console.log("Something happened while trying to update all info", ex);
+          output.success = false;
+          output.error = 2;
+        }
+      }
+
+      return res.json(output);
+    } catch (ex) {
+      console.log(ex);
+    }
   }
-});
-
-// router.post("/edit-profile", upload.array("photos", 5), (req, res)=>{
-//     res.json({
-//         body: req.body,
-//         file: req.files
-//     })
-// })
+);
 
 export default router;

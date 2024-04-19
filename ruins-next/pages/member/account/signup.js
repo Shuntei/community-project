@@ -206,9 +206,9 @@ export default function Signup() {
     e.preventDefault()
     setSubmitted(true)
 
-    const result = updateError()
+    const errorResult = updateError()
 
-    if (result) {
+    if (errorResult) {
       const result = await signup(myForm)
 
       if (!result.success) {
