@@ -10,7 +10,7 @@ export function PointContextProvider({ children }) {
 
   const myPoints = async () => {
     try {
-      const r = await fetch(`${API_SERVER}/05-streaming/u-point/1`, {
+      const r = await fetch(`${API_SERVER}/chat/05-streaming/u-point/1`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
