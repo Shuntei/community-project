@@ -11,6 +11,7 @@ import {
   CART_LINEPAY,
 } from '@/components/config/api-path'
 import dayjs from 'dayjs'
+
 export default function ConfirmDoc() {
   const router = useRouter()
   const [purchaseOrder, setPurchaseOrder] = useState([])
@@ -30,7 +31,7 @@ export default function ConfirmDoc() {
   }
 
   // 取得訂單詳細商品
-  const getdetailPO = async () => {
+  const getdetailPo = async () => {
     const poid = router.query.poid || ''
     // console.log(poid)
 
@@ -106,7 +107,7 @@ export default function ConfirmDoc() {
 
   useEffect(() => {
     getPurchaseOrder()
-    getdetailPO()
+    getdetailPo()
   }, [router.query.poid])
 
   return (
@@ -158,7 +159,7 @@ export default function ConfirmDoc() {
                     收件人手機:{purchaseOrder.row.recipient_mobile}
                   </div>{' '}
                   <div className=" text-black text-[15px] font-normal font-['IBM Plex Mono']">
-                    收件人信箱:aa@gmail.com
+                    取貨商店:{purchaseOrder.row.store_name}
                   </div>
                   <div className=" text-black text-[15px] font-normal font-['IBM Plex Mono']">
                     付款方式:{purchaseOrder.row.payment_method}

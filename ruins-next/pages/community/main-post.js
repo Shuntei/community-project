@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import {
-  BackendPortForImg,
-  SN_COMMENTS,
-} from '@/components/johnny/config/api-path'
+import { BackendPortForImg } from '@/components/johnny/config/api-path'
 import Image from 'next/image'
 import profileImg from '../../components/johnny/img/16.jpg'
 import { useRouter } from 'next/router'
 import CommentModal from '@/components/johnny/modal-comment'
 import { useToggles } from '@/contexts/use-toggles'
 import { useBoards } from '@/contexts/use-boards'
-import LikeButton from './like-button'
-import CommentCount from './comment-count'
+import LikeButton from './interactive-like'
+import CommentCount from './interactive-cm-count'
+import Views from './interactive-views'
 import Comment from '@/components/johnny/comment'
 import {
   RiMapPinFill,
@@ -18,15 +16,11 @@ import {
   RiEmotionLaughFill,
   RiCloseLargeLine,
   RiAddLine,
-  RiEyeFill,
-  RiChat4Fill,
 } from '@remixicon/react'
 import { SN_POSTS } from '@/components/johnny/config/api-path'
-import { reload } from 'firebase/auth'
 
 export default function MainPost() {
   const [renderAfterCm, setRenderAfterCm] = useState(false)
-  // const [commentCount, setCommentCount] = useState('')
   const router = useRouter()
   const handleBack = () => {
     router.back()
@@ -34,16 +28,6 @@ export default function MainPost() {
 
   const { commentModal, setCommentModal } = useToggles()
   const { getPost, setGetPost } = useBoards()
-
-  // const showCommentCount = (postId) => {
-  //   fetch(`${SN_COMMENTS}/${postId}`)
-  //     .then((r) => r.json())
-  //     .then((data) => {
-  //       // console.log('評論數:', data.totalRows[0]['COUNT(1)'])
-  //       setCommentCount(data.totalRows[0]['COUNT(1)'])
-  //       setRenderAfterCm(!renderAfterCm)
-  //     })
-  // }
 
   const postId = router.query.postId
   const isPostId = async () => {
@@ -55,23 +39,12 @@ export default function MainPost() {
 
     const r = await fetch(`${SN_POSTS}?postId=${postIdExist}`)
     const result = await r.json()
-    console.log(result)
     setGetPost(result)
-
-    // // 獲得評論數
-    // const postIdCmCount = result[0].post_id
-    // // showCommentCount(postIdCmCount)
-    // fetch(`${SN_COMMENTS}/${postIdCmCount}`)
-    //   .then((r) => r.json())
-    //   .then((data) => {
-    //     // console.log('評論數:', data.totalRows[0]['COUNT(1)'])
-    //     setCommentCount(data.totalRows[0]['COUNT(1)'])
-    //   })
   }
 
   useEffect(() => {
     isPostId()
-  }, [])
+  }, [postId])
 
   if (!getPost[0]) {
     console.log('data not ready to load')
@@ -141,14 +114,7 @@ export default function MainPost() {
               )}
             </div>
             <div className="flex gap-2 my-3 pc:mx-20 pc:my-5 justify-end">
-              <span className=" pr-2 flex">
-                <RiEyeFill className="pr-1" />
-                297
-              </span>
-              {/* <span className=" pr-2 flex">
-                <RiChat4Fill className="pr-1" />
-                {commentCount}
-              </span> */}
+              <Views postId={getPost[0].post_id} />
               <CommentCount postId={getPost[0].post_id} />
               <LikeButton postId={getPost[0].post_id} />
             </div>

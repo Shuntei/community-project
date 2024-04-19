@@ -16,7 +16,6 @@ const {
   LINEPAY_RETURN_CANCEL_URL,
 } = process.env;
 
-
 const router = express.Router();
 // 拿到會員資料
 router.get("/member-info/:mid", async (req, res) => {
@@ -88,6 +87,7 @@ router.post("/add-purchase-order", async (req, res) => {
     recipient,
     recipient_mobile,
     store_id,
+    store_name,
     shipping_method,
     shipping_fee,
     total_amount,
@@ -105,7 +105,7 @@ router.post("/add-purchase-order", async (req, res) => {
     await connection.beginTransaction();
 
     const purchaseOrderSql =
-      "INSERT INTO `ca_purchase_order`(`purchase_order_id`, `member_id`, `recipient`, `recipient_mobile`, `store_id`, `shipping_method`, `shipping_fee`, `total_amount`, `payment_method`, `payment_status`, `status`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, '未付款', '訂單處理中', NOW())";
+      "INSERT INTO `ca_purchase_order`(`purchase_order_id`, `member_id`, `recipient`, `recipient_mobile`, `store_id`, `store_name`, `shipping_method`, `shipping_fee`, `total_amount`, `payment_method`, `payment_status`, `status`, `created_at`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, '未付款', '訂單處理中', NOW())";
 
     const PurchaseOrderId = uuidv4().replace(/-/g, "");
 
@@ -116,6 +116,7 @@ router.post("/add-purchase-order", async (req, res) => {
       recipient,
       recipient_mobile,
       store_id,
+      store_name,
       shipping_method,
       shipping_fee,
       total_amount,
@@ -212,7 +213,7 @@ router.post("/createLinePayOrder", async (req, res) => {
         cancelUrl: `${LINEPAY_RETURN_HOST}${LINEPAY_RETURN_CANCEL_URL}`,
       },
     };
-    console.log(linePayBody)
+    console.log(linePayBody);
 
     const uri = "/payments/request";
     const headers = createSignature(uri, linePayBody);
@@ -269,8 +270,6 @@ router.get("/linePay/confirm", async (req, res) => {
         'UPDATE `ca_purchase_order` SET `payment_status` = "已付款" WHERE `purchase_order_id` = ?';
 
       const [result] = await db.query(updatePoStatusSql, [orderId]);
-
-      
     } else {
       return res.json({
         success: false,

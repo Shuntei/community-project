@@ -18,11 +18,10 @@ import NavbarMobile from './navbar-mobile'
 import { useCart } from '@/hooks/use-cart'
 import CartModal from '@/components/kevin/modal/cart-modal'
 import { useAuth } from '@/contexts/auth-context'
-import { useProfile } from '@/contexts/profile-context'
+import { IMG_SERVER } from '@/components/config/api-path'
 
 export default function Navbar({ className, navColor = 'white' }) {
   const { auth, logout } = useAuth()
-  const {profile} = useProfile()
   const [showModal, setShowModal] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
@@ -35,7 +34,7 @@ export default function Navbar({ className, navColor = 'white' }) {
       <nav
         className={`${styles.navbar} ${isOpen ? '' : className} ${
           navColor === 'white' ? 'text-white' : 'text-black'
-        } relative`}
+        } relative select-none`}
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
           <div className="flex md:justify-start select-none gap-[15px]">
@@ -82,19 +81,19 @@ export default function Navbar({ className, navColor = 'white' }) {
                   }}
                 >
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
-                  <a href="" className="absolute top-[-6px] left-[-35px]">
-                    {profile.profileUrl ? (
+                  <div className="absolute top-[-6px] left-[-35px]">
+                    {auth.profileUrl ? (
                       <Image
                         width={30}
-                        className="rounded-full"
+                        className="rounded-full min-h-[30px] object-cover"
                         height={30}
-                        src={profile.profileUrl}
+                        src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
                         alt=""
                       />
                     ) : (
                       <CgProfile className="text-[25px]" />
                     )}
-                  </a>
+                  </div>
                   <div className="tracking-wide before:py-[10px]">
                     {auth.username}
                   </div>
@@ -151,12 +150,12 @@ export default function Navbar({ className, navColor = 'white' }) {
             href=""
             className={styles['profile-icon']}
           >
-            {profile.profileUrl ? (
+            {auth.profileUrl ? (
               <Image
                 width={20}
                 className="rounded-full"
                 height={20}
-                src={profile.profileUrl}
+                src={auth.profileUrl}
                 alt=""
               />
             ) : navColor === 'white' ? (

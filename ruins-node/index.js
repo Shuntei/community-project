@@ -10,8 +10,6 @@ import db from "./utils/mysql2-connect.js";
 import cors from "cors";
 import gameRouter from "./routes/ellie/game.js";
 
-const upload = multer({ dest: "profile_uploads/" });
-
 const app = express();
 
 // top level middleware
@@ -24,7 +22,9 @@ const corsOptions = {
     callback(null, true);
   },
 };
+
 app.use(cors(corsOptions));
+app.use(express.static('public'));
 app.use("/member", memberRouter);
 //產品路由
 app.use("/product", productRouter);

@@ -20,10 +20,12 @@
   border: #A0A0A0 1px solid;
   background-color: transparent;
   cursor: pointer;
+  position: relative;
+
 }
 
 .pagination-link:hover {
-  border: 1px dashed black;
+  top: -2px;
 }
 .pagination-link-active {
   text-decoration: none;

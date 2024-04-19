@@ -179,7 +179,7 @@ router.get("/comment/:postId?", async (req, res) => {
   // 留言數統計數,只在單篇中顯示(非列表)
   const totalRowsSql = `SELECT COUNT(1) FROM sn_comments LEFT JOIN sn_posts USING(post_id) WHERE post_id=${postId} ORDER BY sn_comments.comment_id;`;
   const [totalRows] = await db.query(totalRowsSql);
-  console.log(totalRows);
+  // console.log(totalRows);
   output.totalRows = totalRows;
 
   res.json(output);
@@ -314,5 +314,36 @@ router.put(
     res.json(output);
   }
 );
+
+router.get("/updateviewcount/:postId?", async (req, res) => {
+  let postId = +req.params.postId;
+
+  const output = {
+    success: false,
+    message: "",
+    errors: {},
+  };
+
+  try {
+    // 更新觀看次數
+    if (postId) {
+      const sql =
+        "UPDATE sn_posts SET view_count = view_count + 1 WHERE post_id =?";
+      const [counter] = await db.query(sql, [postId]);
+      console.log(counter);
+      if (!!counter.affectedRows) {
+        output.message = "觀看次數已更新";
+      } else {
+        output.errors = "沒有該篇postId文章";
+      }
+    } else {
+      output.message = "沒有postId";
+    }
+  } catch (err) {
+    console.error("更新觀看次數時出錯：", err);
+    output.message = "更新觀看次數時出錯";
+  }
+  res.json(output);
+});
 
 export default router;

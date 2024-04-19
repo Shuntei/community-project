@@ -1,4 +1,5 @@
-export const API_SERVER = 'http://localhost:3001'
+export const API_SERVER = "http://localhost:3001"
+export const IMG_SERVER = "http://localhost:3001/img"
 
 // signup
 export const MB_SIGNUP = `${API_SERVER}/member/signup`
@@ -6,8 +7,8 @@ export const MB_SIGNUP = `${API_SERVER}/member/signup`
 export const MB_LOGIN = `${API_SERVER}/member/login`
 // google
 export const MB_GOOGLE_LOGIN = `${API_SERVER}/member/google-login`
-// get profile info
-export const MB_PROFILE_INFO = `${API_SERVER}/member/profile-data`
+// edit profile
+export const MB_EDIT_PROFILE = `${API_SERVER}/member/edit-profile`
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`
@@ -38,3 +39,12 @@ export const CART_LINEPAY = `${API_SERVER}/cart/createLinePayOrder` // POST
 
 // 購物車 - 與 LINE Pay 確認訂單
 export const CART_LINEPAYCONFIRM = `${API_SERVER}/cart/linePay/confirm`
+
+// 歷史訂單 - status:訂單處理中
+export const PRODUCT_MYONGOINGPO = `$(API_SERVER}/product/api/getOngoingPo`
+
+// 歷史訂單 - status:已完成
+export const PRODUCT_MYCOMPLETEDPO =`${API_SERVER}/product/api/getCompletedPo`
+
+// 揪團貼文
+export const TOUR_POST =  `${API_SERVER}/tour/api`

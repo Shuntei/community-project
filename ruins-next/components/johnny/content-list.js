@@ -12,7 +12,7 @@ import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_COMMENTS, SN_DELETE_POST } from './config/api-path'
+import { SN_DELETE_POST } from './config/api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
@@ -32,12 +32,12 @@ export default function MainContent() {
   const { removeBox, setRemoveBox } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
 
-  useEffect(() => {
-    allPostsShow()
+  // useEffect(() => {
+  //   allPostsShow()
 
-    // 發送後會設成true用於重整,這裡設回false
-    setRender(false)
-  }, [render])
+  //   // 發送(刪除)後會設成true用於重整,這裡設回false
+  //   setRender(false)
+  // }, [render])
 
   const handlePush = (postId) => {
     // router.push(`/community/main-post?postId=${postId}`);
@@ -84,9 +84,13 @@ export default function MainContent() {
     <>
       {postsList ? (
         <ul className="bg-neutral-300 flex justify-center mt-[90px] text-xl">
-          <li className="border-s-2 px-3 py-3 flex items-center hover:hover1">
+          <Link
+            className="border-s-2 px-3 py-3 flex items-center hover:hover1"
+            onClick={() => handlePage(1)}
+            href={`?page=${1}`}
+          >
             <RiArrowLeftDoubleLine />
-          </li>
+          </Link>
           {Array(20)
             .fill(1)
             .map((v, i) => {
@@ -101,22 +105,27 @@ export default function MainContent() {
                     className={`border-s-2 px-5 flex py-3 hover:hover1 active:bg-white ${p === postsList.page ? 'bg-white' : ''}`}
                   >
                     {p}
-                    {/* <a href={`?page=${p}`}>{p}</a> */}
                   </Link>
                 </li>
               )
             })}
-          <li className="border-x-2 px-3 py-3 flex items-center hover:hover1">
-            {/* <Link href={`?page=${page}`}> */}
+          <Link
+            className="border-x-2 px-3 py-3 flex items-center hover:hover1"
+            href={`?page=${postsList.totalPages}`}
+            onClick={() => handlePage(postsList.totalPages)}
+          >
             <RiArrowRightDoubleLine />
-            {/* </Link> */}
-          </li>
+          </Link>
         </ul>
       ) : selectedPosts ? (
         <ul className=" flex justify-center mt-[90px] text-xl">
-          <li className="border-s-2 px-3 py-3 flex items-center hover:hover1">
+          <Link
+            className="border-s-2 px-3 py-3 flex items-center hover:hover1"
+            onClick={() => handleBdPostsPage(1)}
+            href={`?page=${1}`}
+          >
             <RiArrowLeftDoubleLine />
-          </li>
+          </Link>
           {Array(10)
             .fill(1)
             .map((v, i) => {
@@ -136,14 +145,18 @@ export default function MainContent() {
                 </li>
               )
             })}
-          <li className="border-x-2 px-3 py-3 flex items-center hover:hover1">
+          <Link
+            className="border-x-2 px-3 py-3 flex items-center hover:hover1"
+            onClick={() => handleBdPostsPage(selectedPosts.totalPages)}
+            href={`?page=${selectedPosts.totalPages}`}
+          >
             <RiArrowRightDoubleLine />
-          </li>
+          </Link>
         </ul>
       ) : (
         ''
       )}
-      {(postsList.totalPostsRows || selectedPosts.selectedBdPostsRows).map(
+      {(postsList?.totalPostsRows || selectedPosts?.selectedBdPostsRows).map(
         (v, i) => {
           return (
             <main
@@ -180,7 +193,7 @@ export default function MainContent() {
                     <div className="flex gap-2">
                       <span className="text-575757 pr-2 flex">
                         <RiEyeFill className="pr-1" />
-                        297
+                        {v.view_count}
                       </span>
                       <span className="text-575757 flex cursor-pointer">
                         <RiChat4Fill className="pr-1" />
@@ -197,7 +210,7 @@ export default function MainContent() {
                         {toggleMenu && (
                           <ul
                             tabIndex={0}
-                            className="dropdown-content z-[1] menu shadow bg-base-100 rounded-box w-24"
+                            className="dropdown-content z-[1] menu shadow bg-base-100 rounded-lg w-24"
                           >
                             <li onClick={() => removePost(v.post_id)}>
                               <a>remove</a>

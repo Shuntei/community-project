@@ -13,10 +13,10 @@ import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST, SN_POSTS, SN_PSPOSTS } from './config/api-path'
+import { SN_DELETE_POST, SN_PSPOSTS } from './config/api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 
 export default function PersonalContent() {
@@ -33,6 +33,7 @@ export default function PersonalContent() {
       const r = await fetch(`${SN_PSPOSTS}${currentPage}`)
       const data = await r.json()
       setPsPosts(data)
+      console.log(data)
     } catch (err) {
       console.log(err)
     }
@@ -48,19 +49,6 @@ export default function PersonalContent() {
       console.log(err)
     }
   }
-
-  useEffect(() => {
-    if (router.isReady) {
-      const currentPage = router.query.page
-      handlePsPage(currentPage)
-    }
-  }, [router.query.page, router.isReady])
-
-  useEffect(() => {
-    // 首次渲染及調用render都會執行
-    allPsPostsShow()
-    setRender(false)
-  }, [render])
 
   const handlePush = (postId) => {
     // router.push(`/community/main-post?postId=${postId}`);
@@ -105,46 +93,74 @@ export default function PersonalContent() {
       }
     })
   }
+  useEffect(() => {
+    if (router.isReady) {
+      const currentPage = router.query.page
+      handlePsPage(currentPage)
+    }
+  }, [router.query.page, router.isReady])
 
+  useEffect(() => {
+    // 首次渲染及調用render都會執行
+    allPsPostsShow()
+    setRender(false)
+  }, [render])
   // console.log(psPosts.totalPostsRows)
 
   return (
     <>
-      <ul className="bg-neutral-300 flex justify-center text-xl py-2">
-        <li className="border-s-2 px-3 py-3 flex items-center hover:hover1">
-          <RiArrowLeftDoubleLine />
-        </li>
-        {psPosts &&
-          psPosts.totalPages &&
-          Array(10)
-            .fill(1)
-            .map((v, i) => {
-              const p = psPosts.page - 5 + i
-              // const p = i;
-              if (p < 1 || p > psPosts.totalPages) return null
-              return (
-                <li key={p}>
-                  <span
-                    // href={`?page=${p}`}
-                    onClick={() => {
-                      router.push({
-                        pathname: '/community/main-personal',
-                        query: { page: `${p}` },
-                      })
-                    }}
-                    className={`border-s-2 px-5 flex py-3 hover:hover1 cursor-pointer
+      {psPosts && psPosts.totalPages && (
+        <ul className="bg-neutral-300 flex justify-center text-xl py-2">
+          <span
+            className="border-s-2 px-3 py-3 flex items-center hover:hover1"
+            onClick={() => {
+              router.push({
+                pathname: '/community/main-personal',
+                query: { page: `${1}` },
+              })
+            }}
+          >
+            <RiArrowLeftDoubleLine />
+          </span>
+          {psPosts &&
+            Array(10)
+              .fill(1)
+              .map((v, i) => {
+                const p = psPosts.page - 5 + i
+                // const p = i;
+                if (p < 1 || p > psPosts.totalPages) return null
+                return (
+                  <li key={p}>
+                    <span
+                      // href={`?page=${p}`}
+                      onClick={() => {
+                        router.push({
+                          pathname: '/community/main-personal',
+                          query: { page: `${p}` },
+                        })
+                      }}
+                      className={`border-s-2 px-5 flex py-3 hover:hover1 cursor-pointer
                      active:bg-white ${p === psPosts.page ? 'bg-white' : ''} `}
-                    // onClick={() => handlePsPage(router.query.page)} 已在useEffect依賴
-                  >
-                    {p}
-                  </span>
-                </li>
-              )
-            })}
-        <li className="border-x-2 px-3 py-3 flex items-center hover:hover1">
-          <RiArrowRightDoubleLine />
-        </li>
-      </ul>
+                      // onClick={() => handlePsPage(router.query.page)} 已在useEffect依賴
+                    >
+                      {p}
+                    </span>
+                  </li>
+                )
+              })}
+          <span
+            className="border-x-2 px-3 py-3 flex items-center hover:hover1"
+            onClick={() => {
+              router.push({
+                pathname: '/community/main-personal',
+                query: { page: `${psPosts.totalPages}` },
+              })
+            }}
+          >
+            <RiArrowRightDoubleLine />
+          </span>
+        </ul>
+      )}
       {psPosts.totalPostsRows &&
         psPosts.totalPostsRows.map((v, i) => {
           return (
@@ -189,11 +205,11 @@ export default function PersonalContent() {
                     <div className="flex gap-2">
                       <span className="text-575757 pr-2 flex">
                         <RiEyeFill className="pr-1" />
-                        297
+                        {v.view_count}
                       </span>
                       <span className="text-575757 flex">
                         <RiChat4Fill className="pr-1" />
-                        85
+                        {v.comment_count}
                       </span>
                       <div className="relative">
                         <div
