@@ -18,7 +18,7 @@ const defaultAuth = {
   email: '',
   profileUrl: '',
   coverUrl: '',
-  googlePhoto:'',
+  googlePhoto:false,
   aboutMe: '',
   showContactInfo: false,
   ytLink: '',
