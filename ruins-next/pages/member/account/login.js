@@ -35,10 +35,6 @@ export default function Login() {
     setMyForm({ ...myForm, [e.target.name]: e.target.value })
   }
 
-  const handleShowPass = () => {
-    setShowPass(!showPass)
-  }
-
   const updateError = () => {
     let initErrors = {
       hasErrors: false,
@@ -162,7 +158,7 @@ export default function Login() {
                     onChange={handleChange}
                     className="bg-inherit focus:outline-none text-base text-white flex self-stretch w-full flex-1 text-base"
                   />{' '}
-                  <div onClick={handleShowPass}>
+                  <div onClick={()=>{setShowPass(!showPass)}}>
                     {showPass ? (
                       <IoMdEye className="md:text-3xl text-xl text-white" />
                     ) : (

@@ -85,7 +85,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                     {auth.profileUrl ? (
                       <Image
                         width={30}
-                        className="rounded-full min-h-[30px] object-cover"
+                        className="rounded-full min-h-[30px] max-h-[30px] object-cover"
                         height={30}
                         src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
                         alt=""
@@ -153,9 +153,9 @@ export default function Navbar({ className, navColor = 'white' }) {
             {auth.profileUrl ? (
               <Image
                 width={20}
-                className="rounded-full"
+                className="rounded-full h-[20px] object-cover"
                 height={20}
-                src={auth.profileUrl}
+                src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
                 alt=""
               />
             ) : navColor === 'white' ? (

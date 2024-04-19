@@ -97,6 +97,8 @@ router.post("/login", async (req, res) => {
     data: {
       id: 0,
       username: "",
+      name: '',
+      email: '',
       profileUrl: "",
       coverUrl: "",
       googlePhoto: false,
@@ -142,6 +144,8 @@ router.post("/login", async (req, res) => {
     output.data = {
       id: row.id,
       username: row.username,
+      name: row.name,
+      email: row.email,
       profileUrl: row.profile_pic_url,
       coverUrl: row.cover_pic_url,
       googlePhoto: row.google_photo,
@@ -183,9 +187,11 @@ router.post("/google-login", async (req, res) => {
     return {
       id: rows[0].id,
       username: rows[0].username,
+      name: rows[0].name,
+      email: rows[0].email,
       profileUrl: rows[0].profile_pic_url,
       coverUrl: rows[0].cover_pic_url,
-      googlePhoto: rows[0].google_login,
+      googlePhoto: rows[0].google_photo,
       aboutMe: rows[0].about_me,
       showContactInfo: rows[0].allow_contact_info_visibility,
       ytLink: rows[0].youtube_link,
@@ -240,28 +246,9 @@ router.post("/google-login", async (req, res) => {
         console.log(ex);
       }
     } else {
-      if (!emailRows[0].google_login) {
-        try {
-          const sql = `UPDATE mb_user SET google_login=? WHERE id=?`;
-          const [result] = await db.query(sql, [true, emailRows[0].id]);
-          if (result.affectedRows) {
-            output.success = true;
-            output.data = generateOutputData(emailRows)
-          } else {
-            output.success = false;
-            output.code = 2;
-            output.message =
-              "Something went wrong while updating the google_login";
-            return res.json(output);
-          }
-        } catch (ex) {
-          console.log("Something went wrong while updating google_login", ex);
-        }
-      } else if (emailRows[0].google_login) {
         output.data = generateOutputData(emailRows)
         output.success = true;
         output.message = "Successfully logged in";
-      }
     }
   } catch (ex) {
     console.log("Something went wrong", ex);
@@ -282,6 +269,7 @@ router.put(
       code: 0,
       error: "",
       message: "",
+      data: null,
     };
     const { name, username, aboutMe, allowShowContact, yt, fb, ig, email } =
       req.body;
@@ -334,8 +322,13 @@ router.put(
             id,
           ]);
           if (result.affectedRows) {
-            output.success = true;
-            output.message = "Updated successfully";
+            const sql = `SELECT * FROM mb_user WHERE id = ?`
+            const [rows] = await db.query(sql, id)
+            if(rows.length){
+              output.data = rows
+              output.success = true;
+              output.message = "Updated successfully";
+            }
           } else {
             output.success = false;
             output.code = 1;

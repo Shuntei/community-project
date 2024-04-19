@@ -129,7 +129,7 @@ export default function FillDoc() {
   // 欄位驗證
   const validateForm = debounce(() => {
     const isValid =
-      memberName.trim() !== '' &&
+      memberName !== '' &&
       memberEmail.trim() !== '' &&
       memberMobile !== 0 &&
       paymentMethod !== '' &&

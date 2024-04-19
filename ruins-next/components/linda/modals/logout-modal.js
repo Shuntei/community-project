@@ -15,7 +15,7 @@ export default function LogoutModal({ isVisible }) {
           {auth.profileUrl ? (
             <Image
               width={50}
-              className="rounded-full min-h-[50px] object-cover"
+              className="rounded-full min-h-[50px] max-h-[50px] object-cover"
               height={50}
               src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
               alt=""

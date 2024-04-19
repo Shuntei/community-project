@@ -18,6 +18,7 @@ import NotifyRed from '@/components/linda/notify/notify-red'
 import { MB_EDIT_PROFILE, IMG_SERVER } from '@/components/config/api-path'
 import { z } from 'zod'
 import { PiWarningCircle } from 'react-icons/pi'
+import Router, { useRouter } from 'next/router'
 
 const nameRe = new RegExp(/^[a-zA-Z0-9\s]*$/)
 const schemaName = z
@@ -27,7 +28,7 @@ const schemaName = z
 const schemaEmail = z.string().email({ message: 'Invalid email' })
 
 export default function Account() {
-  const { auth } = useAuth()
+  const { auth, setUpdate, update } = useAuth()
   const [aboutMe, setAboutMe] = useState('')
   const [charCount, setCharCount] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
@@ -40,6 +41,7 @@ export default function Account() {
   const [notificationText, setNotificationText] = useState('')
   const [usernameErrorCode, setUsernameErrorCode] = useState(null)
   const storageKey = 'ruins-auth'
+  const router = useRouter()
 
   const [myForm, setMyForm] = useState({
     cover: '',
@@ -94,7 +96,7 @@ export default function Account() {
     }
   }
 
-  const updateError = () => {
+  const updateError = (code) => {
     let initErrors = {
       hasErrors: false,
       name: '',
@@ -111,7 +113,7 @@ export default function Account() {
         hasErrors: true,
         username: 'Cannot be blank',
       }
-    } else if (usernameErrorCode === 1) {
+    } else if (code === 1) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
@@ -137,7 +139,7 @@ export default function Account() {
           name: nameZod.error.issues[0].message,
         }
       }
-    }
+    } 
 
     if (myForm.email) {
       const emailZod = schemaEmail.safeParse(myForm.email)
@@ -169,24 +171,47 @@ export default function Account() {
       })
 
       const result = await r.json()
-      if(result.success){
+      if (result.success) {
+        const data = result.data[0]
         const str = localStorage.getItem(storageKey)
-        const data = JSON.parse(str)
-        
+        const storageData = JSON.parse(str)
+        try {
+          storageData.username = data.username
+          storageData.name = data.name
+          storageData.aboutMe = data.about_me
+          storageData.profileUrl = data.profile_pic_url
+          storageData.coverUrl = data.cover_pic_url
+          storageData.googleLogin = data.google_login
+          storageData.googlePhoto = data.google_photo
+          storageData.showContactInfo = data.allow_contact_info_visibility
+          storageData.fbLink = data.facebook_link
+          storageData.ytLink = data.youtube_link
+          storageData.igLink = data.instagram_link
+          storageData.gmailLink = data.gmail_link
+
+          localStorage.setItem(storageKey, JSON.stringify(storageData))
+          return result.success
+        } catch (ex) {
+          console.log('Something happened while updating the local storage', ex)
+        }
+      } else {
+        updateError(result.code)
       }
-      return result.success
     } catch (ex) {
       console.log(ex)
     }
   }
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
     const errorResult = updateError()
     if (errorResult) {
-      const isSuccessful = editAPI()
+      const isSuccessful = await editAPI()
       if (isSuccessful) {
+        setUpdate(!update)
+        updateFormInfo()
         setNotificationText('Edit successfully')
         setShowGreenNotification(true)
+        // router.push()
       } else {
         setNotificationText('Edit unsuccessful')
         setShowRedNotification(true)
@@ -224,7 +249,7 @@ export default function Account() {
 
   useEffect(() => {
     updateFormInfo()
-  }, [])
+  }, [auth])
 
   return (
     <>
@@ -259,8 +284,9 @@ export default function Account() {
             <div
               className="bg-cover bg-center absolute inset-0"
               style={{
-                backgroundImage: `url(${coverPreview ? coverPreview : (auth.coverUrl ? `${IMG_SERVER}/${auth.coverUrl}` : home2.src)})`,
+                backgroundImage: `url(${coverPreview ? coverPreview : auth.coverUrl ? `${IMG_SERVER}/${auth.coverUrl}` : home2.src})`,
                 width: '100%',
+                height: 'auto',
               }}
             ></div>
           </div>
@@ -277,11 +303,11 @@ export default function Account() {
               onClick={() => {
                 avatarInputRef.current.click()
               }}
-              className="relative rounded-full"
+              className="relative rounded-full max-h-[110px] min-w-[110px] overflow-hidden flex justify-center items-center"
             >
               <Image
                 priority
-                className={`${avatarPreview ? 'object-cover max-h-[110px] min-h-[110px]' : ''} min-w-[110px] rounded-full hover:border`}
+                className={`${avatarPreview ? 'max-h-[110px] min-h-[110px]' : ''} min-w-[110px] rounded-full hover:border`}
                 alt=""
                 width={110}
                 height={110}
