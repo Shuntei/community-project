@@ -11,7 +11,7 @@ const io = new SocketIOServer(server, {
 
 app.use(express.json());
 
-import db from './utils/mysql2_connect.js';
+import db from './utils/tyler/mysql2_connect.js';
 import cors from "cors";
 const corsOptions = {
   credentials: true,
@@ -149,7 +149,7 @@ io.on('connection', socket => {
   socket.on('join-room', handleJoinVideoRoom)
 })
 
-let port = process.env.WEB_PORT || 3010
+let port = process.env.WEB_PORT || 3306
 
 server.listen(port, () => {
   console.log(`正在連線伺服器 ${port}`)
