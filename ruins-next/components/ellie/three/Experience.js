@@ -1,3 +1,4 @@
+import React,{ useState, useRef, useEffect } from 'react'
 import React, { useState, useRef } from 'react'
 import React, { useState, useRef } from 'react'
 import { Box, OrbitControls } from '@react-three/drei'
@@ -10,6 +11,13 @@ export default function Experience() {
   const [hover, setHover] = useState(false)
   const cube = useRef()
   const jump = () => {
+    cube.current.applyImpulse({ x:0, y:7, z:0 });
+  };
+  useEffect(() => {
+    // 在客戶端渲染時初始化相關功能
+    // 例如：設置事件監聽器，初始化動畫，等等
+  }, []);
+  
     cube.current.applyImpulse({ x: 0, y: 7, z: 0 })
   }
 
