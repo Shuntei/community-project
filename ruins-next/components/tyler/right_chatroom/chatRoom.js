@@ -5,7 +5,7 @@ import { socket } from "@/src/socket";
 import { RiCloseFill, RiGift2Line, RiMoneyDollarCircleFill, RiPushpinFill, RiReplyFill, RiSpam3Line, RiStoreLine, RiUser3Fill, RiUserFill } from "@remixicon/react";
 import Image from 'next/image';
 import { useEffect, useRef, useState } from "react";
-import { API_SERVER } from "../config/api-path";
+import { API_SERVER } from "@/components/config/api-path";
 import styles from './chatRoom.module.css';
 
 export default function ChatRoom({ isConnected, comment, setComment }) {
