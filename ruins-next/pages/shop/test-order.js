@@ -1,21 +1,21 @@
-import Image from "next/image";
-import React from "react";
-import Process3 from "@/components/common/process3";
-import Link from "next/link";
-import Navbar from "@/components/linda/navbar/navbar";
-import Footer from "@/components/linda/footer/footer";
+import Image from 'next/image'
+import React from 'react'
+import Process3 from '@/components/common/process3'
+import Link from 'next/link'
+import Navbar from '@/components/linda/navbar/navbar'
+import Footer from '@/components/linda/footer/footer'
 export default function Order() {
   return (
     <>
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28">
         {/* header開始 */}
-        <Navbar navColor={""} />
+        <Navbar navColor={''} />
         {/* header結束 */}
 
         <div className="md:w-10/12  w-full flex  flex-col justify-center items-center bg-gradient-to-t from-gray-400 to-gray-100 md:px-24 px-4 py-5 mb-5">
-          {" "}
+          {' '}
           {/* 進度條開始 */}
-          <Process3 name1={"購物車　"} name2={"填寫資料"} name3={"確認訂單"} />
+          <Process3 name1={'購物車　'} name2={'填寫資料'} name3={'確認訂單'} />
           {/* 進度條結束 */}
           {/* 內頁開始 */}
           <div className="md:w-9/12 w-full md:p-10 p-3 m-10 flex flex-col bg-white items-center space-y-12">
@@ -38,7 +38,7 @@ export default function Order() {
                 </div>
                 <div className="text-black text-[15px] font-normal font-['IBM Plex Mono']">
                   訂單日期:2024-04-24 13:48
-                </div>{" "}
+                </div>{' '}
                 <div className=" text-black text-[15px] font-normal font-['IBM Plex Mono']">
                   物流方式:7-11店到店
                 </div>
@@ -84,5 +84,5 @@ export default function Order() {
         {/* FOOTER結束 */}
       </div>
     </>
-  );
+  )
 }

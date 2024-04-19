@@ -31,7 +31,7 @@ export default function ConfirmDoc() {
   }
 
   // 取得訂單詳細商品
-  const getdetailPO = async () => {
+  const getdetailPo = async () => {
     const poid = router.query.poid || ''
     // console.log(poid)
 
@@ -107,7 +107,7 @@ export default function ConfirmDoc() {
 
   useEffect(() => {
     getPurchaseOrder()
-    getdetailPO()
+    getdetailPo()
   }, [router.query.poid])
 
   return (
