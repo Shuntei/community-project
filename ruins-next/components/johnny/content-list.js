@@ -32,12 +32,12 @@ export default function MainContent() {
   const { removeBox, setRemoveBox } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
 
-  useEffect(() => {
-    allPostsShow()
+  // useEffect(() => {
+  //   allPostsShow()
 
-    // 發送後會設成true用於重整,這裡設回false
-    setRender(false)
-  }, [render])
+  //   // 發送(刪除)後會設成true用於重整,這裡設回false
+  //   setRender(false)
+  // }, [render])
 
   const handlePush = (postId) => {
     // router.push(`/community/main-post?postId=${postId}`);

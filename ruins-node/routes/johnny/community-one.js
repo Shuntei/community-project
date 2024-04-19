@@ -86,25 +86,32 @@ router.get("/posts/:post_id?", async (req, res) => {
   // const post_id = +req.params.post_id;
   let postId = +req.query.postId || 0;
   // console.log("postId_log:", postId);
-
+  let keyword = req.query.searchTerm || "";
+  console.log(keyword);
   if (!postId) {
     // 這裡是主頁所有文章
     let page = +req.query.page || 1;
     // console.log(page);
-    // let keyword = req.query.keyword || "";
+
     let where = " WHERE 1 ";
 
-    // if (keyword) {
-    //   const keywordEsc = db.escape("%" + keyword + "%");
-    //   where += AND
-    // }
+    if (keyword) {
+      const keywordEsc = db.escape("%" + keyword + "%");
+      console.log(keywordEsc);
+      where += ` AND ( 
+        p.title LIKE ${keywordEsc} 
+        OR
+        p.content LIKE ${keywordEsc} 
+      ) `;
+      // WHERE 1  AND ( p.content LIKE '%再%' )
+    }
 
     if (page < 1) {
       return { success: false, redirect: "?page=1" };
     }
 
     const perPage = 10;
-    const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts ${where}`;
+    const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts WHERE 1`;
     // console.log(t_sql);
     const [[{ totalRows }]] = await db.query(t_sql);
     // console.log(totalRows);
@@ -126,14 +133,15 @@ router.get("/posts/:post_id?", async (req, res) => {
     // const totalPostsSql = ` SELECT * FROM sn_posts ${where}
     // ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
 
-    // 加入留言統計後sql
+    // 加入留言統計後sql & 搜尋
     const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
     LEFT JOIN ( SELECT post_id, 
     COUNT(comment_id) AS comment_count 
     FROM  sn_comments 
-    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id ${where}
     ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
+    console.log(totalPostsSql);
     // console.log(req.query);
 
     res.json({
@@ -168,13 +176,7 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
 
     // 這裡是主頁所有文章
     // console.log(page);
-    // let keyword = req.query.keyword || "";
     let where = "  WHERE post_type = 'yours' ";
-
-    // if (keyword) {
-    //   const keywordEsc = db.escape("%" + keyword + "%");
-    //   where += AND
-    // }
 
     if (page < 1) {
       return { success: false, redirect: "?page=1" };
@@ -184,7 +186,7 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
     const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts ${where}`;
     // console.log(t_sql);
     const [[{ totalRows }]] = await db.query(t_sql);
-    // console.log("totalRows:", totalRows);
+    // console.log("totalRows:/", totalRows);
 
     let totalPostsRows = [];
     let totalPages = 0;

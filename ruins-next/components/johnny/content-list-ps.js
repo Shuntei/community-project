@@ -13,10 +13,10 @@ import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST, SN_POSTS, SN_PSPOSTS } from './config/api-path'
+import { SN_DELETE_POST, SN_PSPOSTS } from './config/api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
-import toast, { Toaster } from 'react-hot-toast'
+import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 
 export default function PersonalContent() {
@@ -122,31 +122,32 @@ export default function PersonalContent() {
           >
             <RiArrowLeftDoubleLine />
           </span>
-          {Array(10)
-            .fill(1)
-            .map((v, i) => {
-              const p = psPosts.page - 5 + i
-              // const p = i;
-              if (p < 1 || p > psPosts.totalPages) return null
-              return (
-                <li key={p}>
-                  <span
-                    // href={`?page=${p}`}
-                    onClick={() => {
-                      router.push({
-                        pathname: '/community/main-personal',
-                        query: { page: `${p}` },
-                      })
-                    }}
-                    className={`border-s-2 px-5 flex py-3 hover:hover1 cursor-pointer
+          {psPosts &&
+            Array(10)
+              .fill(1)
+              .map((v, i) => {
+                const p = psPosts.page - 5 + i
+                // const p = i;
+                if (p < 1 || p > psPosts.totalPages) return null
+                return (
+                  <li key={p}>
+                    <span
+                      // href={`?page=${p}`}
+                      onClick={() => {
+                        router.push({
+                          pathname: '/community/main-personal',
+                          query: { page: `${p}` },
+                        })
+                      }}
+                      className={`border-s-2 px-5 flex py-3 hover:hover1 cursor-pointer
                      active:bg-white ${p === psPosts.page ? 'bg-white' : ''} `}
-                    // onClick={() => handlePsPage(router.query.page)} 已在useEffect依賴
-                  >
-                    {p}
-                  </span>
-                </li>
-              )
-            })}
+                      // onClick={() => handlePsPage(router.query.page)} 已在useEffect依賴
+                    >
+                      {p}
+                    </span>
+                  </li>
+                )
+              })}
           <span
             className="border-x-2 px-3 py-3 flex items-center hover:hover1"
             onClick={() => {
