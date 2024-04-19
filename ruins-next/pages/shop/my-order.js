@@ -53,16 +53,16 @@ export default function MyOrder() {
                 </div>
                 <div className="w-full flex justify-between">
                   <div className="flex gap-5">
-                    <div className="py-2 px-7 bg-white border border-black justify-center items-center flex absolute bottom-11 md:static">
-                      <div className="text-black text-xs  font-['Noto Sans TC']">
+                    <button className="py-2 px-7 bg-white border border-black justify-center items-center flex absolute bottom-11 md:static hover:bg-black hover:border-white group">
+                      <div className="text-black group-hover:text-white text-xs  font-['Noto Sans TC']">
                         評價商品
                       </div>
-                    </div>
-                    <div className=" py-2 px-7 bg-black border border-black justify-center items-center flex absolute bottom-0 md:static">
+                    </button>
+                    <button className=" py-2 px-7 bg-black border border-black justify-center items-center flex absolute bottom-0 md:static hover:bg-neutral-500 hover:border-white">
                       <div className="text-white text-xs  font-['Noto Sans TC']">
                         再買一次
                       </div>
-                    </div>
+                    </button>
                   </div>
                   <div className="text-white text-base font-['IBM Plex Mono']">
                     $ 1,998
@@ -71,89 +71,9 @@ export default function MyOrder() {
               </div>
             </div>
             {/* 一個內容 */}
-            <div className="w-full flex justify-between md:gap-12 gap-5 relative h-[220px] md:h-fit">
-              <div className="md:w-1/12 w-1/4">
-                <Image
-                  src="/images/camp.jpg"
-                  alt="Picture of camp"
-                  width={200}
-                  height={200}
-                  className="aspect-square rounded"
-                />
-              </div>
-              <div className="md:w-11/12 w-3/4 flex flex-col gap-3">
-                <div className="w-full flex justify-between">
-                  <div className="text-white text-base font-['Noto Sans TC']">
-                    天幕帳專用營柱
-                  </div>
-                  <div className="text-zinc-300 text-xs font-['Noto Sans TC']">
-                    已完成
-                  </div>
-                </div>
-                <div className="w-full text-right text-white text-xs  font-['IBM Plex Mono']">
-                  x1
-                </div>
-                <div className="w-full flex justify-between">
-                  <div className="flex gap-5">
-                    <div className="py-2 px-7 bg-white border border-black justify-center items-center flex absolute bottom-11 md:static">
-                      <div className="text-black text-xs  font-['Noto Sans TC']">
-                        評價商品
-                      </div>
-                    </div>
-                    <div className=" py-2 px-7 bg-black border border-black justify-center items-center flex absolute bottom-0 md:static">
-                      <div className="text-white text-xs  font-['Noto Sans TC']">
-                        再買一次
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-white text-base font-['IBM Plex Mono']">
-                    $ 1,998
-                  </div>
-                </div>
-              </div>
-            </div>
+
             {/* 一個內容 */}
-            <div className="w-full flex justify-between md:gap-12 gap-5 relative h-[220px] md:h-fit">
-              <div className="md:w-1/12 w-1/4">
-                <Image
-                  src="/images/camp.jpg"
-                  alt="Picture of camp"
-                  width={200}
-                  height={200}
-                  className="aspect-square rounded"
-                />
-              </div>
-              <div className="md:w-11/12 w-3/4 flex flex-col gap-3">
-                <div className="w-full flex justify-between">
-                  <div className="text-white text-base font-['Noto Sans TC']">
-                    天幕帳專用營柱
-                  </div>
-                  <div className="text-zinc-300 text-xs font-['Noto Sans TC']">
-                    已完成
-                  </div>
-                </div>
-                <div className="w-full text-right text-white text-xs  font-['IBM Plex Mono']">
-                  x1
-                </div>
-                <div className="w-full flex justify-between">
-                  <div className="flex gap-5">
-                    <div className="py-2 px-7 bg-white border border-black justify-center items-center flex absolute bottom-11 md:static">
-                      <div className="text-black text-xs  font-['Noto Sans TC']">
-                        評價商品
-                      </div>
-                    </div>
-                    <div className=" py-2 px-7 bg-black border border-black justify-center items-center flex absolute bottom-0 md:static">
-                      <div className="text-white text-xs  font-['Noto Sans TC']">
-                        再買一次
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-white text-base font-['IBM Plex Mono']">
-                    $ 1,998
-                  </div>
-                </div>
-              </div>
-            </div>
+
           </div>
         </div>
 

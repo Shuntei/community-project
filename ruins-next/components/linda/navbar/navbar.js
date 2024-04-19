@@ -37,8 +37,8 @@ export default function Navbar({ className, navColor = 'white' }) {
         } relative select-none`}
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
-          <div className="flex cursor-pointer md:justify-start gap-[15px]">
-            <div onClick={toggleNav} className="pt-[2px]">
+          <div className="flex md:justify-start select-none gap-[15px]">
+            <div onClick={toggleNav} className="pt-[2px] cursor-pointer">
               <div
                 id="nav-icon4"
                 className="md:w-[30px] w-[23px] h-auto absolute"
@@ -61,9 +61,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                 ></div>
               </div>
             </div>
-            <Link href="#" className="md:block hidden text-[15px] pl-[40px]">
-              MAIN
-            </Link>
+            <span className="md:block hidden text-[15px] pl-[40px]">MAIN</span>
           </div>
         </div>
         <Link
@@ -135,16 +133,16 @@ export default function Navbar({ className, navColor = 'white' }) {
         <div
           className={`${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
-          <a href="" className={`${styles['nav-cart-mobile']}`}>
-            <div>CART</div>
+          <div className={`${styles['nav-cart-mobile']}`}>
+          <CartModal />
 
             {navColor === 'white' ? (
               <Image alt="" src={CartLine} />
             ) : (
               <Image alt="" src={CartLineB} />
             )}
-            <div className={styles['cart-number']}>0</div>
-          </a>
+            <div className={styles['cart-number']}>{totalItems}</div>
+          </div>
           <button
             onClick={() => {
               setShowModal(!showModal)

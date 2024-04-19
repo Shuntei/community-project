@@ -7,7 +7,6 @@ const router = express.Router();
 const getListData = async (req, res) => {
   let page = +req.query.page || 1; //用戶要求查看第幾頁
   let where = " WHERE 1 "; //後面不確定有幾個搜尋條件
-  let qs = {}; //把querystring的設定傳給template
 
   // 關鍵字搜尋
   let keyword =
@@ -21,7 +20,7 @@ const getListData = async (req, res) => {
     req.query.main_category && typeof req.query.main_category === "string"
       ? req.query.main_category
       : "";
-      let categoryEsc = db.escape(`${main_category}`);
+  let categoryEsc = db.escape(`${main_category}`);
 
   // 副分類篩選
   let sub_category =
@@ -37,21 +36,17 @@ const getListData = async (req, res) => {
       : "";
 
   if (keyword) {
-    qs.keyword = keyword; // 如果有qs 就給keyword屬性，設定到keyword
     where += ` AND ( \`name\` LIKE ${keywordEsc})`;
   }
   if (main_category) {
-    qs.main_category = main_category;
     where += ` AND (category_id = ${categoryEsc})`;
   }
 
   if (sub_category) {
-    qs.sub_category = sub_category;
     where += ` AND (sub_category_id = ${sub_categoryEsc})`;
   }
 
   if (sortBy) {
-    qs.sortBy = sortBy;
     if (sortBy === "priceFromHighToLow") {
       where += ` ORDER BY \`price\` DESC `;
     } else if (sortBy === "priceFromLowToHigh") {
@@ -59,8 +54,8 @@ const getListData = async (req, res) => {
     } else if (sortBy === "latest") {
       where += ` ORDER BY \`create_at\` ASC `;
     }
-  }else{
-    where += ` ORDER BY \`pid\` DESC `;
+  } else {
+    where += ` ORDER BY \`create_at\` ASC `;
   }
 
   if (page < 1) {
@@ -90,7 +85,6 @@ const getListData = async (req, res) => {
     perPage,
     rows,
     query: req.query,
-    qs:qs,
   };
 };
 
@@ -112,5 +106,51 @@ router.get("/api/getProduct/:pid", async (req, res) => {
 
   res.json({ success: true, row });
 });
+
+//取得商品評價
+const getComment = async (req) => {
+  let pid = +req.params.pid
+  let where = ` WHERE 1 AND pid = ?`
+  let totalRows = 0
+  let rows = []
+
+  let output = {
+    success: false,
+    rows,
+    totalRows,
+    redirect: '',
+    info: '',
+  }
+
+  const t_sql = `SELECT COUNT(1) totalRows FROM ca_product_comment  ${where} `
+
+  ;[[{ totalRows }]] = await db.query(t_sql, [pid])
+
+  if (totalRows > 0) {
+    const sql = `SELECT * FROM ca_product_comment ${where}`
+    ;[rows] = await db.query(sql, [pid])
+    output = { ...output, success: true, rows, totalRows }
+  }
+
+  return output
+}
+router.get('/api/getProductComment/:pid', async (req, res) => {
+  res.json(await getComment(req))
+})
+
+// 相關商品區：取得 10 筆同類別商品 row.sub_category
+router.get('/api/relatedProducts', async (req, res) => {
+  const sub_category = +req.query.sub_category || 2
+  const pid = +req.query.pid || 1
+  const sql =
+    'SELECT * FROM `ca_products` WHERE `sub_category_id` = ? AND `pid` != ? LIMIT 10 '
+
+  const [rows] = await db.query(sql, [sub_category, pid])
+  if (!rows.length) {
+    return res.json({ success: false })
+  }
+
+  res.json({ success: true, rows })
+})
 
 export default router;

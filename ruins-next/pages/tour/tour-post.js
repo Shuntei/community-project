@@ -149,8 +149,9 @@ export default function TourPost() {
               <h2></h2>
             </div>
           </div>
-          <div>
-            <div className="w-full md:px-[60px] md:py-10 pt-5 pb-5 md:bg-black rounded-lg md:space-y-10 flex flex-col items-start">
+          <div className='w-full relative'>
+          <div className='sticky top-14'>
+            <div className=" w-full md:px-[60px] md:py-10 pt-5 pb-5 md:bg-black rounded-lg md:space-y-10 flex flex-col items-start">
               <div className="md:flex w-full justify-center hidden">
                 <button className="flex px-5 py-2.5 border border-gray-200 rounded-s-md">
                   <div className="flex-col">
@@ -185,6 +186,7 @@ export default function TourPost() {
               </div>
             </div>
             <hr className="md:hidden"/>
+          </div>
           </div>
         </div>
 

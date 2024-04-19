@@ -34,7 +34,8 @@ export default function Index() {
   }, [router])
   return (
     <>
-      <div className=" bg-gray-100 flex flex-col justify-center items-center w-full  pt-28">
+    {console.log(products.totalRows)}
+      <div className=" bg-gray-100 flex flex-col justify-center items-center w-full pt-8 md:pt-28">
         {/* header開始 */}
         <Navbar navColor={''} />
         {/* header結束 */}
@@ -68,10 +69,10 @@ export default function Index() {
           {/* 搜尋與排序欄結束 */}
           {/* 商品欄開始 */}
 
-          <div className="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4">
+          <div className="grid md:grid-cols-4  grid-cols-2 md:gap-[36px]  gap-[20px] w-full  justify-between md:px-24 px-4 ">
             <Link
               href="/shop/product/1"
-              className=" flex-col md:row-span-2 md:col-span-2 gap-5 flex"
+              className=" flex-col md:row-span-2 md:col-span-2 gap-5 flex transition duration-200 hover:scale-105 hover:skew-y-2"
             >
               <img
                 className="w-full aspect-square  rounded-xl"
@@ -87,7 +88,6 @@ export default function Index() {
                 </div>
               </div>
             </Link>
-
             <Items />
           </div>
           {/* 商品欄結束 */}

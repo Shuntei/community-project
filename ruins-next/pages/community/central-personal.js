@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import 'tailwindcss/tailwind.css'
 import { RiSettings3Fill, RiEqualizerLine, RiAddLine } from '@remixicon/react'
 import PostModal from '@/components/johnny/modal-post'
+import EditPostModal from '@/pages/community/edit/[postId]'
 import PersonalBackground from '@/components/johnny/ps-background'
 import Profile from '@/components/johnny/ps-profile'
 import SeeMoreFollows from '@/components/johnny/seemore-follows'
@@ -10,8 +11,14 @@ import { useToggles } from '@/contexts/use-toggles'
 import PersonalContent from '@/components/johnny/content-list-ps'
 
 export default function CentralContentP() {
-  const { postModal, setPostModal, toggles, removeBox, setRemoveBox } =
-    useToggles()
+  const {
+    postModal,
+    setPostModal,
+    editModal,
+    toggles,
+    removeBox,
+    setRemoveBox,
+  } = useToggles()
 
   return (
     <>
@@ -37,6 +44,7 @@ export default function CentralContentP() {
             </button>
           </div>
           {postModal && <PostModal />}
+          {/* {editModal && <EditPostModal />} */}
           {/* <!-- 貼文列表 --> */}
           {toggles.follows || toggles.notification ? (
             ''

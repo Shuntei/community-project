@@ -1,9 +1,8 @@
-import express, { query } from "express";
+import express from "express";
 import cors from "cors";
 import db from "../../utils/johnny/mysql2-connect.js";
 import uploadImgs from "../../utils/johnny/upload-imgs.js";
 import bodyParser from "body-parser";
-import multer from "multer";
 
 const router = express.Router();
 
@@ -46,18 +45,31 @@ router.get("/boards/:board_id?", async (req, res) => {
     }
   }
 
-  const selectedBdPosts = `SELECT * FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id = ? ORDER BY p.post_id DESC LIMIT ${
-    (page - 1) * perPage
-  }, ${perPage} `;
+  // 評論數量前SQL
+  // const selectedBdPosts = `SELECT * FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id = ? ORDER BY p.post_id DESC LIMIT ${
+  //   (page - 1) * perPage
+  // }, ${perPage} `;
+  // 評論數量後SQL
+  const selectedBdPosts = `SELECT p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count
+    FROM sn_public_boards AS b 
+    JOIN sn_posts AS p USING(board_id) 
+    LEFT JOIN 
+        ( SELECT post_id, COUNT(comment_id) AS comment_count FROM sn_comments GROUP BY post_id)
+        AS comment_counts ON p.post_id = comment_counts.post_id
+    WHERE b.board_id = ? 
+    ORDER BY p.post_id DESC 
+    LIMIT ${(page - 1) * perPage}, ${perPage}`;
   // const selectedBdPosts = `SELECT * FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id = ? ORDER BY p.post_id DESC`;
 
   const [selectedBdPostsRows] = await db.query(selectedBdPosts, [board_id]);
-  console.log(selectedBdPostsRows);
+  // console.log(selectedBdPostsRows);
   if (selectedBdPostsRows.length === 0) {
     // return { success: false, error: "Posts not found(Backend Msg)" };
     return res.json({
       success: true,
-      selectedBdPostsRows: [{ title: "無任何貼文" }],
+      page: 1,
+      totalPages: 1,
+      selectedBdPostsRows: [{ title: "無任何貼文", comment_count: 0 }],
     });
   }
 
@@ -70,96 +82,43 @@ router.get("/boards/:board_id?", async (req, res) => {
   });
 });
 
-// 初始寫法
-// router.get("/posts/:post_id?", async (req, res) => {
-//   const post_id = +req.params.post_id;
-
-//   if (!post_id) {
-//     let page = +req.query.page || 1;
-//     // console.log(page);
-//     // let keyword = req.query.keyword || "";
-//     let where = " WHERE 1 ";
-
-//     // if (keyword) {
-//     //   const keywordEsc = db.escape("%" + keyword + "%");
-//     //   where += AND
-//     // }
-
-//     if (page < 1) {
-//       return { success: false, redirect: "?page=1" };
-//     }
-
-//     const perPage = 10;
-//     const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts ${where}`;
-//     // console.log(t_sql);
-//     const [[{ totalRows }]] = await db.query(t_sql);
-//     // console.log(totalRows);
-
-//     let totalPostsRows = [];
-//     let totalPages = 0;
-
-//     if (totalRows) {
-//       totalPages = Math.ceil(totalRows / perPage);
-//       if (page > totalPages) {
-//         const newQuery = { ...req.query, page: totalPages };
-//         const qs = new URLSearchParams(newQuery).toString();
-//         return { success: false, redirect: `?` + qs };
-//       }
-//     }
-
-//     const totalPostsSql = ` SELECT * FROM sn_posts ${where} ORDER BY post_id DESC LIMIT ${
-//       (page - 1) * perPage
-//     }, ${perPage}`;
-//     [totalPostsRows] = await db.query(totalPostsSql);
-
-//     console.log(req.query);
-
-//     res.json({
-//       success: true,
-//       totalPages,
-//       totalRows,
-//       page,
-//       perPage,
-//       totalPostsRows,
-//       query: req.query,
-//     });
-
-//     return;
-//   }
-//   const chosenPostSql = " SELECT * FROM sn_posts WHERE post_id=? ";
-//   const [chosenPost] = await db.query(chosenPostSql, [post_id]);
-//   res.json(chosenPost);
-// });
-
 router.get("/posts/:post_id?", async (req, res) => {
   // const post_id = +req.params.post_id;
   let postId = +req.query.postId || 0;
   // console.log("postId_log:", postId);
-
+  let keyword = req.query.searchTerm || "";
+  console.log(keyword);
   if (!postId) {
+    // 這裡是主頁所有文章
     let page = +req.query.page || 1;
     // console.log(page);
-    // let keyword = req.query.keyword || "";
+
     let where = " WHERE 1 ";
 
-    // if (keyword) {
-    //   const keywordEsc = db.escape("%" + keyword + "%");
-    //   where += AND
-    // }
+    if (keyword) {
+      const keywordEsc = db.escape("%" + keyword + "%");
+      console.log(keywordEsc);
+      where += ` AND ( 
+        p.title LIKE ${keywordEsc} 
+        OR
+        p.content LIKE ${keywordEsc} 
+      ) `;
+      // WHERE 1  AND ( p.content LIKE '%再%' )
+    }
 
     if (page < 1) {
       return { success: false, redirect: "?page=1" };
     }
 
     const perPage = 10;
-    const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts ${where}`;
+    const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts WHERE 1`;
     // console.log(t_sql);
     const [[{ totalRows }]] = await db.query(t_sql);
     // console.log(totalRows);
 
     let totalPostsRows = [];
     let totalPages = 0;
-    
+
     if (totalRows) {
       totalPages = Math.ceil(totalRows / perPage);
       if (page > totalPages) {
@@ -170,10 +129,19 @@ router.get("/posts/:post_id?", async (req, res) => {
       }
     }
 
-    const totalPostsSql = ` SELECT * FROM sn_posts ${where} 
-    ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
-    [totalPostsRows] = await db.query(totalPostsSql);
+    // 加入留言統計前sql
+    // const totalPostsSql = ` SELECT * FROM sn_posts ${where}
+    // ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
 
+    // 加入留言統計後sql & 搜尋
+    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
+    LEFT JOIN ( SELECT post_id, 
+    COUNT(comment_id) AS comment_count 
+    FROM  sn_comments 
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id ${where}
+    ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+    [totalPostsRows] = await db.query(totalPostsSql);
+    console.log(totalPostsSql);
     // console.log(req.query);
 
     res.json({
@@ -190,9 +158,83 @@ router.get("/posts/:post_id?", async (req, res) => {
     return;
   }
 
+  // 這裡是選擇單篇文章
   const chosenPostSql = " SELECT * FROM sn_posts WHERE post_id=? ";
   const [chosenPost] = await db.query(chosenPostSql, [postId]);
   // console.log(postId);
+  // console.log("chosenPost", chosenPost);
+  res.json(chosenPost);
+});
+
+router.get("/personal/posts/:post_id?", async (req, res) => {
+  // const post_id = +req.params.post_id;
+  let postId = +req.query.postId || 0;
+  // console.log("postId_log:", postId);
+
+  if (!postId) {
+    let page = +req.query.page || 1;
+
+    // 這裡是主頁所有文章
+    // console.log(page);
+    let where = "  WHERE post_type = 'yours' ";
+
+    if (page < 1) {
+      return { success: false, redirect: "?page=1" };
+    }
+
+    const perPage = 3;
+    const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts ${where}`;
+    // console.log(t_sql);
+    const [[{ totalRows }]] = await db.query(t_sql);
+    // console.log("totalRows:/", totalRows);
+
+    let totalPostsRows = [];
+    let totalPages = 0;
+
+    if (totalRows) {
+      totalPages = Math.ceil(totalRows / perPage);
+      if (page > totalPages) {
+        const newQuery = { ...req.query, page: totalPages };
+        const qs = new URLSearchParams(newQuery).toString();
+        console.log("qs--", qs);
+        return { success: false, redirect: `?` + qs };
+      }
+    }
+
+    // 加入留言統計前sql
+    // const totalPostsSql = ` SELECT * FROM sn_posts ${where}
+    // ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+    // [totalPostsRows] = await db.query(totalPostsSql);
+
+    // 加入留言統計後sql
+    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
+    LEFT JOIN ( SELECT post_id, 
+    COUNT(comment_id) AS comment_count 
+    FROM  sn_comments 
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id WHERE p.post_type = 'yours'
+    ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+    [totalPostsRows] = await db.query(totalPostsSql);
+
+    // console.log(req.query);
+    res.json({
+      success: true,
+      totalPages,
+      totalRows,
+      page,
+      perPage,
+      totalPostsRows,
+      query: req.query,
+      images: req.files,
+    });
+
+    return;
+  }
+
+  // 這裡是選擇單篇文章
+  const chosenPostSql = " SELECT * FROM sn_posts WHERE post_id=? ";
+  const [chosenPost] = await db.query(chosenPostSql, [postId]);
+  // console.log(postId);
+  // console.log("chosenPost", chosenPost);
   res.json(chosenPost);
 });
 
@@ -224,11 +266,11 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
       ]);
     }
     if (req.file) {
-      console.log("來到圖片區但是沒有圖片");
-      const newFilePath =
-        "http://localhost:3005/johnny/" + req.file.path.slice(21);
+      // console.log("來到圖片區但是沒有圖片");
+      const newFilePath = req.file.path.slice(21);
+      // "http://localhost:3001/community/" + req.file.path.slice(21);
       console.log("newFilePath", newFilePath);
-      // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
+      // http://localhost:3001/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
       const sql =
         "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `image_url`, `board_id`) VALUES ( ?, ?, ?, ?, ?)";
@@ -277,9 +319,5 @@ router.delete("/:post_id", async (req, res) => {
 //   // console.log(req.files);
 //   res.json(req.files);
 // });
-router.post("/try-uploads", uploadImgs.single("photo"), (req, res) => {
-  console.log(req.file);
-  res.json(req.file);
-});
 
 export default router;
