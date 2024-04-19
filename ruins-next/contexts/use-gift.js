@@ -94,7 +94,6 @@ export function GiftContextProvider({ children }) {
       return;
     }
     setIsAnimating(true);
-    console.log(`第一次${isAnimating}`);
     setGiftRain([]);
 
     const createGiftArray = Array.from({ length: 30 }).map((_, i) => ({
