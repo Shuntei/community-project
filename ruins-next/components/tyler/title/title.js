@@ -1,4 +1,4 @@
-import { RiArrowDownSLine, RiArrowUpSLine, RiArrowRightSLine } from "@remixicon/react";
+import { RiArrowDownSLine, RiArrowRightSLine } from "@remixicon/react";
 import { useState } from 'react';
 import styles from './title.module.css';
 
