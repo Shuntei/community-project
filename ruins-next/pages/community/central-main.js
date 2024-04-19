@@ -11,7 +11,7 @@ import { useRouter } from 'next/router'
 
 export default function CentralContent() {
   const { toggles } = useToggles()
-  const { render, setRender, allPostsShow, setPostsLists } = useBoards()
+  const { render, setRender, postsShow, setPostsLists } = useBoards()
   const [sortBy, setSortBy] = useState('time')
   const [searchTerm, setSearchTerm] = useState('')
   // const [searchRender, setSearchTermRender] = useState(false)
@@ -41,27 +41,11 @@ export default function CentralContent() {
   }
 
   useEffect(() => {
-    allPostsShow()
+    postsShow()
 
     // 發送後(刪除)會設成true用於重整,這裡設回false
     setRender(false)
   }, [render])
-
-  // // 刪除還沒做好
-  // useEffect(() => {
-  //   // 初始化allPostsShow()
-  //   if (!render) {
-  //     allPostsShow()
-  //     setRender(true)
-  //   }
-  // }, [render, allPostsShow])
-
-  // useEffect(() => {
-  //   // 確保submitHandler觸發在allPostsShow()之後
-  //   if (render) {
-  //     submitHandler()
-  //   }
-  // }, [render]) // 只在initialized改變時觸發
 
   return (
     <>
@@ -79,8 +63,6 @@ export default function CentralContent() {
                 name="form1"
                 className="flex justify-center items-center py-2"
               >
-                {/* <div className=" pc:px-2 pc:fs-4 hidden">SORT BY</div> */}
-                {/* <RiEqualizerLine /> */}
                 <select
                   className="mx-3 border-white border-4 rounded-[8px] flex cursor-pointer"
                   value={sortBy}

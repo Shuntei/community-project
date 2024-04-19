@@ -28,10 +28,10 @@ export default function BoardsContextProvider({ children }) {
   }
 
   // 初始載入posts, 預設第一頁用於點全部按鈕
-  const allPostsShow = async () => {
+  const postsShow = async () => {
     // currentPage是?page=哪一頁
     try {
-      const r = await fetch(`${SN_POSTS}`)
+      const r = await fetch(`${SN_POSTS}${location.search}`)
       const data = await r.json()
       setPostsLists(data)
     } catch (err) {
@@ -39,15 +39,16 @@ export default function BoardsContextProvider({ children }) {
     }
   }
 
-  const handlePage = async (p) => {
-    try {
-      const r = await fetch(`${SN_POSTS}?page=${p}`)
-      const data = await r.json()
-      setPostsLists(data)
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  // const handlePage = async (p) => {
+  //   try {
+  //     // const r = await fetch(`${SN_POSTS}?page=${p}`)
+  //     const r = await fetch(`${SN_POSTS}${location.search}`)
+  //     const data = await r.json()
+  //     setPostsLists(data)
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
   const handlePostId = async (postId) => {
     try {
@@ -113,11 +114,11 @@ export default function BoardsContextProvider({ children }) {
         setSelectedPosts,
         postsList,
         setPostsLists,
-        allPostsShow,
+        postsShow,
         getPost,
         setGetPost,
         handlePostId,
-        handlePage,
+        // handlePage,
         handleBdPosts,
         handleBdPostsPage,
         render,

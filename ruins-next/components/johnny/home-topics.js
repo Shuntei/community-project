@@ -5,12 +5,14 @@ import { SN_BOARDS } from './config/api-path'
 import { useRouter } from 'next/router'
 
 export default function Topics() {
+  const router = useRouter()
+
   const {
     boards,
     setBoards,
     setPostsLists,
     setSelectedPosts,
-    allPostsShow,
+    postsShow,
     handleBdPosts,
   } = useBoards()
 
@@ -34,7 +36,7 @@ export default function Topics() {
         <ul>
           <li
             className=" text-white px-10 py-3 flex cursor-pointer duration-200 hover:text-2xl"
-            onClick={() => allPostsShow()}
+            onClick={() => postsShow()}
           >
             全部
             <RiArrowDropDownLine />

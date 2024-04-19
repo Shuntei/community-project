@@ -7,10 +7,10 @@ import GirlController from '../character/GirlController'
 
 export default function Experience() {
   const [hover, setHover] = useState(false)
-  const cube = useRef()
-  const jump = () => {
-    cube.curre
-  }
+  // const cube = useRef()
+  // const jump = () => {
+  //   cube.curre
+  // }
 
   return (
     <>
@@ -35,9 +35,9 @@ export default function Experience() {
           <Box
             onPointerEnter={() => setHover(true)}
             onPointerLeave={() => setHover(false)}
-            onClick={jump}
+            // onClick={jump}
           >
-            <meshStandardMaterial color={hovered ? 'hotpink' : 'royalblue'} />
+            {/* <meshStandardMaterial color={hovered ? 'hotpink' : 'royalblue'} /> */}
           </Box>
         </RigidBody>
         <GirlController onPointerEnter={() => setHover(true)} />

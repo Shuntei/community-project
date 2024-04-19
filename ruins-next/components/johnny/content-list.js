@@ -22,21 +22,22 @@ export default function MainContent() {
   const {
     postsList,
     selectedPosts,
-    allPostsShow,
+    postsShow,
     handlePostId,
-    handlePage,
+    // handlePage,
     handleBdPostsPage,
     render,
     setRender,
   } = useBoards()
 
   const router = useRouter()
+  // const query = { ...router.query, page: p }
 
   const { removeBox, setRemoveBox } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
 
   // useEffect(() => {
-  //   allPostsShow()
+  //   postsShow()
 
   //   // 發送(刪除)後會設成true用於重整,這裡設回false
   //   setRender(false)
@@ -83,17 +84,22 @@ export default function MainContent() {
     })
   }
 
+  useEffect(() => {
+    // handlePage()
+    postsShow()
+  }, [router.query])
+
   return (
     <>
       {postsList ? (
         <ul className="bg-neutral-300 flex justify-center mt-[90px] text-xl">
           <Link
             className="border-s-2 px-3 py-3 flex items-center hover:hover1"
-            onClick={() => handlePage(1)}
-            // href={`?page=${1}`}
+            // onClick={() => handlePage(1)}
+            onClick={postsShow}
             href={{
               pathname: '/community/main-page',
-              query: `page=${1}`,
+              query: { ...router.query, page: `${1}` },
             }}
           >
             <RiArrowLeftDoubleLine />
@@ -107,8 +113,13 @@ export default function MainContent() {
               return (
                 <li key={p}>
                   <Link
-                    href={`?page=${p}`}
-                    onClick={() => handlePage(p)}
+                    // href={`?page=${p}`}
+                    href={{
+                      pathname: '/community/main-page',
+                      query: { ...router.query, page: `${p}` },
+                    }}
+                    // onClick={() => handlePage(p)}
+                    onClick={postsShow}
                     className={`border-s-2 px-5 flex py-3 hover:hover1 active:bg-white ${p === postsList.page ? 'bg-white' : ''}`}
                   >
                     {p}
@@ -118,8 +129,13 @@ export default function MainContent() {
             })}
           <Link
             className="border-x-2 px-3 py-3 flex items-center hover:hover1"
-            href={`?page=${postsList.totalPages}`}
-            onClick={() => handlePage(postsList.totalPages)}
+            // href={`?page=${postsList.totalPages}`}
+            href={{
+              pathname: '/community/main-page',
+              query: { ...router.query, page: `${postsList.totalPages}` },
+            }}
+            // onClick={() => handlePage(postsList.totalPages)}
+            onClick={postsShow}
           >
             <RiArrowRightDoubleLine />
           </Link>
@@ -129,7 +145,7 @@ export default function MainContent() {
           <Link
             className="border-s-2 px-3 py-3 flex items-center hover:hover1"
             onClick={() => handleBdPostsPage(1)}
-            href={`?page=${1}`}
+            // href={`?page=${1}`}
           >
             <RiArrowLeftDoubleLine />
           </Link>
