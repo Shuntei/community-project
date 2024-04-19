@@ -16,7 +16,6 @@ import {
   RiEmotionLaughFill,
   RiCloseLargeLine,
   RiAddLine,
-  RiEyeFill,
 } from '@remixicon/react'
 import { SN_POSTS } from '@/components/johnny/config/api-path'
 
