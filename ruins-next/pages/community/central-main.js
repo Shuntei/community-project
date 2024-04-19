@@ -7,6 +7,7 @@ import { useToggles } from '@/contexts/use-toggles'
 import { useEffect, useState } from 'react'
 import { SN_POSTS } from '@/components/johnny/config/api-path'
 import { useBoards } from '@/contexts/use-boards'
+import { useRouter } from 'next/router'
 
 export default function CentralContent() {
   const { toggles } = useToggles()
@@ -15,13 +16,19 @@ export default function CentralContent() {
   const [searchTerm, setSearchTerm] = useState('')
   const [searchRender, setSearchTermRender] = useState(false)
 
+  const router = useRouter()
+
+  const query = { ...router.query, term: searchTerm }
+  console.log(query)
+
   const submitHandler = (e) => {
     if (e) {
       e.preventDefault()
     }
-    const formData = new FormData(document.form1)
-    const queryString = new URLSearchParams(formData).toString()
+    // const formData = new FormData(document.form1)
+    const queryString = new URLSearchParams(query).toString()
     console.log(queryString)
+
     const urlWithQuery = `${SN_POSTS}?${queryString}`
 
     fetch(urlWithQuery)
@@ -68,10 +75,9 @@ export default function CentralContent() {
               <div className=" text-[32px] flex justify-center">
                 [COMMUNITY]
               </div>
-              <form
+              <div
                 name="form1"
                 className="flex justify-center items-center py-2"
-                onSubmit={submitHandler}
               >
                 {/* <div className=" pc:px-2 pc:fs-4 hidden">SORT BY</div> */}
                 {/* <RiEqualizerLine /> */}
@@ -94,12 +100,12 @@ export default function CentralContent() {
                   />
                   <button
                     className="px-2 bg-white flex items-center h-[32px] p-[6px] translate-x-[-5px] pc:translate-x-0 pc:shadow1 rounded-r-lg"
-                    type="submit"
+                    onClick={submitHandler}
                   >
                     <RiSearchLine />
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
           )}
 
