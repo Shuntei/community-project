@@ -60,7 +60,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
   const [userProfile, setUserProfile] = useState("/images/face-id.png")
 
   const getUserProfile = async () => {
-    const r = await fetch(`${API_SERVER}/user-pic/12`, {
+    const r = await fetch(`${API_SERVER}/chat/user-pic/12`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -197,7 +197,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
     if (profile == "/images/treasure.png" && !clickedIds.includes(id)) {
 
       let userId = 1
-      fetch(`${API_SERVER}/add-point`, {
+      fetch(`${API_SERVER}/chat/add-point`, {
         method: 'POST',
         body: JSON.stringify({ userId }),
         headers: {

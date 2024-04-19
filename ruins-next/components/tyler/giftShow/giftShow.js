@@ -30,7 +30,6 @@ export default function GiftShow({ giftrain, size }) {
     }
 
   }
-  // console.log(`第三次${isAnimating}`);
 
 console.log('跑動畫');
   return (
