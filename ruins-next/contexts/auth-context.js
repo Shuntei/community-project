@@ -14,6 +14,7 @@ const AuthContext = createContext()
 const defaultAuth = {
   id: 0,
   username: '',
+  name: '',
   profileUrl: '',
   coverUrl: '',
   googlePhoto:'',
@@ -32,6 +33,7 @@ const storageKey = 'ruins-auth'
 export function AuthContextProvider({ children }) {
   const googleAuth = new GoogleAuthProvider()
   const [auth, setAuth] = useState(defaultAuth)
+  const [update, setUpdate] = useState(false);
 
   const signup = async (formData) => {
     try {
@@ -126,10 +128,10 @@ export function AuthContextProvider({ children }) {
         setAuth(data)
       }
     } catch (ex) {}
-  }, [])
+  }, [update])
 
   return (
-    <AuthContext.Provider value={{ login, logout, signup, auth, googleLogin }}>
+    <AuthContext.Provider value={{ login, logout, signup, auth, googleLogin, update, setUpdate }}>
       {children}
     </AuthContext.Provider>
   )
