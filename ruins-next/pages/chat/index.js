@@ -74,7 +74,7 @@ export default function CheckRole() {
           </Link>
 
           {/* 主播區 */}
-          <Link href="./02-check-webcam-source">
+          <Link href="./chat/02-check-webcam-source">
             <div
               className={!viewerHover && !streamerHover ? styles['streamer-block'] : streamerHover ? `${styles['streamer-block']}` : `${styles['unhover']}`}
               onMouseEnter={handleStreamerMouseEnter}

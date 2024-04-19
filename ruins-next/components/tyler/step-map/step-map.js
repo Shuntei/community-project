@@ -12,11 +12,11 @@ export default function StepMap() {
   const [turnPage, setTurnPage] = useState([{
     url: '/'
   }, {
-    url: '/02-check-webcam-source'
+    url: '/chat/02-check-webcam-source'
   }, {
-    url: '/03-insert-live-details'
+    url: '/chat/03-insert-live-details'
   }, {
-    url: '/04-final-check'
+    url: '/chat/04-final-check'
   }])
 
   const handlePageChange = () => {

@@ -1,8 +1,8 @@
-import Title from '@/components/title/title';
-import useAni from '@/context/use-animate';
-import useE from '@/context/use-effect';
-import useGift from '@/context/use-gift';
-import useToggle from '@/context/use-toggle-show';
+import Title from '../title/title';
+import useAni from '@/contexts/use-animate';
+import useE from '@/contexts/use-effect';
+import useGift from '@/contexts/use-gift';
+import useToggle from '@/contexts/use-toggle-show';
 import { RiArrowLeftSLine, RiArrowRightSLine, RiCloseLine, RiCoinFill } from "@remixicon/react";
 import { AnimatePresence, motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
@@ -10,7 +10,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import GiftShow from '../giftShow/giftShow';
 import styles from './streamScreen.module.css';
-const StreamContent = dynamic(() => import('@/components/stream/stream'), {
+const StreamContent = dynamic(() => import('@/components/tyler/stream/stream'), {
   ssr: false,
 })
 
