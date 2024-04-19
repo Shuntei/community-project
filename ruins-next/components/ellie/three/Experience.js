@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{ useState, useRef } from 'react'
 import { Box, OrbitControls } from '@react-three/drei'
 import { CylinderCollider, RigidBody } from '@react-three/rapier'
 import { Cylinder } from '@react-three/drei';
@@ -7,10 +7,10 @@ import GirlController  from '../character/GirlController';
 
 export default function Experience() {
   const [hover, setHover ] = useState(false);
-  // const cube = useRef();
-  // const jump = () => {
-  //   cube.curre
-  // };
+  const cube = useRef();
+  const jump = () => {
+    cube.current.applyImpulse({ x:0, y:7, z:0 });
+  };
 
   return (
     <>
@@ -26,15 +26,20 @@ export default function Experience() {
           <meshStandardMaterial color="white"/>
         </Cylinder>
       </RigidBody>
-      <RigidBody position={[-2.5,1,0]}>
+      <RigidBody position={[6,5,0]} ref={cube}>
         <Box 
           onPointerEnter={() => setHover(true)}
           onPointerLeave={() => setHover(false)}
-          // onClick={jump}
+          onClick={jump}
           >
-          {/* <meshStandardMaterial color={hovered ? 'hotpink' : 'royalblue'} /> */}
+          <meshStandardMaterial color={hover ? 'hotpink' : 'royalblue'} />
           </Box>
       </RigidBody>
+      {/* <RigidBody type="fixes" restitution={2}>
+        <Box position={[0,4,0]} args={[10,1,10]}>
+          <meshStandardMaterial color="springgreen"/>
+        </Box>
+      </RigidBody> */}
       <GirlController onPointerEnter={() => setHover(true)}/>
     </group>
    
