@@ -1,5 +1,6 @@
 import Image from 'next/image'
-import Process3 from '@/components/common/process2'
+import Process3 from '@/components/common/process3'
+import Loader from '@/components/linda/loader/loader'
 import Link from 'next/link'
 import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
@@ -44,7 +45,6 @@ export default function OrderSuccess() {
     }
   }
 
-
   useEffect(() => {
     getPurchaseOrder()
     getdetailPO()
@@ -67,7 +67,7 @@ export default function OrderSuccess() {
           <div className="md:w-9/12 w-full md:p-10 p-3 m-10 flex flex-col bg-white items-center md:space-y-12 space-y-7">
             {/* title */}
             <div className="text-black text-xl font-semibold font-['Noto Sans TC'] border-b border-b-black ">
-              確認訂單
+              付款成功！
             </div>
             {/* 購物細項 */}
             {purchaseOrder.row && (
@@ -98,7 +98,6 @@ export default function OrderSuccess() {
                   <div className=" text-black text-[15px] font-normal font-['IBM Plex Mono']">
                     收件人手機:{purchaseOrder.row.recipient_mobile}
                   </div>{' '}
-                  
                   <div className=" text-black text-[15px] font-normal font-['IBM Plex Mono']">
                     付款方式:{purchaseOrder.row.payment_method}
                   </div>
@@ -117,17 +116,19 @@ export default function OrderSuccess() {
             {/* 分隔線 */}
             <div className="w-10/12 border-dotted border-black border-b border-t h-1"></div>
 
-            <button
-              onClick={(e) => {
-                e.preventDefault()
-                sendPoToLine(e)
-              }}
-              className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
-            >
-              <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
-                PAY NOW
-              </div>
-            </button>
+            <div className="flex w-full justify-center items-center gap-2 flex-col md:flex-row ">
+              <Link href="/shop" className="w-[280px] h-[75px] bg-white border justify-center items-center gap-2.5 flex hover:bg-black hover:border-white group">
+                <div className="text-black text-2xl font-semibold font-['IBM Plex Mono'] group-hover:text-white">
+                  商品列表
+                </div>
+              </Link>
+
+              <Link href="/shop/my-order" className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white">
+                <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
+                  我的訂單
+                </div>
+              </Link>
+            </div>
           </div>
           {/* 內頁結束 */}
         </div>

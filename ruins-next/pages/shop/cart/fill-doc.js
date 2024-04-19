@@ -44,7 +44,7 @@ export default function FillDoc() {
   const [totalAmount, setTotalAmount] = useState(0)
 
   // 用於欄位驗證
-  const [terms, setTerms] = useState(false)
+  // const [terms, setTerms] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
 
   const router = useRouter()
@@ -141,7 +141,7 @@ export default function FillDoc() {
   }, 300) // 300 毫秒是 debounce 的延遲時間，可以根據需要進行調整
 
   // 送出訂單給後端
-  const creactPO = async (e) => {
+  const creactPo = async (e) => {
     e.preventDefault()
     const storeidValue = store711.storeid || ''
     const storeName = store711.storename || ''
@@ -569,7 +569,7 @@ export default function FillDoc() {
 
             {isFormValid ? (
               <button
-                onClick={creactPO}
+                onClick={creactPo}
                 className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
               >
                 <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
