@@ -11,7 +11,7 @@ const io = new SocketIOServer(server, {
 
 // 確認連線
 io.on('connection', socket => {
-  // console.log(`用戶ID ${socket.id} 已連線`);
+  console.log(`用戶ID ${socket.id} 已連線`);
   // 聊天室
   const handleJoinRoom = (room) => {
     socket.join(room)
