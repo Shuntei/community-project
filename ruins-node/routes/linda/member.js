@@ -277,7 +277,6 @@ router.put(
     const { avatar, cover } = req.files;
     const hasAvatar = avatar && avatar[0].filename;
     const hasCover = cover && cover[0].filename;
-    const googlePhoto = hasAvatar ? true : false;
     let id = req.params.id;
 
     try {
@@ -312,7 +311,7 @@ router.put(
             username,
             hasAvatar ? avatar[0].filename : rows[0].profile_pic_url ,
             hasCover ? cover[0].filename : rows[0].cover_pic_url ,
-            googlePhoto,
+            hasAvatar ? false : rows[0].google_login,
             aboutMe,
             allowContact,
             yt,
