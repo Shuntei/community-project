@@ -1,6 +1,7 @@
 import 'tailwindcss/tailwind.css'
-import { RiSearchLine, RiArrowDropDownLine } from '@remixicon/react'
+import { RiSearchLine, RiArrowDropDownLine, RiH1 } from '@remixicon/react'
 import MainContent from '@/components/johnny/content-list'
+import MainContentBd from '@/components/johnny/content-list-bd'
 import SeeMoreFollows from '@/components/johnny/seemore-follows'
 import SeeMoreNotification from '@/components/johnny/seemore-notification'
 import { useToggles } from '@/contexts/use-toggles'
@@ -11,20 +12,20 @@ import { useRouter } from 'next/router'
 
 export default function CentralContent() {
   const { toggles } = useToggles()
-  const { render, setRender, postsShow, setPostsLists } = useBoards()
+  const { render, setRender, postsShow, setPostsLists, selectedPosts } =
+    useBoards()
   const [sortBy, setSortBy] = useState('time')
   const [searchTerm, setSearchTerm] = useState('')
   // const [searchRender, setSearchTermRender] = useState(false)
 
   const router = useRouter()
 
+  console.log(router.query)
+
   const query = { ...router.query, keyword: searchTerm }
   console.log(query)
 
   const queryHandler = (e) => {
-    // if (e) {
-    //   e.preventDefault()
-    // }
     const queryString = new URLSearchParams(query).toString()
     router.push({ pathname: '/community/main-page', query: queryString })
     console.log(queryString)
@@ -97,7 +98,11 @@ export default function CentralContent() {
             <SeeMoreNotification />
           ) : (
             <div className="pt-[100px] pc:pt-[60px] bg-neutral-300">
-              <MainContent />
+              {selectedPosts.selectedBdPostsRows ? (
+                <MainContentBd />
+              ) : (
+                <MainContent />
+              )}
             </div>
           )}
         </section>

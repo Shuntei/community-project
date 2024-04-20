@@ -6,9 +6,9 @@ import { useRouter } from 'next/router'
 import CommentModal from '@/components/johnny/modal-comment'
 import { useToggles } from '@/contexts/use-toggles'
 import { useBoards } from '@/contexts/use-boards'
-import LikeButton from './interactive-like'
-import CommentCount from './interactive-cm-count'
-import Views from './interactive-views'
+import LikeButton from '../../components/johnny/interactive-like'
+import CommentCount from '../../components/johnny/interactive-cm-count'
+import Views from '../../components/johnny/interactive-views'
 import Comment from '@/components/johnny/comment'
 import {
   RiMapPinFill,

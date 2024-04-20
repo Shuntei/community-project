@@ -33,7 +33,7 @@ export default function PersonalContent() {
       const r = await fetch(`${SN_PSPOSTS}${currentPage}`)
       const data = await r.json()
       setPsPosts(data)
-      console.log(data)
+      // console.log(data)
     } catch (err) {
       console.log(err)
     }

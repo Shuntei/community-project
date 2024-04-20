@@ -15,7 +15,9 @@ router.use(express.static("routes/johnny/upload"));
 //下面是選board後對應posts的邏輯
 router.get("/boards/:board_id?", async (req, res) => {
   // 如果提供了板塊ID，則返回指定板塊的信息
-  const board_id = +req.params.board_id;
+  // const board_id = +req.params.board_id;
+  const board_id = +req.query.boardId;
+  console.log("board_id有嗎?", board_id);
   // 如果沒有提供板塊ID，則返回所有板塊的信息
   if (!board_id) {
     const sql = "SELECT * FROM `sn_public_boards`";
@@ -24,11 +26,11 @@ router.get("/boards/:board_id?", async (req, res) => {
     return;
   }
 
-  let page = +req.query.page || 1;
+  let page = +req.query.bdpage || 1;
   let totalPages = 0;
   let perPage = 2;
   // let where = " WHERE 1 ";
-
+  console.log("page有拿到嗎", page);
   // console.log(board_id);
   const t_sql =
     " SELECT COUNT(1) totalRows FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id =? ";
