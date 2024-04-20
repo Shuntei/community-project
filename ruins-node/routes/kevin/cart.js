@@ -248,7 +248,7 @@ router.get("/linePay/confirm", async (req, res) => {
     return res.json({ success: false });
   }
   const row = rows[0];
-  // console.log('row:', row)
+  console.log('row:', row)
 
   try {
     // 比對本地端訂單
@@ -261,7 +261,7 @@ router.get("/linePay/confirm", async (req, res) => {
 
     const url = `${LINEPAY_SITE}/${LINEPAY_VERSION}${uri}`;
     const linePayRes = await axios.post(url, linePayBody, { headers });
-    // console.log('linePayRes', linePayRes)
+    console.log('linePayRes', linePayRes)
 
     // 付款成功後
     if (linePayRes?.data?.returnCode === "0000") {
@@ -270,6 +270,11 @@ router.get("/linePay/confirm", async (req, res) => {
         'UPDATE `ca_purchase_order` SET `payment_status` = "已付款" WHERE `purchase_order_id` = ?';
 
       const [result] = await db.query(updatePoStatusSql, [orderId]);
+      return res.json({
+        success: true,
+        lineResult: linePayRes?.data?.returnCode,
+        
+      });
     } else {
       return res.json({
         success: false,
