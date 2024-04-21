@@ -1,17 +1,144 @@
-import {useState} from 'react'
+import { useEffect, useState } from 'react'
 import { RiCloseLargeLine } from '@remixicon/react'
 import { IoMdEye } from 'react-icons/io'
 import { IoMdEyeOff } from 'react-icons/io'
 import { useAuth } from '@/contexts/auth-context'
+import {z} from "zod"
+import { MB_CHECK_EMAIL } from '@/components/config/api-path'
+
+const schemaEmail = z.string().email({ message: 'Invalid email address' })
 
 export default function ChangeEmailPopup({
   isVisible,
   onClose,
   setShowOTPModal,
+  setShowEmailModal,
+  setNewEmail
 }) {
   if (!isVisible) return null
   const { auth } = useAuth()
   const [showPass, setShowPass] = useState(false)
+  const defaultForm = {
+    password: '',
+    email: '',
+  }
+
+  const initErrors = {
+    password: '',
+    email: '',
+  }
+
+  const [form, setForm] = useState(defaultForm)
+  const [errors, setErrors] = useState(initErrors)
+  const [emailErrorCode, setEmailErrorCode] = useState(0)
+  const [passwordErrorCode, setPasswordErrorCode] = useState(0)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const handleChange = (e) => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      [e.target.name]: e.target.value,
+    }))
+
+    if(isSubmitted) {
+      updateError()
+    }
+  }
+
+  const updateError = (code) => {
+    let initErrors = {
+      hasErrors: false,
+      password: '',
+      email: ''
+    }
+
+    if (!form.password) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        password: 'Cannot be blank',
+      }
+    } else if (passwordErrorCode) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        password: 'wrong password',
+      }
+    }
+
+    if (!form.email) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        email: 'Cannot be blank',
+      }
+    } else if (emailErrorCode) {
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        email: 'email is in use. try another',
+      }
+    } else if (auth.email == form.email){
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        email: 'it should be different than your current email',
+      }
+    } else {
+      const emailZod = schemaEmail.safeParse(form.email)
+      if (!emailZod.success) {
+        initErrors = {
+          ...initErrors,
+          hasErrors: true,
+          email: emailZod.error.issues[0].message,
+        }
+      }
+    }
+
+    if (initErrors.hasErrors) {
+      setErrors(initErrors)
+      return false
+    } else {
+      setErrors(initErrors)
+      return true
+    }
+
+  }
+
+  const handleButtonClick = async () => {
+    setIsSubmitted(true)
+    const passedValidation = updateError()
+    if(passedValidation){
+      try {
+        const r = await fetch(`${MB_CHECK_EMAIL}/${auth.id}`, {
+          method: 'post',
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(form)
+        })
+
+        const result = await r.json()
+        if(result.success){
+          setNewEmail(form.email)
+          setShowOTPModal(true)
+          setShowEmailModal(false)
+        } else {
+          result.emailCode ? setEmailErrorCode(result.emailCode) : ''
+          result.passwordCode ? setPasswordErrorCode(result.passwordCode) : ''
+          console.log("Password or email is wrong");
+        }
+      } catch (ex) {
+        console.log("Failed to fetch edit email", ex);
+      }
+    }
+  }
+
+  useEffect(()=>{
+    if(isSubmitted){
+      updateError()
+    }
+  }, [form, emailErrorCode, passwordErrorCode])
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-[1000] flex justify-center items-center">
@@ -43,14 +170,27 @@ export default function ChangeEmailPopup({
         </div>
         <div className="gap-[25px] flex w-full flex-col">
           <div className="flex w-full flex-col gap-[6px]">
-            <div className="text-[#969696] text-[12px]">Your password</div>
-            <div className="flex relative">
+            <div className="text-[#969696] text-[14px]">Your password</div>
+            <div className="flex flex-col relative">
               {' '}
               <input
+                name="password"
+                onChange={(e)=>{
+                  handleChange(e)
+                  setPasswordErrorCode(0)
+                }}
                 type={showPass ? 'text' : 'password'}
                 className="bg-[#191919] h-[44px] rounded focus:outline-none text-[14px] text-white flex w-full p-[15px]"
               />{' '}
-              <div className='absolute top-2 right-2' onClick={()=>{setShowPass(!showPass)}}>
+              <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
+                {errors.password}
+              </div>
+              <div
+                className="absolute md:top-2 top-3 right-2"
+                onClick={() => {
+                  setShowPass(!showPass)
+                }}
+              >
                 {showPass ? (
                   <IoMdEye className="md:text-2xl text-xl text-white" />
                 ) : (
@@ -60,18 +200,24 @@ export default function ChangeEmailPopup({
             </div>
           </div>
           <div className="flex w-full flex-col gap-[6px]">
-            <div className="text-[#969696] text-[12px]">New email</div>
-            <div className="flex relative">
+            <div className="text-[#969696] text-[14px]">New email</div>
+            <div className="flex flex-col relative">
               <input
+                name="email"
+                onChange={(e)=>{
+                  handleChange(e)
+                  setEmailErrorCode(0)
+                }}
                 type="text"
                 className="bg-[#191919] h-[44px] rounded focus:outline-none text-[14px] text-white flex w-full p-[15px]"
               />
+              <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
+                {errors.email}
+              </div>
             </div>
           </div>
           <button
-            onClick={() => {
-              setShowOTPModal(true)
-            }}
+            onClick={handleButtonClick}
             className="bg-black hover:bg-[#7A7A7A] flex items-center justify-center w-full py-[18px] italic border border-white"
           >
             SEND CODE
