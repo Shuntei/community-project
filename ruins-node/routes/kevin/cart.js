@@ -239,7 +239,7 @@ router.post("/createLinePayOrder", async (req, res) => {
 // 本地端頁面，轉回來的路由
 router.get("/linePay/confirm", async (req, res) => {
   const { transactionId, orderId } = req.query;
-  console.log(transactionId, orderId);
+  // console.log(transactionId, orderId);
 
   const sql = `SELECT * FROM ca_purchase_order WHERE purchase_order_id = ?`;
   const [rows] = await db.query(sql, [orderId]);
@@ -248,7 +248,7 @@ router.get("/linePay/confirm", async (req, res) => {
     return res.json({ success: false });
   }
   const row = rows[0];
-  console.log('row:', row)
+  // console.log('row:', row)
 
   try {
     // 比對本地端訂單
@@ -261,7 +261,7 @@ router.get("/linePay/confirm", async (req, res) => {
 
     const url = `${LINEPAY_SITE}/${LINEPAY_VERSION}${uri}`;
     const linePayRes = await axios.post(url, linePayBody, { headers });
-    console.log('linePayRes', linePayRes)
+    // console.log('linePayRes', linePayRes)
 
     // 付款成功後
     if (linePayRes?.data?.returnCode === "0000") {

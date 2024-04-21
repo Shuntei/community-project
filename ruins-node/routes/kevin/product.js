@@ -152,6 +152,28 @@ router.get('/api/relatedProducts', async (req, res) => {
 
   res.json({ success: true, rows })
 })
+
+
+// 取得全部歷史訂單 
+router.get('/api/getAllPo/:mid', async (req, res) => {
+  let output = {
+    success: false,
+    rows: [],
+  }
+  // 取得 member_id 去搜尋
+  const mid = req.params.mid
+
+  const sql =
+    "SELECT `sid`, `purchase_order_id`, `member_id`, `total_amount`, `payment_status`, `status`, `created_at` FROM `ca_purchase_order` WHERE `member_id` = ? ORDER BY created_at DESC"
+
+  const [rows] = await db.query(sql, [mid])
+  if (!rows.length) {
+    return res.json({ success: false })
+  }
+
+  res.json({ success: true, rows })
+})
+
 // 取得歷史訂單 - status:訂單處理中
 router.get('/api/getOngoingPo/:mid', async (req, res) => {
   let output = {
