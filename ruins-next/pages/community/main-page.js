@@ -9,7 +9,7 @@ import Footer from '@/components/linda/footer/footer'
 export default function MainPage() {
   return (
     <div className="bg-black h-screen">
-      <Navbar className="bg-black" />
+      <Navbar className="bg-gradient-to-b from-black to-gray-800" />
       <PageSelect />
       <Topics />
       <FollowsBar />

@@ -45,6 +45,9 @@ export const CART_LINEPAY = `${API_SERVER}/cart/createLinePayOrder` // POST
 // 購物車 - 與 LINE Pay 確認訂單
 export const CART_LINEPAYCONFIRM = `${API_SERVER}/cart/linePay/confirm`
 
+// 歷史訂單 - status:全部
+export const PRODUCT_MYALLPO =`${API_SERVER}/product/api/getAllPo`
+
 // 歷史訂單 - status:訂單處理中
 export const PRODUCT_MYONGOINGPO = `${API_SERVER}/product/api/getOngoingPo`
 

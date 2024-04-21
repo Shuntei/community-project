@@ -43,7 +43,7 @@ export default function EditModal() {
 
   const [previewUrl, setPreviewUrl] = useState('')
   const [isFormChanged, setIsFormChanged] = useState(false)
-  const { render, setRender, allPostsShow } = useBoards()
+  const { render, setRender, postsShow } = useBoards()
 
   const changeHandler = (e) => {
     setPostForm({ ...postForm, [e.target.name]: e.target.value })
@@ -178,7 +178,7 @@ export default function EditModal() {
 
   // 用於編輯後立即更新貼文列表
   useEffect(() => {
-    allPostsShow()
+    postsShow()
     setRender(false)
   }, [render])
 

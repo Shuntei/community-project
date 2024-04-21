@@ -1,6 +1,6 @@
 module.exports = {
   content: ['./pages/**/*.{js, jsx, ts}', './components/**/*.{js, jsx, ts}'],
-  plugins: [require('daisyui')],
+  plugins: [require('daisyui'), require('tailwind-scrollbar')],
   daisyui: {
     themes: false, // false: only light + dark | true: all themes | array: specific themes like this ["light", "dark", "cupcake"]
     darkTheme: 'light', // name of one of the included themes for dark mode

@@ -9,7 +9,7 @@ import Navbar from '@/components/linda/navbar/navbar'
 export default function MainPersonal() {
   return (
     <div className="bg-black h-screen">
-      <Navbar className=" bg-black" />
+      <Navbar className="bg-gradient-to-b from-black to-gray-800" />
       <PageSelect />
       <InfoBar />
       <FollowsBar />

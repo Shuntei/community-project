@@ -8,13 +8,14 @@ const BoardsContext = createContext()
 export default function BoardsContextProvider({ children }) {
   const [viewsCounter, setViewsCounter] = useState([{ postId: '', count: 0 }])
   const [boards, setBoards] = useState([])
-  const [selectedPosts, setSelectedPosts] = useState({
-    success: false,
-    page: 0,
-    selectedBdPostsRows: [],
-    totalPages: 0,
-    boardId: 0,
-  })
+  // const [selectedPosts, setSelectedPosts] = useState({
+  //   success: false,
+  //   page: 0,
+  //   selectedBdPostsRows: [],
+  //   totalPages: 0,
+  //   boardId: 0,
+  // })
+  const [selectedPosts, setSelectedPosts] = useState([])
   const [postsList, setPostsLists] = useState({
     success: false,
     page: 0,
@@ -28,10 +29,10 @@ export default function BoardsContextProvider({ children }) {
   }
 
   // 初始載入posts, 預設第一頁用於點全部按鈕
-  const allPostsShow = async (currentPage = '?page=1') => {
+  const postsShow = async () => {
     // currentPage是?page=哪一頁
     try {
-      const r = await fetch(`${SN_POSTS}${currentPage}`)
+      const r = await fetch(`${SN_POSTS}${location.search}`)
       const data = await r.json()
       setPostsLists(data)
     } catch (err) {
@@ -39,15 +40,16 @@ export default function BoardsContextProvider({ children }) {
     }
   }
 
-  const handlePage = async (p) => {
-    try {
-      const r = await fetch(`${SN_POSTS}?page=${p}`)
-      const data = await r.json()
-      setPostsLists(data)
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  // const handlePage = async (p) => {
+  //   try {
+  //     // const r = await fetch(`${SN_POSTS}?page=${p}`)
+  //     const r = await fetch(`${SN_POSTS}${location.search}`)
+  //     const data = await r.json()
+  //     setPostsLists(data)
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
   const handlePostId = async (postId) => {
     try {
@@ -86,23 +88,25 @@ export default function BoardsContextProvider({ children }) {
     }
   }
 
-  const handleBdPosts = async (boardId) => {
-    const r = await fetch(`${SN_BOARDS}/${boardId}`)
-    const data = await r.json()
-    if (data) {
-      setPostsLists(false)
-    }
-    setSelectedPosts({ ...data, boardId: boardId })
-  }
+  // const handleBdPosts = async (boardId) => {
+  //   // const r = await fetch(`${SN_BOARDS}/${boardId}`)
+  //   const r = await fetch(`${SN_BOARDS}/${boardId}`)
+  //   const data = await r.json()
+  //   console.log(data)
+  //   if (data) {
+  //     setPostsLists(false)
+  //   }
+  //   setSelectedPosts({ ...data, boardId: boardId })
+  // }
 
-  const handleBdPostsPage = async (p) => {
-    const r = await fetch(`${SN_BOARDS}/${selectedPosts.boardId}?page=${p}`)
-    const data = await r.json()
-    if (data) {
-      setPostsLists(false)
-    }
-    setSelectedPosts({ ...data, boardId: selectedPosts.boardId })
-  }
+  // const handleBdPostsPage = async (p) => {
+  //   const r = await fetch(`${SN_BOARDS}/${selectedPosts.boardId}?page=${p}`)
+  //   const data = await r.json()
+  //   if (data) {
+  //     setPostsLists(false)
+  //   }
+  //   setSelectedPosts({ ...data, boardId: selectedPosts.boardId })
+  // }
 
   return (
     <BoardsContext.Provider
@@ -113,13 +117,13 @@ export default function BoardsContextProvider({ children }) {
         setSelectedPosts,
         postsList,
         setPostsLists,
-        allPostsShow,
+        postsShow,
         getPost,
         setGetPost,
         handlePostId,
-        handlePage,
-        handleBdPosts,
-        handleBdPostsPage,
+        // handlePage,
+        // handleBdPosts,
+        // handleBdPostsPage,
         render,
         setRender,
         viewsCounter,

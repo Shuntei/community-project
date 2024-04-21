@@ -239,7 +239,7 @@ router.post("/createLinePayOrder", async (req, res) => {
 // 本地端頁面，轉回來的路由
 router.get("/linePay/confirm", async (req, res) => {
   const { transactionId, orderId } = req.query;
-  console.log(transactionId, orderId);
+  // console.log(transactionId, orderId);
 
   const sql = `SELECT * FROM ca_purchase_order WHERE purchase_order_id = ?`;
   const [rows] = await db.query(sql, [orderId]);
@@ -270,6 +270,11 @@ router.get("/linePay/confirm", async (req, res) => {
         'UPDATE `ca_purchase_order` SET `payment_status` = "已付款" WHERE `purchase_order_id` = ?';
 
       const [result] = await db.query(updatePoStatusSql, [orderId]);
+      return res.json({
+        success: true,
+        lineResult: linePayRes?.data?.returnCode,
+        
+      });
     } else {
       return res.json({
         success: false,

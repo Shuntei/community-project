@@ -32,7 +32,7 @@ export default function PostModal() {
   })
 
   const [previewUrl, setPreviewUrl] = useState('')
-  const { render, setRender, allPostsShow } = useBoards()
+  const { render, setRender, postsShow } = useBoards()
 
   const changeHandler = (e) => {
     setPostForm({ ...postForm, [e.target.name]: e.target.value })
@@ -139,7 +139,7 @@ export default function PostModal() {
   }
 
   useEffect(() => {
-    allPostsShow()
+    postsShow()
     setRender(false)
   }, [render])
 
