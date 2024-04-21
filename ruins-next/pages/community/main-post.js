@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackendPortForImg } from '@/components/johnny/config/api-path'
+import { API_SERVER } from '@/components/johnny/config/api-path'
 import Image from 'next/image'
 import profileImg from '../../components/johnny/img/16.jpg'
 import { useRouter } from 'next/router'
@@ -98,7 +98,7 @@ export default function MainPost() {
             <div className="mb-2">
               {getPost[0].image_url && (
                 <Image
-                  src={`http://localhost:${BackendPortForImg}/community/${getPost[0].image_url}`}
+                  src={`${API_SERVER}/${getPost[0].image_url}`}
                   width={0}
                   height={0}
                   // sizes="100vw"

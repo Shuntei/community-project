@@ -37,29 +37,14 @@ input:-webkit-autofill:active {
 
 /* johnny  start*/
 @layer utilities {
-  /* body,
-  html {
-    height: 100%;
-  } */
   .border-style1 {
     border: 0.8px solid #dbd7de;
   }
-  /* .ff-IBM {
-    font-family: "IBM Plex Mono";
-  }
-  .ff-NotoSans {
-    font-family: "Noto Sans";
-  } */
   .hover1 {
     background-color: rgba(255, 255, 255, 0.2);
     cursor: pointer;
   }
   .hover2 {
-    /* background: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.3) 0%,
-      rgba(255, 255, 255, 0) 90.24%
-    ); */
     background: rgb(42, 38, 38);
     border-radius: 10px;
     transition: background-color 0.3s;
@@ -71,9 +56,9 @@ input:-webkit-autofill:active {
   .shadow1 {
     box-shadow: 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
   }
-  .parent-black {
+  /* .parent-black {
     background-color: black;
-  }
+  } */
   .notification {
     background: linear-gradient(
       180deg,

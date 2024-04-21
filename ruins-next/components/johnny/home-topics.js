@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useBoards } from '@/contexts/use-boards'
-import { RiArrowDropDownLine } from '@remixicon/react'
+import { RiArrowDropDownLine, RiListCheck } from '@remixicon/react'
 import { SN_BOARDS } from './config/api-path'
 import { useRouter } from 'next/router'
-import Link from 'next/link'
 
 export default function Topics() {
   const router = useRouter()
@@ -27,12 +26,11 @@ export default function Topics() {
         setSelectedPosts(result)
       })
       .catch((ex) => console.log({ ex }))
-    console.log(router)
   }, [router.query.boardId])
-  
+
   return (
     <>
-      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] bg-black overflow-scroll z-[998] rounded-b-3xl">
+      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] pb-20 bg-black overflow-y-scroll z-[998] rounded-b-3xl hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
         <div className="text-white px-10 pt-3 pb-1 text-[20px]  cursor-pointer">
           TOPICS
         </div>
@@ -40,7 +38,6 @@ export default function Topics() {
         <ul>
           <li
             className=" text-white px-10 py-3 flex cursor-pointer duration-200 hover:text-2xl"
-            // onClick={() => postsShow()}
             onClick={() =>
               router.push({
                 pathname: '/community/main-page',
@@ -57,7 +54,12 @@ export default function Topics() {
                   className=" text-white px-10 py-3 flex cursor-pointer duration-200 hover:text-2xl"
                   onClick={() =>
                     router.push({
-                      query: { ...router.query, boardId: v.board_id },
+                      query: {
+                        ...router.query,
+                        boardId: v.board_id,
+                        bdpage: 1,
+                        keyword: '',
+                      },
                     })
                   }
                 >
