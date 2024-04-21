@@ -9,6 +9,11 @@ export const MB_LOGIN = `${API_SERVER}/member/login`
 export const MB_GOOGLE_LOGIN = `${API_SERVER}/member/google-login`
 // edit profile
 export const MB_EDIT_PROFILE = `${API_SERVER}/member/edit-profile`
+// check email and send otp
+export const MB_CHECK_EMAIL = `${API_SERVER}/member/check-email`
+// edit email
+export const MB_EDIT_EMAIL = `${API_SERVER}/member/edit-email`
+
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`

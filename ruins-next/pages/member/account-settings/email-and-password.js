@@ -10,12 +10,15 @@ import ChangeEmailPopup from '@/components/linda/modals/changeEmailModal'
 import ChangePasswordPopup from '@/components/linda/modals/changePasswordModal'
 import OTPModal from '@/components/linda/modals/OTPModal'
 import { useAuth } from '@/contexts/auth-context'
+import NotifyRed from '@/components/linda/notify/notify-red'
 
 export default function EmailAndPassword() {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
-  const [showOTPModal, setShowOTPModal] = useState(false)
+  const [showOTPModal, setShowOTPModal] = useState(true)
+  const [newEmail, setNewEmail] = useState('')
   const {auth} = useAuth()
+  const [text, setText] = useState('')
 
   useEffect(() => {
     if (showOTPModal) {
@@ -71,7 +74,6 @@ export default function EmailAndPassword() {
             </div>
           </div>
           <div
-            // href="/member/account-settings/edit-password"
             onClick={() => {
               setShowPasswordModal(true)
             }}
@@ -87,12 +89,15 @@ export default function EmailAndPassword() {
           </div>
         </div>
       </div>
-      <ChangeEmailPopup
+      <ChangeEmailPopup 
+
         setShowOTPModal={setShowOTPModal}
         isVisible={showEmailModal}
         onClose={() => {
           setShowEmailModal(false)
         }}
+        setShowEmailModal
+        setNewEmail={setNewEmail}
       />
       <ChangePasswordPopup
         isVisible={showPasswordModal}
@@ -101,11 +106,14 @@ export default function EmailAndPassword() {
         }}
       />
       <OTPModal
+      setShowOTPModal={setShowOTPModal}
+      newEmail={newEmail}
         isVisible={showOTPModal}
         onClose={() => {
           setShowOTPModal(false)
         }}
       />{' '}
+  
     </>
   )
 }
