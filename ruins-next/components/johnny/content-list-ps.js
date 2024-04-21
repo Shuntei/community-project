@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackendPortForImg } from './config/api-path'
+import { API_SERVER } from './config/api-path'
 import {
   RiChat4Fill,
   RiEyeFill,
@@ -33,7 +33,7 @@ export default function PersonalContent() {
       const r = await fetch(`${SN_PSPOSTS}${currentPage}`)
       const data = await r.json()
       setPsPosts(data)
-      console.log(data)
+      // console.log(data)
     } catch (err) {
       console.log(err)
     }
@@ -266,10 +266,10 @@ export default function PersonalContent() {
                   {v.image_url && (
                     <Image
                       className="size-[100px] object-cover rounded-xl"
-                      src={`http://localhost:${BackendPortForImg}/community/${v.image_url}`}
+                      src={`${API_SERVER}/${v.image_url}`}
                       width={100}
                       height={100}
-                      alt="Description of image"
+                      alt="上傳的無法顯示圖片"
                     />
                   )}
                 </Link>

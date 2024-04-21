@@ -12,31 +12,21 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST } from './config/api-path'
+import { SN_BOARDS, SN_DELETE_POST } from './config/api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 
-export default function MainContent() {
-  const {
-    postsList,
-    selectedPosts,
-    postsShow,
-    handlePostId,
-    // handlePage,
-    handleBdPostsPage,
-    render,
-    setRender,
-  } = useBoards()
+export default function MainContentBd() {
+  const { selectedPosts, setSelectedPosts, handlePostId, render, setRender } =
+    useBoards()
 
   const router = useRouter()
-
   const { removeBox, setRemoveBox } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
 
   const handlePush = (postId) => {
-    // router.push(`/community/main-post?postId=${postId}`);
     handlePostId(postId)
   }
 
@@ -77,62 +67,73 @@ export default function MainContent() {
   }
 
   useEffect(() => {
-    postsShow()
-  }, [router.query, router.query.page])
+    if (!router.isReady) return
+    if (!router.query.bdpage || !router.query.boardId) return
+
+    console.log('測試location', location.search)
+    fetch(`${SN_BOARDS}${location.search}`)
+      .then((r) => r.json())
+      .then((result) => {
+        setSelectedPosts(result)
+      })
+  }, [router.query.bdpage, router.query.boardId, router.query.keyword])
 
   return (
     <>
-      {postsList.totalPostsRows.length === 0 ? (
+      {selectedPosts.selectedBdPostsRows.length === 0 ? (
         <ul className=" flex justify-center mt-[90px] text-xl"></ul>
       ) : (
-        <ul className="flex justify-center mt-[90px] text-xl">
-          <Link
+        <ul className=" flex justify-center mt-[90px] text-xl">
+          <span
             className="border-s-2 px-3 py-3 flex items-center hover:hover1"
-            // onClick={() => handlePage(1)}
-            onClick={postsShow}
-            href={{
-              pathname: '/community/main-page',
-              query: { ...router.query, page: `${1}` },
-            }}
+            // onClick={() => handleBdPostsPage(1)}
+            onClick={() =>
+              router.push({
+                pathname: '/community/main-page',
+                query: { ...router.query, bdpage: 1 },
+              })
+            }
           >
             <RiArrowLeftDoubleLine />
-          </Link>
-          {Array(20)
+          </span>
+          {Array(10)
             .fill(1)
             .map((v, i) => {
-              const p = postsList.page - 5 + i
+              const p = selectedPosts.page - 5 + i
               // const p = i;
-              if (p < 1 || p > postsList.totalPages) return null
+              if (p < 1 || p > selectedPosts.totalPages) return null
               return (
                 <li key={p}>
-                  <Link
-                    href={{
-                      pathname: '/community/main-page',
-                      query: { ...router.query, page: `${p}` },
+                  <span
+                    onClick={() => {
+                      router.push({
+                        pathname: '/community/main-page',
+                        query: { ...router.query, bdpage: p },
+                      })
                     }}
-                    onClick={postsShow}
-                    className={`border-s-2 px-5 flex py-3 hover:hover1 active:bg-white ${p === postsList.page ? 'bg-white' : ''}`}
+                    className={`border-s-2 px-5 flex py-3 hover:hover1 active:bg-white ${p === selectedPosts.page ? 'bg-white' : ''}`}
                   >
                     {p}
-                  </Link>
+                  </span>
                 </li>
               )
             })}
-          <Link
+          <span
             className="border-x-2 px-3 py-3 flex items-center hover:hover1"
-            // href={`?page=${postsList.totalPages}`}
-            href={{
-              pathname: '/community/main-page',
-              query: { ...router.query, page: `${postsList.totalPages}` },
-            }}
-            // onClick={() => handlePage(postsList.totalPages)}
-            onClick={postsShow}
+            // onClick={() => handleBdPostsPage(selectedPosts.totalPages)}
+            // href={`?page=${selectedPosts.totalPages}`}
+            onClick={() =>
+              router.push({
+                pathname: '/community/main-page',
+                query: { ...router.query, bdpage: selectedPosts.totalPages },
+              })
+            }
           >
             <RiArrowRightDoubleLine />
-          </Link>
+          </span>
         </ul>
       )}
-      {postsList.totalPostsRows.length === 0 ? (
+      {selectedPosts.selectedBdPostsRows.length === 0 ? (
         <h1
           className="flex bg-neutral-300 leading border-b-slate-500 justify-center 
         text-[20px] font-semibold py-10"
@@ -142,7 +143,7 @@ export default function MainContent() {
       ) : (
         ''
       )}
-      {postsList?.totalPostsRows?.map((v, i) => {
+      {selectedPosts.selectedBdPostsRows?.map((v, i) => {
         return (
           <main
             className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative"
@@ -215,7 +216,7 @@ export default function MainContent() {
                   <Image
                     className="size-[100px] object-cover rounded-xl"
                     src={`${API_SERVER}/${v.image_url}`}
-                    alt="上傳的圖片無法顯示"
+                    alt="上傳的無法顯示圖片"
                     width={100}
                     height={100}
                   />

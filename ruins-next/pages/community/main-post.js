@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { BackendPortForImg } from '@/components/johnny/config/api-path'
+import { API_SERVER } from '@/components/johnny/config/api-path'
 import Image from 'next/image'
 import profileImg from '../../components/johnny/img/16.jpg'
 import { useRouter } from 'next/router'
 import CommentModal from '@/components/johnny/modal-comment'
 import { useToggles } from '@/contexts/use-toggles'
 import { useBoards } from '@/contexts/use-boards'
-import LikeButton from './interactive-like'
-import CommentCount from './interactive-cm-count'
-import Views from './interactive-views'
+import LikeButton from '../../components/johnny/interactive-like'
+import CommentCount from '../../components/johnny/interactive-cm-count'
+import Views from '../../components/johnny/interactive-views'
 import Comment from '@/components/johnny/comment'
 import {
   RiMapPinFill,
@@ -98,7 +98,7 @@ export default function MainPost() {
             <div className="mb-2">
               {getPost[0].image_url && (
                 <Image
-                  src={`http://localhost:${BackendPortForImg}/community/${getPost[0].image_url}`}
+                  src={`${API_SERVER}/${getPost[0].image_url}`}
                   width={0}
                   height={0}
                   // sizes="100vw"
