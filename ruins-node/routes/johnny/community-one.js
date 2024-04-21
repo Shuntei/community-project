@@ -21,6 +21,7 @@ router.get("/boards/:board_id?", async (req, res) => {
 
   let keyword = req.query.keyword || "";
 
+  let filter = req.query.filter;
   // 如果沒有提供板塊ID，則返回所有板塊的信息(只用於顯示板塊)
   if (!board_id) {
     const sql = "SELECT * FROM `sn_public_boards`";
@@ -38,6 +39,25 @@ router.get("/boards/:board_id?", async (req, res) => {
         OR
         p.content LIKE ${keywordEsc}
       ) `;
+  }
+
+  let orderByClause = "ORDER BY p.post_id DESC";
+  switch (filter) {
+    case "newTime":
+      orderByClause = "ORDER BY p.posts_timestamp DESC";
+      break;
+    case "oldTime":
+      orderByClause = "ORDER BY p.posts_timestamp ASC";
+      break;
+    case "likes":
+      break;
+    case "views":
+      orderByClause = "ORDER BY p.view_count DESC";
+      break;
+    case "comments":
+      break;
+    default:
+      break;
   }
 
   let page = +req.query.bdpage || 1;
@@ -72,7 +92,7 @@ router.get("/boards/:board_id?", async (req, res) => {
         ( SELECT post_id, COUNT(comment_id) AS comment_count FROM sn_comments GROUP BY post_id)
         AS comment_counts ON p.post_id = comment_counts.post_id
     WHERE b.board_id = ? ${and}
-    ORDER BY p.post_id DESC 
+    ${orderByClause} 
     LIMIT ${(page - 1) * perPage}, ${perPage}`;
   // const selectedBdPosts = `SELECT * FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id = ? ORDER BY p.post_id DESC`;
   console.log("sp", selectedBdPosts);
@@ -102,9 +122,11 @@ router.get("/boards/:board_id?", async (req, res) => {
 router.get("/posts/:post_id?", async (req, res) => {
   // const post_id = +req.params.post_id;
   let postId = +req.query.postId || 0;
-  // console.log("postId_log:", postId);
+
   let keyword = req.query.keyword || "";
-  console.log(keyword);
+  // console.log(keyword);
+  let filter = req.query.filter;
+
   if (!postId) {
     // 這裡是主頁所有文章
     let page = +req.query.page || 1;
@@ -120,6 +142,25 @@ router.get("/posts/:post_id?", async (req, res) => {
         OR
         p.content LIKE ${keywordEsc} 
       ) `;
+    }
+
+    let orderByClause = "ORDER BY p.post_id DESC";
+    switch (filter) {
+      case "newTime":
+        orderByClause = "ORDER BY p.posts_timestamp DESC";
+        break;
+      case "oldTime":
+        orderByClause = "ORDER BY p.posts_timestamp ASC";
+        break;
+      case "likes":
+        break;
+      case "views":
+        orderByClause = "ORDER BY p.view_count DESC";
+        break;
+      case "comments":
+        break;
+      default:
+        break;
     }
 
     if (page < 1) {
@@ -155,7 +196,7 @@ router.get("/posts/:post_id?", async (req, res) => {
     COUNT(comment_id) AS comment_count 
     FROM  sn_comments 
     GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id ${where}
-    ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+    ${orderByClause} LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
 
     res.json({

@@ -11,7 +11,7 @@ export default function MainMessenger() {
 
   return (
     <div className="bg-292929 h-screen">
-      <Navbar className="bg-black" />
+      <Navbar className="bg-gradient-to-b from-black to-gray-800" />
       <PageSelect paddingBG={paddingBG} />
       <ChannelAndMsg />
       <MessengerFollows />
