@@ -1,8 +1,6 @@
 // export const API_SERVER = "http://192.168.35.200:3001";
 const port = 3001 || 3002 //3002備用 與server相同
 
-export const BackendPortForImg = `${port}`
-
 export const API_SERVER = `http://localhost:${port}/community`
 //localhost:3005/johnny/posts
 // 取得列表資料

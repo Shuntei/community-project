@@ -17,6 +17,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 
 export default function MainContentBd() {
   const { selectedPosts, setSelectedPosts, handlePostId, render, setRender } =
@@ -76,7 +77,12 @@ export default function MainContentBd() {
       .then((result) => {
         setSelectedPosts(result)
       })
-  }, [router.query.bdpage, router.query.boardId, router.query.keyword])
+  }, [
+    router.query.bdpage,
+    router.query.boardId,
+    router.query.keyword,
+    router.query.filter,
+  ])
 
   return (
     <>
@@ -171,10 +177,19 @@ export default function MainContentBd() {
                   href={`/community/main-post?postId=${v.post_id}`}
                   className="cursor-pointer"
                 >
-                  <div className="text-[20px] font-semibold">{v.title}</div>
+                  <div className="text-[20px] font-semibold flex items-center justify-between">
+                    <span>{v.title}</span>
+                    <span className="hidden pc:flex text-[12px]">
+                      {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
+                    </span>
+                  </div>
                   <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
                   <span>{v.content}</span>
+                  <div className="text-[12px] pc:hidden">
+                    {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
+                  </div>
                 </Link>
+
                 <div className="text-[14px] text-292929">
                   <div className="flex gap-2">
                     <span className="text-575757 pr-2 flex">

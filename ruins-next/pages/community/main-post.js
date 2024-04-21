@@ -18,17 +18,17 @@ import {
   RiAddLine,
 } from '@remixicon/react'
 import { SN_POSTS } from '@/components/johnny/config/api-path'
+import dayjs from 'dayjs'
 
 export default function MainPost() {
   const [renderAfterCm, setRenderAfterCm] = useState(false)
   const router = useRouter()
-  const handleBack = () => {
-    router.back()
-  }
 
   const { commentModal, setCommentModal } = useToggles()
   const { getPost, setGetPost } = useBoards()
-
+  const handleBack = () => {
+    router.back()
+  }
   const postId = router.query.postId
   const isPostId = async () => {
     const postIdExist = postId
@@ -61,7 +61,10 @@ export default function MainPost() {
             <div className="flex justify-between mb-5">
               <div>
                 <div className="text-[24px] border-b-2">{getPost[0].title}</div>
-                <div>Feb 27, 2024</div>
+                {/* <div>Feb 27, 2024</div> */}
+                <div>
+                  {dayjs(getPost[0].posts_timestamp).format('MMM DD, YYYY')}
+                </div>
               </div>
             </div>
             {/* <div className="flex my-2 gap-2 items-center size-[35px] overflow-hidden rounded-[100%]"> */}

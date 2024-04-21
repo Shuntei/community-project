@@ -1,10 +1,5 @@
 import 'tailwindcss/tailwind.css'
-import {
-  RiSearchLine,
-  RiArrowDropDownLine,
-  RiH1,
-  RiListCheck,
-} from '@remixicon/react'
+import { RiSearchLine, RiListCheck } from '@remixicon/react'
 import MainContent from '@/components/johnny/content-list'
 import MainContentBd from '@/components/johnny/content-list-bd'
 import SeeMoreFollows from '@/components/johnny/seemore-follows'
@@ -17,15 +12,8 @@ import { useRouter } from 'next/router'
 
 export default function CentralContent() {
   const { toggles } = useToggles()
-  const {
-    render,
-    setRender,
-    postsShow,
-    setPostsLists,
-    selectedPosts,
-    boards,
-    setBoards,
-  } = useBoards()
+  const { render, setRender, postsShow, setPostsLists, selectedPosts, boards } =
+    useBoards()
   const [sortBy, setSortBy] = useState('time')
   const [searchTerm, setSearchTerm] = useState('')
   const [showBoards, setShowBoards] = useState(false)
@@ -45,7 +33,7 @@ export default function CentralContent() {
       .then((r) => r.json())
       .then((data) => {
         console.log(data)
-        // setSearchTermRender(!searchRender)
+
         setPostsLists(data)
       })
   }
@@ -87,7 +75,6 @@ export default function CentralContent() {
                     <ul
                       className="absolute w-[120px] bg-zinc-100 h-[200px] px-2 py-1 mt-3 overflow-y-scroll 
                       scrollbar-thin scrollbar-thumb-slate-500 scrollbar-track-slate-200"
-                      // style={{ scrollbarWidth: 'thin' }}
                     >
                       <li
                         className="py-1 cursor-pointer hover:bg-gray-200 text-center px-2"
@@ -134,12 +121,12 @@ export default function CentralContent() {
                     })
                   }}
                 >
-                  <option value="time">依時間排序</option>
+                  <option value="newTime">顯示較新貼文</option>
+                  <option value="oldTime">顯示較舊貼文</option>
                   <option value="likes">依按讚數排序</option>
                   <option value="views">依觀看數排序</option>
                   <option value="comments">依評論數排序</option>
                 </select>
-                {/* <RiArrowDropDownLine /> */}
                 <div className="flex">
                   <input
                     className="flex p-[6px] items-center outline-none h-[32px] pc:w-[200px] w-full  pc:shadow1 rounded-l-lg pl-5"
