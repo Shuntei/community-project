@@ -90,11 +90,6 @@ export default function OrderSuccess() {
   }, [router.isReady])
   
 
-  useEffect(() => {
-    getPurchaseOrder()
-    getdetailPO()
-  }, [router.query.orderId])
-
 
   useEffect(() => {
     getPurchaseOrder()
