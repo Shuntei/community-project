@@ -61,11 +61,11 @@ export default function OrderSuccess() {
         setTimeout(() => {
           setLoad(false)
           getdetailPO() // 在付款成功后获取订单详细信息
-        }, 3000)
+        }, 5000)
       } else {
         setTimeout(() => {
           setLoad(false)
-        }, 3000)
+        }, 5000)
         console.log('付款失敗')
       }
     } catch (ex) {
