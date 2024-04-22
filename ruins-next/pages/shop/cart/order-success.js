@@ -57,8 +57,10 @@ export default function OrderSuccess() {
 
       if (d.success) {
         console.log('line pay success')
+        console.log(d)
         setTimeout(() => {
           setLoad(false)
+          getdetailPO() // 在付款成功后获取订单详细信息
         }, 3000)
       } else {
         setTimeout(() => {
@@ -88,8 +90,6 @@ export default function OrderSuccess() {
 
     // eslint-disable-next-line
   }, [router.isReady])
-  
-
 
   useEffect(() => {
     getPurchaseOrder()
@@ -98,7 +98,6 @@ export default function OrderSuccess() {
 
   return (
     <>
-      {console.log(load)}
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28">
         {/* header開始 */}
         <Navbar navColor={''} />

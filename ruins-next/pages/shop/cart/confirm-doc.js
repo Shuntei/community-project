@@ -47,6 +47,7 @@ export default function ConfirmDoc() {
   // --- 按下 LINE Pay 按鈕
   const sendPoToLine = async (e) => {
     e.preventDefault()
+    
     try {
       const linePayOrder = await convertOrderForLinePay()
 
@@ -172,7 +173,6 @@ export default function ConfirmDoc() {
 
             <button
               onClick={(e) => {
-                e.preventDefault()
                 sendPoToLine(e)
               }}
               className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex hover:bg-neutral-500 hover:border-white"
