@@ -109,109 +109,161 @@ router.get("/api/getProduct/:pid", async (req, res) => {
 
 //取得商品評價
 const getComment = async (req) => {
-  let pid = +req.params.pid
-  let where = ` WHERE 1 AND pid = ?`
-  let totalRows = 0
-  let rows = []
+  let pid = +req.params.pid;
+  let where = ` WHERE 1 AND pid = ?`;
+  let totalRows = 0;
+  let rows = [];
 
   let output = {
     success: false,
     rows,
     totalRows,
-    redirect: '',
-    info: '',
-  }
+    redirect: "",
+    info: "",
+  };
 
-  const t_sql = `SELECT COUNT(1) totalRows FROM ca_product_comment  ${where} `
+  const t_sql = `SELECT COUNT(1) totalRows FROM ca_product_comment  ${where} `;
 
-  ;[[{ totalRows }]] = await db.query(t_sql, [pid])
+  [[{ totalRows }]] = await db.query(t_sql, [pid]);
 
   if (totalRows > 0) {
-    const sql = `SELECT * FROM ca_product_comment ${where}`
-    ;[rows] = await db.query(sql, [pid])
-    output = { ...output, success: true, rows, totalRows }
+    const sql = `SELECT * FROM ca_product_comment ${where}`;
+    [rows] = await db.query(sql, [pid]);
+    output = { ...output, success: true, rows, totalRows };
   }
 
-  return output
-}
-router.get('/api/getProductComment/:pid', async (req, res) => {
-  res.json(await getComment(req))
-})
+  return output;
+};
+router.get("/api/getProductComment/:pid", async (req, res) => {
+  res.json(await getComment(req));
+});
 
 // 相關商品區：取得 10 筆同類別商品 row.sub_category
-router.get('/api/relatedProducts', async (req, res) => {
-  const sub_category = +req.query.sub_category || 2
-  const pid = +req.query.pid || 1
+router.get("/api/relatedProducts", async (req, res) => {
+  const sub_category = +req.query.sub_category || 2;
+  const pid = +req.query.pid || 1;
   const sql =
-    'SELECT * FROM `ca_products` WHERE `sub_category_id` = ? AND `pid` != ? LIMIT 10 '
+    "SELECT * FROM `ca_products` WHERE `sub_category_id` = ? AND `pid` != ? LIMIT 10 ";
 
-  const [rows] = await db.query(sql, [sub_category, pid])
+  const [rows] = await db.query(sql, [sub_category, pid]);
   if (!rows.length) {
-    return res.json({ success: false })
+    return res.json({ success: false });
   }
 
-  res.json({ success: true, rows })
-})
+  res.json({ success: true, rows });
+});
 
-
-// 取得全部歷史訂單 
-router.get('/api/getAllPo/:mid', async (req, res) => {
+// 取得全部歷史訂單
+router.get("/api/getAllPo/:mid", async (req, res) => {
   let output = {
     success: false,
     rows: [],
-  }
+  };
   // 取得 member_id 去搜尋
-  const mid = req.params.mid
+  const mid = req.params.mid;
 
   const sql =
-    "SELECT `sid`, `purchase_order_id`, `member_id`, `total_amount`, `payment_status`, `status`, `created_at` FROM `ca_purchase_order` WHERE `member_id` = ? ORDER BY created_at DESC"
+    "SELECT `sid`, `purchase_order_id`, `member_id`, `total_amount`, `payment_status`, `status`, `created_at` FROM `ca_purchase_order` WHERE `member_id` = ? ORDER BY created_at DESC";
 
-  const [rows] = await db.query(sql, [mid])
+  const [rows] = await db.query(sql, [mid]);
   if (!rows.length) {
-    return res.json({ success: false })
+    return res.json({ success: false });
   }
 
-  res.json({ success: true, rows })
-})
+  res.json({ success: true, rows });
+});
 
 // 取得歷史訂單 - status:訂單處理中
-router.get('/api/getOngoingPo/:mid', async (req, res) => {
+router.get("/api/getOngoingPo/:mid", async (req, res) => {
   let output = {
     success: false,
     rows: [],
-  }
+  };
   // 取得 member_id 去搜尋
-  const mid = req.params.mid
+  const mid = req.params.mid;
 
   const sql =
-    "SELECT `sid`, `purchase_order_id`, `member_id`, `total_amount`, `payment_status`, `status`, `created_at` FROM `ca_purchase_order` WHERE `member_id` = ? AND (`status` = '訂單處理中' OR `status` = '運送中' OR `status` = '待取貨') ORDER BY created_at DESC"
+    "SELECT `sid`, `purchase_order_id`, `member_id`, `total_amount`, `payment_status`, `status`, `created_at` FROM `ca_purchase_order` WHERE `member_id` = ? AND (`status` = '訂單處理中' OR `status` = '運送中' OR `status` = '待取貨') ORDER BY created_at DESC";
 
-  const [rows] = await db.query(sql, [mid])
+  const [rows] = await db.query(sql, [mid]);
   if (!rows.length) {
-    return res.json({ success: false })
+    return res.json({ success: false });
   }
 
-  res.json({ success: true, rows })
-})
+  res.json({ success: true, rows });
+});
 
 // 取得歷史訂單 - status:已完成
-router.get('/api/getCompletedPo/:mid', async (req, res) => {
+router.get("/api/getCompletedPo/:mid", async (req, res) => {
   let output = {
     success: false,
     rows: [],
-  }
+  };
   // 取得 member_id 去搜尋
-  const mid = req.params.mid
+  const mid = req.params.mid;
 
   const sql =
-    "SELECT `sid`, `purchase_order_id`, `member_id`, `total_amount`, `payment_status`, `status`, `created_at` FROM `ca_purchase_order` WHERE `member_id` = ? AND `status` = '已完成' ORDER BY created_at DESC"
+    "SELECT `sid`, `purchase_order_id`, `member_id`, `total_amount`, `payment_status`, `status`, `created_at` FROM `ca_purchase_order` WHERE `member_id` = ? AND `status` = '已完成' ORDER BY created_at DESC";
 
-  const [rows] = await db.query(sql, [mid])
+  const [rows] = await db.query(sql, [mid]);
   if (!rows.length) {
-    return res.json({ success: false })
+    return res.json({ success: false });
   }
 
-  res.json({ success: true, rows })
-})
+  res.json({ success: true, rows });
+});
+
+// 新增商品評論
+router.post("/product-comment", async (req, res) => {
+  const output = {
+    success: false,
+    postData: req.body, // 除錯用
+    add_comment: false,
+
+    update_comment_result: false,
+    exception: "",
+  };
+
+  try {
+    const { pid, member_id, purchase_order_id, score, comment } = req.body;
+
+    // 1. 新增評論
+    const addCommentSql =
+      "INSERT INTO `ca_product_comment`(`pid`, `member_id`, `purchase_order_id`, `score`, `comment`, `create_at`) VALUES (?, ?, ?, ?, ?, NOW())";
+
+    const [addCommentResult] = await db.query(addCommentSql, [
+      pid,
+      member_id,
+      purchase_order_id,
+      score,
+      comment,
+    ]);
+
+    output.add_comment = !!addCommentResult.affectedRows;
+    if (addCommentResult.affectedRows) {
+      try {
+        // 3. 更新 order_detail 的評論紀錄
+        const updateCommentRecordSql = `UPDATE ca_order_detail od
+          JOIN ca_purchase_order po ON od.purchase_order_sid = po.sid
+          SET od.is_comment = 1
+          WHERE od.pid = ? AND po.purchase_order_id = ?`;
+
+        const [updateCommentResult] = await db.query(updateCommentRecordSql, [
+          pid,
+          purchase_order_id,
+        ]);
+
+        output.update_comment_result = !!updateCommentResult.affectedRows;
+        output.success = !!addCommentResult.affectedRows;
+      } catch (ex) {
+        output.exception = ex;
+      }
+    }
+  } catch (ex) {
+    output.exception = ex;
+  }
+
+  res.json(output);
+});
 
 export default router;

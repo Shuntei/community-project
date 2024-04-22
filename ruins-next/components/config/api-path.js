@@ -24,6 +24,9 @@ export const PRODUCT_ONE = `${API_SERVER}/product/api/getProduct`
 //產品評論
 export const PRODUCT_COMMENT = `${API_SERVER}/product/api/getProductComment`
 
+// 新增商品評論
+export const PRODUCT_COMMENT_ADD = `${API_SERVER}/product/product-comment`
+
 // 相關商品10筆
 export const PRODUCT_RELATED = `${API_SERVER}/product/api/relatedProducts`
 
