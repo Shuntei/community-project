@@ -1,15 +1,15 @@
-import React from "react";
-import Image from "next/image";
-import img from "./img/90.jpg";
-import { RiDraftLine, RiBookmarkFill } from "@remixicon/react";
-import { useToggles } from "@/contexts/use-toggles";
+import React from 'react'
+import Image from 'next/image'
+import img from './img/90.jpg'
+import { RiDraftLine, RiBookmarkFill } from '@remixicon/react'
+import { useToggles } from '@/contexts/use-toggles'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function Profile() {
-  const { toggles, setToggles } = useToggles();
-
+  const { toggles, setToggles } = useToggles()
+  const { auth } = useAuth()
   return (
     <>
-      {" "}
       <div className="flex   justify-center mr-[10%] w-full ">
         <div className="flex items-center pc:gap-10">
           <div className="overflow-hidden size-[100px] pc:size-[128px] translate-x-[20%] translate-y-[-10%] pc:translate-x-[40%] pc:translate-y-[-40%] PcImagePosition">
@@ -23,7 +23,7 @@ export default function Profile() {
           </div>
 
           <div className="text-white pc:ml-56 ml-[140px] mt-2 pc:my-3">
-            <div className="text-[24px]">John Doe</div>
+            <div className="text-[24px]">{auth.username}&nbsp;</div>
             <div className="flex gap-16 items-end">
               <ul className="flex gap-4 pc:gap-6">
                 <li className="text-[14px] pc:text-[16px]">
@@ -62,5 +62,5 @@ export default function Profile() {
         </div>
       </div>
     </>
-  );
+  )
 }

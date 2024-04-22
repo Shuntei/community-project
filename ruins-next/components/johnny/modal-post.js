@@ -21,8 +21,10 @@ import {
 } from '@remixicon/react'
 import { SN_ADD_POST, SN_BOARDS } from './config/api-path'
 import { useBoards } from '@/contexts/use-boards'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function PostModal() {
+  const { auth } = useAuth()
   const { postModal, setPostModal } = useToggles()
   const [postForm, setPostForm] = useState({
     title: '',
@@ -61,6 +63,7 @@ export default function PostModal() {
     formData.append('content', postForm.content)
     formData.append('photo', postForm.photo)
     formData.append('boardId', postForm.boardId)
+    formData.append('userId', auth.id)
     // console.log(postForm)
     // http:localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg
     const MySwal = withReactContent(Swal)
@@ -153,14 +156,14 @@ export default function PostModal() {
         id="postModal"
         onSubmit={submitHandler}
       >
-        <div className="bg-black w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl">
+        <div className="bg-zinc-900 w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl">
           <div className="flex justify-between pb-5 text-white">
             <div
               className="text-[25px] flex items-center"
               onClick={bdChooseHandler}
             >
               <select
-                className="bg-black cursor-pointer"
+                className="bg-zinc-900 cursor-pointer"
                 onChange={changeHandler}
                 name="boardId"
               >
@@ -184,7 +187,7 @@ export default function PostModal() {
             <div className="flex items-center justify-between py-3">
               <div className="flex items-center gap-5">
                 <Image className="size-[35px] rounded-full" src={img} alt="" />
-                <span className="text-white text-[20px]">John Doe</span>
+                <span className="text-white text-[20px]">{auth.username}</span>
               </div>
               {/* 操作按鈕區 */}
               <div className="text-white flex gap-10">

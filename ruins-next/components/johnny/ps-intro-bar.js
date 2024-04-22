@@ -4,7 +4,7 @@ import { RiAddLine } from '@remixicon/react'
 export default function InfoBar() {
   return (
     <>
-      <section className="fixed mt-[40px] hidden bargone:block w-[300px] h-[600px] overflow-scroll pb-20 bg-black rounded-b-3xl z-[998]">
+      <section className="fixed mt-[40px] hidden bargone:block w-[300px] h-[600px] overflow-scroll pb-20 rounded-b-3xl z-[998]">
         {/* <div className="text-white flex justify-end px-10">
           <button>X</button>
         </div> */}

@@ -11,19 +11,13 @@ import { useToggles } from '@/contexts/use-toggles'
 import PersonalContent from '@/components/johnny/content-list-ps'
 
 export default function CentralContentP() {
-  const {
-    postModal,
-    setPostModal,
-    editModal,
-    toggles,
-    removeBox,
-    setRemoveBox,
-  } = useToggles()
+  const { postModal, setPostModal, toggles, removeBox, setRemoveBox } =
+    useToggles()
 
   return (
     <>
       {/* 依據navbar 加mt-[88px] pc:mt-[113px] */}
-      <div className="w-full flex justify-center pc:pt-[50px] bg-black mt-[50px] pc:mt-[112px]">
+      <div className="w-full flex justify-center pc:pt-[50px] mt-[50px] pc:mt-[112px]">
         {/* <!-- 中間內容 --> */}
         <section className="w-full pc:w-[800px]">
           {/* <div> */}
@@ -34,7 +28,7 @@ export default function CentralContentP() {
           {/* <!-- 發文按鈕 --> */}
           <div className="border-y-2 text-white flex mt-3 ">
             <button
-              className="items-center flex justify-center leading-10 w-[100%] hover:hover2 text-[20px]"
+              className="items-center flex justify-center leading-10 w-[100%] hover:bg-zinc-900 text-[20px]"
               onClick={() => {
                 setPostModal(!postModal)
               }}

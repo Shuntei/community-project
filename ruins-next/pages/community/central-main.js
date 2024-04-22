@@ -54,7 +54,7 @@ export default function CentralContent() {
   return (
     <>
       {/* 依據navbar  加mt-[88px] pc:mt-[113px] */}
-      <div className="flex justify-center mt-[50px] pc:mt-[112px] bg-black overflow-scroll">
+      <div className="flex justify-center mt-[50px] pc:mt-[112px] overflow-scroll">
         <section className="w-full pc:w-[800px]">
           {toggles.follows || toggles.notification ? (
             ''
@@ -133,6 +133,7 @@ export default function CentralContent() {
                     name="searchTerm"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="關鍵字搜尋"
                   />
                   <button
                     className="px-2 bg-white flex items-center h-[32px] p-[6px] translate-x-[-5px] pc:translate-x-0  pc:shadow1 rounded-r-lg"
