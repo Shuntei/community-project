@@ -21,6 +21,7 @@ export default function ChangeEmailPopup({
   const defaultForm = {
     password: '',
     email: '',
+    username: auth.username,
   }
 
   const initErrors = {

@@ -11,8 +11,12 @@ export const MB_GOOGLE_LOGIN = `${API_SERVER}/member/google-login`
 export const MB_EDIT_PROFILE = `${API_SERVER}/member/edit-profile`
 // check email and send otp
 export const MB_CHECK_EMAIL = `${API_SERVER}/member/check-email`
+// check password and send otp
+export const MB_CHECK_PASS = `${API_SERVER}/member/check-password`
 // edit email
 export const MB_EDIT_EMAIL = `${API_SERVER}/member/edit-email`
+// send OTP 
+export const MB_SEND_CODE = `${API_SERVER}/member/send-code`
 
 
 //商品列表

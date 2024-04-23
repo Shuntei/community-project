@@ -4,60 +4,102 @@ import db from "./../../utils/linda/mysql2-connect.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import upload from "./../../utils/linda/upload-imgs.js";
-import nodemailer from "nodemailer"
-import path from "path"
-import { log } from "console";
+import nodemailer from "nodemailer";
+import path from "path";
 
 const router = express.Router();
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  host: 'smtp.gmail.com',
+  service: "gmail",
+  host: "smtp.gmail.com",
   port: 587,
   secure: false,
   auth: {
-    user: process.env.USER,
+    user: process.env.EMAIL_USER,
     pass: process.env.APP_PASSWORD,
-  }
-})
+  },
+});
 
-function generateOTP(){
-  return Math.floor(10000 + Math.random() * 90000)
+function generateOTP() {
+  return Math.floor(10000 + Math.random() * 90000);
 }
 
-async function saveOTPInDB(id, otp){
+async function saveOTPInDB(id, otp) {
   const sql = `UPDATE mb_user SET otp=? WHERE id=?`;
-  const [result] = await db.query(sql, [otp, id])
-  console.log(result);
+  const [result] = await db.query(sql, [otp, id]);
 }
 
-const sendMail = async (transporter, id)=>{
-  const otp = generateOTP()
+const sendMail = async (transporter, id, email, username) => {
+  const otp = generateOTP();
+  console.log(process.env.EMAIL_USER, process.env.APP_PASSWORD);
 
-  await saveOTPInDB(id, otp)
+  await saveOTPInDB(id, otp);
 
   const mailOptions = {
     from: {
       name: "Ruins",
-      address: process.env.USER
+      address: process.env.EMAIL_USER,
     },
-    to: "nmandakh60@gmail.com",
+    to: email,
     subject: "Your OTP for Verification",
-    text: `Your OTP is: ${otp}`, 
-  }
+    html: `
+    <div style="font-family: 'Open Sans', sans-serif; font-size: 14px; color: #5F6166; width: 100%; height: 100%; margin: 0 auto; padding-block: 32px;">
+    <table cellpadding="0" cellspacing="0" border="0" align="center" style="background: #F7F8F8; width: 90%; max-width: 600px; margin: 0 auto;">
+        <tr>
+            <td align="center" style="padding: 20px;">
+                <table cellpadding="0" cellspacing="0" border="0" align="center" style="background: white; padding: 20px; width: 100%;">
+                    <tr>
+                        <td>
+                            <p style="font-size: 16px; margin-bottom: 10px;">Hello <span style="color: #061820; font-weight: bold;">${username}</span>!</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="center">
+                            <table cellpadding="0" cellspacing="0" border="0" align="center" style="background: #F2F5F4; height: 100px; width: 100%; text-align: center;">
+                                <tr>
+                                    <td>
+                                        <h2 style="font-size: 18px; color: #061820; margin: 0;">Your OTP code is</h2>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p style="font-size: 24px; font-weight: bold; letter-spacing: 5px; margin: 0;">${otp}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-size: 14px; margin: 10px 0;">The OTP code above is one-time-use and expires after <strong>5 minutes</strong> for security reasons. If you did not request this email, you can ignore and delete it.</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p style="font-size: 16px; color: #061820; text-align: center; margin-bottom: 5px;">Thanks</p>
+                            <p style="font-size: 16px; text-align: center; margin-top: 0;"><a style="text-decoration: none; color: #20938D;" href="http://localhost:3000">Ruins Team</a></p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</div>
+`,
+  };
 
   try {
     await transporter.sendMail(mailOptions, (error, info) => {
-      if(error){
+      if (error) {
         console.log("Error sending email:", error);
       } else {
-        console.log('Email sent:' + info.response);
+        console.log("Email sent:" + info.response);
       }
-    })
+    });
     console.log("Sent successfully");
   } catch (error) {
     console.log(error);
   }
-}
+};
 
 router.post("/signup", async (req, res) => {
   const output = {
@@ -149,8 +191,8 @@ router.post("/login", async (req, res) => {
     data: {
       id: 0,
       username: "",
-      name: '',
-      email: '',
+      name: "",
+      email: "",
       profileUrl: "",
       coverUrl: "",
       googlePhoto: false,
@@ -167,10 +209,10 @@ router.post("/login", async (req, res) => {
 
   const { account, password } = req.body;
 
-  const usernameSql = `SELECT * FROM mb_user WHERE username LIKE ?`;
-  const [usernameRows] = await db.query(usernameSql, [`%${account}%`]);
-  const emailSql = `SELECT * FROM mb_user WHERE email LIKE ?`;
-  const [emailRows] = await db.query(emailSql, [`%${account}%`]);
+  const usernameSql = `SELECT * FROM mb_user WHERE username = ?`;
+  const [usernameRows] = await db.query(usernameSql, account);
+  const emailSql = `SELECT * FROM mb_user WHERE email = ?`;
+  const [emailRows] = await db.query(emailSql, account);
 
   if (!usernameRows.length && !emailRows.length) {
     (output.success = false), (output.code = 1);
@@ -235,7 +277,7 @@ router.post("/google-login", async (req, res) => {
       { id: rows[0].id, username: rows[0].username },
       process.env.JWT_SECRET
     );
-  
+
     return {
       id: rows[0].id,
       username: rows[0].username,
@@ -284,7 +326,7 @@ router.post("/google-login", async (req, res) => {
           const [rows] = await db.query(sql, username);
 
           if (rows.length) {
-            output.data = generateOutputData(rows)
+            output.data = generateOutputData(rows);
             output.success = true;
             output.message = "New info was inserted";
           }
@@ -298,9 +340,9 @@ router.post("/google-login", async (req, res) => {
         console.log(ex);
       }
     } else {
-        output.data = generateOutputData(emailRows)
-        output.success = true;
-        output.message = "Successfully logged in";
+      output.data = generateOutputData(emailRows);
+      output.success = true;
+      output.message = "Successfully logged in";
     }
   } catch (ex) {
     console.log("Something went wrong", ex);
@@ -343,7 +385,7 @@ router.put(
       } else {
         try {
           const sql = `SELECT * FROM mb_user WHERE id = ? `;
-          const [rows] = await db.query(sql, id)
+          const [rows] = await db.query(sql, id);
           const userSql = `UPDATE mb_user 
           SET 
           name=?, 
@@ -361,8 +403,8 @@ router.put(
           const [result] = await db.query(userSql, [
             name,
             username,
-            hasAvatar ? avatar[0].filename : rows[0].profile_pic_url ,
-            hasCover ? cover[0].filename : rows[0].cover_pic_url ,
+            hasAvatar ? avatar[0].filename : rows[0].profile_pic_url,
+            hasCover ? cover[0].filename : rows[0].cover_pic_url,
             hasAvatar ? false : rows[0].google_login,
             aboutMe,
             allowContact,
@@ -373,10 +415,10 @@ router.put(
             id,
           ]);
           if (result.affectedRows) {
-            const sql = `SELECT * FROM mb_user WHERE id = ?`
-            const [rows] = await db.query(sql, id)
-            if(rows.length){
-              output.data = rows
+            const sql = `SELECT * FROM mb_user WHERE id = ?`;
+            const [rows] = await db.query(sql, id);
+            if (rows.length) {
+              output.data = rows;
               output.success = true;
               output.message = "Updated successfully";
             }
@@ -399,7 +441,7 @@ router.put(
   }
 );
 
-router.post("/check-email/:id", async(req, res) =>{
+router.post("/check-email/:id", async (req, res) => {
   const output = {
     success: false,
     code: 0,
@@ -408,92 +450,119 @@ router.post("/check-email/:id", async(req, res) =>{
     emailError: "",
     passwordCode: 0,
     passwordError: "",
-  }
-  const id = req.params.id
+  };
+  const id = req.params.id;
+  const newEmail = "nmandakh60@gmail.com";
 
-  const {password, email} = req.body
+  const { password, email, username } = req.body;
 
-  let isRightPass = false
+  let isRightPass = false;
   const sql = `SELECT * FROM mb_user WHERE id=?`;
-  const [rows] = await db.query(sql, id)
-  if(rows.length){
+  const [rows] = await db.query(sql, id);
+  if (rows.length) {
     const result = await bcrypt.compare(password, rows[0].password);
-    if(result){
-      isRightPass = true
+    if (result) {
+      isRightPass = true;
     } else {
-      output.success = false
-      output.passwordCode = 1
-      output.passwordError = "Wrong password"
+      output.success = false;
+      output.passwordCode = 1;
+      output.passwordError = "Wrong password";
     }
   }
 
-  let isUniqueEmail = false
+  let isUniqueEmail = false;
   const emailSql = `SELECT * FROM mb_user WHERE email LIKE ? AND id != ?`;
-  const [emailRows] = await db.query(emailSql, [`%${email}%`, id])
-  if(emailRows.length){
-      output.success = false
-      output.emailCode = 1
-      output.emailError = "Email in use"
+  const [emailRows] = await db.query(emailSql, [`%${email}%`, id]);
+  if (emailRows.length) {
+    output.success = false;
+    output.emailCode = 1;
+    output.emailError = "Email in use";
   } else {
     isUniqueEmail = true;
   }
 
-  if(isUniqueEmail && isRightPass){
-    output.success = true
-    sendMail(transporter);
+  if (isUniqueEmail && isRightPass) {
+    output.success = true;
+    await sendMail(transporter, id, newEmail, username);
   }
 
-  res.json(output)
-})
+  res.json(output);
+});
 
 async function verifyOTP(id, otp) {
   const sql = `SELECT otp FROM mb_user WHERE id = ?`;
-  const [rows] = await db.query(sql, id)
+  const [rows] = await db.query(sql, id);
 
-  if(!rows.length) {
+  if (!rows.length) {
     return false;
   }
 
-  const storedOTP = rows[0].otp
+  const storedOTP = rows[0].otp;
 
-  if(otp !== storedOTP) {
+  if (otp !== storedOTP) {
     return false;
   }
 
   return true;
 }
 
-router.post("/edit-email/:id", async(req, res) => {
+router.post("/send-code/:id", async (req, res) => {
+  // const email = req.body
+  const email = "nmandakh60@gmail.com";
+  const { username } = req.body;
+  const id = req.params.id;
+  try {
+    await sendMail(transporter, id, email, username);
+    res.json({ success: true, message: "otp sent" });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: "otp wasn't sent" });
+  }
+});
+
+router.post("/edit-email/:id", async (req, res) => {
   const output = {
     success: false,
-    message: '',
-  }
-  const id = req.params.id
-  const {otp, newEmail} = req.body
+    message: "",
+  };
+  const id = req.params.id;
+  const { otp, newEmail } = req.body;
 
-  const isOTPVerified = await verifyOTP(id, otp)
+  const isOTPVerified = await verifyOTP(id, otp);
 
-  if(!isOTPVerified){
-    output.success = false
-    output.message = "Invalid OTP"
-    return res.json(output)
+  if (!isOTPVerified) {
+    output.success = false;
+    output.message = "Invalid OTP";
+    return res.json(output);
   }
 
   const sql = `UPDATE mb_user SET email = ?, otp = NULL WHERE id=?`;
   try {
-    await db.query(sql, [newEmail, id])
-    output.success = true
-    output.message = "Email updated successfully"
-    return res.json(output)
+    await db.query(sql, [newEmail, id]);
+    output.success = true;
+    output.message = "Email updated successfully";
+    return res.json(output);
   } catch (error) {
     console.log("Error updating email:", error);
-    output.success = false,
-    output.message = "Error updating email"
+    (output.success = false), (output.message = "Error updating email");
   }
 
-  res.json(output)
+  res.json(output);
+});
+
+router.post("/check-password/:id", async (req, res) => {
+  const {oldPassword} = req.body
+  const id = req.params.id
+
+  const sql = `SELECT * FROM mb_user WHERE id = ?`;
+  const [rows] = await db.query(sql, id);
+
+  const result = await bcrypt.compare(oldPassword, rows[0].password);
+  if (result){
+    return res.json({success: true, message: "Right password"})
+  } else {
+    return res.json({success: false, code: 1, message: "Wrong old password"})
+  }
 })
-
-
 
 export default router;

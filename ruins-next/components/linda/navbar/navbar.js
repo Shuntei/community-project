@@ -98,7 +98,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                     {auth.username}
                   </div>
                 </div>
-                <ProfileModal logout={logout} isVisible={showModal} />
+                <ProfileModal setShowModal={setShowModal} logout={logout} isVisible={showModal} />
               </div>
             </div>
           ) : (
