@@ -4,9 +4,10 @@ import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { API_SERVER, TOUR_POST } from '@/components/config/api-path'
+import { API_SERVER, TOUR_LIST } from '@/components/config/api-path'
 import dayjs from 'dayjs'
-import Modal from '@/components/tony/modal-category'
+import CategoryModal from '@/components/tony/modal-category'
+import FilterModal from '@/components/tony/modal-filter'
 
 export default function AllSearch() {
   const [tourList, setTourList] = useState([])
@@ -17,7 +18,7 @@ export default function AllSearch() {
 
   // 取得全部貼文資料
   const fetchAllTourData = async (page) => {
-    const response = await fetch(`${TOUR_POST}?page=${page}`)
+    const response = await fetch(`${TOUR_LIST}?page=${page}`)
     const result = await response.json()
 
     // 若 result 或 result.rows undefined, 直接結束
@@ -37,7 +38,7 @@ export default function AllSearch() {
   // 取得關鍵字結果,主題篩選結果
   const fetchFilteredTourData = async (page, keyword, category) => {
     const response = await fetch(
-      `${TOUR_POST}?page=${page}&category=${category}&keyword=${encodeURIComponent(keyword)}`
+      `${TOUR_LIST}?page=${page}&category=${category}&keyword=${encodeURIComponent(keyword)}`
     )
     const result = await response.json()
     const newData = result.rows.map((item) => ({
@@ -112,7 +113,7 @@ export default function AllSearch() {
             {/* <button className="rounded bg-white px-2.5 py-[5px] md:inline-block hidden ">
               更多主題<i className="ri-arrow-down-s-line"></i>
             </button> */}
-            <Modal/>
+            <CategoryModal/>
             <div className="md:space-x-3 space-x-2 flex flex-nowrap">
               <button
                 className={`rounded bg-white px-2.5 py-[5px] ${category === 4 ? 'bg-blue-500 text-red-900' : ''}`}
@@ -124,7 +125,7 @@ export default function AllSearch() {
                 className={`rounded bg-white px-2.5 py-[5px] ${category === 11 ? 'bg-blue-500 text-red-900' : ''}`}
                 onClick={() => handleCategoryClick(11)}
               >
-                度假飯店
+                廢棄飯店
               </button>
               <button className="rounded bg-white px-2.5 py-[5px]">工廠</button>
               <button className="rounded bg-white px-2.5 py-[5px]">
@@ -150,10 +151,11 @@ export default function AllSearch() {
             </div>
           </div>
           <div className="md:relative absolute -top-[60px] right-4 md:top-0 md:right-0">
-            <button className="font-['Noto Sans TC'] md:text-[13px] text-xl me:font-semibold md:rounded rounded-full bg-white md:opacity-100 opacity-90 px-2.5 py-[5px]">
+            {/* <button className="font-['Noto Sans TC'] md:text-[13px] text-xl me:font-semibold md:rounded rounded-full bg-white md:opacity-100 opacity-90 px-2.5 py-[5px]">
               <i className="ri-equalizer-line"></i>
               <span className="md:inline hidden">排序</span>
-            </button>
+            </button> */}
+            <FilterModal/>
           </div>
         </div>
         <p className="text-white text-[13px]">{totalRows}個探險結果</p>
@@ -173,7 +175,7 @@ export default function AllSearch() {
                     key={v.tour_id}
                   >
                     <Link
-                      href={`/tour/tour-post/${v.tour_id}`}
+                      href={`/tour/tourpost/${v.tour_id}`}
                       className="space-y-5"
                     >
                       <img

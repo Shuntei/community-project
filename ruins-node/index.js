@@ -33,7 +33,7 @@ app.use("/product", productRouter);
 app.use("/cart", cartRouter);
 app.use("/game", gameRouter);
 app.use("/tour", tourRouter);
-// app.use("/chat", chatRouter);
+app.use("/chat", chatRouter);
 app.use("/community", communityRouter);
 app.use("/community", communityRouterTwo);
 app.use("/tour", tourRouter);
