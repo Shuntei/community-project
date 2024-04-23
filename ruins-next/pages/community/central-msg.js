@@ -37,7 +37,7 @@ export default function CentralContentM() {
   return (
     <>
       {/* 依據navbar 加mt-[88px] pc:mt-[113px]調整*/}
-      <div className="flex justify-center pt-[50px] bg-292929 mt-[50px] pc:mt-[112px]">
+      <div className="flex justify-center pt-[50px] mt-[50px] pc:mt-[112px]">
         <section className="w-full pc:w-[900px]">
           {/* <!-- chatroom-title --> */}
           <div className="bg-292929 text-white w-full  flex justify-between items-center pb-8 pc:w-[900px] px-10 pc:px-0 fixed">

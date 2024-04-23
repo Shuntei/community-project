@@ -19,6 +19,7 @@ import {
   RiCloseLargeLine,
 } from '@remixicon/react'
 import { SN_ADD_COMMENT } from './config/api-path'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function CommentModal({
   postId,
@@ -26,6 +27,7 @@ export default function CommentModal({
   setRenderAfterCm,
 }) {
   console.log('postIdInCommentModal', postId)
+  const { auth } = useAuth()
   const { commentModal, setCommentModal } = useToggles()
 
   const [postForm, setPostForm] = useState({
@@ -61,6 +63,7 @@ export default function CommentModal({
     const formData = new FormData()
     formData.append('content', postForm.content)
     formData.append('postId', postForm.postId)
+    formData.append('userId', auth.id)
     // formData.append('photo', postForm.photo)
 
     const MySwal = withReactContent(Swal)
@@ -114,10 +117,6 @@ export default function CommentModal({
 
     confirmNotify()
   }
-  // useEffect(() => {
-  //   allPostsShow()
-  //   setRender(false)
-  // }, [render])
 
   return (
     <>
@@ -142,7 +141,7 @@ export default function CommentModal({
             <div className="flex items-center justify-between py-3">
               <div className="flex items-center gap-5">
                 <Image className="size-[35px] rounded-full" src={img} alt="" />
-                <span className="text-white text-[20px]">John Doe</span>
+                <span className="text-white text-[20px]">{auth.username}</span>
               </div>
               {/* 操作按鈕區 */}
               <div className="text-white flex gap-10">
@@ -160,15 +159,6 @@ export default function CommentModal({
 
             <div className="w-full h-full">
               {/* <!-- title --> */}
-              {/* <div className="flex justify-center mb-5">
-                <input
-                  className="justify-center w-full text-[20px] leading-10 px-10 py-1 rounded-lg outline-none text-black"
-                  placeholder="Title Here"
-                  name="title"
-                  onChange={changeHandler}
-                  value={postForm.title}
-                />
-              </div> */}
               <div className="rounded-lg bg-slate-300 text-black">
                 <div className="flex justify-center gap-2 pc:gap-5 py-3">
                   <div className="text-[14px] pc:text-[16px] flex">

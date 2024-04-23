@@ -7,7 +7,7 @@ import profileImg from './img/90.jpg'
 export default function ChannelAndMsg() {
   return (
     <>
-      <section className="fixed mt-[40px] ml-5 hidden bargone:block h-[600px] overflow-scroll pb-20 bg-292929 z-[998] rounded-b-3xl">
+      <section className="fixed mt-[40px] ml-5 hidden bargone:block h-[600px] overflow-scroll pb-20 z-[998] rounded-b-3xl">
         <div className="text-white mx-10 pt-3 pb-1 text-[20px] ">CHANNELS</div>
         <div className="border-b-2 mx-10 w-[200px] mb-5"></div>
         <ul>

@@ -20,16 +20,7 @@ import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
 
 export default function MainContent() {
-  const {
-    postsList,
-    selectedPosts,
-    postsShow,
-    handlePostId,
-    // handlePage,
-    handleBdPostsPage,
-    render,
-    setRender,
-  } = useBoards()
+  const { postsList, postsShow, handlePostId, setRender } = useBoards()
 
   const router = useRouter()
 
@@ -48,10 +39,11 @@ export default function MainContent() {
       title: '確認刪除貼文?',
       showConfirmButton: true,
       showCancelButton: true,
-      confirmButtonColor: '#006400',
+      confirmButtonColor: '#292929', //#006400
       cancelButtonColor: '#8B0000',
       confirmButtonText: '是',
       cancelButtonText: '否',
+      timer: 3000,
     }).then((rst) => {
       if (rst.isConfirmed) {
         MySwal.fire({

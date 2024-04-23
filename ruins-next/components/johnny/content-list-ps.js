@@ -63,10 +63,11 @@ export default function PersonalContent() {
       title: '確認刪除貼文?',
       showCancelButton: true,
       showCancelButton: true,
-      confirmButtonColor: '#006400',
+      confirmButtonColor: '#292929',
       cancelButtonColor: '#8B0000',
       confirmButtonText: '是',
       cancelButtonText: '否',
+      timer: 3000,
     }).then((rst) => {
       if (rst.isConfirmed) {
         MySwal.fire({
