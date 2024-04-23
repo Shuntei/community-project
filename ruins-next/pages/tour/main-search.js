@@ -25,7 +25,7 @@ export default function MainSearch() {
         </div>
       </div>
       <div className="md:px-[150px] px-5 py-5 space-y-5 relative">
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <div className="md:flex md:space-x-3 font-['Noto Sans TC'] text-[13px] font-semibold">
             <button className="rounded bg-white px-2.5 py-[5px] md:inline-block hidden ">
               更多主題<i className="ri-arrow-down-s-line"></i>
@@ -50,7 +50,7 @@ export default function MainSearch() {
             </button>
           </div>
         </div>
-        <p className="text-white text-[13px]">215個探險</p>
+        <p className="text-white text-[13px]">215個探險</p> */}
       </div>
       <div className="md:px-[150px] px-5 space-y-10 pb-[50px]">
         <div className="space-y-4 font-['Noto Sans TC']">

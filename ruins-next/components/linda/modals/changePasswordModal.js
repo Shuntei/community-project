@@ -38,7 +38,7 @@ export default function ChangePasswordPopup({ isVisible, onClose }) {
                   type="password"
                   className="bg-[#191919] h-[44px] rounded focus:outline-none text-base text-white flex w-full p-[15px]"
                 />{" "}
-                <IoMdEye className="absolute bottom-[10px] right-[15px] md:text-3xl text-xl text-white" />
+                <IoMdEye className="absolute bottom-[10px] right-[15px] md:text-2xl text-xl text-white" />
               </div>
             </div>
             <div className="flex w-full flex-col gap-[6px]">
@@ -49,7 +49,7 @@ export default function ChangePasswordPopup({ isVisible, onClose }) {
                   type="password"
                   className="bg-[#191919] h-[44px] rounded focus:outline-none text-base text-white flex w-full p-[15px]"
                 />{" "}
-                <IoMdEye className="absolute bottom-[10px] right-[15px] md:text-3xl text-xl text-white" />
+                <IoMdEye className="absolute bottom-[10px] right-[15px] md:text-2xl text-xl text-white" />
               </div>
             </div>
             <div className="flex w-full flex-col gap-[6px]">
@@ -60,7 +60,7 @@ export default function ChangePasswordPopup({ isVisible, onClose }) {
                   type="password"
                   className="bg-[#191919] h-[44px] rounded focus:outline-none text-base text-white flex w-full p-[15px]"
                 />{" "}
-                <IoMdEye className="absolute bottom-[10px] right-[15px] md:text-3xl text-xl text-white" />
+                <IoMdEye className="absolute bottom-[10px] right-[15px] md:text-2xl text-xl text-white" />
               </div>
             </div>
             <button className="bg-black hover:bg-[#7A7A7A] flex items-center justify-center w-full py-[18px] italic border border-white">

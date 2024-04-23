@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackendPortForImg } from '../../../components/johnny/config/api-path'
+import { API_SERVER } from '../../../components/johnny/config/api-path'
 import Link from 'next/link'
 import Image from 'next/image'
 import img from '../../../components/johnny/img/90.jpg'
@@ -43,7 +43,7 @@ export default function EditModal() {
 
   const [previewUrl, setPreviewUrl] = useState('')
   const [isFormChanged, setIsFormChanged] = useState(false)
-  const { render, setRender, allPostsShow } = useBoards()
+  const { render, setRender, postsShow } = useBoards()
 
   const changeHandler = (e) => {
     setPostForm({ ...postForm, [e.target.name]: e.target.value })
@@ -178,7 +178,7 @@ export default function EditModal() {
 
   // 用於編輯後立即更新貼文列表
   useEffect(() => {
-    allPostsShow()
+    postsShow()
     setRender(false)
   }, [render])
 
@@ -305,7 +305,7 @@ export default function EditModal() {
                               return (
                                 <Image
                                   className="size-[150px] object-cover rounded-lg"
-                                  src={`http://localhost:${BackendPortForImg}/community/${postForm.image_url}`}
+                                  src={`${API_SERVER}/${postForm.image_url}`}
                                   width={150}
                                   height={150}
                                   alt=""

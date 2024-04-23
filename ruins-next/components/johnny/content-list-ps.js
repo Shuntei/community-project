@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackendPortForImg } from './config/api-path'
+import { API_SERVER } from './config/api-path'
 import {
   RiChat4Fill,
   RiEyeFill,
@@ -18,6 +18,7 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 
 export default function PersonalContent() {
   const router = useRouter()
@@ -33,7 +34,7 @@ export default function PersonalContent() {
       const r = await fetch(`${SN_PSPOSTS}${currentPage}`)
       const data = await r.json()
       setPsPosts(data)
-      console.log(data)
+      // console.log(data)
     } catch (err) {
       console.log(err)
     }
@@ -114,10 +115,14 @@ export default function PersonalContent() {
           <span
             className="border-s-2 px-3 py-3 flex items-center hover:hover1"
             onClick={() => {
-              router.push({
-                pathname: '/community/main-personal',
-                query: { page: `${1}` },
-              })
+              router.push(
+                {
+                  pathname: '/community/main-personal',
+                  query: { page: `${1}` },
+                },
+                undefined,
+                { shallow: true }
+              )
             }}
           >
             <RiArrowLeftDoubleLine />
@@ -134,10 +139,14 @@ export default function PersonalContent() {
                     <span
                       // href={`?page=${p}`}
                       onClick={() => {
-                        router.push({
-                          pathname: '/community/main-personal',
-                          query: { page: `${p}` },
-                        })
+                        router.push(
+                          {
+                            pathname: '/community/main-personal',
+                            query: { page: `${p}` },
+                          },
+                          undefined,
+                          { shallow: true }
+                        )
                       }}
                       className={`border-s-2 px-5 flex py-3 hover:hover1 cursor-pointer
                      active:bg-white ${p === psPosts.page ? 'bg-white' : ''} `}
@@ -151,10 +160,14 @@ export default function PersonalContent() {
           <span
             className="border-x-2 px-3 py-3 flex items-center hover:hover1"
             onClick={() => {
-              router.push({
-                pathname: '/community/main-personal',
-                query: { page: `${psPosts.totalPages}` },
-              })
+              router.push(
+                {
+                  pathname: '/community/main-personal',
+                  query: { page: `${psPosts.totalPages}` },
+                },
+                undefined,
+                { shallow: true }
+              )
             }}
           >
             <RiArrowRightDoubleLine />
@@ -197,9 +210,17 @@ export default function PersonalContent() {
                     }}
                     className="cursor-pointer"
                   >
-                    <div className="text-[20px] font-semibold">{v.title}</div>
+                    <div className="text-[20px] font-semibold flex items-center justify-between">
+                      <span>{v.title}</span>
+                      <span className="hidden pc:flex text-[12px]">
+                        {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
+                      </span>
+                    </div>
                     <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
                     <span>{v.content}</span>
+                    <div className="text-[12px] pc:hidden">
+                      {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
+                    </div>
                   </span>
                   <div className="text-[14px] text-292929">
                     <div className="flex gap-2">
@@ -266,10 +287,10 @@ export default function PersonalContent() {
                   {v.image_url && (
                     <Image
                       className="size-[100px] object-cover rounded-xl"
-                      src={`http://localhost:${BackendPortForImg}/community/${v.image_url}`}
+                      src={`${API_SERVER}/${v.image_url}`}
                       width={100}
                       height={100}
-                      alt="Description of image"
+                      alt="上傳的無法顯示圖片"
                     />
                   )}
                 </Link>

@@ -85,7 +85,7 @@ export default function Account() {
     const fileSizeInMB = file.size / (1024 * 1024)
     if (fileSizeInMB > 2) {
       setNotificationText('File size is too big (Max 2MB)')
-      setShowGreenNotification(true)
+      setShowRedNotification(true)
       return
     }
     setMyForm({ ...myForm, [e.target.name]: file })
@@ -139,7 +139,7 @@ export default function Account() {
           name: nameZod.error.issues[0].message,
         }
       }
-    } 
+    }
 
     if (myForm.email) {
       const emailZod = schemaEmail.safeParse(myForm.email)
@@ -303,21 +303,23 @@ export default function Account() {
               onClick={() => {
                 avatarInputRef.current.click()
               }}
-              className="relative rounded-full max-h-[110px] min-w-[110px] overflow-hidden flex justify-center items-center"
+              className="relative rounded-full max-h-[110px] min-w-[110px] flex justify-center items-center"
             >
               <Image
                 priority
-                className={`${avatarPreview ? 'max-h-[110px] min-h-[110px]' : ''} min-w-[110px] rounded-full hover:border`}
+                className={`${avatarPreview || auth.profileUrl ? 'max-h-[110px] min-h-[110px]' : ''} object-cover min-w-[110px] rounded-full hover:border`}
                 alt=""
                 width={110}
                 height={110}
                 src={
                   avatarPreview ||
                   (auth.profileUrl
-                    ? 
-                    (auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`)
-                    : 
-                    (isHovered ? ProfileIconBold : ProfileIcon))
+                    ? auth.googlePhoto
+                      ? auth.profileUrl
+                      : `${IMG_SERVER}/${auth.profileUrl}`
+                    : isHovered
+                      ? ProfileIconBold
+                      : ProfileIcon)
                 }
                 onMouseEnter={() => {
                   setIsHovered(true)
@@ -505,29 +507,22 @@ export default function Account() {
             </div>
           </div>
         </div>
-        {showRedNotification || showGreenNotification ? (
-          <div className="md:pl-[277px] fixed bottom-[148px] md:bottom-[103px] right-0 w-full ">
-            {showGreenNotification ? (
-              <NotifyGreen
-                onClose={() => {
-                  setShowGreenNotification(false)
-                }}
-              >
-                {notificationText}
-              </NotifyGreen>
-            ) : (
-              <NotifyRed
-                onClose={() => {
-                  setShowRedNotification(false)
-                }}
-              >
-                {notificationText}
-              </NotifyRed>
-            )}
-          </div>
-        ) : (
-          ''
-        )}
+        <div className="md:pl-[277px] fixed bottom-[148px] md:bottom-[103px] right-0 w-full ">
+          <NotifyGreen
+            onClose={() => {
+              setShowGreenNotification(false)
+            }}
+            text={notificationText}
+            show={showGreenNotification}
+          />
+          <NotifyRed
+            onClose={() => {
+              setShowRedNotification(false)
+            }}
+            text={notificationText}
+            show={showRedNotification}
+          />
+        </div>
         {/* Footer button */}
         <div className="fixed bottom-0 right-0 flex md:flex-row flex-col py-[23px] md:px-[80px] text-white md:justify-between gap-[15px] items-center w-full md:pl-[360px] bg-black">
           <div className="flex gap-[15px] items-center">

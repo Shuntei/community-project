@@ -239,7 +239,7 @@ router.post("/createLinePayOrder", async (req, res) => {
 // 本地端頁面，轉回來的路由
 router.get("/linePay/confirm", async (req, res) => {
   const { transactionId, orderId } = req.query;
-  console.log(transactionId, orderId);
+  // console.log(transactionId, orderId);
 
   const sql = `SELECT * FROM ca_purchase_order WHERE purchase_order_id = ?`;
   const [rows] = await db.query(sql, [orderId]);
@@ -270,6 +270,24 @@ router.get("/linePay/confirm", async (req, res) => {
         'UPDATE `ca_purchase_order` SET `payment_status` = "已付款" WHERE `purchase_order_id` = ?';
 
       const [result] = await db.query(updatePoStatusSql, [orderId]);
+
+      if (result.affectedRows > 0) {
+        
+        return res.json({
+          success: true,
+          lineResult: linePayRes?.data?.returnCode,
+          updatePaymentStatus: { success: true },
+        });
+      } else {
+        return res.json({
+          success: false,
+          lineResult: linePayRes?.data?.returnCode,
+          updatePaymentStatus: {
+            success: false,
+            error: "Failed to update payment status",
+          },
+        });
+      }
     } else {
       return res.json({
         success: false,
@@ -285,6 +303,7 @@ router.get("/linePay/confirm", async (req, res) => {
     });
   }
 });
+
 // LinePay function：創建 Line Pay 簽章
 function createSignature(uri, linePayBody) {
   const nonce = parseInt(new Date().getTime() / 1000);

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { BackendPortForImg } from '@/components/johnny/config/api-path'
+import { API_SERVER } from '@/components/johnny/config/api-path'
 import Image from 'next/image'
 import profileImg from '../../components/johnny/img/16.jpg'
 import { useRouter } from 'next/router'
 import CommentModal from '@/components/johnny/modal-comment'
 import { useToggles } from '@/contexts/use-toggles'
 import { useBoards } from '@/contexts/use-boards'
-import LikeButton from './interactive-like'
-import CommentCount from './interactive-cm-count'
-import Views from './interactive-views'
+import LikeButton from '../../components/johnny/interactive-like'
+import CommentCount from '../../components/johnny/interactive-cm-count'
+import Views from '../../components/johnny/interactive-views'
 import Comment from '@/components/johnny/comment'
 import {
   RiMapPinFill,
@@ -18,17 +18,17 @@ import {
   RiAddLine,
 } from '@remixicon/react'
 import { SN_POSTS } from '@/components/johnny/config/api-path'
+import dayjs from 'dayjs'
 
 export default function MainPost() {
   const [renderAfterCm, setRenderAfterCm] = useState(false)
   const router = useRouter()
-  const handleBack = () => {
-    router.back()
-  }
 
   const { commentModal, setCommentModal } = useToggles()
   const { getPost, setGetPost } = useBoards()
-
+  const handleBack = () => {
+    router.back()
+  }
   const postId = router.query.postId
   const isPostId = async () => {
     const postIdExist = postId
@@ -61,7 +61,10 @@ export default function MainPost() {
             <div className="flex justify-between mb-5">
               <div>
                 <div className="text-[24px] border-b-2">{getPost[0].title}</div>
-                <div>Feb 27, 2024</div>
+                {/* <div>Feb 27, 2024</div> */}
+                <div>
+                  {dayjs(getPost[0].posts_timestamp).format('MMM DD, YYYY')}
+                </div>
               </div>
             </div>
             {/* <div className="flex my-2 gap-2 items-center size-[35px] overflow-hidden rounded-[100%]"> */}
@@ -98,7 +101,7 @@ export default function MainPost() {
             <div className="mb-2">
               {getPost[0].image_url && (
                 <Image
-                  src={`http://localhost:${BackendPortForImg}/community/${getPost[0].image_url}`}
+                  src={`${API_SERVER}/${getPost[0].image_url}`}
                   width={0}
                   height={0}
                   // sizes="100vw"

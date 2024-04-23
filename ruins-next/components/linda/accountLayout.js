@@ -9,11 +9,11 @@ export default function AccountLayout({ children }) {
   const {auth} = useAuth()
   const router = useRouter()
 
-  useEffect(()=>{
-    if(!auth.id){
-      router.push("/")
-    }
-  }, [auth])
+  // useEffect(()=>{
+  //   if(!auth.id){
+  //     router.push("/")
+  //   }
+  // }, [auth])
   
   return (
     <>

@@ -4,19 +4,21 @@ import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { API_SERVER, TOUR_POST } from '@/components/config/api-path'
+import { API_SERVER, TOUR_LIST } from '@/components/config/api-path'
 import dayjs from 'dayjs'
+import CategoryModal from '@/components/tony/modal-category'
+import FilterModal from '@/components/tony/modal-filter'
 
 export default function AllSearch() {
   const [tourList, setTourList] = useState([])
   const [pageNumber, setPageNumber] = useState(1)
-  const [keyword, setKeyword] = useState('')  // 搜尋關鍵字
-  const [category, setCategory] = useState('')  // 類別標籤
-  const [totalRows, setTotalRows] = useState(0);  // 呈現資料筆數
+  const [keyword, setKeyword] = useState('') // 搜尋關鍵字
+  const [category, setCategory] = useState('') // 類別標籤
+  const [totalRows, setTotalRows] = useState(0) // 呈現資料筆數
 
   // 取得全部貼文資料
   const fetchAllTourData = async (page) => {
-    const response = await fetch(`${TOUR_POST}?page=${page}`)
+    const response = await fetch(`${TOUR_LIST}?page=${page}`)
     const result = await response.json()
 
     // 若 result 或 result.rows undefined, 直接結束
@@ -28,7 +30,7 @@ export default function AllSearch() {
       ...item,
       key: item.tour_id,
     }))
-    setTourList((prevList) => [...prevList, ...newData]);
+    setTourList((prevList) => [...prevList, ...newData])
     setPageNumber(page + 1)
     setTotalRows(result.totalRows)
   }
@@ -36,14 +38,14 @@ export default function AllSearch() {
   // 取得關鍵字結果,主題篩選結果
   const fetchFilteredTourData = async (page, keyword, category) => {
     const response = await fetch(
-      `${TOUR_POST}?page=${page}&category=${category}&keyword=${encodeURIComponent(keyword)}`
+      `${TOUR_LIST}?page=${page}&category=${category}&keyword=${encodeURIComponent(keyword)}`
     )
     const result = await response.json()
     const newData = result.rows.map((item) => ({
       ...item,
       key: item.tour_id,
     }))
-    setTourList((prevList) => [...prevList, ...newData]);
+    setTourList((prevList) => [...prevList, ...newData])
     setPageNumber(page + 1)
     setTotalRows(result.totalRows)
   }
@@ -108,34 +110,52 @@ export default function AllSearch() {
       <div className="md:px-[150px] px-5 py-5 space-y-5 relative">
         <div className="flex justify-between">
           <div className="md:flex md:space-x-3 font-['Noto Sans TC'] text-[13px] font-semibold">
-            <button className="rounded bg-white px-2.5 py-[5px] md:inline-block hidden ">
+            {/* <button className="rounded bg-white px-2.5 py-[5px] md:inline-block hidden ">
               更多主題<i className="ri-arrow-down-s-line"></i>
-            </button>
+            </button> */}
+            <CategoryModal/>
             <div className="md:space-x-3 space-x-2 flex flex-nowrap">
               <button
                 className={`rounded bg-white px-2.5 py-[5px] ${category === 4 ? 'bg-blue-500 text-red-900' : ''}`}
                 onClick={() => handleCategoryClick(4)}
               >
-                戲院
+                古厝洋樓
               </button>
-              <button className={`rounded bg-white px-2.5 py-[5px] ${category === 11 ? 'bg-blue-500 text-red-900' : ''}`}
+              <button
+                className={`rounded bg-white px-2.5 py-[5px] ${category === 11 ? 'bg-blue-500 text-red-900' : ''}`}
                 onClick={() => handleCategoryClick(11)}
               >
-                工廠遺址
+                廢棄飯店
+              </button>
+              <button className="rounded bg-white px-2.5 py-[5px]">工廠</button>
+              <button className="rounded bg-white px-2.5 py-[5px]">
+                電影院
               </button>
               <button className="rounded bg-white px-2.5 py-[5px]">
-                百貨公司
+                廢棄百貨
               </button>
               <button className="rounded bg-white px-2.5 py-[5px]">
-                尚有名額
+                娛樂場所
+              </button>
+              <button className="rounded bg-white px-2.5 py-[5px]">
+                醫院診所
+              </button>
+              <button className="rounded bg-white px-2.5 py-[5px]">
+                公寓大樓
+              </button>
+              <button className="rounded bg-white px-2.5 py-[5px]">學校</button>
+              <button className="rounded bg-white px-2.5 py-[5px]">旅館</button>
+              <button className="rounded bg-white px-2.5 py-[5px]">
+                歷史建築
               </button>
             </div>
           </div>
           <div className="md:relative absolute -top-[60px] right-4 md:top-0 md:right-0">
-            <button className="font-['Noto Sans TC'] md:text-[13px] text-xl me:font-semibold md:rounded rounded-full bg-white md:opacity-100 opacity-90 px-2.5 py-[5px]">
+            {/* <button className="font-['Noto Sans TC'] md:text-[13px] text-xl me:font-semibold md:rounded rounded-full bg-white md:opacity-100 opacity-90 px-2.5 py-[5px]">
               <i className="ri-equalizer-line"></i>
-              <span className="md:inline hidden">篩選</span>
-            </button>
+              <span className="md:inline hidden">排序</span>
+            </button> */}
+            <FilterModal/>
           </div>
         </div>
         <p className="text-white text-[13px]">{totalRows}個探險結果</p>
@@ -145,18 +165,21 @@ export default function AllSearch() {
           {/* 揪團文章容器 */}
           <div
             id="cardbox"
-            className="md:flex md:gap-4 md:space-y-0 space-y-5 flex-wrap"
+            className="md:flex md:gap-8 md:space-y-0 space-y-5 flex-wrap"
           >
             {tourList &&
               tourList.map((v, i) => {
                 return (
                   <div
-                    className="bg-white md:w-[24%] rounded overflow-hidden pb-4"
+                    className="bg-white md:w-[23%] rounded overflow-hidden pb-4"
                     key={v.tour_id}
                   >
-                    <Link href={`/tour/tour-post/${v.tour_id}`} className="space-y-5">
+                    <Link
+                      href={`/tour/tourpost/${v.tour_id}`}
+                      className="space-y-5"
+                    >
                       <img
-                        className="h-[300px] max-w-full object-cover"
+                        className="h-[250px] max-w-full object-cover"
                         src={v.image_url}
                         alt=""
                       />

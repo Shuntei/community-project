@@ -4,8 +4,60 @@ import db from "./../../utils/linda/mysql2-connect.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import upload from "./../../utils/linda/upload-imgs.js";
+import nodemailer from "nodemailer"
+import path from "path"
+import { log } from "console";
 
 const router = express.Router();
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,
+  auth: {
+    user: process.env.USER,
+    pass: process.env.APP_PASSWORD,
+  }
+})
+
+function generateOTP(){
+  return Math.floor(10000 + Math.random() * 90000)
+}
+
+async function saveOTPInDB(id, otp){
+  const sql = `UPDATE mb_user SET otp=? WHERE id=?`;
+  const [result] = await db.query(sql, [otp, id])
+  console.log(result);
+}
+
+const sendMail = async (transporter, id)=>{
+  const otp = generateOTP()
+
+  await saveOTPInDB(id, otp)
+
+  const mailOptions = {
+    from: {
+      name: "Ruins",
+      address: process.env.USER
+    },
+    to: "nmandakh60@gmail.com",
+    subject: "Your OTP for Verification",
+    text: `Your OTP is: ${otp}`, 
+  }
+
+  try {
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if(error){
+        console.log("Error sending email:", error);
+      } else {
+        console.log('Email sent:' + info.response);
+      }
+    })
+    console.log("Sent successfully");
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 router.post("/signup", async (req, res) => {
   const output = {
@@ -277,7 +329,6 @@ router.put(
     const { avatar, cover } = req.files;
     const hasAvatar = avatar && avatar[0].filename;
     const hasCover = cover && cover[0].filename;
-    const googlePhoto = hasAvatar ? true : false;
     let id = req.params.id;
 
     try {
@@ -312,7 +363,7 @@ router.put(
             username,
             hasAvatar ? avatar[0].filename : rows[0].profile_pic_url ,
             hasCover ? cover[0].filename : rows[0].cover_pic_url ,
-            googlePhoto,
+            hasAvatar ? false : rows[0].google_login,
             aboutMe,
             allowContact,
             yt,
@@ -347,5 +398,102 @@ router.put(
     }
   }
 );
+
+router.post("/check-email/:id", async(req, res) =>{
+  const output = {
+    success: false,
+    code: 0,
+    message: "",
+    emailCode: 0,
+    emailError: "",
+    passwordCode: 0,
+    passwordError: "",
+  }
+  const id = req.params.id
+
+  const {password, email} = req.body
+
+  let isRightPass = false
+  const sql = `SELECT * FROM mb_user WHERE id=?`;
+  const [rows] = await db.query(sql, id)
+  if(rows.length){
+    const result = await bcrypt.compare(password, rows[0].password);
+    if(result){
+      isRightPass = true
+    } else {
+      output.success = false
+      output.passwordCode = 1
+      output.passwordError = "Wrong password"
+    }
+  }
+
+  let isUniqueEmail = false
+  const emailSql = `SELECT * FROM mb_user WHERE email LIKE ? AND id != ?`;
+  const [emailRows] = await db.query(emailSql, [`%${email}%`, id])
+  if(emailRows.length){
+      output.success = false
+      output.emailCode = 1
+      output.emailError = "Email in use"
+  } else {
+    isUniqueEmail = true;
+  }
+
+  if(isUniqueEmail && isRightPass){
+    output.success = true
+    sendMail(transporter);
+  }
+
+  res.json(output)
+})
+
+async function verifyOTP(id, otp) {
+  const sql = `SELECT otp FROM mb_user WHERE id = ?`;
+  const [rows] = await db.query(sql, id)
+
+  if(!rows.length) {
+    return false;
+  }
+
+  const storedOTP = rows[0].otp
+
+  if(otp !== storedOTP) {
+    return false;
+  }
+
+  return true;
+}
+
+router.post("/edit-email/:id", async(req, res) => {
+  const output = {
+    success: false,
+    message: '',
+  }
+  const id = req.params.id
+  const {otp, newEmail} = req.body
+
+  const isOTPVerified = await verifyOTP(id, otp)
+
+  if(!isOTPVerified){
+    output.success = false
+    output.message = "Invalid OTP"
+    return res.json(output)
+  }
+
+  const sql = `UPDATE mb_user SET email = ?, otp = NULL WHERE id=?`;
+  try {
+    await db.query(sql, [newEmail, id])
+    output.success = true
+    output.message = "Email updated successfully"
+    return res.json(output)
+  } catch (error) {
+    console.log("Error updating email:", error);
+    output.success = false,
+    output.message = "Error updating email"
+  }
+
+  res.json(output)
+})
+
+
 
 export default router;

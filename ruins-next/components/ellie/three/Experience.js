@@ -36,6 +36,9 @@ export default function Experience() {
   //   // 例如：設置事件監聽器，初始化動畫，等等
   // }, []);
   
+    cube.current.applyImpulse({ x: 0, y: 7, z: 0 })
+  }
+
   return (
     <>
     <group>
@@ -62,7 +65,6 @@ export default function Experience() {
       <Ball/>
       {/* <GirlController onPointerEnter={() => setHover(true)}/> */}
     </group>
-   
     </>
   )
 }
