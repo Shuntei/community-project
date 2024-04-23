@@ -6,6 +6,7 @@ import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import { API_SERVER, TOUR_POST } from '@/components/config/api-path'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 import Modal from '@/components/kevin/modal/comment-modal'
@@ -18,30 +19,54 @@ import 'swiper/css/navigation'
 import { Navigation } from 'swiper/modules'
 
 export default function TourPost() {
-  // const [tourList, setTourList] = useState([])
+  const router = useRouter()
+  const [tourPost, setTourPost] = useState({
+    tour_id: 0,
+    title: '',
+    content: '',
+    image_url: '',
+    area: 0,
+    city: 0,
+  })
+
+  const [imgs, setImgs] = useState([])
 
   // 抓取資料
-  // const fetchTourData = () => {
-  //   fetch(
-  //     `${TOUR_POST}}`
-  //   )
-  //     .then((r) => r.json())
-  //     .then((result) => {
-  //       console.log(result);
-  //       const newData = result.rows.map((item) => ({
-  //         ...item,
-  //         // 使用 tour_id 作為 key
-  //         key: item.tour_id,
-  //       }));
-  //       setTourList(newData);
-  //     })
-  //     .catch((error) => console.error('Error fetching tour data:', error));
-  // };
+  const fetchTourPost = async (tid) => {
+    const url = `${TOUR_POST}/${tid}`
+
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      // 抓出來為row物件陣列,因為文章相關內容都一樣,故取第一個即可
+      setTourPost(data.row[0])
+      // 照片另外處理,要使用map 欲呈現前三張的話可用filter或是索引值寫死
+      setImgs(
+        data.row.map((v) => ({
+          tour_img_id: v.tour_img_id,
+          image_url: v.image_url,
+          image_descrip: v.image_descrip,
+        }))
+      )
+      const test = data.row.map((v) => ({
+        tour_img_id: v.tour_img_id,
+        image_url: v.image_url,
+        image_descrip: v.image_descrip,
+      }))
+      console.log(test)
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   // 呈現後端文章資料
-  // useEffect(() => {
-  //   fetchTourData();
-  // }, []);
+  useEffect(() => {
+    if (router.isReady) {
+      const { tid } = router.query
+      console.log(tid)
+      fetchTourPost(tid)
+    }
+  }, [router.isReady, router.query.tid])
 
   return (
     <>
@@ -49,7 +74,9 @@ export default function TourPost() {
       <div className="md:flex-none md:flex-col flex flex-col-reverse bg-zinc-800">
         <div className="md:px-[150px] px-5 md:py-2.5 md:pt-32 md:space-y-5 space-y-2">
           <h1 className="font-['Noto Sans TC'] text-white md:text-6xl">
-            Grace Hill麗庭莊園
+            {/* Grace Hill麗庭莊園 */}
+            {/* {tourPost?.find(v=>v.tour_id==router.query.tid)?.title} */}
+            {tourPost.title}
           </h1>
           <div className="flex justify-between items-center md:pb-0 pb-5">
             <div className="md:space-x-3 space-x-1 font-['Noto Sans TC'] text-[13px] font-semibold">
@@ -85,13 +112,18 @@ export default function TourPost() {
         </div>
         {/* Photo section */}
         <div className="w-full h-auto md:px-[150px] py-5 md:pt-5 pt-12 flex items-center gap-2.5">
-          <img
-            className="md:w-[60%] grow shrink"
-            src="/images/borou/grass03.jpg"
-          />
+          {imgs.length > 0 && (
+            <img className="md:w-[60%] grow shrink" src={imgs[0].image_url} />
+          )}
           <div className="w-1/3 flex-col justify-start items-start gap-2.5 inline-flex relative md:block hidden">
-            <img className="" src="/images/borou/grass01.jpg" />
-            <img className="" src="/images/borou/grass02.jpg" />
+            {imgs.slice(1, 3).map((img, index) => (
+              <img
+                key={index}
+                className=""
+                src={img.image_url}
+                alt={img.image_descrip}
+              />
+            ))}
             <button className="absolute right-4 bottom-4 px-5 py-2.5 text-white bg-zinc-800 bg-opacity-80 rounded text-[13px] hover:bg-zinc-700">
               查看照片
             </button>
@@ -104,6 +136,7 @@ export default function TourPost() {
           {/* article content start */}
           <h2 className="md:text-[26px] text-[15px] font-semibold">活動介紹</h2>
           <div className="md:text-xl text-[13px] space-y-5">
+            <p>{tourPost?.content}</p>
             <p>
               麗庭莊園位於台北內湖的工業園區，前身為婚禮場地。 該酒店於 2005
               年開業，由長興婚禮事業有限公司管理，該公司熱衷於為婚禮和其他活動提供更大、更奢華的空間，顛覆當地市場。
@@ -193,7 +226,6 @@ export default function TourPost() {
             <div className=" w-full md:px-[60px] md:py-10 pt-5 pb-5 md:bg-black rounded-lg md:space-y-10 flex flex-col items-start">
               <div className="md:flex w-full justify-center hidden">
                 <button className="flex items-center space-x-2 px-5 py-2.5 border rounded-md relative">
-                  
                   <div>
                     <div className="">參加人數</div>
                     <div className=" text-gray-300">1位參加者</div>

@@ -41,3 +41,5 @@ next-env.d.ts
 
 /public/3Ddemo
 /public/svg
+
+/pages/chat

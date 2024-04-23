@@ -50,7 +50,7 @@ export default function Notepad({ onClose }) {
       </div> {/* notepad bar */}
       <div className="blackLine">
         <div className="barPadding">
-          <div className="title">Note - Title here</div>
+          <div className="title">key={v.pid}</div>
 
       <div className="notepad-settings">
         <div className="buttonLineUp">
