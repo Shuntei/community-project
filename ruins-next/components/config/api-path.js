@@ -46,5 +46,8 @@ export const PRODUCT_MYONGOINGPO = `${API_SERVER}/product/api/getOngoingPo`
 // 歷史訂單 - status:已完成
 export const PRODUCT_MYCOMPLETEDPO =`${API_SERVER}/product/api/getCompletedPo`
 
-// 揪團貼文
-export const TOUR_POST =  `${API_SERVER}/tour/api`
+// 揪團貼文列表
+export const TOUR_LIST =  `${API_SERVER}/tour/api`
+
+// 揪團貼文單筆
+export const TOUR_POST =  `${API_SERVER}/tour/api/getPost`
