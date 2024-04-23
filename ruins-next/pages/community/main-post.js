@@ -27,7 +27,6 @@ export default function MainPost() {
   const { auth } = useAuth()
   const { commentModal, setCommentModal } = useToggles()
   const { getPost, setGetPost } = useBoards()
-  const [go, setGo] = useState(false)
 
   const handleBack = () => {
     router.back()
@@ -48,7 +47,7 @@ export default function MainPost() {
 
   useEffect(() => {
     isPostId()
-  }, [postId, go])
+  }, [postId])
 
   if (!getPost[0]) {
     console.log('data not ready to load')
@@ -123,13 +122,7 @@ export default function MainPost() {
             <div className="flex gap-2 my-3 pc:mx-20 pc:my-5 justify-end">
               <Views postId={getPost[0].post_id} />
               <CommentCount postId={getPost[0].post_id} />
-              <LikeButton
-                postId={getPost[0].post_id}
-                isPostId={isPostId}
-                likes={getPost[0].likes}
-                go={go}
-                setGo={setGo}
-              />
+              <LikeButton postId={getPost[0].post_id} />
             </div>
             {/* <!-- 留言按鈕 --> */}
             <div

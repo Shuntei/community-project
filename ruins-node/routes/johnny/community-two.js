@@ -79,6 +79,7 @@ router.get("/toggle-like", async (req, res) => {
     likesCountError: "",
     code: 0,
     rows: "",
+    userIdExist: "",
   };
 
   // console.log(postId);
@@ -164,14 +165,14 @@ router.get("/like-state/:postId?", async (req, res) => {
     code: 0,
     rows: "",
   };
-
+  console.log("ao6u.3", postId);
   // 確認有無這則貼文的like
   if (!postId) {
     return;
   } else {
     // console.log(`postId: ${postId} came, keep going`);
   }
-  const isLikeRowsSql = `SELECT pl.like_id, ps.post_id FROM sn_post_likes pl 
+  const isLikeRowsSql = `SELECT pl.like_id, ps.post_id, pl.user_id FROM sn_post_likes pl 
   INNER JOIN sn_posts ps ON pl.post_id = ps.post_id WHERE ps.post_id=?`;
   const [likeRows, field] = await db.query(isLikeRowsSql, [postId]);
   // console.log("field:", field);

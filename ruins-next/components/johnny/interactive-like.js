@@ -9,59 +9,58 @@ import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'
 
-export default function LikeButton({ postId, likes }) {
-  const [isLike, setIsLike] = useState('')
-  const [likeChange, setLikeChange] = useState(false)
+export default function LikeButton({ postId }) {
+  const [likesChange, setLikesChange] = useState(false)
+  const [isUserLike, setIsUserLike] = useState(false)
   const { getPost, setGetPost } = useBoards()
   const { auth } = useAuth()
   const router = useRouter()
   // console.log('the postId', postId)
 
   const query = { ...router.query, postId: postId, userId: auth.id }
-  const queryString = new URLSearchParams(query)
+  const queryString = new URLSearchParams(query).toString()
 
-  const toggleLike = async (postId) => {
+  const toggleLike = async () => {
     const r = await fetch(`${SN_LIKES_CHANGE}?${queryString}`)
     const data = await r.json()
-    console.log(data)
-    toggleLikeInit(postId)
-  }
-  const toggleLikeInit = async (postId) => {
-    const r = await fetch(`${SN_LIKES_STATE}/${postId}`)
-    const data = await r.json()
-    setIsLike(data.rows)
+    console.log(auth.id)
+    // console.log(!data.rows.map((v) => v.user_id).includes(auth.id))
+    const userLikeState = !data.rows.map((v) => v.user_id).includes(auth.id) //狀態為已變更的資料庫上一棟,使用!
+    setIsUserLike(userLikeState)
+    setLikesChange(!likesChange)
   }
 
   useEffect(() => {
     fetch(`${SN_POSTS}?postId=${postId}`)
       .then((r) => r.json())
       .then((result) => setGetPost(result))
-    toggleLikeInit(postId)
-  }, [likeChange])
+  }, [likesChange])
+
+  useEffect(() => {
+    fetch(`${SN_LIKES_STATE}/${postId}`)
+      .then((r) => r.json())
+      .then((data) => {
+        console.log(data)
+        const userLikeState = data.rows.map((v) => v.user_id).includes(auth.id)
+        console.log(userLikeState)
+        setIsUserLike(userLikeState)
+      })
+  }, [])
 
   return (
     <span
       className=" flex cursor-pointer"
       onClick={() => {
-        toggleLike(postId)
+        toggleLike()
       }}
     >
-      {getPost[0].likes ? (
-        <RiHeartFill
-          className="pr-1 text-red-400"
-          onClick={() => {
-            setLikeChange(!likeChange)
-          }}
-        />
+      {isUserLike ? (
+        <RiHeartFill className="pr-1 text-red-400" />
       ) : (
-        <RiHeartLine
-          className="pr-1"
-          onClick={() => {
-            setLikeChange(!likeChange)
-          }}
-        />
+        <RiHeartLine className="pr-1" />
       )}
-      {likes}
+
+      {getPost[0].likes}
     </span>
   )
 }
