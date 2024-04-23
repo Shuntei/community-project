@@ -173,23 +173,6 @@ router.post("/711", function (req, res) {
 //linepay
 
 //測試訂單
-const orders = {
-  amount: 299,
-  currency: "TWD",
-  packages: [
-    {
-      id: "vip",
-      amount: 299,
-      products: [
-        {
-          name: "vip",
-          quantity: 1,
-          price: 299,
-        },
-      ],
-    },
-  ],
-};
 
 router.post("/createLinePayOrder", async (req, res) => {
   const { orderId, linePayOrder, total_amount } = req.body;
@@ -213,7 +196,7 @@ router.post("/createLinePayOrder", async (req, res) => {
         cancelUrl: `${LINEPAY_RETURN_HOST}${LINEPAY_RETURN_CANCEL_URL}`,
       },
     };
-    console.log(linePayBody);
+    // console.log(linePayBody);
 
     const uri = "/payments/request";
     const headers = createSignature(uri, linePayBody);
@@ -223,7 +206,7 @@ router.post("/createLinePayOrder", async (req, res) => {
     const url = `${LINEPAY_SITE}/${LINEPAY_VERSION}${uri}`; // 發出請求的路徑
 
     const linePayRes = await axios.post(url, linePayBody, { headers });
-    console.log("linePayResDataInfo", linePayRes.data);
+    // console.log("linePayResDataInfo", linePayRes.data);
 
     if (linePayRes?.data?.returnCode === "0000") {
       res.json(linePayRes?.data?.info?.paymentUrl.web);

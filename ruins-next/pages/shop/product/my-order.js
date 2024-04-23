@@ -41,38 +41,7 @@ export default function MyOrder() {
       console.log(ex)
     }
   }
-  // 取得歷史訂單： 全部
-  const getAllPo = async () => {
-    try {
-      const r = await fetch(PRODUCT_MYALLPO + `/${memberId}`)
-      const d = await r.json()
-      setAllPo(d)
-    } catch (ex) {
-      console.log(ex)
-    }
-  }
-
-  // 取得歷史訂單：訂單處理中
-  const getOngoingPo = async () => {
-    try {
-      const r = await fetch(PRODUCT_MYONGOINGPO + `/${memberId}`)
-      const d = await r.json()
-      setOngoingPo(d)
-    } catch (ex) {
-      console.log(ex)
-    }
-  }
-
-  // 取得歷史訂單：已完成
-  const getCompletedPo = async () => {
-    try {
-      const r = await fetch(PRODUCT_MYCOMPLETEDPO + `/${memberId}`)
-      const d = await r.json()
-      setCompletedPo(d)
-    } catch (ex) {
-      console.log(ex)
-    }
-  }
+  
   const fetchProductDetails = async () => {
     try {
       const r = await fetch(PRODUCT_MYALLPO + `/${memberId}`)
@@ -90,22 +59,24 @@ export default function MyOrder() {
     }
   }
 
-  useEffect(() => {
-    // if (memberId) {
-    getOngoingPo()
-    getAllPo()
-    getCompletedPo()
-    // } else {
-    //   // router.push('/member/login')
-    //   router.push('/shop/product/my-order')
-    // }
-  }, [memberId])
+  // useEffect(() => {
+  //   // if (memberId) {
+  //   getOngoingPo()
+  //   getAllPo()
+  //   getCompletedPo()
+  //   // } else {
+  //   //   // router.push('/member/login')
+  //   //   router.push('/shop/product/my-order')
+  //   // }
+  // }, [memberId])
 
   useEffect(() => {
+  
     fetchProductDetails()
   }, [memberId])
   return (
     <>
+    {console.log(allPo)}
       <div className="w-full flex flex-col px-4 md:px-20 py-5 md:py-12 md:gap-12 gap-5 ">
         {/* 訂單完成/未完成超連結 &&我的訂單標題*/}
         <OrderState />
