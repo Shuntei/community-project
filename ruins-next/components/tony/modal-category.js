@@ -56,6 +56,20 @@ function CategoryModal() {
               </select>
             </div>
             <div className="space-y-2">
+              <div>探險難度</div>
+              <div className="space-x-2">
+                <button className="border border-black px-2 py-1 rounded hover:bg-black hover:text-white">
+                  簡單
+                </button>
+                <button className="border border-black px-2 py-1 rounded hover:bg-black hover:text-white">
+                  中等
+                </button>
+                <button className="border border-black px-2 py-1 rounded hover:bg-black hover:text-white">
+                  困難
+                </button>
+              </div>
+            </div>
+            <div className="space-y-2">
               <div>探險時長</div>
               <div className="space-x-2">
                 <button className="border border-black px-2 py-1 rounded hover:bg-black hover:text-white">

@@ -38,7 +38,7 @@ const getTourList = async (req, res) => {
       return { success: false, redirect: `?page=${totalPages}` };
     }
     const sql = `
-    SELECT tour_post.*, MIN(tour_images.image_url) AS image_url, tour_location.cid
+    SELECT tour_post.*, MIN(tour_images.image_url) AS image_url, tour_location.*
     FROM tony_tour_post AS tour_post
     LEFT JOIN tony_tour_images AS tour_images 
     ON tour_post.tour_id = tour_images.tour_id
@@ -62,6 +62,31 @@ const getTourList = async (req, res) => {
   };
 };
 
+// 取得單筆文章內容
+const getTourPost = async (req, res) => {
+  try {
+    const tid = +req.params.tid;
+
+    const sql = `SELECT tour_post.*, tour_images.*, tour_location.*
+      FROM tony_tour_post AS tour_post
+      LEFT JOIN tony_tour_images AS tour_images 
+      ON tour_post.tour_id = tour_images.tour_id
+      LEFT JOIN tony_tour_location AS tour_location 
+      ON tour_post.ruin_id = tour_location.ruin_id 
+      WHERE tour_post.tour_id=?`;
+
+    const [rows] = await db.query(sql, [tid]);
+    if (!rows.length) {
+      return { success: false };
+    }
+    const row = rows;
+
+    return { success: true, row };
+  } catch (error) {
+    return { success: false, message: "Internal server error" };
+  }
+};
+
 // 揪團圖片資料
 const getTourImages = async (req, res) => {
   const t_sql = `SELECT COUNT(1) totalRows FROM tony_tour_images`;
@@ -79,7 +104,7 @@ const getTourImages = async (req, res) => {
   };
 };
 
-// 從資料庫取得圖片資料
+// 從資料庫取得表單資料
 router.get("/api", async (req, res) => {
   try {
     const result = await getTourList(req);
@@ -89,7 +114,13 @@ router.get("/api", async (req, res) => {
   }
 });
 
-// 定義路由名稱, 從資料庫取得表單資料
+// 取得單筆資料
+router.get("/api/getPost/:tid", async (req, res) => {
+  const result = await getTourPost(req);
+  res.json(result);
+});
+
+// 定義路由名稱, 取得圖片資料
 router.get("/img", async (req, res) => {
   res.json(await getTourImages(req));
 });
@@ -101,27 +132,22 @@ router.get("/test", (req, res) => {
 
 export default router;
 
-
-
-
-
-
 // 搜尋 台北 的syql語法
-  // SELECT tour_post.*, MIN(tour_images.image_url) AS image_url
-  //     FROM tony_tour_post AS tour_post
-  //     LEFT JOIN tony_tour_images AS tour_images
-  //     ON tour_post.tour_id = tour_images.tour_id
-  //     WHERE 1
-  //     AND (tour_post.title LIKE '%台北%')
-  //     GROUP BY tour_post.tour_id
-  //     ORDER BY tour_post.event_date
+// SELECT tour_post.*, MIN(tour_images.image_url) AS image_url
+//     FROM tony_tour_post AS tour_post
+//     LEFT JOIN tony_tour_images AS tour_images
+//     ON tour_post.tour_id = tour_images.tour_id
+//     WHERE 1
+//     AND (tour_post.title LIKE '%台北%')
+//     GROUP BY tour_post.tour_id
+//     ORDER BY tour_post.event_date
 
-  // 合併 tour_post 和 tour_location.cid, 並且重複的 ruin_id 會顯示
-  //   SELECT tour_post.*, tour_location.cid
-  // FROM tony_tour_post AS tour_post
-  // LEFT JOIN (
-  //     SELECT ruin_id, cid
-  //     FROM tony_tour_location
-  // ) AS tour_location
-  // ON tour_post.ruin_id = tour_location.ruin_id
-  // ORDER BY tour_post.event_date ASC;
+// 合併 tour_post 和 tour_location.cid, 並且重複的 ruin_id 會顯示
+//   SELECT tour_post.*, tour_location.cid
+// FROM tony_tour_post AS tour_post
+// LEFT JOIN (
+//     SELECT ruin_id, cid
+//     FROM tony_tour_location
+// ) AS tour_location
+// ON tour_post.ruin_id = tour_location.ruin_id
+// ORDER BY tour_post.event_date ASC;
