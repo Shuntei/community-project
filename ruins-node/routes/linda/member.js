@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import upload from "./../../utils/linda/upload-imgs.js";
 import nodemailer from "nodemailer";
 import path from "path";
+import { isExternal } from "util/types";
+import { log } from "console";
 
 const router = express.Router();
 const transporter = nodemailer.createTransport({
@@ -19,20 +21,21 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-function generateOTP() {
-  return Math.floor(10000 + Math.random() * 90000);
+async function saveOTPInDB(id, otp, otpExpiry) {
+  const sql = `UPDATE mb_user SET otp=?, otp_expiry=? WHERE id=?`;
+  const [result] = await db.query(sql, [otp, otpExpiry, id]);
 }
 
-async function saveOTPInDB(id, otp) {
-  const sql = `UPDATE mb_user SET otp=? WHERE id=?`;
-  const [result] = await db.query(sql, [otp, id]);
+async function saveReqInDB(email, reqExpiry){
+  
 }
 
 const sendMail = async (transporter, id, email, username) => {
-  const otp = generateOTP();
-  console.log(process.env.EMAIL_USER, process.env.APP_PASSWORD);
+  const otp = Math.floor(10000 + Math.random() * 90000);
+  const otpExpiry = new Date();
+  otpExpiry.setMinutes(otpExpiry.getMinutes() + 5);
 
-  await saveOTPInDB(id, otp);
+  await saveOTPInDB(id, otp, otpExpiry);
 
   const mailOptions = {
     from: {
@@ -101,16 +104,60 @@ const sendMail = async (transporter, id, email, username) => {
   }
 };
 
+const sendPasswordResetEmail = async (transporter, email) => {
+  const reqExpiry = new Date();
+  reqExpiry.setMinutes(reqExpiry.getMinutes() + 10);
+
+  await saveReqInDB(email, reqExpiry);
+}
+
+function generateOutputData(rows) {
+  const token = jwt.sign(
+    { id: rows[0].id, username: rows[0].username },
+    process.env.JWT_SECRET
+  );
+
+  return {
+    id: rows[0].id,
+    username: rows[0].username,
+    name: rows[0].name,
+    email: rows[0].email,
+    profileUrl: rows[0].profile_pic_url,
+    coverUrl: rows[0].cover_pic_url,
+    googlePhoto: rows[0].google_photo,
+    aboutMe: rows[0].about_me,
+    showContactInfo: rows[0].allow_contact_info_visibility,
+    ytLink: rows[0].youtube_link,
+    fbLink: rows[0].facebook_link,
+    igLink: rows[0].instagram_link,
+    gmailLink: rows[0].gmail_link,
+    token,
+  };
+}
+
+const defaultData = {
+  id: 0,
+  username: "",
+  name: "",
+  email: "",
+  profileUrl: "",
+  coverUrl: "",
+  googlePhoto: false,
+  aboutMe: "",
+  showContactInfo: false,
+  ytLink: "",
+  fbLink: "",
+  igLink: "",
+  gmailLink: "",
+  token: "",
+}
+
 router.post("/signup", async (req, res) => {
   const output = {
     success: false,
     code: 0,
     error: "",
-    data: {
-      id: 0,
-      username: "",
-      token: "",
-    },
+    data: defaultData,
   };
 
   const { email, password, phone, username, birthday } = req.body;
@@ -163,17 +210,7 @@ router.post("/signup", async (req, res) => {
       if (output.success) {
         const sql = "SELECT * FROM mb_user WHERE username=?";
         const [rows] = await db.query(sql, username);
-
-        const token = jwt.sign(
-          { id: rows[0].id, username: rows[0].username },
-          process.env.JWT_SECRET
-        );
-
-        output.data = {
-          id: rows[0].id,
-          username: rows[0].username,
-          token,
-        };
+        output.data = generateOutputData(rows[0])
       }
     } catch (ex) {
       console.log(ex);
@@ -188,23 +225,7 @@ router.post("/login", async (req, res) => {
     success: false,
     code: 0,
     error: "",
-    data: {
-      id: 0,
-      username: "",
-      name: "",
-      email: "",
-      profileUrl: "",
-      coverUrl: "",
-      googlePhoto: false,
-      aboutMe: "",
-      showContactInfo: false,
-      ytLink: "",
-      fbLink: "",
-      igLink: "",
-      gmailLink: "",
-      googleLogin: false,
-      token: "",
-    },
+    data: defaultData,
   };
 
   const { account, password } = req.body;
@@ -225,33 +246,7 @@ router.post("/login", async (req, res) => {
   const result = await bcrypt.compare(password, row.password);
   if (result) {
     output.success = true;
-
-    const token = jwt.sign(
-      {
-        id: row.id,
-        account: row.username,
-      },
-      process.env.JWT_SECRET
-    );
-
-    // TODO:
-    output.data = {
-      id: row.id,
-      username: row.username,
-      name: row.name,
-      email: row.email,
-      profileUrl: row.profile_pic_url,
-      coverUrl: row.cover_pic_url,
-      googlePhoto: row.google_photo,
-      aboutMe: row.about_me,
-      showContactInfo: row.allow_contact_info_visibility,
-      ytLink: row.youtube_link,
-      fbLink: row.facebook_link,
-      igLink: row.instagram_link,
-      gmailLink: row.gmail_link,
-      googleLogin: row.google_login,
-      token,
-    };
+    output.data = generateOutputData(row)
   } else {
     output.code = 2;
     output.error = "Account or password is wrong";
@@ -270,44 +265,19 @@ router.post("/google-login", async (req, res) => {
     data: null,
   };
 
-  const { account, username, photoUrl } = req.body;
-
-  function generateOutputData(rows) {
-    const token = jwt.sign(
-      { id: rows[0].id, username: rows[0].username },
-      process.env.JWT_SECRET
-    );
-
-    return {
-      id: rows[0].id,
-      username: rows[0].username,
-      name: rows[0].name,
-      email: rows[0].email,
-      profileUrl: rows[0].profile_pic_url,
-      coverUrl: rows[0].cover_pic_url,
-      googlePhoto: rows[0].google_photo,
-      aboutMe: rows[0].about_me,
-      showContactInfo: rows[0].allow_contact_info_visibility,
-      ytLink: rows[0].youtube_link,
-      fbLink: rows[0].facebook_link,
-      igLink: rows[0].instagram_link,
-      gmailLink: rows[0].gmail_link,
-      googleLogin: rows[0].google_login,
-      token,
-    };
-  }
+  const { account, username, photoUrl, googleId } = req.body;
 
   try {
-    const emailSql = `SELECT * FROM mb_user WHERE email LIKE ?`;
-    const [emailRows] = await db.query(emailSql, [`%${account}%`]);
+    const sql = `SELECT * FROM mb_user WHERE google_id = ?`;
+    const [rows] = await db.query(sql, [googleId]);
 
-    if (!emailRows.length) {
+    if (!rows.length) {
       const userSql = `INSERT INTO mb_user
       (username, 
       email, 
       google_photo,
       created_at, 
-      google_login, 
+      google_id, 
       profile_pic_url) 
       VALUES (?, ?, ?, NOW(), ?, ?);`;
 
@@ -316,14 +286,14 @@ router.post("/google-login", async (req, res) => {
           username,
           account,
           true,
-          true,
+          googleId,
           photoUrl,
         ]);
         output.success = !!userRows.affectedRows;
 
         if (output.success) {
-          const sql = "SELECT * FROM mb_user WHERE username=?";
-          const [rows] = await db.query(sql, username);
+          const sql = "SELECT * FROM mb_user WHERE google_id=?";
+          const [rows] = await db.query(sql, googleId);
 
           if (rows.length) {
             output.data = generateOutputData(rows);
@@ -340,7 +310,7 @@ router.post("/google-login", async (req, res) => {
         console.log(ex);
       }
     } else {
-      output.data = generateOutputData(emailRows);
+      output.data = generateOutputData(rows);
       output.success = true;
       output.message = "Successfully logged in";
     }
@@ -452,27 +422,33 @@ router.post("/check-email/:id", async (req, res) => {
     passwordError: "",
   };
   const id = req.params.id;
-  const newEmail = "nmandakh60@gmail.com";
 
-  const { password, email, username } = req.body;
+  const { password, email, newEmail, username } = req.body;
 
+  let pass = password ? password : "";
   let isRightPass = false;
+
   const sql = `SELECT * FROM mb_user WHERE id=?`;
   const [rows] = await db.query(sql, id);
+
   if (rows.length) {
-    const result = await bcrypt.compare(password, rows[0].password);
-    if (result) {
-      isRightPass = true;
+    if (rows[0].password) {
+      const result = await bcrypt.compare(pass, rows[0].password);
+      if (result) {
+        isRightPass = true;
+      } else {
+        output.success = false;
+        output.passwordCode = 1;
+        output.passwordError = "Wrong password";
+      }
     } else {
-      output.success = false;
-      output.passwordCode = 1;
-      output.passwordError = "Wrong password";
+      isRightPass = true;
     }
   }
 
   let isUniqueEmail = false;
   const emailSql = `SELECT * FROM mb_user WHERE email LIKE ? AND id != ?`;
-  const [emailRows] = await db.query(emailSql, [`%${email}%`, id]);
+  const [emailRows] = await db.query(emailSql, [`%${newEmail}%`, id]);
   if (emailRows.length) {
     output.success = false;
     output.emailCode = 1;
@@ -483,33 +459,36 @@ router.post("/check-email/:id", async (req, res) => {
 
   if (isUniqueEmail && isRightPass) {
     output.success = true;
-    await sendMail(transporter, id, newEmail, username);
+    await sendMail(transporter, id, email, username);
   }
 
   res.json(output);
 });
 
 async function verifyOTP(id, otp) {
-  const sql = `SELECT otp FROM mb_user WHERE id = ?`;
+  const sql = `SELECT * FROM mb_user WHERE id = ?`;
   const [rows] = await db.query(sql, id);
 
   if (!rows.length) {
-    return false;
+    return {isValid: false};
   }
 
   const storedOTP = rows[0].otp;
+  const otpExpiry = new Date(rows[0].otp_expiry)
 
   if (otp !== storedOTP) {
-    return false;
+    return {isValid: false};
   }
 
-  return true;
+  if(new Date() > otpExpiry){
+    return {isValid: false, isExpired: true}
+  }
+
+  return {isValid: true, isExpired: false};
 }
 
 router.post("/send-code/:id", async (req, res) => {
-  // const email = req.body
-  const email = "nmandakh60@gmail.com";
-  const { username } = req.body;
+  const { username, email } = req.body;
   const id = req.params.id;
   try {
     await sendMail(transporter, id, email, username);
@@ -520,49 +499,121 @@ router.post("/send-code/:id", async (req, res) => {
   }
 });
 
-router.post("/edit-email/:id", async (req, res) => {
+router.post("/edit-info/:id", async (req, res) => {
   const output = {
     success: false,
     message: "",
+    code: 0,
   };
   const id = req.params.id;
-  const { otp, newEmail } = req.body;
+  const { otp, newEmail, newPassword } = req.body;
 
-  const isOTPVerified = await verifyOTP(id, otp);
+  const {isValid, isExpired} = await verifyOTP(id, otp);
 
-  if (!isOTPVerified) {
+  if (!isValid) {
+    if(isExpired){
+      output.message = "OTP has expired"
+      output.code = 3
+    } else {
+      output.message = "Invalid OTP";
+      output.code = 4
+    }
     output.success = false;
-    output.message = "Invalid OTP";
     return res.json(output);
   }
 
-  const sql = `UPDATE mb_user SET email = ?, otp = NULL WHERE id=?`;
-  try {
-    await db.query(sql, [newEmail, id]);
-    output.success = true;
-    output.message = "Email updated successfully";
-    return res.json(output);
-  } catch (error) {
-    console.log("Error updating email:", error);
-    (output.success = false), (output.message = "Error updating email");
+  const sql = `UPDATE mb_user SET email = ?, otp = NULL, otp_expiry = NULL WHERE id=?`;
+  if (newEmail) {
+    try {
+      await db.query(sql, [newEmail, id]);
+      output.success = true;
+      output.message = "Email updated successfully";
+      output.code = 1;
+      return res.json(output);
+    } catch (error) {
+      console.log("Error updating email:", error);
+      (output.success = false), (output.message = "Error updating email");
+    }
+  }
+
+  const passSql = `UPDATE mb_user SET password = ?, otp = NULL WHERE id = ?`;
+  if (newPassword) {
+    try {
+      const hash = await bcrypt.hash(newPassword, 10);
+      await db.query(passSql, [hash, id]);
+      output.success = true;
+      output.code = 2;
+      output.message = "Password updated successfully";
+      return res.json(output);
+    } catch (error) {
+      console.log("Error updating password:", error);
+      (output.success = false), (output.message = "Error updating password");
+    }
   }
 
   res.json(output);
 });
 
 router.post("/check-password/:id", async (req, res) => {
-  const {oldPassword} = req.body
-  const id = req.params.id
+  const { oldPassword, email, username } = req.body;
+  const id = req.params.id;
 
   const sql = `SELECT * FROM mb_user WHERE id = ?`;
   const [rows] = await db.query(sql, id);
 
-  const result = await bcrypt.compare(oldPassword, rows[0].password);
-  if (result){
-    return res.json({success: true, message: "Right password"})
+  if(rows[0].password){
+    const result = await bcrypt.compare(oldPassword, rows[0].password);
+    if (result) {
+      await sendMail(transporter, id, email, username);
+      return res.json({ success: true, message: "Right password" });
+    } else {
+      return res.json({ success: false, code: 1, message: "Wrong old password" });
+    }
   } else {
-    return res.json({success: false, code: 1, message: "Wrong old password"})
+    if(oldPassword){
+      return res.json({success: false, code: 1, message: "Wrong old password"})
+    }
+    
+    await sendMail(transporter, id, email, username); 
+    return res.json({ success: true, message: "There is no password yet" });
+  }
+});
+
+router.post("/request-email", async (req, res) => {
+  const output = {
+    success: false,
+    code: 0,
+    message: '',
+    sec: 0
+  }
+
+  const {email} = req.body
+  try {
+    const sql = `SELECT * FROM mb_user WHERE email = ?`;
+    const [rows] = await db.query(sql, email)
+
+    const exp = new Date(rows[0].request_expiry)
+      const currentTime = new Date()
+      if(exp > currentTime) {
+        output.sec = Math.floor((exp - currentTime) / 1000)
+        output.message = "Wait for the cool down time"
+        output.code = 1
+        return res.json(output)
+      }
+
+    isRegistered = rows.length
+
+    if(isRegistered){
+      
+    } else {
+
+    }
+  } catch (error) {
+    console.log("Error with the sql", error);
   }
 })
+
+// create a link to reset password
+// https://www.sandbox.game/en/restore/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoicnVpbnN1cmJhbmVAZ21haWwuY29tIiwiaWQiOiJmNjQ3OTE4Ni0xMjJmLTRmNWYtYjI4NS01ODZjOTYzOTg3YzEiLCJhY2Nlc3NMZXZlbCI6InJlc3RvcmUifSwiaWF0IjoxNzEzODYxMTM2LCJleHAiOjE3MTM4NjE3MzZ9.nfQca3MOtlcfMjSAdXaJmqFTzX_TTc5lEAJ-g9ZSYuk
 
 export default router;

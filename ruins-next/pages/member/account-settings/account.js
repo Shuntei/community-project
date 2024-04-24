@@ -203,8 +203,8 @@ export default function Account() {
   }
 
   const handleFormSubmit = async () => {
-    const errorResult = updateError()
-    if (errorResult) {
+    const passedValidation = updateError()
+    if (passedValidation) {
       const isSuccessful = await editAPI()
       if (isSuccessful) {
         setUpdate(!update)

@@ -1,42 +1,47 @@
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from 'react'
 import { RiCloseLargeLine } from '@remixicon/react'
 import { IoMdEye } from 'react-icons/io'
 import { IoMdEyeOff } from 'react-icons/io'
 import { z } from 'zod'
 import { useAuth } from '@/contexts/auth-context'
 import { MB_CHECK_PASS } from '@/components/config/api-path'
-import OTPModal from './OTPModal'
+import OTPModal from './otp-modal'
 
 const passwordRe = new RegExp(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/)
 const schemaPassword = z
   .string()
-  .regex(passwordRe, { message: 'USE 8 OR MORE CHARACTERS MIXING LETTERS AND NUMBERS' })
+  .regex(passwordRe, {
+    message: 'USE 8 OR MORE CHARACTERS MIXING LETTERS AND NUMBERS',
+  })
 
 export default function ChangePasswordPopup({
   isVisible,
   onClose,
   setShowOTPModal,
-  setShowEmailModal,
+  setShowPasswordModal,
+  setNewPassword,
 }) {
   if (!isVisible) return null
+
+  const { auth } = useAuth()
 
   const defaultForm = {
     oldPassword: '',
     newPassword: '',
     repeatedPassword: '',
+    email: auth.email,
+    username: auth.username,
   }
-  
+
   const initErrors = {
     oldPassword: '',
     newPassword: '',
     repeatedPassword: '',
   }
-  
-  const { auth } = useAuth()
+
   const [showOldPass, setShowOldPass] = useState(false)
   const [showNewPass, setShowNewPass] = useState(false)
   const [showRepeatedPass, setShowRepeatedPass] = useState(false)
-  const [newPassword, setNewPassword] = useState('')
   const [form, setForm] = useState(defaultForm)
   const [errors, setErrors] = useState(initErrors)
   const [passwordErrorCode, setPasswordErrorCode] = useState(0)
@@ -61,13 +66,7 @@ export default function ChangePasswordPopup({
       repeatedPassword: '',
     }
 
-    if (!form.oldPassword) {
-      initErrors = {
-        ...initErrors,
-        hasErrors: true,
-        oldPassword: 'Cannot be blank',
-      }
-    } else if (passwordErrorCode) {
+    if (passwordErrorCode) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
@@ -81,14 +80,13 @@ export default function ChangePasswordPopup({
         hasErrors: true,
         newPassword: 'Cannot be blank',
       }
-    } else if (form.oldPassword.trim() === form.newPassword.trim()){
+    } else if (form.oldPassword.trim() === form.newPassword.trim()) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
         newPassword: 'new password should be different than old password',
       }
-    } 
-    else {
+    } else {
       const passwordZod = schemaPassword.safeParse(form.newPassword)
       if (!passwordZod.success) {
         initErrors = {
@@ -99,13 +97,13 @@ export default function ChangePasswordPopup({
       }
     }
 
-    if(!form.repeatedPassword){
+    if (!form.repeatedPassword) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
         repeatedPassword: 'Cannot be blank',
       }
-    } else if (form.newPassword.trim() !== form.repeatedPassword.trim()){
+    } else if (form.newPassword.trim() !== form.repeatedPassword.trim()) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
@@ -139,9 +137,9 @@ export default function ChangePasswordPopup({
         if (result.success) {
           setNewPassword(form.newPassword)
           setShowOTPModal(true)
-          setShowEmailModal(false)
+          setShowPasswordModal(false)
         } else {
-          result.code ? setPasswordErrorCode(result.code) : ''
+          setPasswordErrorCode(result.code)
         }
       } catch (ex) {
         console.log('Failed to fetch edit email', ex)
@@ -186,14 +184,21 @@ export default function ChangePasswordPopup({
                 name="oldPassword"
                 onChange={(e) => {
                   handleChange(e)
-                  // setPasswordErrorCode(0)
+                  setPasswordErrorCode(0)
                 }}
                 type={showOldPass ? 'text' : 'password'}
                 className="bg-[#191919] h-[44px] rounded focus:outline-none text-[14px] text-white flex w-full p-[15px]"
               />{' '}
-              <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
-                {errors.oldPassword}
-              </div>
+              {errors.oldPassword ? (
+                <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
+                  {errors.oldPassword}
+                </div>
+              ) : (
+                <div className="text-[#969696] mt-1 text-xs">
+                  Do not complete this field if this account does not have a
+                  previously associated password
+                </div>
+              )}
               <div
                 className="absolute md:top-2 top-3 right-2"
                 onClick={() => {
@@ -268,9 +273,10 @@ export default function ChangePasswordPopup({
               </div>
             </div>
           </div>
-          <button 
-          onClick={handleButtonClick}
-          className="bg-black hover:bg-[#7A7A7A] flex items-center justify-center w-full py-[18px] italic border border-white">
+          <button
+            onClick={handleButtonClick}
+            className="bg-black hover:bg-[#7A7A7A] flex items-center justify-center w-full py-[18px] italic border border-white"
+          >
             UPDATE PASSWORD
           </button>
         </div>

@@ -14,9 +14,11 @@ export const MB_CHECK_EMAIL = `${API_SERVER}/member/check-email`
 // check password and send otp
 export const MB_CHECK_PASS = `${API_SERVER}/member/check-password`
 // edit email
-export const MB_EDIT_EMAIL = `${API_SERVER}/member/edit-email`
+export const MB_EDIT_INFO = `${API_SERVER}/member/edit-info`
 // send OTP 
 export const MB_SEND_CODE = `${API_SERVER}/member/send-code`
+// request email
+export const MB_REQ_EMAIL = `${API_SERVER}/member/request-email`
 
 
 //商品列表

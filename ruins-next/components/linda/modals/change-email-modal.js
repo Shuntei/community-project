@@ -3,7 +3,7 @@ import { RiCloseLargeLine } from '@remixicon/react'
 import { IoMdEye } from 'react-icons/io'
 import { IoMdEyeOff } from 'react-icons/io'
 import { useAuth } from '@/contexts/auth-context'
-import {z} from "zod"
+import { z } from 'zod'
 import { MB_CHECK_EMAIL } from '@/components/config/api-path'
 
 const schemaEmail = z.string().email({ message: 'Invalid email address' })
@@ -13,20 +13,21 @@ export default function ChangeEmailPopup({
   onClose,
   setShowOTPModal,
   setShowEmailModal,
-  setNewEmail
+  setNewEmail,
 }) {
   if (!isVisible) return null
   const { auth } = useAuth()
   const [showPass, setShowPass] = useState(false)
   const defaultForm = {
     password: '',
-    email: '',
+    newEmail: '',
     username: auth.username,
+    email: auth.email
   }
 
   const initErrors = {
     password: '',
-    email: '',
+    newEmail: '',
   }
 
   const [form, setForm] = useState(defaultForm)
@@ -41,25 +42,19 @@ export default function ChangeEmailPopup({
       [e.target.name]: e.target.value,
     }))
 
-    if(isSubmitted) {
+    if (isSubmitted) {
       updateError()
     }
   }
 
-  const updateError = (code) => {
+  const updateError = () => {
     let initErrors = {
       hasErrors: false,
       password: '',
-      email: ''
+      newEmail: '',
     }
 
-    if (!form.password) {
-      initErrors = {
-        ...initErrors,
-        hasErrors: true,
-        password: 'Cannot be blank',
-      }
-    } else if (passwordErrorCode) {
+    if (passwordErrorCode) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
@@ -67,31 +62,31 @@ export default function ChangeEmailPopup({
       }
     }
 
-    if (!form.email) {
+    if (!form.newEmail) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
-        email: 'Cannot be blank',
+        newEmail: 'Cannot be blank',
       }
     } else if (emailErrorCode) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
-        email: 'email is in use. try another',
+        newEmail: 'email is in use. try another',
       }
-    } else if (auth.email == form.email){
+    } else if (auth.email == form.newEmail) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
-        email: 'it should be different than your current email',
+        newEmail: 'it should be different than your current email',
       }
     } else {
-      const emailZod = schemaEmail.safeParse(form.email)
+      const emailZod = schemaEmail.safeParse(form.newEmail)
       if (!emailZod.success) {
         initErrors = {
           ...initErrors,
           hasErrors: true,
-          email: emailZod.error.issues[0].message,
+          newEmail: emailZod.error.issues[0].message,
         }
       }
     }
@@ -103,40 +98,39 @@ export default function ChangeEmailPopup({
       setErrors(initErrors)
       return true
     }
-
   }
 
   const handleButtonClick = async () => {
     setIsSubmitted(true)
     const passedValidation = updateError()
-    if(passedValidation){
+    if (passedValidation) {
       try {
         const r = await fetch(`${MB_CHECK_EMAIL}/${auth.id}`, {
           method: 'post',
           headers: {
-            "Content-Type": "application/json"
+            'Content-Type': 'application/json',
           },
-          body: JSON.stringify(form)
+          body: JSON.stringify(form),
         })
 
         const result = await r.json()
-        if(result.success){
-          setNewEmail(form.email)
+        if (result.success) {
+          setNewEmail(form.newEmail)
           setShowOTPModal(true)
           setShowEmailModal(false)
         } else {
           result.emailCode ? setEmailErrorCode(result.emailCode) : ''
           result.passwordCode ? setPasswordErrorCode(result.passwordCode) : ''
-          console.log("Password or email is wrong");
+          console.log('Password or email is wrong')
         }
       } catch (ex) {
-        console.log("Failed to fetch edit email", ex);
+        console.log('Failed to fetch edit email', ex)
       }
     }
   }
 
-  useEffect(()=>{
-    if(isSubmitted){
+  useEffect(() => {
+    if (isSubmitted) {
       updateError()
     }
   }, [form, emailErrorCode, passwordErrorCode])
@@ -176,16 +170,23 @@ export default function ChangeEmailPopup({
               {' '}
               <input
                 name="password"
-                onChange={(e)=>{
+                onChange={(e) => {
                   handleChange(e)
                   setPasswordErrorCode(0)
                 }}
                 type={showPass ? 'text' : 'password'}
                 className="bg-[#191919] h-[44px] rounded focus:outline-none text-[14px] text-white flex w-full p-[15px]"
               />{' '}
-              <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
-                {errors.password}
-              </div>
+              {errors.password ? (
+                <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
+                  {errors.password}
+                </div>
+              ) : (
+                <div className="text-[#969696] mt-1 text-xs">
+                  Do not complete this field if this account does not have a
+                  previously associated password
+                </div>
+              )}
               <div
                 className="absolute md:top-2 top-3 right-2"
                 onClick={() => {
@@ -204,8 +205,8 @@ export default function ChangeEmailPopup({
             <div className="text-[#969696] text-[14px]">New email</div>
             <div className="flex flex-col relative">
               <input
-                name="email"
-                onChange={(e)=>{
+                name="newEmail"
+                onChange={(e) => {
                   handleChange(e)
                   setEmailErrorCode(0)
                 }}
@@ -213,7 +214,7 @@ export default function ChangeEmailPopup({
                 className="bg-[#191919] h-[44px] rounded focus:outline-none text-[14px] text-white flex w-full p-[15px]"
               />
               <div className=" h-[24px] text-[#EA7E7E] font-medium py-1 text-xs uppercase">
-                {errors.email}
+                {errors.newEmail}
               </div>
             </div>
           </div>
