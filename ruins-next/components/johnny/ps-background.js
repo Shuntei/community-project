@@ -10,7 +10,7 @@ export default function PersonalBackground() {
     <>
       <div>
         <Image
-          className="h-[256px] w-full object-cover rounded-lg overflow-hidden"
+          className="h-[256px] w-full object-cover rounded-lg overflow-hidden bg-zinc-500"
           // src={img}
           width={1000}
           height={256}
@@ -20,7 +20,7 @@ export default function PersonalBackground() {
               ? auth.profileUrl
               : `${IMG_SERVER}/${auth.coverUrl}`
           }
-          alt=""
+          alt="背景圖片"
         />
       </div>
     </>

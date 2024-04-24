@@ -50,6 +50,7 @@ router.get("/boards/:board_id?", async (req, res) => {
       orderByClause = "ORDER BY p.posts_timestamp ASC";
       break;
     case "likes":
+      orderByClause = "ORDER BY p.likes DESC";
       break;
     case "views":
       orderByClause = "ORDER BY p.view_count DESC";
@@ -95,7 +96,7 @@ router.get("/boards/:board_id?", async (req, res) => {
     ${orderByClause} 
     LIMIT ${(page - 1) * perPage}, ${perPage}`;
   // const selectedBdPosts = `SELECT * FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id = ? ORDER BY p.post_id DESC`;
-  console.log("sp", selectedBdPosts);
+  // console.log("sp", selectedBdPosts);
   const [selectedBdPostsRows] = await db.query(selectedBdPosts, [board_id]);
   // console.log(selectedBdPostsRows);
 
@@ -305,16 +306,16 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
 
     req.body.post_type = "yours";
     // console.log("this is photo:", req.file);
-
     if (!req.file) {
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `board_id`, `user_id`) VALUES ( ?, ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.post_type,
         req.body.boardId,
         req.body.userId,
+        req.body.emotion,
       ]);
     }
     if (req.file) {
@@ -325,7 +326,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
       // http://localhost:3001/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `image_url`, `board_id`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `image_url`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
@@ -333,6 +334,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
         req.body.image_url,
         req.body.boardId,
         req.body.userId,
+        req.body.emotion,
       ]);
     }
 

@@ -25,7 +25,7 @@ export default function Profile() {
               fill={true}
               objectFit="cover"
               alt=""
-              className="rounded-full"
+              className="rounded-full bg-zinc-300"
             />
           </div>
 

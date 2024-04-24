@@ -1,18 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import img from './img/90.jpg'
+// import img from './img/90.jpg'
 import { z } from 'zod'
 import { useToggles } from '@/contexts/use-toggles'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast, { Toaster } from 'react-hot-toast'
-
+import emotionHandler from './utils/emotionHandler'
 import {
   RiVideoOnFill,
   RiImageFill,
   RiMapPinFill,
   RiPriceTag3Fill,
-  RiEmotionLaughFill,
   RiEqualizerLine,
   RiSendPlane2Fill,
   RiDraftLine,
@@ -22,6 +21,8 @@ import {
 import { SN_ADD_POST, SN_BOARDS } from './config/api-path'
 import { useBoards } from '@/contexts/use-boards'
 import { useAuth } from '@/contexts/auth-context'
+import { IMG_SERVER } from '../config/api-path'
+import Emotion from './modal-post-options/emotion'
 
 export default function PostModal() {
   const { auth } = useAuth()
@@ -31,6 +32,8 @@ export default function PostModal() {
     content: '',
     photo: '',
     boardId: '',
+    userId: '',
+    emotion: '',
   })
 
   const [previewUrl, setPreviewUrl] = useState('')
@@ -57,13 +60,14 @@ export default function PostModal() {
 
   const submitHandler = async (e) => {
     e.preventDefault()
-
+    console.log(postForm)
     const formData = new FormData()
     formData.append('title', postForm.title)
     formData.append('content', postForm.content)
     formData.append('photo', postForm.photo)
     formData.append('boardId', postForm.boardId)
     formData.append('userId', auth.id)
+    formData.append('emotion', postForm.emotion)
     // console.log(postForm)
     // http:localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg
     const MySwal = withReactContent(Swal)
@@ -148,7 +152,6 @@ export default function PostModal() {
 
   return (
     <>
-      {' '}
       {/* <!-- 發文框 --> */}
       <form
         name="form1"
@@ -173,7 +176,7 @@ export default function PostModal() {
                 {bdChoose.map((v, i) => {
                   return (
                     <option key={v.board_id} value={v.board_id}>
-                      {v.board_name}
+                      {v.board_name}{' '}
                     </option>
                   )
                 })}
@@ -186,7 +189,17 @@ export default function PostModal() {
           <div className="flex-col mb-5">
             <div className="flex items-center justify-between py-3">
               <div className="flex items-center gap-5">
-                <Image className="size-[35px] rounded-full" src={img} alt="" />
+                <Image
+                  className="size-[35px] rounded-full"
+                  width={35}
+                  height={35}
+                  src={
+                    auth.googlePhoto
+                      ? auth.profileUrl
+                      : `${IMG_SERVER}/${auth.profileUrl}`
+                  }
+                  alt=""
+                />
                 <span className="text-white text-[20px]">{auth.username}</span>
               </div>
               {/* 操作按鈕區 */}
@@ -219,15 +232,14 @@ export default function PostModal() {
                   <div className="text-[14px] pc:text-[16px] flex">
                     <RiPriceTag3Fill className="mr-2" />
                     黃曉桂
-                  </div>
+                  </div>{' '}
                   <div className="text-[14px] pc:text-[16px] flex">
-                    <RiEmotionLaughFill className="mr-2" />
-                    覺得興奮
+                    {emotionHandler(postForm.emotion)}
                   </div>
                   <div className="text-[14px] pc:text-[16px] flex">
                     <RiMapPinFill className="mr-2" />
                     光華商場
-                  </div>
+                  </div>{' '}
                 </div>
                 {/* <!-- 輸入區域 --> */}
                 <textarea
@@ -285,10 +297,11 @@ export default function PostModal() {
               <RiPriceTag3Fill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">TAGS</span>
             </button>
-            <button className="flex items-center">
+            {/* <button className="flex items-center">
               <RiEmotionLaughFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">FEELING</span>
-            </button>
+            </button> */}
+            <Emotion postForm={postForm} setPostForm={setPostForm} />
           </div>
         </div>
       </form>

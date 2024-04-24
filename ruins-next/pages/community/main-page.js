@@ -1,7 +1,7 @@
 import PageSelect from '@/components/johnny/page-select'
 import React from 'react'
 import CentralMain from './central-main'
-import Topics from '@/components/johnny/home-topics'
+import Topics from '@/components/johnny/bar-home-topics'
 import FollowsBar from '@/components/johnny/bar-follows-notify'
 import Navbar from '@/components/linda/navbar/navbar'
 

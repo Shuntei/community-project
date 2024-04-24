@@ -32,12 +32,13 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
     // console.log("this is photo:", req.file);
 
     if (!req.file) {
-      const sql = `UPDATE sn_posts SET title=? , content=?, post_type=?, board_id=? WHERE post_id=${postId}`;
+      const sql = `UPDATE sn_posts SET title=? , content=?, post_type=?, board_id=?, emotion=? WHERE post_id=${postId}`;
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.post_type,
         req.body.boardId,
+        req.body.emotion,
       ]);
     }
     if (req.file) {
@@ -47,13 +48,14 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
       console.log("newFilePath", newFilePath);
       // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
-      const sql = `UPDATE sn_posts SET title=?, content=?, post_type=?, image_url=?, board_id=? WHERE post_id=${postId}`;
+      const sql = `UPDATE sn_posts SET title=?, content=?, post_type=?, image_url=?, board_id=?, emotion=? WHERE post_id=${postId}`;
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.post_type,
         req.body.image_url,
         req.body.boardId,
+        req.body.emotion,
       ]);
     }
 
@@ -165,7 +167,7 @@ router.get("/like-state/:postId?", async (req, res) => {
     code: 0,
     rows: "",
   };
-  console.log("ao6u.3", postId);
+  console.log("postId(toggle-like)", postId);
   // 確認有無這則貼文的like
   if (!postId) {
     return;
@@ -357,7 +359,7 @@ router.put(
 
 router.get("/updateviewcount/:postId?", async (req, res) => {
   let postId = +req.params.postId;
-
+  console.log(postId);
   const output = {
     success: false,
     message: "",

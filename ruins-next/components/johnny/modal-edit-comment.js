@@ -25,6 +25,7 @@ import {
 } from './config/api-path'
 import { useBoards } from '@/contexts/use-boards'
 import { useAuth } from '@/contexts/auth-context'
+import { IMG_SERVER } from '../config/api-path'
 
 export default function CommentEditModal({
   commentId,
@@ -122,7 +123,7 @@ export default function CommentEditModal({
       return
     }
     if (!isFormChanged) {
-      toast.error('內容沒有變更，請繼續編輯')
+      toast.error('內容沒有變更，請繼續編輯或離開')
       return
     }
 
@@ -174,7 +175,17 @@ export default function CommentEditModal({
           <div className="flex-col mb-5">
             <div className="flex items-center justify-between py-3">
               <div className="flex items-center gap-5">
-                <Image className="size-[35px] rounded-full" src={img} alt="" />
+                <Image
+                  className="size-[35px] rounded-full"
+                  height={35}
+                  width={35}
+                  src={
+                    auth.googlePhoto
+                      ? auth.profileUrl
+                      : `${IMG_SERVER}/${auth.profileUrl}`
+                  }
+                  alt=""
+                />
                 <span className="text-white text-[20px]">{auth.username}</span>
               </div>
               {/* 操作按鈕區 */}

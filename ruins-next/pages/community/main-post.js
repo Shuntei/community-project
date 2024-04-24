@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState } from 'react'
-import { API_SERVER } from '@/components/johnny/config/api-path'
+import { API_SERVER, SN_POST_VIEWS } from '@/components/johnny/config/api-path'
 import Image from 'next/image'
 import profileImg from '../../components/johnny/img/16.jpg'
 import { useRouter } from 'next/router'
@@ -20,6 +20,7 @@ import {
 import { SN_POSTS } from '@/components/johnny/config/api-path'
 import dayjs from 'dayjs'
 import { useAuth } from '@/contexts/auth-context'
+import emotionHandler from '@/components/johnny/utils/emotionHandler'
 
 export default function MainPost() {
   const [renderAfterCm, setRenderAfterCm] = useState(false)
@@ -27,8 +28,11 @@ export default function MainPost() {
   const { auth } = useAuth()
   const { commentModal, setCommentModal } = useToggles()
   const { getPost, setGetPost, handlePostId } = useBoards()
+  const [afterTimerReset, setAfterTimerReset] = useState(false)
+  const [timerRun, setTimerRun] = useState(false)
 
   const handleBack = () => {
+    setTimerRun(false) //未達秒數退出時解除更新
     router.back()
   }
   const postId = router.query.postId
@@ -46,14 +50,28 @@ export default function MainPost() {
     setGetPost(result)
   }
 
-  // useEffect(() => {
-  //   isPostId()
-  // }, [])
+  // 進入頁面一定秒數後更新觀看數
+  useEffect(() => {
+    setTimeout(() => {
+      setTimerRun(true)
+    }, 3000)
+  }, [])
+
+  // 判斷後更新觀看數
+  if (timerRun) {
+    fetch(`${SN_POST_VIEWS}/${postId}`)
+      .then((r) => r.json())
+      .then((rst) => {
+        console.log(rst)
+        setAfterTimerReset(!afterTimerReset) //更新列表
+        setTimerRun(false)
+      })
+  }
 
   useEffect(() => {
     if (!router.isReady) return
     isPostId(postId)
-  }, [postId, router.isReady])
+  }, [postId, router.isReady, afterTimerReset])
 
   // console.log(getPost[0])
 
@@ -102,8 +120,9 @@ export default function MainPost() {
                 </span>
               </div>
               <div className="flex">
-                <RiEmotionLaughFill className="mr-2" />
-                <span className="hidden pc:inline-block">覺得新奇</span>
+                {/* <RiEmotionLaughFill className="mr-2" />
+                <span className="hidden pc:inline-block">覺得新奇</span> */}
+                {emotionHandler(getPost[0].emotion)}
               </div>
             </div>
             <div className="mb-2 text-[20px] pc:py-5">{getPost[0].content}</div>

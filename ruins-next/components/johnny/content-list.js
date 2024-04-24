@@ -139,7 +139,7 @@ export default function MainContent() {
       {postsList?.totalPostsRows?.map((v, i) => {
         return (
           <main
-            className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative"
+            className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative "
             key={v.post_id}
           >
             {/*relative用於toggle垃圾桶*/}
@@ -177,15 +177,15 @@ export default function MainContent() {
                 </Link>
                 <div className="text-[14px] text-292929">
                   <div className="flex gap-2">
-                    <span className="text-575757 pr-2 flex">
+                    <span className="text-575757 flex w-[55px]">
                       <RiEyeFill className="pr-1" />
                       {v.view_count}
                     </span>
-                    <span className="text-575757 flex cursor-pointer">
+                    <span className="text-575757 flex w-[55px]">
                       <RiChat4Fill className="pr-1" />
                       {v.comment_count}
                     </span>
-                    <span className="text-575757 flex cursor-pointer">
+                    <span className="text-575757 flex w-[55px]">
                       <RiHeartFill className="pr-1" />
                       {v.likes}
                     </span>
