@@ -15,7 +15,7 @@ import NotifyRed from '@/components/linda/notify/notify-red'
 export default function EmailAndPassword() {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
-  const [showOTPModal, setShowOTPModal] = useState(true)
+  const [showOTPModal, setShowOTPModal] = useState(false)
   const [newEmail, setNewEmail] = useState('')
   const {auth} = useAuth()
   const [text, setText] = useState('')
