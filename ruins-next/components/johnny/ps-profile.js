@@ -4,16 +4,23 @@ import img from './img/90.jpg'
 import { RiDraftLine, RiBookmarkFill } from '@remixicon/react'
 import { useToggles } from '@/contexts/use-toggles'
 import { useAuth } from '@/contexts/auth-context'
+import { IMG_SERVER } from '../config/api-path'
 
 export default function Profile() {
   const { toggles, setToggles } = useToggles()
   const { auth } = useAuth()
+  console.log(auth)
   return (
     <>
       <div className="flex   justify-center mr-[10%] w-full ">
         <div className="flex items-center pc:gap-10">
           <div className="overflow-hidden size-[100px] pc:size-[128px] translate-x-[20%] translate-y-[-10%] pc:translate-x-[40%] pc:translate-y-[-40%] PcImagePosition">
             <Image
+              // src={
+              //   auth.googlePhoto
+              //     ? auth.profileUrl
+              //     : `${IMG_SERVER}/${auth.profileUrl}`
+              // }
               src={img}
               fill={true}
               objectFit="cover"

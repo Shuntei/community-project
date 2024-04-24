@@ -9,7 +9,7 @@ export default function Views({ postId }) {
   fetch(`${SN_POSTS}?postId=${postId}`)
     .then((r) => r.json())
     .then((data) => {
-      console.log(data[0].view_count)
+      // console.log(data[0].view_count)
       setViewCount(data[0].view_count)
     })
 

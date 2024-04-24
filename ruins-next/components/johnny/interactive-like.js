@@ -9,13 +9,14 @@ import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'
 
-export default function LikeButton({ postId }) {
+export default function LikeButton() {
   const [likesChange, setLikesChange] = useState(false)
   const [isUserLike, setIsUserLike] = useState(false)
   const { getPost, setGetPost } = useBoards()
   const { auth } = useAuth()
   const router = useRouter()
   // console.log('the postId', postId)
+  const postId = router.query.postId
 
   const query = { ...router.query, postId: postId, userId: auth.id }
   const queryString = new URLSearchParams(query).toString()
@@ -40,9 +41,9 @@ export default function LikeButton({ postId }) {
     fetch(`${SN_LIKES_STATE}/${postId}`)
       .then((r) => r.json())
       .then((data) => {
-        console.log(data)
+        // console.log(data)
         const userLikeState = data.rows.map((v) => v.user_id).includes(auth.id)
-        console.log(userLikeState)
+        // console.log(userLikeState)
         setIsUserLike(userLikeState)
       })
   }, [])

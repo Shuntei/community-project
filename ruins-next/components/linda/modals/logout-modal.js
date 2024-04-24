@@ -40,12 +40,14 @@ export default function LogoutModal({ isVisible }) {
           >
             SETTINGS
           </Link>
-          <Link href="#" 
-           onClick={(e) => {
+          <Link
+            href="#"
+            onClick={(e) => {
               e.preventDefault()
               logout()
             }}
-          className="text-rose-400 text-base">
+            className="text-rose-400 text-base"
+          >
             LOGOUT
           </Link>
         </div>

@@ -142,6 +142,7 @@ router.get("/posts/:post_id?", async (req, res) => {
         orderByClause = "ORDER BY p.posts_timestamp ASC";
         break;
       case "likes":
+        orderByClause = "ORDER BY p.likes DESC";
         break;
       case "views":
         orderByClause = "ORDER BY p.view_count DESC";
