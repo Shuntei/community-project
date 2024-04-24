@@ -30,7 +30,7 @@ export default function Topics() {
 
   return (
     <>
-      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] pb-20 bg-black overflow-y-scroll z-[998] rounded-b-3xl hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
+      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] pb-20 overflow-y-scroll z-[998] rounded-b-3xl hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
         <div className="text-white px-10 pt-3 pb-1 text-[20px]  cursor-pointer">
           TOPICS
         </div>

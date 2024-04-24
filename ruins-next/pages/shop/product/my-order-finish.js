@@ -15,7 +15,6 @@ import {
 import { useRouter } from 'next/router'
 import { Path } from 'three'
 import OrderState from '@/components/kevin/product/order-state'
-import { button } from 'leva'
 export default function MyOrder() {
   const router = useRouter()
   const { auth } = useAuth()
@@ -41,10 +40,41 @@ export default function MyOrder() {
       console.log(ex)
     }
   }
-  
+  // 取得歷史訂單： 全部
+  // const getAllPo = async () => {
+  //   try {
+  //     const r = await fetch(PRODUCT_MYALLPO + `/${memberId}`)
+  //     const d = await r.json()
+  //     setAllPo(d)
+  //   } catch (ex) {
+  //     console.log(ex)
+  //   }
+  // }
+
+  // 取得歷史訂單：訂單處理中
+  // const getOngoingPo = async () => {
+  //   try {
+  //     const r = await fetch(PRODUCT_MYONGOINGPO + `/${memberId}`)
+  //     const d = await r.json()
+  //     setOngoingPo(d)
+  //   } catch (ex) {
+  //     console.log(ex)
+  //   }
+  // }
+
+  // 取得歷史訂單：已完成
+  // const getCompletedPo = async () => {
+  //   try {
+  //     const r = await fetch(PRODUCT_MYCOMPLETEDPO + `/${memberId}`)
+  //     const d = await r.json()
+  //     setCompletedPo(d)
+  //   } catch (ex) {
+  //     console.log(ex)
+  //   }
+  // }
   const fetchProductDetails = async () => {
     try {
-      const r = await fetch(PRODUCT_MYALLPO + `/${memberId}`)
+      const r = await fetch(PRODUCT_MYCOMPLETEDPO + `/${memberId}`)
       const d = await r.json()
       setAllPo(d)
 
@@ -61,9 +91,9 @@ export default function MyOrder() {
 
   // useEffect(() => {
   //   // if (memberId) {
-  //   getOngoingPo()
-  //   getAllPo()
-  //   getCompletedPo()
+  //   // getOngoingPo()
+  //   // getAllPo()
+  //   // getCompletedPo()
   //   // } else {
   //   //   // router.push('/member/login')
   //   //   router.push('/shop/product/my-order')
@@ -71,19 +101,17 @@ export default function MyOrder() {
   // }, [memberId])
 
   useEffect(() => {
-  
     fetchProductDetails()
   }, [memberId])
   return (
     <>
-    {console.log(allPo)}
+      {console.log(allPo)}
       <div className="w-full flex flex-col px-4 md:px-20 py-5 md:py-12 md:gap-12 gap-5 ">
         {/* 訂單完成/未完成超連結 &&我的訂單標題*/}
         <OrderState />
         {/* 訂單內容列表 */}
         {allPo.rows &&
           allPo.rows.map((v, i) => {
-            const ispaid = v.payment_status === '已付款'
             return (
               <div className="w-full flex flex-col md:gap-12 gap-5" key={v.sid}>
                 {/* 一個內容 */}
@@ -107,7 +135,6 @@ export default function MyOrder() {
                         <div className="text-zinc-300 text-xs font-['Noto Sans TC']">
                           訂單成立日期:{v.created_at.split('T')[0]}
                         </div>
-
                         <div className="text-white text-base font-['IBM Plex Mono']">
                           訂單總金額:${v.total_amount}
                         </div>
@@ -116,30 +143,6 @@ export default function MyOrder() {
                   </div>
                   {/* 訂單內部 */}
                   <div className="collapse-content flex flex-col items-center justify-center ">
-                    <div className="flex justify-end w-full">
-                      {ispaid ? (
-                        ''
-                      ) : (
-                        <button
-                          className="py-2 px-7 bg-white border border-black justify-center items-center flex absolute bottom-0 md:static hover:bg-black hover:border-white group"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            router.push(
-                              {
-                                pathname: '/shop/cart/confirm-doc',
-                                query: { poid: v.purchase_order_id },
-                              },
-                              undefined,
-                              { scroll: false }
-                            )
-                          }}
-                        >
-                          <div className="text-black group-hover:text-white text-xs  font-['Noto Sans TC']">
-                            去結帳
-                          </div>
-                        </button>
-                      )}
-                    </div>
                     {orderDetails[v.purchase_order_id]?.rows &&
                       orderDetails[v.purchase_order_id].rows.map((p, index) => {
                         const isCommented = p.is_comment === 1

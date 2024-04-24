@@ -9,7 +9,7 @@ export default function FollowsBar() {
 
   return (
     <>
-      <section className="fixed right-0 mt-[40px] pt-[10px] w-[260px] hidden bargone:block h-[600px] overflow-scroll pb-20 mr-10 pl-5 bg-black rounded-b-3xl z-[998]">
+      <section className="fixed right-0 mt-[40px] pt-[10px] w-[260px] hidden bargone:block h-[600px] overflow-scroll pb-20 mr-10 pl-5 rounded-b-3xl z-[998]">
         <div className="mb-5">
           <div></div>
           <div className="text-white py-1 text-[20px] ">FOLLOWS</div>

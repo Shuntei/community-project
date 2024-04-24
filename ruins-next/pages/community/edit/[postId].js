@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackendPortForImg } from '../../../components/johnny/config/api-path'
+import { API_SERVER } from '../../../components/johnny/config/api-path'
 import Link from 'next/link'
 import Image from 'next/image'
 import img from '../../../components/johnny/img/90.jpg'
@@ -28,11 +28,12 @@ import {
   RiCloseLargeLine,
   RiArrowDropDownLine,
 } from '@remixicon/react'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function EditModal() {
   const router = useRouter()
   console.log(router.query.postId)
-
+  const { auth } = useAuth()
   const { editModal, setEditModal } = useToggles()
   const [postForm, setPostForm] = useState({
     title: '',
@@ -231,7 +232,9 @@ export default function EditModal() {
                     src={img}
                     alt=""
                   />
-                  <span className="text-white text-[20px]">John Doe</span>
+                  <span className="text-white text-[20px]">
+                    {auth.username}
+                  </span>
                 </div>
                 {/* 操作按鈕區 */}
                 <div className="text-white flex gap-10">
@@ -305,7 +308,7 @@ export default function EditModal() {
                               return (
                                 <Image
                                   className="size-[150px] object-cover rounded-lg"
-                                  src={`http://localhost:${BackendPortForImg}/community/${postForm.image_url}`}
+                                  src={`${API_SERVER}/${postForm.image_url}`}
                                   width={150}
                                   height={150}
                                   alt=""

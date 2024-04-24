@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { API_SERVER } from '@/components/johnny/config/api-path'
 import Image from 'next/image'
 import profileImg from '../../components/johnny/img/16.jpg'
@@ -19,17 +19,20 @@ import {
 } from '@remixicon/react'
 import { SN_POSTS } from '@/components/johnny/config/api-path'
 import dayjs from 'dayjs'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function MainPost() {
   const [renderAfterCm, setRenderAfterCm] = useState(false)
   const router = useRouter()
-
+  const { auth } = useAuth()
   const { commentModal, setCommentModal } = useToggles()
   const { getPost, setGetPost } = useBoards()
+
   const handleBack = () => {
     router.back()
   }
   const postId = router.query.postId
+
   const isPostId = async () => {
     const postIdExist = postId
       ? localStorage.setItem('postId', postId)
@@ -55,8 +58,8 @@ export default function MainPost() {
   return (
     <>
       {getPost && (
-        <div className="bg-292929 flex pc:items-start items-baseline justify-between w-ful p-5">
-          <section className="bg-292929 text-white w-full pc:w-[1000px]   pc:p-10 pc:ml-20">
+        <div className=" flex pc:items-start items-baseline justify-between w-ful p-5">
+          <section className=" text-white w-full pc:w-[1000px]   pc:p-10 pc:ml-20">
             {/* <!-- 標題區 --> */}
             <div className="flex justify-between mb-5">
               <div>
@@ -76,7 +79,7 @@ export default function MainPost() {
                 objectFit="cover"
                 alt=""
               />
-              NameHere@ccmail.com
+              {auth.username}
             </div>
             {/* <!-- 文章 --> */}
             <div className="flex mb-2 pc:my-5 gap-5 text-gray-400">

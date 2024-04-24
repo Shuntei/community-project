@@ -4,13 +4,17 @@ import CentralMain from './central-main'
 import Topics from '@/components/johnny/home-topics'
 import FollowsBar from '@/components/johnny/bar-follows-notify'
 import Navbar from '@/components/linda/navbar/navbar'
-import Footer from '@/components/linda/footer/footer'
 
 export default function MainPage() {
+  const paddingBGPC = 'pc:bg-292929'
+
   return (
-    <div className="bg-black h-screen">
+    <div className="h-screen">
       <Navbar className="bg-gradient-to-b from-black to-gray-800" />
       <PageSelect />
+      <div
+        className={`mt-[40px] pc:h-[10px] h-[15px] fixed w-full z-10 ${paddingBGPC} bg-neutral-300`}
+      ></div>
       <Topics />
       <FollowsBar />
       <CentralMain />
