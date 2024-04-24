@@ -11,15 +11,15 @@ export default function PersonalBackground() {
       <div>
         <Image
           className="h-[256px] w-full object-cover rounded-lg overflow-hidden"
-          src={img}
+          // src={img}
           width={1000}
           height={256}
           objectFit="cover"
-          // src={
-          //   auth.googlePhoto
-          //     ? auth.profileUrl
-          //     : `${IMG_SERVER}/${auth.coverUrl}`
-          // }
+          src={
+            auth.googlePhoto
+              ? auth.profileUrl
+              : `${IMG_SERVER}/${auth.coverUrl}`
+          }
           alt=""
         />
       </div>
