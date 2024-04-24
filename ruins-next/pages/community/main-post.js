@@ -26,28 +26,36 @@ export default function MainPost() {
   const router = useRouter()
   const { auth } = useAuth()
   const { commentModal, setCommentModal } = useToggles()
-  const { getPost, setGetPost } = useBoards()
+  const { getPost, setGetPost, handlePostId } = useBoards()
 
   const handleBack = () => {
     router.back()
   }
   const postId = router.query.postId
+  console.log('postId', postId)
 
-  const isPostId = async () => {
-    const postIdExist = postId
-      ? localStorage.setItem('postId', postId)
-      : localStorage.getItem('postId')
+  const isPostId = async (postId) => {
+    // 用於重整
+    // const postIdExist = postId
+    //   ? localStorage.setItem('postId', postId)
+    //   : localStorage.getItem('postId')
 
-    if (!postIdExist) return
-
-    const r = await fetch(`${SN_POSTS}?postId=${postIdExist}`)
+    // if (!postIdExist) return
+    const r = await fetch(`${SN_POSTS}?postId=${postId}`)
     const result = await r.json()
     setGetPost(result)
   }
 
+  // useEffect(() => {
+  //   isPostId()
+  // }, [])
+
   useEffect(() => {
-    isPostId()
-  }, [postId])
+    if (!router.isReady) return
+    isPostId(postId)
+  }, [postId, router.isReady])
+
+  // console.log(getPost[0])
 
   if (!getPost[0]) {
     console.log('data not ready to load')
@@ -123,6 +131,7 @@ export default function MainPost() {
               <Views postId={getPost[0].post_id} />
               <CommentCount postId={getPost[0].post_id} />
               <LikeButton postId={getPost[0].post_id} />
+              {/* <LikeButton postId={postId} /> */}
             </div>
             {/* <!-- 留言按鈕 --> */}
             <div

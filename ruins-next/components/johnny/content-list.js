@@ -7,6 +7,7 @@ import {
   RiMoreFill,
   RiArrowRightDoubleLine,
   RiArrowLeftDoubleLine,
+  RiHeartFill,
 } from '@remixicon/react'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -27,10 +28,10 @@ export default function MainContent() {
   const { removeBox, setRemoveBox } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
 
-  const handlePush = (postId) => {
-    // router.push(`/community/main-post?postId=${postId}`);
-    handlePostId(postId)
-  }
+  // const handlePush = (postId) => {
+  //   // router.push(`/community/main-post?postId=${postId}`);
+  //   handlePostId(postId)
+  // }
 
   const removePost = async (postId) => {
     const MySwal = withReactContent(Swal)
@@ -159,7 +160,6 @@ export default function MainContent() {
               <div className="w-[70%]">
                 <Link
                   name="postId"
-                  onClick={() => handlePush(v.post_id)}
                   href={`/community/main-post?postId=${v.post_id}`}
                   className="cursor-pointer"
                 >
@@ -184,6 +184,10 @@ export default function MainContent() {
                     <span className="text-575757 flex cursor-pointer">
                       <RiChat4Fill className="pr-1" />
                       {v.comment_count}
+                    </span>
+                    <span className="text-575757 flex cursor-pointer">
+                      <RiHeartFill className="pr-1" />
+                      {v.likes}
                     </span>
                     <div className="dropdown dropdown-right dropdown-end">
                       <div
@@ -210,7 +214,7 @@ export default function MainContent() {
               </div>
               <Link
                 className="ml-6 w-[100px] pc:w-[150px] flex items-center justify-end flex-shrink-0 cursor-pointer"
-                onClick={() => handlePush(v.post_id)}
+                // onClick={() => handlePush(v.post_id)}
                 href={`/community/main-post?postId=${v.post_id}`}
               >
                 {v.image_url && (

@@ -87,7 +87,11 @@ export default function Navbar({ className, navColor = 'white' }) {
                         width={30}
                         className="rounded-full min-h-[30px] max-h-[30px] object-cover"
                         height={30}
-                        src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
+                        // src={
+                        //   auth.googlePhoto
+                        //     ? auth.profileUrl
+                        //     : `${IMG_SERVER}/${auth.profileUrl}`
+                        // }
                         alt=""
                       />
                     ) : (
@@ -134,7 +138,7 @@ export default function Navbar({ className, navColor = 'white' }) {
           className={`${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
           <div className={`${styles['nav-cart-mobile']}`}>
-          <CartModal />
+            <CartModal />
 
             {navColor === 'white' ? (
               <Image alt="" src={CartLine} />
@@ -155,7 +159,11 @@ export default function Navbar({ className, navColor = 'white' }) {
                 width={20}
                 className="rounded-full h-[20px] object-cover"
                 height={20}
-                src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
+                // src={
+                //   auth.googlePhoto
+                //     ? auth.profileUrl
+                //     : `${IMG_SERVER}/${auth.profileUrl}`
+                // }
                 alt=""
               />
             ) : navColor === 'white' ? (
