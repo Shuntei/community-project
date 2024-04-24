@@ -34,12 +34,12 @@ export default function PageSelect({ bgColor = 'bg-black', optionsStyle }) {
   return (
     <>
       <div
-        className={`${bgColor} flex justify-center items-center h-[40px] fixed w-full z-[998]`}
+        className={`${bgColor} flex justify-center items-center h-[40px] fixed w-full z-[998] `}
       >
         <span
           className={
             pathname.includes('main-page')
-              ? `${optionsStyle} bg-zinc-600`
+              ? `${optionsStyle} bg-zinc-600 `
               : `${optionsStyle} bg-zinc-900`
           }
           onClick={() => {

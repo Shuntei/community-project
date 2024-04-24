@@ -1,5 +1,5 @@
 import FollowsBar from '@/components/johnny/bar-follows-notify'
-import InfoBar from '@/components/johnny/ps-intro-bar'
+import InfoBar from '@/components/johnny/bar-ps-intro'
 import PageSelect from '@/components/johnny/page-select'
 import React, { useEffect, useState } from 'react'
 import CentralPersonal from './central-personal'

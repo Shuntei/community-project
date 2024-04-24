@@ -9,6 +9,7 @@ import SeeMoreFollows from '@/components/johnny/seemore-follows'
 import SeeMoreNotification from '@/components/johnny/seemore-notification'
 import { useToggles } from '@/contexts/use-toggles'
 import PersonalContent from '@/components/johnny/content-list-ps'
+import InfoMobile from '@/components/johnny/ps-mobile-intro'
 
 export default function CentralContentP() {
   const { postModal, setPostModal, toggles, removeBox, setRemoveBox } =
@@ -25,6 +26,9 @@ export default function CentralContentP() {
           <PersonalBackground />
           {/* <!-- 頭像,姓名 --> */}
           <Profile />
+          <span className="bargone:hidden">
+            <InfoMobile />
+          </span>
           {/* <!-- 發文按鈕 --> */}
           <div className="border-y-2 text-white flex mt-3 ">
             <button

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { RiChat4Fill } from '@remixicon/react'
+import { RiChat4Fill, RiChat4Line } from '@remixicon/react'
 import { SN_COMMENTS } from '@/components/johnny/config/api-path'
 
 export default function CommentCount({ postId }) {
@@ -14,7 +14,11 @@ export default function CommentCount({ postId }) {
 
   return (
     <span className=" pr-2 flex">
-      <RiChat4Fill className="pr-1" />
+      {commentCount === 0 ? (
+        <RiChat4Line className="pr-1" />
+      ) : (
+        <RiChat4Fill className="pr-1" />
+      )}
       {commentCount}
     </span>
   )
