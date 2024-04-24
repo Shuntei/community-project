@@ -241,9 +241,9 @@ router.post("/login", async (req, res) => {
     return res.json(output);
   }
 
-  const row = usernameRows.length ? usernameRows[0] : emailRows[0];
+  const row = usernameRows.length ? usernameRows : emailRows;
 
-  const result = await bcrypt.compare(password, row.password);
+  const result = await bcrypt.compare(password, row[0].password);
   if (result) {
     output.success = true;
     output.data = generateOutputData(row)
