@@ -27,7 +27,7 @@ async function saveOTPInDB(id, otp, otpExpiry) {
 }
 
 async function saveReqInDB(email, reqExpiry){
-  
+
 }
 
 const sendMail = async (transporter, id, email, username) => {
