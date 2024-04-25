@@ -18,7 +18,7 @@ import Items from '@/components/kevin/product/items'
 export default function List() {
   const router = useRouter()
   const { onAddItem } = useCart()
-  const [products, setProuducts] = useState([])
+  const [products, setProducts] = useState([])
 
   const getProducts = async () => {
     const url = `${PRODUCT_LIST}${location.search}`
@@ -27,7 +27,7 @@ export default function List() {
       const data = await res.json()
       //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
 
-      setProuducts(data)
+      setProducts(data)
     } catch (e) {
       console.log(e)
     }
