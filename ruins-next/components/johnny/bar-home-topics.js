@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useBoards } from '@/contexts/use-boards'
 import { RiArrowDropDownLine, RiListCheck } from '@remixicon/react'
-import { SN_BOARDS } from './config/api-path'
+import { SN_BOARDS } from '../config/johnny-api-path'
 import { useRouter } from 'next/router'
 
 export default function Topics() {
@@ -52,6 +52,7 @@ export default function Topics() {
               return (
                 <li
                   className=" text-white px-10 py-3 flex cursor-pointer duration-200 hover:text-2xl"
+                  key={v.board_id}
                   onClick={() =>
                     router.push({
                       query: {

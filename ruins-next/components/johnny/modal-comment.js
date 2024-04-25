@@ -18,7 +18,7 @@ import {
   RiDraftLine,
   RiCloseLargeLine,
 } from '@remixicon/react'
-import { SN_ADD_COMMENT } from './config/api-path'
+import { SN_ADD_COMMENT } from '../config/johnny-api-path'
 import { useAuth } from '@/contexts/auth-context'
 import { IMG_SERVER } from '../config/api-path'
 
@@ -146,9 +146,11 @@ export default function CommentModal({
                   height={35}
                   width={35}
                   src={
-                    auth.googlePhoto
-                      ? auth.profileUrl
-                      : `${IMG_SERVER}/${auth.profileUrl}`
+                    auth.profileUrl
+                      ? auth.googlePhoto
+                        ? auth.profileUrl
+                        : `${IMG_SERVER}/${auth.profileUrl}`
+                      : ''
                   }
                   alt=""
                 />

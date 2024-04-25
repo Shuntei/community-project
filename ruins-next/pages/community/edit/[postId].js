@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { API_SERVER } from '../../../components/johnny/config/api-path'
+import { API_SERVER } from '../../../components/config/johnny-api-path'
 import Link from 'next/link'
 import Image from 'next/image'
 import { z } from 'zod'
@@ -11,7 +11,7 @@ import {
   SN_BOARDS,
   SN_EDIT_POST,
   SN_POSTS,
-} from '../../../components/johnny/config/api-path'
+} from '../../../components/config/johnny-api-path'
 import { useBoards } from '@/contexts/use-boards'
 import { useRouter } from 'next/router'
 import EditLayout from '../edit-layout'
@@ -235,9 +235,11 @@ export default function EditModal() {
                     width={35}
                     height={35}
                     src={
-                      auth.googlePhoto
-                        ? auth.profileUrl
-                        : `${IMG_SERVER}/${auth.profileUrl}`
+                      auth.profileUrl
+                        ? auth.googlePhoto
+                          ? auth.profileUrl
+                          : `${IMG_SERVER}/${auth.profileUrl}`
+                        : ''
                     }
                     alt=""
                   />

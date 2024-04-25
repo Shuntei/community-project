@@ -18,7 +18,7 @@ import {
   RiCloseLargeLine,
   RiArrowDropDownLine,
 } from '@remixicon/react'
-import { SN_ADD_POST, SN_BOARDS } from './config/api-path'
+import { SN_ADD_POST, SN_BOARDS } from '../config/johnny-api-path'
 import { useBoards } from '@/contexts/use-boards'
 import { useAuth } from '@/contexts/auth-context'
 import { IMG_SERVER } from '../config/api-path'
@@ -60,7 +60,7 @@ export default function PostModal() {
 
   const submitHandler = async (e) => {
     e.preventDefault()
-    console.log(postForm)
+
     const formData = new FormData()
     formData.append('title', postForm.title)
     formData.append('content', postForm.content)
@@ -148,6 +148,7 @@ export default function PostModal() {
   useEffect(() => {
     postsShow()
     setRender(false)
+    console.log(auth)
   }, [render])
 
   return (
@@ -194,9 +195,11 @@ export default function PostModal() {
                   width={35}
                   height={35}
                   src={
-                    auth.googlePhoto
-                      ? auth.profileUrl
-                      : `${IMG_SERVER}/${auth.profileUrl}`
+                    auth.profileUrl
+                      ? auth.googlePhoto
+                        ? auth.profileUrl
+                        : `${IMG_SERVER}/${auth.profileUrl}`
+                      : ''
                   }
                   alt=""
                 />

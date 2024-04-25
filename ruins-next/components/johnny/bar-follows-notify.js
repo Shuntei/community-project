@@ -1,11 +1,23 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { RiSearchLine } from '@remixicon/react'
 import Image from 'next/image'
 import profileImg from './img/16.jpg'
 import { useToggles } from '@/contexts/use-toggles'
+import { SN_USER_INFO } from '../config/johnny-api-path'
+import { IMG_SERVER } from '../config/api-path'
 
 export default function FollowsBar() {
   const { toggles, setToggles } = useToggles()
+  const [userInfo, setUserinfo] = useState('')
+
+  useEffect(() => {
+    fetch(`${SN_USER_INFO}`)
+      .then((r) => r.json())
+      .then((result) => {
+        // console.log(result)
+        setUserinfo(result)
+      })
+  }, [])
 
   return (
     <>
@@ -20,41 +32,27 @@ export default function FollowsBar() {
               <RiSearchLine />
             </button>
           </div>
-          <ul>
-            <a href="./others.html">
-              <li className="  text-white py-2 flex items-center">
-                <Image
-                  className="w-[35px] rounded-full mr-5"
-                  src={profileImg}
-                  alt=""
-                />
-                David
-              </li>
-            </a>
-            <li className="  text-white py-2 flex items-center">
-              <Image
-                className="w-[35px] rounded-full mr-5"
-                src={profileImg}
-                alt=""
-              />
-              Name
-            </li>
-            <li className="  text-white py-2 flex items-center">
-              <Image
-                className="w-[35px] rounded-full mr-5"
-                src={profileImg}
-                alt=""
-              />
-              Name
-            </li>
-            <li className="  text-white py-2 flex items-center">
-              <Image
-                className="w-[35px] rounded-full mr-5"
-                src={profileImg}
-                alt=""
-              />
-              Name
-            </li>
+          <ul className="h-[200px] overflow-auto hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
+            {userInfo &&
+              userInfo.map((v, i) => {
+                return (
+                  <li
+                    key={v.id}
+                    className="  text-white py-2 flex items-center"
+                  >
+                    <img
+                      className="w-[35px] h-[35px] object-cover overflow-hidden rounded-full mr-5 bg-zinc-300"
+                      src={
+                        v.google_id
+                          ? v.profile_pic_url
+                          : `${IMG_SERVER}/${v.profile_pic_url}`
+                      }
+                      alt=""
+                    />
+                    {v.username}
+                  </li>
+                )
+              })}
           </ul>
           <div
             className="text-white flex justify-end mr-5 text-[14px] font-semibold  hover:cursor-pointer "
@@ -73,7 +71,7 @@ export default function FollowsBar() {
         <div className="notification rounded-xl w-[240px]">
           <div className="text-white px-6 py-1 text-[20px] ">NOTIFICATION</div>
           <div className="border-b-2 mx-6 mb-2 w-[200px]"></div>
-          <ul>
+          <ul className="overflow-auto h-[100px] hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
             <li className="  text-white px-6 py-1 flex items-center">
               <div className="mr-5">
                 <Image

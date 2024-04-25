@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react'
-import Link from 'next/link'
+import React from 'react'
 import { useToggles } from '@/contexts/use-toggles'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/contexts/auth-context'

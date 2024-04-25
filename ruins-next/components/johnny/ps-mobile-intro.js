@@ -19,16 +19,16 @@ export default function InfoMobile() {
         <div className="border-b-2 w-[200px] ml-10 mr-5"></div>
         <div className=" pl-10 pr-5 text-white py-3 ">{auth.aboutMe}</div>
         <div className=" pl-10 pr-5 text-white pb-3 flex gap-x-3">
-          <Link href={auth.ytLink}>
+          <Link href={auth.ytLink ? auth.ytLink : ''}>
             <FaYoutube className="text-[24px] cursor-pointer hover:text-red-500" />
           </Link>
-          <Link href={auth.fbLink}>
+          <Link href={auth.fbLink ? auth.fbLink : ''}>
             <FaFacebook className="text-[24px] cursor-pointer hover:text-sky-600" />
           </Link>
-          <Link href={auth.igLink}>
+          <Link href={auth.igLink ? auth.igLink : ''}>
             <AiFillInstagram className="text-[24px] cursor-pointer hover:text-pink-400" />
           </Link>
-          <Link href={auth.gmailLink}>
+          <Link href={auth.gmailLink ? auth.gmailLink : ''}>
             <MdEmail className="text-[24px] cursor-pointer hover:text-amber-400" />
           </Link>
           {/* <div class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 transform rotate-45"></div>

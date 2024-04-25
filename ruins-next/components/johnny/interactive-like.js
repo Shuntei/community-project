@@ -4,7 +4,7 @@ import {
   SN_LIKES_CHANGE,
   SN_LIKES_STATE,
   SN_POSTS,
-} from '@/components/johnny/config/api-path'
+} from '@/components/config/johnny-api-path'
 import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'

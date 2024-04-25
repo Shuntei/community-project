@@ -56,6 +56,7 @@ router.get("/boards/:board_id?", async (req, res) => {
       orderByClause = "ORDER BY p.view_count DESC";
       break;
     case "comments":
+      orderByClause = "ORDER BY comment_count DESC";
       break;
     default:
       break;
@@ -149,6 +150,7 @@ router.get("/posts/:post_id?", async (req, res) => {
         orderByClause = "ORDER BY p.view_count DESC";
         break;
       case "comments":
+        orderByClause = "ORDER BY comment_count DESC";
         break;
       default:
         break;

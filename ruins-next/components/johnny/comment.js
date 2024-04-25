@@ -5,7 +5,7 @@ import {
   RiArrowDropDownLine,
   RiArrowDropUpLine,
 } from '@remixicon/react'
-import { SN_COMMENTS, SN_DELETE_COMMENT } from './config/api-path'
+import { SN_COMMENTS, SN_DELETE_COMMENT } from '../config/johnny-api-path'
 import Link from 'next/link'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'

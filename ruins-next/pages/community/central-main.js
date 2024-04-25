@@ -6,7 +6,7 @@ import SeeMoreFollows from '@/components/johnny/seemore-follows'
 import SeeMoreNotification from '@/components/johnny/seemore-notification'
 import { useToggles } from '@/contexts/use-toggles'
 import { useEffect, useRef, useState } from 'react'
-import { SN_POSTS } from '@/components/johnny/config/api-path'
+import { SN_POSTS } from '@/components/config/johnny-api-path'
 import { useBoards } from '@/contexts/use-boards'
 import { useRouter } from 'next/router'
 import useOutsideClick from '@/components/johnny/utils/out-side-click'
@@ -154,7 +154,7 @@ export default function CentralContent() {
           )}
 
           {toggles.follows ? (
-            <SeeMoreFollows />
+            <SeeMoreFollows marginTop={`mt-14`} />
           ) : toggles.notification ? (
             <SeeMoreNotification />
           ) : (
