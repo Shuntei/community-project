@@ -19,6 +19,8 @@ export const MB_EDIT_INFO = `${API_SERVER}/member/edit-info`
 export const MB_SEND_CODE = `${API_SERVER}/member/send-code`
 // request email
 export const MB_REQ_EMAIL = `${API_SERVER}/member/request-email`
+// update password
+export const MB_UPDATE_PASS = `${API_SERVER}/member/update-password`
 
 
 //商品列表

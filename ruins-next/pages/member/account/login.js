@@ -194,7 +194,6 @@ export default function Login() {
                 <button
                   onClick={() => {
                     setShowSendLink(true)
-                    console.log('Clicked')
                   }}
                   className="border-b border-white ml-auto"
                 >

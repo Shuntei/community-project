@@ -23,6 +23,8 @@ import { IMG_SERVER } from '@/components/config/api-path'
 export default function Navbar({ className, navColor = 'white' }) {
   const { auth, logout } = useAuth()
   const [showModal, setShowModal] = useState(false)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
   const toggleNav = () => {
@@ -146,6 +148,8 @@ export default function Navbar({ className, navColor = 'white' }) {
           <button
             onClick={() => {
               setShowModal(!showModal)
+              setShowLogoutModal(!showLogoutModal)
+              setShowLoginModal(!showLoginModal)
             }}
             href=""
             className={styles['profile-icon']}
@@ -166,9 +170,9 @@ export default function Navbar({ className, navColor = 'white' }) {
           </button>
         </div>
         {auth.id ? (
-          <LogoutModal isVisible={showModal} />
+          <LogoutModal isVisible={showLogoutModal} />
         ) : (
-          <LoginModal isVisible={showModal} />
+          <LoginModal isVisible={showLoginModal} />
         )}
       </nav>
       {isOpen ? <NavbarPopup /> : ''}

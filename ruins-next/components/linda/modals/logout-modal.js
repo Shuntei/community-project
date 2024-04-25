@@ -17,7 +17,7 @@ export default function LogoutModal({ isVisible }) {
               width={50}
               className="rounded-full min-h-[50px] max-h-[50px] object-cover"
               height={50}
-              src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
+              src={`${IMG_SERVER}/${auth.profileUrl}`}
               alt=""
             />
           ) : (
@@ -40,14 +40,14 @@ export default function LogoutModal({ isVisible }) {
           >
             SETTINGS
           </Link>
-          <Link href="#" 
-           onClick={(e) => {
-              e.preventDefault()
-              logout()
-            }}
+          <button
+           onClick={()=>{
+            console.log("Clicked")
+            logout()
+           }}
           className="text-rose-400 text-base">
             LOGOUT
-          </Link>
+          </button>
         </div>
       </div>
     </>

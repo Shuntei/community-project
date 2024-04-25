@@ -81,8 +81,6 @@ export function AuthContextProvider({ children }) {
     try {
       const result = await signInWithPopup(firebaseAuth, googleAuth)
       const { user } = result
-      console.log(result)
-      console.log(user)
 
       let account = user.email
       let username = user.displayName
