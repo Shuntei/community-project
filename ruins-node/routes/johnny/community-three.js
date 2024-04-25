@@ -32,10 +32,20 @@ router.get("/userinfoByPostId", async (req, res) => {
 
 router.get("/userinfo", async (req, res) => {
   // const sql = `SELECT * FROM mb_user WHERE 1`;
+  const keyword = req.query.followsKeyword;
+
+  console.log(keyword);
+
+  let where = ` WHERE 1 `;
+  if (keyword) {
+    const keywordEsc = db.escape("%" + keyword + "%");
+    where += ` AND username LIKE ${keywordEsc} `;
+  }
 
   const userInfoSql = `
-  SELECT mb_user.* FROM mb_user ORDER BY id DESC`;
+  SELECT mb_user.* FROM mb_user ${where} ORDER BY id DESC `;
   const [userInfo] = await db.query(userInfoSql);
+  // console.log(userInfo);
 
   res.json(userInfo);
 });
