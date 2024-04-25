@@ -1,8 +1,28 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import AccountLayout from '@/components/linda/accountLayout'
 import Link from 'next/link'
+import { TOUR_GET_POST } from '@/components/config/api-path'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function MyPosts() {
+
+  const {auth} = useAuth()
+
+  useEffect(async ()=>{
+    console.log(auth.id);
+    try {
+      const r = await fetch(`${TOUR_GET_POST}/${auth.id}`, {
+        method: 'get'
+      })
+
+      const result = await r.json()
+      console.log(result);
+
+    } catch (error) {
+      console.log("Failed to fetch tour data:", error);
+    }
+  }, [])
+
   return (
     <>
       <div className="flex w-full flex-col md:p-0 p-[30px] gap-[37px]">

@@ -275,7 +275,7 @@ export default function TourPost() {
           id="commentBox"
           className="md:text-base text-[13px] flex md:flex-wrap justify-between overflow-hidden"
         >
-          <Swiper>
+          <Swiper slidesPerView={1}>
             <SwiperSlide className="px-4">
               <div className="md:w-[46%] w-full md:h-fit h-full px-2 py-6 space-y-5 border rounded">
                 <div className="flex space-x-3 items-center">
