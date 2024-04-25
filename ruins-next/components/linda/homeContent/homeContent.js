@@ -1,13 +1,33 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
+import Link from 'next/link'
 import styles from './homeContent.module.css'
 import home1 from '@/public/images/home1.jpg'
 import home2 from '@/public/images/home2.jpg'
 import home3 from '@/public/images/home3.jpg'
 import arrowPng from '@/public/images/arrow.png'
 import product1 from '@/public/images/product1.jpeg'
-
+import { PRODUCT_RELATED } from '@/components/config/api-path'
+import { useRouter } from 'next/router'
 export default function HomeContent() {
+  const router = useRouter()
+
+  const [products, setProducts] = useState()
+  const getProducts = async () => {
+    const url = `${PRODUCT_RELATED}${location.search}`
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
+
+      setProducts(data)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    getProducts()
+  }, [router])
   return (
     <>
       <div
@@ -86,51 +106,36 @@ export default function HomeContent() {
         </div>
         <div>
           <div>
-            <div className={styles.ps5}>
-              <p className={styles['cards-container-title']}>RECENTLY ADDED</p>
-            </div>
-            <div className={styles['cards-container']}>
-              <div>
-                <div className="max-h=[315px]">
-                  <Image alt="" src={product1} className={styles.cards} />
-                </div>
-                <div className={styles['item-info']}>
-                  <p className={styles['item-name']}>Item Name</p>
-                  <p className={styles['item-price']}>$12</p>
-                </div>
+            <div className={styles.ps5}></div>
+            <p className={styles['cards-container-title']}>RECENTLY ADDED</p>
+            <div className="flex w-full justify-between  md:px-24 px-4 py-5 flex-col space-y-5">
+              <div className={`flex md:gap-10 gap-5 ${styles['containerP']}`} >
+                {products &&
+                  products.rows.map((v, i) => {
+                    return (
+                      <Link
+                        key={v.pid}
+                        href={`/shop/product/${v.pid}`}
+                        className={`md:w-1/5 w-1/2 ${styles['product-item']} flex-col  gap-5 flex transition duration-200 hover:skew-y-2`}
+                        style={{ minWidth: '20%' }}
+                      >
+                        <img
+                          className="w-full aspect-square  rounded-xl"
+                          src={`/images/product/${v.img.split(',')[0]}`}
+                          alt="pic"
+                        />
+                        <div className="md:px-10 flex-col  gap-1 flex">
+                          <div className="text-white text-sm font-medium font-['IBM Plex Mono']">
+                            {v.name}
+                          </div>
+                          <div className="text-zinc-500 text-[15px] font-medium font-['IBM Plex Mono']">
+                            {v.price}
+                          </div>
+                        </div>
+                      </Link>
+                    )
+                  })}
               </div>
-              <div>
-                <div className="max-h=[315px]">
-                  <Image alt="" src={product1} className={styles.cards} />
-                </div>
-                <div className={styles['item-info']}>
-                  <p className={styles['item-name']}>Item Name</p>
-                  <p className={styles['item-price']}>$12</p>
-                </div>
-              </div>
-              <div>
-                <div className="max-h=[315px]">
-                  <Image alt="" src={product1} className={styles.cards} />
-                </div>
-                <div className={styles['item-info']}>
-                  <p className={styles['item-name']}>Item Name</p>
-                  <p className={styles['item-price']}>$12</p>
-                </div>
-              </div>
-              <div>
-                <div className="max-h=[315px]">
-                  <Image alt="" src={product1} className={styles.cards} />
-                </div>
-                <div className={styles['item-info']}>
-                  <p className={styles['item-name']}>Item Name</p>
-                  <p className={styles['item-price']}>$12</p>
-                </div>
-              </div>
-              <Image
-                alt=""
-                src={arrowPng}
-                className={`${styles['arrow-png']} z-50`}
-              />
             </div>
           </div>
         </div>

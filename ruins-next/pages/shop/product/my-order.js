@@ -4,7 +4,7 @@ import Link from 'next/link'
 import CommentModal from '@/components/kevin/modal/comment-modal'
 import AccountLayout from '@/components/linda/accountLayout'
 import { useState, useEffect, useContext } from 'react'
-import AuthContext, { useAuth } from '@/contexts/auth-context'
+import  { useAuth } from '@/contexts/auth-context'
 import {
   CART_GETPO,
   CART_GETPODETAIL,

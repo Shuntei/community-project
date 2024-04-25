@@ -143,7 +143,7 @@ router.get("/api/relatedProducts", async (req, res) => {
   const sub_category = +req.query.sub_category || 2;
   const pid = +req.query.pid || 1;
   const sql =
-    "SELECT * FROM `ca_products` WHERE `sub_category_id` = ? AND `pid` != ? LIMIT 10 ";
+    "SELECT * FROM `ca_products` WHERE `sub_category_id` = ? AND `pid` != ? LIMIT 20 ";
 
   const [rows] = await db.query(sql, [sub_category, pid]);
   if (!rows.length) {
