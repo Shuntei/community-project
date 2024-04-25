@@ -3,7 +3,8 @@ import { RiStarFill, RiCloseLargeLine } from '@remixicon/react'
 import Image from 'next/image'
 import { PRODUCT_COMMENT_ADD } from '@/components/config/api-path'
 import Swal from 'sweetalert2'
-function CommentModal({ p, fetchProductDetails }) {
+
+function CommentModal({ p, getdetailPo }) {
   const [isOpen, setIsOpen] = useState(false)
   const openModal = () => setIsOpen(true)
   const closeModal = () => setIsOpen(false)
@@ -61,7 +62,7 @@ function CommentModal({ p, fetchProductDetails }) {
       console.log(d)
       if (d.success) {
         setIsOpen(false)
-        fetchProductDetails()
+        getdetailPo(p.purchase_order_id)
         Swal.fire({
           icon: 'success',
           title: '已成功評論',

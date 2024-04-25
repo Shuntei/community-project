@@ -21,87 +21,44 @@ export default function MyOrder() {
   const memberId = auth.id
   const [allPo, setAllPo] = useState([])
   const [ongoingPo, setOngoingPo] = useState([])
+  const [selectedOrderId, setSelectedOrderId] = useState(null)
   const [completedPo, setCompletedPo] = useState([])
   const [products, setProducts] = useState([])
   const [orderDetails, setOrderDetails] = useState({})
+  // 取得歷史訂單： 全部
+  const getAllPo = async () => {
+    try {
+      const r = await fetch(PRODUCT_MYCOMPLETEDPO + `/${memberId}`)
+      const d = await r.json()
+      setAllPo(d)
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+  // 訂單詳細內容 toggle
+  const showOrderDetails = (orderId) => {
+    setSelectedOrderId(orderId === selectedOrderId ? null : orderId)
+    if (orderId !== selectedOrderId) {
+      getdetailPo(orderId)
+    }
+  }
 
   // 取得訂單詳細商品
-  const getdetailPO = async (poid) => {
+  const getdetailPo = async (poid) => {
     try {
-      const response = await fetch(CART_GETPODETAIL + `?poid=${poid}`)
-      const products = await response.json()
-
-      // 將詳細產品資料保存到對應的訂單 ID 中
-      setOrderDetails((prevDetails) => ({
+      const r = await fetch(CART_GETPODETAIL + `?poid=${poid}`)
+      const d = await r.json()
+      setProducts((prevDetails) => ({
         ...prevDetails,
-        [poid]: products,
+        [poid]: d,
       }))
     } catch (ex) {
       console.log(ex)
     }
   }
-  // 取得歷史訂單： 全部
-  // const getAllPo = async () => {
-  //   try {
-  //     const r = await fetch(PRODUCT_MYALLPO + `/${memberId}`)
-  //     const d = await r.json()
-  //     setAllPo(d)
-  //   } catch (ex) {
-  //     console.log(ex)
-  //   }
-  // }
-
-  // 取得歷史訂單：訂單處理中
-  // const getOngoingPo = async () => {
-  //   try {
-  //     const r = await fetch(PRODUCT_MYONGOINGPO + `/${memberId}`)
-  //     const d = await r.json()
-  //     setOngoingPo(d)
-  //   } catch (ex) {
-  //     console.log(ex)
-  //   }
-  // }
-
-  // 取得歷史訂單：已完成
-  // const getCompletedPo = async () => {
-  //   try {
-  //     const r = await fetch(PRODUCT_MYCOMPLETEDPO + `/${memberId}`)
-  //     const d = await r.json()
-  //     setCompletedPo(d)
-  //   } catch (ex) {
-  //     console.log(ex)
-  //   }
-  // }
-  const fetchProductDetails = async () => {
-    try {
-      const r = await fetch(PRODUCT_MYCOMPLETEDPO + `/${memberId}`)
-      const d = await r.json()
-      setAllPo(d)
-
-      // 獲取所有訂單的詳細產品資料
-      await Promise.all(
-        d.rows.map(async (order) => {
-          await getdetailPO(order.purchase_order_id)
-        })
-      )
-    } catch (error) {
-      console.error('Error fetching product details:', error)
-    }
-  }
-
-  // useEffect(() => {
-  //   // if (memberId) {
-  //   // getOngoingPo()
-  //   // getAllPo()
-  //   // getCompletedPo()
-  //   // } else {
-  //   //   // router.push('/member/login')
-  //   //   router.push('/shop/product/my-order')
-  //   // }
-  // }, [memberId])
 
   useEffect(() => {
-    fetchProductDetails()
+    getAllPo()
   }, [memberId])
   return (
     <>
@@ -112,11 +69,16 @@ export default function MyOrder() {
         {/* 訂單內容列表 */}
         {allPo.rows &&
           allPo.rows.map((v, i) => {
+            const ispaid = v.payment_status === '已付款'
             return (
               <div className="w-full flex flex-col md:gap-12 gap-5" key={v.sid}>
                 {/* 一個內容 */}
                 <div className="collapse collapse-arrow  bg-292929">
-                  <input type="checkbox" className="bg-292929" />
+                  <input
+                    type="checkbox"
+                    className="bg-292929"
+                    onClick={() => showOrderDetails(v.purchase_order_id)}
+                  />
                   {/* 訂單外部 */}
                   <div className="collapse-title text-xl font-medium bg-292929">
                     <div className="md:w-full w-3/4 flex flex-col gap-3">
@@ -135,6 +97,7 @@ export default function MyOrder() {
                         <div className="text-zinc-300 text-xs font-['Noto Sans TC']">
                           訂單成立日期:{v.created_at.split('T')[0]}
                         </div>
+
                         <div className="text-white text-base font-['IBM Plex Mono']">
                           訂單總金額:${v.total_amount}
                         </div>
@@ -143,8 +106,32 @@ export default function MyOrder() {
                   </div>
                   {/* 訂單內部 */}
                   <div className="collapse-content flex flex-col items-center justify-center ">
-                    {orderDetails[v.purchase_order_id]?.rows &&
-                      orderDetails[v.purchase_order_id].rows.map((p, index) => {
+                    <div className="flex justify-end w-full">
+                      {ispaid ? (
+                        ''
+                      ) : (
+                        <button
+                          className="py-2 px-7 bg-white border border-black justify-center items-center flex absolute bottom-0 md:static hover:bg-black hover:border-white group"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            router.push(
+                              {
+                                pathname: '/shop/cart/confirm-doc',
+                                query: { poid: v.purchase_order_id },
+                              },
+                              undefined,
+                              { scroll: false }
+                            )
+                          }}
+                        >
+                          <div className="text-black group-hover:text-white text-xs  font-['Noto Sans TC']">
+                            去結帳
+                          </div>
+                        </button>
+                      )}
+                    </div>
+                    {products[v.purchase_order_id]?.rows &&
+                      products[v.purchase_order_id].rows.map((p, index) => {
                         const isCommented = p.is_comment === 1
                         const isFinish = p.status === '已完成'
                         return (
@@ -188,9 +175,7 @@ export default function MyOrder() {
                                     ) : (
                                       <CommentModal
                                         p={p}
-                                        fetchProductDetails={
-                                          fetchProductDetails
-                                        }
+                                        getdetailPo={getdetailPo}
                                       />
                                     )}
 

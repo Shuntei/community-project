@@ -190,7 +190,7 @@ router.get("/api/getOngoingPo/:mid", async (req, res) => {
     return res.json({ success: false });
   }
 
-  res.json({ success: true, rows });
+  res.json({ success: true, rows , test:"my-test"});
 });
 
 // 取得歷史訂單 - status:已完成

@@ -22,61 +22,49 @@ export default function MyOrder() {
   const memberId = auth.id
   const [allPo, setAllPo] = useState([])
   const [ongoingPo, setOngoingPo] = useState([])
+  const [selectedOrderId, setSelectedOrderId] = useState(null)
   const [completedPo, setCompletedPo] = useState([])
   const [products, setProducts] = useState([])
   const [orderDetails, setOrderDetails] = useState({})
+  // 取得歷史訂單： 全部
+  const getAllPo = async () => {
+    try {
+      const r = await fetch(PRODUCT_MYALLPO + `/${memberId}`)
+      const d = await r.json()
+      setAllPo(d)
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+  // 訂單詳細內容 toggle
+  const showOrderDetails = (orderId) => {
+    setSelectedOrderId(orderId === selectedOrderId ? null : orderId)
+    if (orderId !== selectedOrderId) {
+      getdetailPo(orderId)
+    }
+  }
 
   // 取得訂單詳細商品
-  const getdetailPO = async (poid) => {
+  const getdetailPo = async (poid) => {
     try {
-      const response = await fetch(CART_GETPODETAIL + `?poid=${poid}`)
-      const products = await response.json()
-
-      // 將詳細產品資料保存到對應的訂單 ID 中
-      setOrderDetails((prevDetails) => ({
+      const r = await fetch(CART_GETPODETAIL + `?poid=${poid}`)
+      const d = await r.json()
+      setProducts((prevDetails) => ({
         ...prevDetails,
-        [poid]: products,
+        [poid]: d ,
       }))
     } catch (ex) {
       console.log(ex)
     }
   }
-  
-  const fetchProductDetails = async () => {
-    try {
-      const r = await fetch(PRODUCT_MYALLPO + `/${memberId}`)
-      const d = await r.json()
-      setAllPo(d)
 
-      // 獲取所有訂單的詳細產品資料
-      await Promise.all(
-        d.rows.map(async (order) => {
-          await getdetailPO(order.purchase_order_id)
-        })
-      )
-    } catch (error) {
-      console.error('Error fetching product details:', error)
-    }
-  }
-
-  // useEffect(() => {
-  //   // if (memberId) {
-  //   getOngoingPo()
-  //   getAllPo()
-  //   getCompletedPo()
-  //   // } else {
-  //   //   // router.push('/member/login')
-  //   //   router.push('/shop/product/my-order')
-  //   // }
-  // }, [memberId])
 
   useEffect(() => {
-  
-    fetchProductDetails()
+    getAllPo()
   }, [memberId])
   return (
     <>
-    {console.log(allPo)}
+      {console.log(allPo)}
       <div className="w-full flex flex-col px-4 md:px-20 py-5 md:py-12 md:gap-12 gap-5 ">
         {/* 訂單完成/未完成超連結 &&我的訂單標題*/}
         <OrderState />
@@ -88,7 +76,11 @@ export default function MyOrder() {
               <div className="w-full flex flex-col md:gap-12 gap-5" key={v.sid}>
                 {/* 一個內容 */}
                 <div className="collapse collapse-arrow  bg-292929">
-                  <input type="checkbox" className="bg-292929" />
+                  <input
+                    type="checkbox"
+                    className="bg-292929"
+                    onClick={() => showOrderDetails(v.purchase_order_id)}
+                  />
                   {/* 訂單外部 */}
                   <div className="collapse-title text-xl font-medium bg-292929">
                     <div className="md:w-full w-3/4 flex flex-col gap-3">
@@ -140,8 +132,8 @@ export default function MyOrder() {
                         </button>
                       )}
                     </div>
-                    {orderDetails[v.purchase_order_id]?.rows &&
-                      orderDetails[v.purchase_order_id].rows.map((p, index) => {
+                    {products[v.purchase_order_id]?.rows &&
+                      products[v.purchase_order_id].rows.map((p, index) => {
                         const isCommented = p.is_comment === 1
                         const isFinish = p.status === '已完成'
                         return (
@@ -185,9 +177,7 @@ export default function MyOrder() {
                                     ) : (
                                       <CommentModal
                                         p={p}
-                                        fetchProductDetails={
-                                          fetchProductDetails
-                                        }
+                                        getdetailPo={getdetailPo}
                                       />
                                     )}
 
