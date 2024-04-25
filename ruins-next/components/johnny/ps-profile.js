@@ -15,11 +15,28 @@ export default function Profile() {
       <div className="flex   justify-center mr-[10%] w-full ">
         <div className="flex items-center pc:gap-10">
           <div className="overflow-hidden size-[100px] pc:size-[128px] translate-x-[20%] translate-y-[-10%] pc:translate-x-[40%] pc:translate-y-[-40%] PcImagePosition">
+            {/* <Image
+              src={
+                auth.profileUrl
+                  ? auth.googlePhoto
+                    ? auth.profileUrl
+                    : `${IMG_SERVER}/${auth.profileUrl}`
+                  : ''
+              }
+              // src={img}
+              fill={true}
+              objectFit="cover"
+              alt=""
+              className="rounded-full bg-zinc-300"
+            /> */}
+            {/* <img src="./img/0da44d263f64186851d88be18f8d36f78a4f7d5f.jpg" alt="" /> */}
             <Image
               src={
-                auth.googlePhoto
-                  ? auth.profileUrl
-                  : `${IMG_SERVER}/${auth.profileUrl}`
+                auth.profileUrl
+                  ? auth.googlePhoto
+                    ? auth.profileUrl
+                    : `${IMG_SERVER}/${auth.profileUrl}`
+                  : ''
               }
               // src={img}
               fill={true}

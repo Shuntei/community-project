@@ -22,7 +22,7 @@ import {
   SN_ADD_COMMENT,
   SN_EDIT_COMMENT,
   SN_SELECTED_COMMENT,
-} from './config/api-path'
+} from '../config/johnny-api-path'
 import { useBoards } from '@/contexts/use-boards'
 import { useAuth } from '@/contexts/auth-context'
 import { IMG_SERVER } from '../config/api-path'
@@ -180,9 +180,11 @@ export default function CommentEditModal({
                   height={35}
                   width={35}
                   src={
-                    auth.googlePhoto
-                      ? auth.profileUrl
-                      : `${IMG_SERVER}/${auth.profileUrl}`
+                    auth.profileUrl
+                      ? auth.googlePhoto
+                        ? auth.profileUrl
+                        : `${IMG_SERVER}/${auth.profileUrl}`
+                      : ''
                   }
                   alt=""
                 />

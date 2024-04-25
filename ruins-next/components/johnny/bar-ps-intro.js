@@ -29,20 +29,20 @@ export default function InfoBar() {
         </div>
         <div className="border-b-2 w-[200px] ml-10 mr-5"></div>
         <div className=" pl-10 pr-5 text-white py-3 flex gap-x-3">
-          <Link href={auth.ytLink}>
+          <Link href={auth.ytLink ? auth.ytLink : ''}>
             <FaYoutube className="text-[24px] cursor-pointer hover:text-red-500" />
           </Link>
-          <Link href={auth.fbLink}>
+          <Link href={auth.fbLink ? auth.fbLink : ''}>
             <FaFacebook className="text-[24px] cursor-pointer hover:text-sky-600" />
           </Link>
-          <Link href={auth.igLink}>
+          <Link href={auth.igLink ? auth.igLink : ''}>
             <AiFillInstagram className="text-[24px] cursor-pointer hover:text-pink-400" />
           </Link>
-          <Link href={auth.gmailLink}>
+          <Link href={auth.gmailLink ? auth.gmailLink : ''}>
             <MdEmail className="text-[24px] cursor-pointer hover:text-amber-400" />
           </Link>
-          {/* <div class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 transform rotate-45"></div>
-          <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400">
+          {/* <div class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 transform rotate-45"></div> */}
+          {/* <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400">
             Nothing short <br /> of amazing.
           </span> */}
           {/* 除了學習和探索，我還喜歡與人交流和建立連結。我相信每個人都有獨特的故事和觀點，我希望能夠與您分享我的故事，並聆聽您的故事。

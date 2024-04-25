@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { RiChat4Fill, RiChat4Line } from '@remixicon/react'
-import { SN_COMMENTS } from '@/components/johnny/config/api-path'
+import { SN_COMMENTS } from '@/components/config/johnny-api-path'
 
 export default function CommentCount({ postId }) {
   const [commentCount, setCommentCount] = useState('')

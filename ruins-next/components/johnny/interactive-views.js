@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { RiEyeFill } from '@remixicon/react'
-import { SN_POSTS } from '@/components/johnny/config/api-path'
+import { SN_POSTS } from '@/components/config/johnny-api-path'
 import { useRouter } from 'next/router'
 
 export default function Views() {

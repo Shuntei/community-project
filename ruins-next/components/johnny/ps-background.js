@@ -16,9 +16,7 @@ export default function PersonalBackground() {
           height={256}
           objectFit="cover"
           src={
-            auth.googlePhoto
-              ? auth.profileUrl
-              : `${IMG_SERVER}/${auth.coverUrl}`
+            auth.coverUrl ? (auth.googlePhoto ? auth.coverUrl : `${IMG_SERVER}/${auth.coverUrl}`) : ''
           }
           alt="背景圖片"
         />

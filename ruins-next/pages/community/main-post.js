@@ -1,7 +1,11 @@
-import React, { use, useEffect, useState } from 'react'
-import { API_SERVER, SN_POST_VIEWS } from '@/components/johnny/config/api-path'
+import React, { useEffect, useState } from 'react'
+import {
+  SN_COMMUNITY,
+  SN_POST_VIEWS,
+  SN_USER_INFO_POST,
+} from '@/components/config/johnny-api-path'
 import Image from 'next/image'
-import profileImg from '../../components/johnny/img/16.jpg'
+// import profileImg from '../../components/johnny/img/16.jpg'
 import { useRouter } from 'next/router'
 import CommentModal from '@/components/johnny/modal-comment'
 import { useToggles } from '@/contexts/use-toggles'
@@ -13,23 +17,23 @@ import Comment from '@/components/johnny/comment'
 import {
   RiMapPinFill,
   RiPriceTag3Fill,
-  RiEmotionLaughFill,
   RiCloseLargeLine,
   RiAddLine,
 } from '@remixicon/react'
-import { SN_POSTS } from '@/components/johnny/config/api-path'
+import { SN_POSTS } from '@/components/config/johnny-api-path'
 import dayjs from 'dayjs'
-import { useAuth } from '@/contexts/auth-context'
 import emotionHandler from '@/components/johnny/utils/emotionHandler'
+import { IMG_SERVER } from '@/components/config/api-path'
 
 export default function MainPost() {
   const [renderAfterCm, setRenderAfterCm] = useState(false)
   const router = useRouter()
-  const { auth } = useAuth()
   const { commentModal, setCommentModal } = useToggles()
   const { getPost, setGetPost, handlePostId } = useBoards()
   const [afterTimerReset, setAfterTimerReset] = useState(false)
   const [timerRun, setTimerRun] = useState(false)
+  const [proFilePic, setProfilePic] = useState('')
+  const [authUsername, setAuthUsername] = useState('')
 
   const handleBack = () => {
     setTimerRun(false) //未達秒數退出時解除更新
@@ -48,6 +52,22 @@ export default function MainPost() {
     const r = await fetch(`${SN_POSTS}?postId=${postId}`)
     const result = await r.json()
     setGetPost(result)
+  }
+
+  const isPostAuth = async (postId) => {
+    const r = await fetch(`${SN_USER_INFO_POST}?postId=${postId}`)
+    const result = await r.json()
+    // console.log(result)
+
+    // 圖片處理區
+    const profilePicUrl = result[0].profile_pic_url
+    const googleId = result[0].google_id
+    googleId
+      ? setProfilePic(profilePicUrl)
+      : setProfilePic(`${IMG_SERVER}/${profilePicUrl}`)
+
+    // 其他資訊區
+    setAuthUsername(result[0].username)
   }
 
   // 進入頁面一定秒數後更新觀看數
@@ -71,6 +91,7 @@ export default function MainPost() {
   useEffect(() => {
     if (!router.isReady) return
     isPostId(postId)
+    isPostAuth(postId)
   }, [postId, router.isReady, afterTimerReset])
 
   // console.log(getPost[0])
@@ -100,12 +121,21 @@ export default function MainPost() {
             <div className="flex items-center gap-2 my-2 text-white">
               <Image
                 className="rounded-[100%] size-[35px]"
-                src={profileImg}
+                src={
+                  proFilePic
+                  // auth.profileUrl
+                  //   ? auth.googlePhoto
+                  //     ? auth.profileUrl
+                  //     : `${IMG_SERVER}/${auth.profileUrl}`
+                  //   : ''
+                }
+                width={35}
+                height={35}
                 layout="full"
                 objectFit="cover"
                 alt=""
               />
-              {auth.username}
+              {authUsername ? authUsername : '匿名者'}
             </div>
             {/* <!-- 文章 --> */}
             <div className="flex mb-2 pc:my-5 gap-5 text-gray-400">
@@ -131,7 +161,7 @@ export default function MainPost() {
             <div className="mb-2">
               {getPost[0].image_url && (
                 <Image
-                  src={`${API_SERVER}/${getPost[0].image_url}`}
+                  src={`${SN_COMMUNITY}/${getPost[0].image_url}`}
                   width={0}
                   height={0}
                   // sizes="100vw"

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { API_SERVER } from './config/api-path'
+import { API_SERVER, SN_COMMUNITY } from '../config/johnny-api-path'
 import {
   RiChat4Fill,
   RiEyeFill,
@@ -13,7 +13,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST } from './config/api-path'
+import { SN_DELETE_POST } from '../config/johnny-api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
@@ -220,7 +220,7 @@ export default function MainContent() {
                 {v.image_url && (
                   <Image
                     className="size-[100px] object-cover rounded-xl"
-                    src={`${API_SERVER}/${v.image_url}`}
+                    src={`${SN_COMMUNITY}/${v.image_url}`}
                     alt="上傳的圖片無法顯示"
                     width={100}
                     height={100}
