@@ -66,7 +66,9 @@ export const PRODUCT_MYONGOINGPO = `${API_SERVER}/product/api/getOngoingPo`
 export const PRODUCT_MYCOMPLETEDPO =`${API_SERVER}/product/api/getCompletedPo`
 
 // 揪團貼文列表
-export const TOUR_LIST =  `${API_SERVER}/tour/api`
+export const TOUR_LIST = `${API_SERVER}/tour/api`
 
 // 揪團貼文單筆
-export const TOUR_POST =  `${API_SERVER}/tour/api/getPost`
+export const TOUR_POST = `${API_SERVER}/tour/api/getPost`
+// get post information
+export const TOUR_GET_POST = `${API_SERVER}/tour/api/get-post`
