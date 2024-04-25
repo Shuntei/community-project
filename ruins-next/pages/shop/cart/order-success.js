@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import Process3 from '@/components/common/process3'
-import Loader from '@/components/linda/loader/loader'
+import Loader from '@/components/kevin/loader/loader'
 import Link from 'next/link'
 import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
@@ -103,8 +103,8 @@ export default function OrderSuccess() {
         <Navbar navColor={''} />
         {/* header結束 */}
         {load && load ? (
-          <div className="h-[500px] flex items-center justify-center">
-            <Loader color="black" />
+          <div className="h-[500px] flex flex-col items-center justify-center">
+            <Loader color="black"></Loader>
             <h1 className="text-black text-xl font-semibold font-['Noto Sans TC'] ">
               交易進行中
             </h1>

@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/auth-context'
 import React from 'react'
-
+import Feelings from '@/components/johnny/modal-post-options/emotion'
 const JWT_KEY = 'kjdgdk3453JYUGUYG57438'
 
 const data = {
@@ -26,6 +26,9 @@ export default function Test2() {
       <li>{googleLogin}</li>
       <li>{update}</li>
       <li>{setUpdate}</li> */}
+      <div className="flex justify-center mt-[200px] text-black">
+        <Feelings />
+      </div>
     </ul>
   )
 }

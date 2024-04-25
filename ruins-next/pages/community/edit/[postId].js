@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react'
 import { API_SERVER } from '../../../components/johnny/config/api-path'
 import Link from 'next/link'
 import Image from 'next/image'
-import img from '../../../components/johnny/img/90.jpg'
 import { z } from 'zod'
 import { useToggles } from '@/contexts/use-toggles'
 import Swal from 'sweetalert2'
@@ -16,19 +15,21 @@ import {
 import { useBoards } from '@/contexts/use-boards'
 import { useRouter } from 'next/router'
 import EditLayout from '../edit-layout'
+import { useAuth } from '@/contexts/auth-context'
+import { IMG_SERVER } from '@/components/config/api-path'
+import emotionHandler from '@/components/johnny/utils/emotionHandler'
+import Emotion from '@/components/johnny/modal-post-options/emotion'
 import {
   RiVideoOnFill,
   RiImageFill,
   RiMapPinFill,
   RiPriceTag3Fill,
-  RiEmotionLaughFill,
   RiEqualizerLine,
   RiSendPlane2Fill,
   RiDraftLine,
   RiCloseLargeLine,
   RiArrowDropDownLine,
 } from '@remixicon/react'
-import { useAuth } from '@/contexts/auth-context'
 
 export default function EditModal() {
   const router = useRouter()
@@ -40,6 +41,7 @@ export default function EditModal() {
     content: '',
     photo: '',
     boardId: '',
+    emotion: '',
   })
 
   const [previewUrl, setPreviewUrl] = useState('')
@@ -75,6 +77,7 @@ export default function EditModal() {
     formData.append('content', postForm.content)
     formData.append('photo', postForm.photo)
     formData.append('boardId', postForm.boardId)
+    formData.append('emotion', postForm.emotion)
     // console.log(postForm)
     // http:localhost:3001/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg
     const MySwal = withReactContent(Swal)
@@ -138,7 +141,7 @@ export default function EditModal() {
       return
     }
     if (!isFormChanged) {
-      toast.error('內容沒有變更，請繼續編輯')
+      toast.error('內容沒有變更，請繼續編輯或離開')
       return
     }
 
@@ -165,10 +168,10 @@ export default function EditModal() {
       .then((r) => r.json())
       .then((rst) => {
         if (rst[0]) {
-          // console.log(rst[0])
-          const { title, content, image_url, board_id } = rst[0]
-          setPostForm({ title, content, image_url, board_id })
-          // console.log({ title, content, image_url, board_id })
+          console.log(rst[0])
+          const { title, content, image_url, board_id, emotion } = rst[0]
+          setPostForm({ title, content, image_url, board_id, emotion })
+          // console.log({ title, content, image_url, board_id, emotion })
           // setPostForm(rst[0])
         } else {
           router.push(`/community/main-personal`)
@@ -229,7 +232,13 @@ export default function EditModal() {
                 <div className="flex items-center gap-5">
                   <Image
                     className="size-[35px] rounded-full"
-                    src={img}
+                    width={35}
+                    height={35}
+                    src={
+                      auth.googlePhoto
+                        ? auth.profileUrl
+                        : `${IMG_SERVER}/${auth.profileUrl}`
+                    }
                     alt=""
                   />
                   <span className="text-white text-[20px]">
@@ -268,8 +277,9 @@ export default function EditModal() {
                       黃曉桂
                     </div>
                     <div className="text-[14px] pc:text-[16px] flex">
-                      <RiEmotionLaughFill className="mr-2" />
-                      覺得興奮
+                      {/* <RiEmotionLaughFill className="mr-2" />
+                      覺得興奮 */}
+                      {emotionHandler(postForm.emotion)}
                     </div>
                     <div className="text-[14px] pc:text-[16px] flex">
                       <RiMapPinFill className="mr-2" />
@@ -347,10 +357,15 @@ export default function EditModal() {
                 <RiPriceTag3Fill className="mr-2 text-[24px]" />
                 <span className="hidden pc:flex">TAGS</span>
               </button>
-              <button className="flex items-center">
+              {/* <button className="flex items-center">
                 <RiEmotionLaughFill className="mr-2 text-[24px]" />
                 <span className="hidden pc:flex">FEELING</span>
-              </button>
+              </button> */}
+              <Emotion
+                postForm={postForm}
+                setPostForm={setPostForm}
+                setIsFormChanged={setIsFormChanged}
+              />
             </div>
           </div>
         </form>

@@ -20,6 +20,7 @@ import {
 } from '@remixicon/react'
 import { SN_ADD_COMMENT } from './config/api-path'
 import { useAuth } from '@/contexts/auth-context'
+import { IMG_SERVER } from '../config/api-path'
 
 export default function CommentModal({
   postId,
@@ -140,7 +141,17 @@ export default function CommentModal({
           <div className="flex-col mb-5">
             <div className="flex items-center justify-between py-3">
               <div className="flex items-center gap-5">
-                <Image className="size-[35px] rounded-full" src={img} alt="" />
+                <Image
+                  className="size-[35px] rounded-full"
+                  height={35}
+                  width={35}
+                  src={
+                    auth.googlePhoto
+                      ? auth.profileUrl
+                      : `${IMG_SERVER}/${auth.profileUrl}`
+                  }
+                  alt=""
+                />
                 <span className="text-white text-[20px]">{auth.username}</span>
               </div>
               {/* 操作按鈕區 */}

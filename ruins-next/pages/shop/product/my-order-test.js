@@ -15,6 +15,7 @@ import {
 import { useRouter } from 'next/router'
 import { Path } from 'three'
 import OrderState from '@/components/kevin/product/order-state'
+import { button } from 'leva'
 export default function MyOrder() {
   const router = useRouter()
   const { auth } = useAuth()
@@ -25,10 +26,10 @@ export default function MyOrder() {
   const [completedPo, setCompletedPo] = useState([])
   const [products, setProducts] = useState([])
   const [orderDetails, setOrderDetails] = useState({})
-  // 取得歷史訂單： ongoing
+  // 取得歷史訂單： 全部
   const getAllPo = async () => {
     try {
-      const r = await fetch(PRODUCT_MYONGOINGPO + `/${memberId}`)
+      const r = await fetch(PRODUCT_MYALLPO + `/${memberId}`)
       const d = await r.json()
       setAllPo(d)
     } catch (ex) {
@@ -39,12 +40,12 @@ export default function MyOrder() {
   const showOrderDetails = (orderId) => {
     setSelectedOrderId(orderId === selectedOrderId ? null : orderId)
     if (orderId !== selectedOrderId) {
-      getdetailPo(orderId)
+      getdetailPO(orderId)
     }
   }
 
   // 取得訂單詳細商品
-  const getdetailPo = async (poid) => {
+  const getdetailPO = async (poid) => {
     try {
       const r = await fetch(CART_GETPODETAIL + `?poid=${poid}`)
       const d = await r.json()
@@ -63,6 +64,7 @@ export default function MyOrder() {
   }, [memberId])
   return (
     <>
+      {console.log(allPo)}
       <div className="w-full flex flex-col px-4 md:px-20 py-5 md:py-12 md:gap-12 gap-5 ">
         {/* 訂單完成/未完成超連結 &&我的訂單標題*/}
         <OrderState />
@@ -97,6 +99,7 @@ export default function MyOrder() {
                         <div className="text-zinc-300 text-xs font-['Noto Sans TC']">
                           訂單成立日期:{v.created_at.split('T')[0]}
                         </div>
+
                         <div className="text-white text-base font-['IBM Plex Mono']">
                           訂單總金額:${v.total_amount}
                         </div>
@@ -174,8 +177,8 @@ export default function MyOrder() {
                                     ) : (
                                       <CommentModal
                                         p={p}
-                                        getdetailPo={getdetailPo}
-                                       
+                                        getdetailPO={getdetailPO}
+                                        v={v.purchase_order_id}
                                       />
                                     )}
 

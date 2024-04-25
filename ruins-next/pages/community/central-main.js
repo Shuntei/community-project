@@ -5,10 +5,11 @@ import MainContentBd from '@/components/johnny/content-list-bd'
 import SeeMoreFollows from '@/components/johnny/seemore-follows'
 import SeeMoreNotification from '@/components/johnny/seemore-notification'
 import { useToggles } from '@/contexts/use-toggles'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { SN_POSTS } from '@/components/johnny/config/api-path'
 import { useBoards } from '@/contexts/use-boards'
 import { useRouter } from 'next/router'
+import useOutsideClick from '@/components/johnny/utils/out-side-click'
 
 export default function CentralContent() {
   const { toggles } = useToggles()
@@ -17,6 +18,11 @@ export default function CentralContent() {
   const [sortBy, setSortBy] = useState('time')
   const [searchTerm, setSearchTerm] = useState('')
   const [showBoards, setShowBoards] = useState(false)
+  const ref = useRef()
+
+  useOutsideClick(ref, () => {
+    setShowBoards(false)
+  })
 
   const router = useRouter()
   const query = { ...router.query, keyword: searchTerm }
@@ -67,6 +73,7 @@ export default function CentralContent() {
                 <div
                   class="dropdown"
                   onClick={() => setShowBoards(!showBoards)}
+                  ref={ref}
                 >
                   <div className="relative">
                     <RiListCheck className="bargone:hidden cursor-pointer" />
@@ -133,7 +140,7 @@ export default function CentralContent() {
                     name="searchTerm"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="關鍵字搜尋"
+                    placeholder="關鍵字"
                   />
                   <button
                     className="px-2 bg-white flex items-center h-[32px] p-[6px] translate-x-[-5px] pc:translate-x-0  pc:shadow1 rounded-r-lg"

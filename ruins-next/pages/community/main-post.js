@@ -1,5 +1,5 @@
 import React, { use, useEffect, useState } from 'react'
-import { API_SERVER } from '@/components/johnny/config/api-path'
+import { API_SERVER, SN_POST_VIEWS } from '@/components/johnny/config/api-path'
 import Image from 'next/image'
 import profileImg from '../../components/johnny/img/16.jpg'
 import { useRouter } from 'next/router'
@@ -20,34 +20,60 @@ import {
 import { SN_POSTS } from '@/components/johnny/config/api-path'
 import dayjs from 'dayjs'
 import { useAuth } from '@/contexts/auth-context'
+import emotionHandler from '@/components/johnny/utils/emotionHandler'
 
 export default function MainPost() {
   const [renderAfterCm, setRenderAfterCm] = useState(false)
   const router = useRouter()
   const { auth } = useAuth()
   const { commentModal, setCommentModal } = useToggles()
-  const { getPost, setGetPost } = useBoards()
+  const { getPost, setGetPost, handlePostId } = useBoards()
+  const [afterTimerReset, setAfterTimerReset] = useState(false)
+  const [timerRun, setTimerRun] = useState(false)
 
   const handleBack = () => {
+    setTimerRun(false) //未達秒數退出時解除更新
     router.back()
   }
   const postId = router.query.postId
+  console.log('postId', postId)
 
-  const isPostId = async () => {
-    const postIdExist = postId
-      ? localStorage.setItem('postId', postId)
-      : localStorage.getItem('postId')
+  const isPostId = async (postId) => {
+    // 用於重整
+    // const postIdExist = postId
+    //   ? localStorage.setItem('postId', postId)
+    //   : localStorage.getItem('postId')
 
-    if (!postIdExist) return
-
-    const r = await fetch(`${SN_POSTS}?postId=${postIdExist}`)
+    // if (!postIdExist) return
+    const r = await fetch(`${SN_POSTS}?postId=${postId}`)
     const result = await r.json()
     setGetPost(result)
   }
 
+  // 進入頁面一定秒數後更新觀看數
   useEffect(() => {
-    isPostId()
-  }, [postId])
+    setTimeout(() => {
+      setTimerRun(true)
+    }, 3000)
+  }, [])
+
+  // 判斷後更新觀看數
+  if (timerRun) {
+    fetch(`${SN_POST_VIEWS}/${postId}`)
+      .then((r) => r.json())
+      .then((rst) => {
+        console.log(rst)
+        setAfterTimerReset(!afterTimerReset) //更新列表
+        setTimerRun(false)
+      })
+  }
+
+  useEffect(() => {
+    if (!router.isReady) return
+    isPostId(postId)
+  }, [postId, router.isReady, afterTimerReset])
+
+  // console.log(getPost[0])
 
   if (!getPost[0]) {
     console.log('data not ready to load')
@@ -94,8 +120,9 @@ export default function MainPost() {
                 </span>
               </div>
               <div className="flex">
-                <RiEmotionLaughFill className="mr-2" />
-                <span className="hidden pc:inline-block">覺得新奇</span>
+                {/* <RiEmotionLaughFill className="mr-2" />
+                <span className="hidden pc:inline-block">覺得新奇</span> */}
+                {emotionHandler(getPost[0].emotion)}
               </div>
             </div>
             <div className="mb-2 text-[20px] pc:py-5">{getPost[0].content}</div>
@@ -123,6 +150,7 @@ export default function MainPost() {
               <Views postId={getPost[0].post_id} />
               <CommentCount postId={getPost[0].post_id} />
               <LikeButton postId={getPost[0].post_id} />
+              {/* <LikeButton postId={postId} /> */}
             </div>
             {/* <!-- 留言按鈕 --> */}
             <div
