@@ -26,8 +26,9 @@ async function saveOTPInDB(id, otp, otpExpiry) {
   const [result] = await db.query(sql, [otp, otpExpiry, id]);
 }
 
-async function saveReqInDB(email, reqExpiry){
-
+async function saveReqInDB(id, reqExpiry, token) {
+  const sql = `INSERT INTO mb_password_reset_tokens (user_id, expiry_time, token) VALUES (?, ?, ?) `;
+  const [result] = await db.query(sql, [id, reqExpiry, token]);
 }
 
 const sendMail = async (transporter, id, email, username) => {
@@ -104,12 +105,90 @@ const sendMail = async (transporter, id, email, username) => {
   }
 };
 
-const sendPasswordResetEmail = async (transporter, email) => {
+const sendPasswordResetEmail = async (transporter, email, id) => {
   const reqExpiry = new Date();
   reqExpiry.setMinutes(reqExpiry.getMinutes() + 10);
 
-  await saveReqInDB(email, reqExpiry);
-}
+  const token = jwt.sign(
+    { id: id, reqExpiry: reqExpiry },
+    process.env.JWT_SECRET
+  );
+
+  await saveReqInDB(id, reqExpiry, token);
+
+  const resetPasswordLink = `http://localhost:3000/member/account/reset-password?token=${token}`;
+
+  const mailOptions = {
+    from: {
+      name: "Ruins",
+      address: process.env.EMAIL_USER,
+    },
+    to: email,
+    subject: "Restore your password",
+    html: `
+    <div style="font-family: 'Open Sans', sans-serif; font-size: 14px; color: #5F6166; width: 100%; height: 100%; padding-block: 32px;">
+      <table cellpadding="0" cellspacing="0" border="0" align="center" style="padding: 40px; background: #F7F8F8; width: 90%; max-width: 600px; margin: 0 auto;">
+      <tr>
+          <td align="center">
+              <p style="font-size: 16px; margin-bottom: 10px;">We received a password reset request!</p>
+          </td>
+      </tr>
+      <tr>
+          <td align="center">
+              <table cellpadding="0" cellspacing="0" border="0" align="center" style="width: 100%; text-align: center;">
+                  <tr>
+                      <td colspan="2">
+                          <p style="padding-bottom: 20px;">This link will expire in <strong> 10 minutes </strong>, so please use it right away.</p>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td colspan="2" align="center">
+                          <a href="${resetPasswordLink}" 
+                            style="border: 2px solid black; 
+                            font-size: 20px;
+                            width: 150px; 
+                            font-style: italic; 
+                            background-color: white; 
+                            color: black; 
+                            padding: 13px 30px; 
+                            text-align: center; 
+                            text-decoration: none !important;">
+                            Reset password
+                          </a>
+                      </td>
+                  </tr>
+              </table>
+          </td>
+      </tr>
+      <tr>
+          <td align="center">
+              <p style="font-size: 14px; margin: 10px 0; margin-top: 30px">If you did not make this request, you can ignore this message and your password will not be changed. Someone probably typed your email by mistake.</p>
+          </td>
+      </tr>
+      <tr>
+          <td>
+              <p style="font-size: 14px; color: #061820; text-align: center; margin-bottom: 5px;">Regards</p>
+              <p style="font-size: 16px; text-align: center; margin-top: 0;"><a style="text-decoration: none; color: #20938D;" href="http://localhost:3000">Ruins Team</a></p>
+          </td>
+      </tr>
+  </table>
+</div>
+`,
+  };
+
+  try {
+    await transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.log("Error sending email:", error);
+      } else {
+        console.log("Email sent:" + info.response);
+      }
+    });
+    console.log("Sent successfully");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 function generateOutputData(rows) {
   const token = jwt.sign(
@@ -150,7 +229,7 @@ const defaultData = {
   igLink: "",
   gmailLink: "",
   token: "",
-}
+};
 
 router.post("/signup", async (req, res) => {
   const output = {
@@ -210,7 +289,7 @@ router.post("/signup", async (req, res) => {
       if (output.success) {
         const sql = "SELECT * FROM mb_user WHERE username=?";
         const [rows] = await db.query(sql, username);
-        output.data = generateOutputData(rows[0])
+        output.data = generateOutputData(rows[0]);
       }
     } catch (ex) {
       console.log(ex);
@@ -246,7 +325,7 @@ router.post("/login", async (req, res) => {
   const result = await bcrypt.compare(password, row[0].password);
   if (result) {
     output.success = true;
-    output.data = generateOutputData(row)
+    output.data = generateOutputData(row);
   } else {
     output.code = 2;
     output.error = "Account or password is wrong";
@@ -470,21 +549,21 @@ async function verifyOTP(id, otp) {
   const [rows] = await db.query(sql, id);
 
   if (!rows.length) {
-    return {isValid: false};
+    return { isValid: false };
   }
 
   const storedOTP = rows[0].otp;
-  const otpExpiry = new Date(rows[0].otp_expiry)
+  const otpExpiry = new Date(rows[0].otp_expiry);
 
   if (otp !== storedOTP) {
-    return {isValid: false};
+    return { isValid: false };
   }
 
-  if(new Date() > otpExpiry){
-    return {isValid: false, isExpired: true}
+  if (new Date() > otpExpiry) {
+    return { isValid: false, isExpired: true };
   }
 
-  return {isValid: true, isExpired: false};
+  return { isValid: true, isExpired: false };
 }
 
 router.post("/send-code/:id", async (req, res) => {
@@ -508,21 +587,21 @@ router.post("/edit-info/:id", async (req, res) => {
   const id = req.params.id;
   const { otp, newEmail, newPassword } = req.body;
 
-  const {isValid, isExpired} = await verifyOTP(id, otp);
+  const { isValid, isExpired } = await verifyOTP(id, otp);
 
   if (!isValid) {
-    if(isExpired){
-      output.message = "OTP has expired"
-      output.code = 3
+    if (isExpired) {
+      output.message = "OTP has expired";
+      output.code = 3;
     } else {
       output.message = "Invalid OTP";
-      output.code = 4
+      output.code = 4;
     }
     output.success = false;
     return res.json(output);
   }
 
-  const sql = `UPDATE mb_user SET email = ?, otp = NULL, otp_expiry = NULL WHERE id=?`;
+  const sql = `UPDATE mb_user SET email = ? WHERE id=?`;
   if (newEmail) {
     try {
       await db.query(sql, [newEmail, id]);
@@ -561,20 +640,28 @@ router.post("/check-password/:id", async (req, res) => {
   const sql = `SELECT * FROM mb_user WHERE id = ?`;
   const [rows] = await db.query(sql, id);
 
-  if(rows[0].password){
+  if (rows[0].password) {
     const result = await bcrypt.compare(oldPassword, rows[0].password);
     if (result) {
       await sendMail(transporter, id, email, username);
       return res.json({ success: true, message: "Right password" });
     } else {
-      return res.json({ success: false, code: 1, message: "Wrong old password" });
+      return res.json({
+        success: false,
+        code: 1,
+        message: "Wrong old password",
+      });
     }
   } else {
-    if(oldPassword){
-      return res.json({success: false, code: 1, message: "Wrong old password"})
+    if (oldPassword) {
+      return res.json({
+        success: false,
+        code: 1,
+        message: "Wrong old password",
+      });
     }
-    
-    await sendMail(transporter, id, email, username); 
+
+    await sendMail(transporter, id, email, username);
     return res.json({ success: true, message: "There is no password yet" });
   }
 });
@@ -583,37 +670,109 @@ router.post("/request-email", async (req, res) => {
   const output = {
     success: false,
     code: 0,
-    message: '',
-    sec: 0
-  }
+    message: "",
+    sec: 0,
+  };
 
-  const {email} = req.body
+  const { email } = req.body;
   try {
     const sql = `SELECT * FROM mb_user WHERE email = ?`;
-    const [rows] = await db.query(sql, email)
+    const [rows] = await db.query(sql, email);
 
-    const exp = new Date(rows[0].request_expiry)
-      const currentTime = new Date()
-      if(exp > currentTime) {
-        output.sec = Math.floor((exp - currentTime) / 1000)
-        output.message = "Wait for the cool down time"
-        output.code = 1
-        return res.json(output)
+    if (!rows.length) {
+      output.code = 1;
+      output.message = "Unregistered account";
+      return res.json(output);
+    }
+
+    let id = rows[0].id
+
+    try {
+      const sql = `SELECT * FROM mb_password_reset_tokens WHERE user_id = ?`;
+      const [rows] = await db.query(sql, id)
+
+      if(rows.length){
+        if (rows[0].expiry_time) {
+          const exp = new Date(rows[0].expiry_time);
+          const currentTime = new Date();
+          if (exp > currentTime) {
+            output.sec = Math.floor((exp - currentTime) / 1000);
+            output.message = "Wait for the cool down time";
+            output.code = 2;
+            return res.json(output);
+          }
+        }
       }
+    } catch (error) {
+      console.log("Failed to get token info:", error);
+    }
 
-    isRegistered = rows.length
-
-    if(isRegistered){
-      
-    } else {
-
+    try {
+      await sendPasswordResetEmail(transporter, email, rows[0].id);
+      res.json({ success: true, message: "Email sent" });
+    } catch (error) {
+      console.log("Something happened while sending the email", error);
     }
   } catch (error) {
     console.log("Error with the sql", error);
   }
-})
+});
 
-// create a link to reset password
-// https://www.sandbox.game/en/restore/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjp7ImVtYWlsIjoicnVpbnN1cmJhbmVAZ21haWwuY29tIiwiaWQiOiJmNjQ3OTE4Ni0xMjJmLTRmNWYtYjI4NS01ODZjOTYzOTg3YzEiLCJhY2Nlc3NMZXZlbCI6InJlc3RvcmUifSwiaWF0IjoxNzEzODYxMTM2LCJleHAiOjE3MTM4NjE3MzZ9.nfQca3MOtlcfMjSAdXaJmqFTzX_TTc5lEAJ-g9ZSYuk
+router.post("/update-password", async (req, res) => {
+  const {newPassword, token} = req.body
+  let id;
+  let reqExpiry;
+
+  if(!token){
+    return res.json({ success: false, code: 1, message: 'Token is required' });
+  }
+
+  try {
+    const sql = `SELECT * FROM mb_password_reset_tokens WHERE token = ?`;
+    const [rows] = await db.query(sql, token)
+
+    if(rows.length){
+      if(rows[0].used){
+        return res.json({ success: false, code: 4, message: 'This link is used already. Request new one' });
+      }
+    }
+  } catch (error) {
+    console.log("Failed to access token:", error);
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if(err){
+      return res.json({ success: false, code: 2, message: 'Invalid or expired token' });
+    }
+    
+    const {id: userId, reqExpiry: expiry} = decoded
+    id = userId
+    reqExpiry = new Date(expiry);
+  })
+
+  if(!id){
+    return res.json({ success: false, message: 'User ID not found in token' });
+  }
+
+  if(reqExpiry < new Date()){
+    return res.json({ success: false, code: 3, message: 'Token has expired' });
+  }
+
+  const hash = await bcrypt.hash(newPassword, 10);
+
+  try {
+    const sql = `UPDATE mb_user SET password = ? WHERE id = ?`;
+    const [result] = await db.query(sql, [hash, id])
+
+    const updateTokenSql = `UPDATE mb_password_reset_tokens SET used = ? WHERE user_id = ?`;
+    const [updateTokenResult] = await db.query(updateTokenSql, [true, id])
+
+  } catch (error) {
+    console.log("Error updating the password:", error);
+    return res.json({success: false, message: "Failed to update password"})
+  }
+
+  return res.json({success: true, message: "Updated the password"})
+})
 
 export default router;

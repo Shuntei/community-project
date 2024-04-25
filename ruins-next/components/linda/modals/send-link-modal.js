@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AccountBtn from '@/components/linda/buttons/accountBtn'
 import { z } from 'zod'
 import { useAuth } from '@/contexts/auth-context'
@@ -12,7 +12,7 @@ export default function SendLinkModal({
   setShowSendLink,
   setShowCheckEmail,
 }) {
-  const [submitted, setSubmitted] = useState(false)
+  const [isSubmitted, setSubmitted] = useState(false)
   const { dateInSec } = useAuth()
   const [error, setError] = useState({ error: '' })
   const [errorCode, setErrorCode] = useState(0)
@@ -34,7 +34,14 @@ export default function SendLinkModal({
         hasErrors: true,
         email: 'Cannot be blank',
       }
-    } else if (errorCode) {
+    } else if (errorCode === 1){
+      initErrors = {
+        ...initErrors,
+        hasErrors: true,
+        email: `Unregistered account`,
+      }
+    }
+    else if (errorCode === 2) {
       initErrors = {
         ...initErrors,
         hasErrors: true,
@@ -72,19 +79,27 @@ export default function SendLinkModal({
             'Content-Type': 'application/json',
           },
         })
-        const result = r.json()
+        const result = await r.json()
+
         if (!result.success) {
           setErrorCode(result.code)
           setRemainingSec(result.sec)
         } else {
-          setShowSendLink(false)
           setShowCheckEmail(true)
+          setShowSendLink(false)
         }
       } catch (error) {
         console.log('Requesting email failed', error)
       }
     }
   }
+
+  useEffect(()=>{
+    if(isSubmitted){
+      updateError()
+    }
+  }, [email, errorCode])
+
   return (
     <>
       <div className="flex justify-center h-[500px]">
