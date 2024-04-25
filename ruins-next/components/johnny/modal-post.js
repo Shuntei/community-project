@@ -35,6 +35,7 @@ export default function PostModal() {
     userId: '',
     emotion: '',
   })
+  const [isFormChanged, setIsFormChanged] = useState(false) //發文用不到,但編輯有用到,因同一個表情元件不傳遞發文會故障
 
   const [previewUrl, setPreviewUrl] = useState('')
   const { render, setRender, postsShow } = useBoards()
@@ -304,7 +305,11 @@ export default function PostModal() {
               <RiEmotionLaughFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">FEELING</span>
             </button> */}
-            <Emotion postForm={postForm} setPostForm={setPostForm} />
+            <Emotion
+              postForm={postForm}
+              setPostForm={setPostForm}
+              setIsFormChanged={setIsFormChanged}
+            />
           </div>
         </div>
       </form>

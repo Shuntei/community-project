@@ -1,34 +1,70 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { RiSearchLine } from '@remixicon/react'
 import Image from 'next/image'
 import profileImg from './img/16.jpg'
 import { useToggles } from '@/contexts/use-toggles'
 import { SN_USER_INFO } from '../config/johnny-api-path'
 import { IMG_SERVER } from '../config/api-path'
+import { useRouter } from 'next/router'
+import useOutsideClick from './utils/out-side-click'
 
 export default function FollowsBar() {
   const { toggles, setToggles } = useToggles()
   const [userInfo, setUserinfo] = useState('')
+  const [keyword, setKeyword] = useState('')
 
-  useEffect(() => {
+  const fetchAllFollows = () => {
     fetch(`${SN_USER_INFO}`)
       .then((r) => r.json())
       .then((result) => {
         // console.log(result)
         setUserinfo(result)
       })
+  }
+
+  const ref = useRef()
+  useOutsideClick(ref, () => {
+    fetchAllFollows()
+  })
+
+  const router = useRouter()
+  const query = { ...router.query, followsKeyword: keyword }
+  const queryString = new URLSearchParams(query).toString()
+  // console.log(query)
+  // console.log(queryString)
+
+  const submitHandler = (e) => {
+    e.preventDefault()
+    router.push({ pathname: '/community/main-page', query: queryString })
+
+    fetch(`${SN_USER_INFO}?${queryString}`)
+      .then((r) => r.json())
+      .then((result) => {
+        setUserinfo(result)
+      })
+  }
+
+  useEffect(() => {
+    fetchAllFollows()
   }, [])
 
   return (
-    <>
+    <span ref={ref}>
       <section className="fixed right-0 mt-[40px] pt-[10px] w-[260px] hidden bargone:block h-[600px] overflow-scroll pb-20 mr-10 pl-5 rounded-b-3xl z-[998] bg-292929">
         <div className="mb-5">
           <div></div>
           <div className="text-white py-1 text-[20px] ">FOLLOWS</div>
           <div className="border-b-2 mb-2 w-[200px]"></div>
           <div className="flex py-1">
-            <input className="flex p-[6px] items-center outline-none h-[32px] w-[160px] rounded-l-lg pl-5" />
-            <button className="iconBg px-2 bg-white flex items-center h-[32px] p-[6px] rounded-r-lg">
+            <input
+              className="flex p-[6px] items-center outline-none h-[32px] w-[160px] rounded-l-lg pl-5"
+              onChange={(e) => setKeyword(e.target.value)}
+              value={keyword}
+            />
+            <button
+              onClick={submitHandler}
+              className="iconBg px-2 bg-white flex items-center h-[32px] p-[6px] rounded-r-lg"
+            >
               <RiSearchLine />
             </button>
           </div>
@@ -64,14 +100,14 @@ export default function FollowsBar() {
               })
             }}
           >
-            SEE ALL
+            MORE...
           </div>
         </div>
 
         <div className="notification rounded-xl w-[240px]">
           <div className="text-white px-6 py-1 text-[20px] ">NOTIFICATION</div>
           <div className="border-b-2 mx-6 mb-2 w-[200px]"></div>
-          <ul className="overflow-auto h-[100px] hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
+          <ul className="overflow-auto h-[180px] hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
             <li className="  text-white px-6 py-1 flex items-center">
               <div className="mr-5">
                 <Image
@@ -125,10 +161,10 @@ export default function FollowsBar() {
               })
             }}
           >
-            SEE ALL
+            MORE...
           </div>
         </div>
       </section>
-    </>
+    </span>
   )
 }

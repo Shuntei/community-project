@@ -34,7 +34,7 @@ export default function Emotion({ postForm, setPostForm, setIsFormChanged }) {
               <a
                 onClick={() => {
                   setPostForm({ ...postForm, emotion: 'laugh' })
-                  setIsFormChanged(false)
+                  setIsFormChanged(true)
                 }}
               >
                 <RiEmotionLaughLine />
