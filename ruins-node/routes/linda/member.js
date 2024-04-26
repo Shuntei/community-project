@@ -685,13 +685,13 @@ router.post("/request-email", async (req, res) => {
       return res.json(output);
     }
 
-    let id = rows[0].id
+    let id = rows[0].id;
 
     try {
       const sql = `SELECT * FROM mb_password_reset_tokens WHERE user_id = ?`;
-      const [rows] = await db.query(sql, id)
+      const [rows] = await db.query(sql, id);
 
-      if(rows.length){
+      if (rows.length) {
         if (rows[0].expiry_time) {
           const exp = new Date(rows[0].expiry_time);
           const currentTime = new Date();
@@ -719,21 +719,25 @@ router.post("/request-email", async (req, res) => {
 });
 
 router.post("/update-password", async (req, res) => {
-  const {newPassword, token} = req.body
+  const { newPassword, token } = req.body;
   let id;
   let reqExpiry;
 
-  if(!token){
-    return res.json({ success: false, code: 1, message: 'Token is required' });
+  if (!token) {
+    return res.json({ success: false, code: 1, message: "Token is required" });
   }
 
   try {
     const sql = `SELECT * FROM mb_password_reset_tokens WHERE token = ?`;
-    const [rows] = await db.query(sql, token)
+    const [rows] = await db.query(sql, token);
 
-    if(rows.length){
-      if(rows[0].used){
-        return res.json({ success: false, code: 4, message: 'This link is used already. Request new one' });
+    if (rows.length) {
+      if (rows[0].used) {
+        return res.json({
+          success: false,
+          code: 4,
+          message: "This link is used already. Request new one",
+        });
       }
     }
   } catch (error) {
@@ -741,38 +745,75 @@ router.post("/update-password", async (req, res) => {
   }
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if(err){
-      return res.json({ success: false, code: 2, message: 'Invalid or expired token' });
+    if (err) {
+      return res.json({
+        success: false,
+        code: 2,
+        message: "Invalid or expired token",
+      });
     }
-    
-    const {id: userId, reqExpiry: expiry} = decoded
-    id = userId
-    reqExpiry = new Date(expiry);
-  })
 
-  if(!id){
-    return res.json({ success: false, message: 'User ID not found in token' });
+    const { id: userId, reqExpiry: expiry } = decoded;
+    id = userId;
+    reqExpiry = new Date(expiry);
+  });
+
+  if (!id) {
+    return res.json({ success: false, message: "User ID not found in token" });
   }
 
-  if(reqExpiry < new Date()){
-    return res.json({ success: false, code: 3, message: 'Token has expired' });
+  if (reqExpiry < new Date()) {
+    return res.json({ success: false, code: 3, message: "Token has expired" });
   }
 
   const hash = await bcrypt.hash(newPassword, 10);
 
   try {
     const sql = `UPDATE mb_user SET password = ? WHERE id = ?`;
-    const [result] = await db.query(sql, [hash, id])
+    const [result] = await db.query(sql, [hash, id]);
 
     const updateTokenSql = `UPDATE mb_password_reset_tokens SET used = ? WHERE user_id = ?`;
-    const [updateTokenResult] = await db.query(updateTokenSql, [true, id])
-
+    const [updateTokenResult] = await db.query(updateTokenSql, [true, id]);
   } catch (error) {
     console.log("Error updating the password:", error);
-    return res.json({success: false, message: "Failed to update password"})
+    return res.json({ success: false, message: "Failed to update password" });
   }
 
-  return res.json({success: true, message: "Updated the password"})
-})
+  return res.json({ success: true, message: "Updated the password" });
+});
+
+router.get("get-preferences/:id")
+
+router.post("/save-preferences/:id", async (req, res) => {
+  const id = req.params.id
+
+  try {
+    const sql = `SELECT * FROM mb_user_preference WHERE user_id = ?`;
+    const [rows] = await db.query(sql, id)
+  
+    if(rows.length){
+      try {
+        const sql = `UPDATE mb_user_preference SET ? WHERE user_id = ?`;
+        const [result] = await db.query(sql, [req.body, id])
+        return res.json({success: true, message: "Updated successfully"})
+      } catch (error) {
+        console.log("Failed to update:", error);
+        return res.json({success: false, message: "Failed to update"})
+      }
+    } else {
+      try {
+        const sql = `INSERT INTO mb_user_preference SET ?, user_id = ?`;
+        const [result] = await db.query(sql, [req.body, id])
+        return res.json({success: true, message: "Inserted successfully"})
+      } catch (error) {
+        console.log("Failed to update:", error);
+        return res.json({success: false, message: "Failed to insert"})
+      }
+    }
+  } catch (error) {
+    console.log("Something's wrong with the sql", error);
+    return res.json({success: false, message: "Something went wrong"})
+  }
+});
 
 export default router;
