@@ -26,6 +26,7 @@ router.post("/ruins_final", async (req, res) => {
     const sql = "UPDATE `gm_user_achieved` SET `activate`=? WHERE `achieved_id`=?";
 
     const [result] = await db.query(sql, [newValue, achievedId]);
+    console.log(result);
  
     res.status(200).json({ message: "Achievement updated successfully." , ...result});
   } catch (error) {
@@ -34,5 +35,25 @@ router.post("/ruins_final", async (req, res) => {
   }
 });
 
+
+router.post("/ruins_final/gm_note", async (req, res) => {
+  // res.send('helllo')
+  // res.json({title:1, content:2})
+  try {
+    // const { titile, content } = req.body;
+
+    console.log(req.body);
+    
+    const sql = "UPDATE `gm_note` SET `title`=? WHERE `note_id`=1";
+
+    const [result] = await db.query(sql, [req.body.title]);
+    console.log(result);
+ 
+    res.status(200).json({ message: "Achievement updated successfully." , ...result});
+  } catch (error) {
+    console.error("Error updating achievement:", error);
+    res.status(500).json({ error: "Failed to update achievement." });
+  }
+});
 
 export default router;
