@@ -21,7 +21,10 @@ export const MB_SEND_CODE = `${API_SERVER}/member/send-code`
 export const MB_REQ_EMAIL = `${API_SERVER}/member/request-email`
 // update password
 export const MB_UPDATE_PASS = `${API_SERVER}/member/update-password`
-
+// save preferences
+export const MB_SAVE_PREFERENCES = `${API_SERVER}/member/save-preferences`
+// get preference
+export const MB_GET_PREFERENCES = `${API_SERVER}/member/get-preferences`
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`
