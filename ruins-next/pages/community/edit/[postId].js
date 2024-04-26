@@ -34,6 +34,7 @@ import {
 export default function EditModal() {
   const router = useRouter()
   console.log(router.query.postId)
+
   const { auth } = useAuth()
   const { editModal, setEditModal } = useToggles()
   const [postForm, setPostForm] = useState({
@@ -98,6 +99,7 @@ export default function EditModal() {
               if (result.success) {
                 setRender(true)
                 setEditModal(false)
+                router.back()
               } else {
                 toast.error('編輯貼文失敗')
               }
@@ -174,7 +176,7 @@ export default function EditModal() {
           // console.log({ title, content, image_url, board_id, emotion })
           // setPostForm(rst[0])
         } else {
-          router.push(`/community/main-personal`)
+          // router.push(`/community/main-personal`)
         }
       })
       .catch((err) => console.log(err))
@@ -223,7 +225,14 @@ export default function EditModal() {
               </div>
               <button>
                 <Link href={`/community/main-personal`}>
-                  <RiCloseLargeLine onClick={() => setEditModal(false)} />
+                  {/* <RiCloseLargeLine onClick={() => setEditModal(false)} /> */}
+                  <RiCloseLargeLine
+                    onClick={() => {
+                      setEditModal(false)
+                      router.back()
+                    }}
+                  />
+                  {/* /community/main-personal */}
                 </Link>
               </button>
             </div>

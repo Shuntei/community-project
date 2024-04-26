@@ -12,7 +12,11 @@ export default function FollowsBar() {
   const { toggles, setToggles } = useToggles()
   const [userInfo, setUserinfo] = useState('')
   const [keyword, setKeyword] = useState('')
-
+  const router = useRouter()
+  const query = { ...router.query, followsKeyword: keyword }
+  const queryString = new URLSearchParams(query).toString()
+  // console.log(query)
+  // console.log(queryString)
   const fetchAllFollows = () => {
     fetch(`${SN_USER_INFO}`)
       .then((r) => r.json())
@@ -26,12 +30,6 @@ export default function FollowsBar() {
   useOutsideClick(ref, () => {
     fetchAllFollows()
   })
-
-  const router = useRouter()
-  const query = { ...router.query, followsKeyword: keyword }
-  const queryString = new URLSearchParams(query).toString()
-  // console.log(query)
-  // console.log(queryString)
 
   const submitHandler = (e) => {
     e.preventDefault()
@@ -72,10 +70,7 @@ export default function FollowsBar() {
             {userInfo &&
               userInfo.map((v, i) => {
                 return (
-                  <li
-                    key={v.id}
-                    className="  text-white py-2 flex items-center"
-                  >
+                  <li key={v.id} className="text-white py-2 flex items-center">
                     <img
                       className="w-[35px] h-[35px] object-cover overflow-hidden rounded-full mr-5 bg-zinc-300"
                       src={

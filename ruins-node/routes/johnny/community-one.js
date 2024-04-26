@@ -218,13 +218,19 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
   // const post_id = +req.params.post_id;
   let postId = +req.query.postId || 0;
   // console.log("postId_log:", postId);
+  let psUserId = +req.query.psUserId;
+  console.log(psUserId);
 
+  let where = " WHERE 1 ";
   if (!postId) {
     let page = +req.query.page || 1;
 
     // 這裡是主頁所有文章
     // console.log(page);
-    let where = "  WHERE post_type = 'yours' ";
+    if (psUserId) {
+      // 沒有psUserId就不會執行造成下方判斷psUserId=NaN錯誤
+      where += ` AND user_id=${psUserId} `;
+    }
 
     if (page < 1) {
       return { success: false, redirect: "?page=1" };
@@ -253,15 +259,19 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
     // const totalPostsSql = ` SELECT * FROM sn_posts ${where}
     // ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
     // [totalPostsRows] = await db.query(totalPostsSql);
-
+    console.log(where);
     // 加入留言統計後sql
     const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
     LEFT JOIN ( SELECT post_id, 
     COUNT(comment_id) AS comment_count 
     FROM  sn_comments 
-    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id WHERE p.post_type = 'yours'
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id ${where}
     ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
+
+    const postsCount = `SELECT COUNT(1) FROM sn_posts ${where}`;
+    const [postsAmount] = await db.query(postsCount);
+    // console.log(postsAmount);
 
     // console.log(req.query);
     res.json({
@@ -271,6 +281,7 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
       page,
       perPage,
       totalPostsRows,
+      postsAmount,
       query: req.query,
       images: req.files,
     });
@@ -306,15 +317,13 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
       return;
     }
 
-    req.body.post_type = "yours";
     // console.log("this is photo:", req.file);
     if (!req.file) {
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
-        req.body.post_type,
         req.body.boardId,
         req.body.userId,
         req.body.emotion,
@@ -328,11 +337,10 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
       // http://localhost:3001/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `image_url`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `image_url`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
-        req.body.post_type,
         req.body.image_url,
         req.body.boardId,
         req.body.userId,
