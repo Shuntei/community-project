@@ -5,14 +5,16 @@ import {
   RiArrowDropDownLine,
   RiArrowDropUpLine,
 } from '@remixicon/react'
-import { SN_COMMENTS, SN_DELETE_COMMENT } from './config/api-path'
+import { SN_COMMENTS, SN_DELETE_COMMENT } from '../config/johnny-api-path'
 import Link from 'next/link'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
 import { useToggles } from '@/contexts/use-toggles'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
+  const { auth } = useAuth()
   const [isComment, setIsComment] = useState('')
   const [toggleMenu, setToggleMenu] = useState(false)
   const [selectedCmId, setSelectedCmId] = useState('')
@@ -38,7 +40,7 @@ export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
       title: '確認刪除留言?',
       showCancelButton: true,
       showCancelButton: true,
-      confirmButtonColor: '#006400',
+      confirmButtonColor: '#292929', //'#006400'
       cancelButtonColor: '#8B0000',
       confirmButtonText: '是',
       cancelButtonText: '否',
@@ -90,8 +92,8 @@ export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
             >
               <div className="likeZone:flex justify-between mb-5">
                 <div>
-                  <div className="text-[20px]">NameHere@ccmail.com</div>
-                  <div>role.name?</div>
+                  <div className="text-[20px]">{auth.username}</div>
+                  {/* <div>role.name?</div> */}
                 </div>
                 <div className="likeZone:flex gap-2 items-center flex">
                   <span>Feb 13(3 hr ago)</span>

@@ -2,6 +2,7 @@ import express from "express";
 import multer from "multer";
 import communityRouter from "./routes/johnny/community-one.js";
 import communityRouterTwo from "./routes/johnny/community-two.js";
+import communityRouterThree from "./routes/johnny/community-three.js";
 import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js";
 import cartRouter from "./routes/kevin/cart.js";
@@ -33,9 +34,11 @@ app.use("/product", productRouter);
 app.use("/cart", cartRouter);
 app.use("/game", gameRouter);
 app.use("/tour", tourRouter);
-// app.use("/chat", chatRouter);
+app.use("/chat", chatRouter);
+// 社群路由 one主頁 two修改及貼文 three好友通知
 app.use("/community", communityRouter);
 app.use("/community", communityRouterTwo);
+app.use("/community", communityRouterThree);
 app.use("/tour", tourRouter);
 
 app.use((req, res) => {

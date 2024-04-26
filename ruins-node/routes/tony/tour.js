@@ -7,7 +7,13 @@ const router = express.Router();
 const getTourList = async (req, res) => {
   let page = +req.query.page || 1; //用戶要求查看第幾頁
   let keyword = req.query.keyword || ""; // 設定關鍵字
-  let where = " WHERE 1 "; //後面不確定有幾個搜尋條件
+  let level = req.query.level || 0;  // 難易度
+  let ePeriod = req.query.ePeriod || 0; // 活動時長
+  let area = req.query.area || 0; // 地區北中南東
+  let latest = req.query.latest || "" // 最新揪團
+  let soon = req.query.soon || "" // 
+  let where = " WHERE 1 "; // 後面不確定有幾個搜尋條件
+  let order = "";
 
   // 搜尋篩選
   if (keyword.trim() !== "") {
@@ -16,6 +22,33 @@ const getTourList = async (req, res) => {
   // 揪團主題篩選
   if (req.query.category) {
     where += ` AND tour_location.cid = ${req.query.category}`;
+  }
+
+  // 難易度篩選
+  if (req.query.level) {
+    where += ` AND tour_post.level_id = ${level}`;
+  }
+  // 活動時長篩選
+  if (req.query.ePeriod) {
+    if (ePeriod === '一日') {
+      where += ` AND tour_post.event_period > 6`; // Greater than 6
+    } else if (ePeriod === '半日') {
+      where += ` AND tour_post.event_period <= 6`; // Less than or equal to 6
+    }
+  }
+  // 地區篩選
+  if (req.query.area) {
+    where += ` AND tour_location.area = ${area}`;
+  }
+
+  // 最新上架,即創建最晚
+  if(latest){
+    order += ` ORDER BY tour_post.created_at DESC`
+  }
+  // 最受歡迎
+  // 最快出發,即日期最早
+  if(soon){
+    order += ` ORDER BY tour_post.event_date`
   }
 
   if (page < 1) {
@@ -46,7 +79,7 @@ const getTourList = async (req, res) => {
     ON tour_post.ruin_id = tour_location.ruin_id
     ${where}
     GROUP BY tour_post.tour_id
-    ORDER BY tour_post.event_date
+    ${order}
       LIMIT ${(page - 1) * perPage}, ${perPage};
     `;
     [rows] = await db.query(sql);
@@ -118,6 +151,30 @@ router.get("/api", async (req, res) => {
 router.get("/api/getPost/:tid", async (req, res) => {
   const result = await getTourPost(req);
   res.json(result);
+});
+
+router.get("/api/get-post/:id", async (req, res) => {
+  const output = {
+    success: false,
+    code: 0,
+    message: '',
+    data: null,
+  }
+
+  const id = req.params.id
+  const sql = `SELECT * FROM tony_tour_post WHERE user_id = ?`;
+  const [rows] = await db.query(sql, id)
+
+  if(!rows.length) {
+    output.code = 1
+    output.message = "There is no tour info"
+    return res.json(output)
+  }
+
+  output.data = rows
+  output.success = true
+
+  res.json(output);
 });
 
 // 定義路由名稱, 取得圖片資料

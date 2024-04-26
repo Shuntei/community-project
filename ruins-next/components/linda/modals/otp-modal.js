@@ -2,13 +2,14 @@ import React, { useEffect, useState, useRef } from 'react'
 import { RiCloseLargeLine } from '@remixicon/react'
 import { IoMdEye } from 'react-icons/io'
 import { IoMdEyeOff } from 'react-icons/io'
-import { MB_EDIT_EMAIL } from '@/components/config/api-path'
+import { MB_EDIT_INFO, MB_SEND_CODE } from '@/components/config/api-path'
 import { useAuth } from '@/contexts/auth-context'
 import NotifyRed from '../notify/notify-red'
 import NotifyGreen from '../notify/notify-green'
 import Router, { useRouter } from 'next/router'
+import Loader from '../loader/loader'
 
-export default function OTPModal({setShowOTPModal, isVisible, onClose, newEmail }) {
+export default function OTPModal({setShowOTPModal, isVisible, onClose, newEmail, newPassword }) {
   if (!isVisible) return null
   const router = useRouter()
   const { auth, logout } = useAuth()
@@ -18,10 +19,51 @@ export default function OTPModal({setShowOTPModal, isVisible, onClose, newEmail 
   const [showGreenNotification, setShowGreenNotification] = useState(false)
   const [notificationText, setNotificationText] = useState('')
   const [processCompleted, setProcessCompleted] = useState(false)
+  const [countdown, setCountdown] = useState(60)
+  const [disableButton, setDisableButton] = useState(false)
 
   useEffect(() => {
     inputRefs.current[0].focus()
   }, [])
+
+  const sendCode = async ()=>{
+    const username = auth.username
+    const email = auth.email
+    const payload = {email, username}
+    try {
+      const r = await fetch(`${MB_SEND_CODE}/${auth.id}`, {
+        method: 'post',
+        body: JSON.stringify(payload),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+
+      const result = await r.json()
+
+    } catch(ex){
+      console.log("Something happened while sending code:", ex);
+    }
+  }
+
+  const startCountdown = async () => {
+    setDisableButton(true)
+    await sendCode()
+    setOtpInputs(Array(5).fill(''))
+
+    let remainingTime = countdown
+
+    const interval = setInterval(() => {
+      remainingTime -= 1;
+      setCountdown(remainingTime)
+    }, 1000);
+
+    setTimeout(()=>{
+      clearInterval(interval)
+      setCountdown(60)
+      setDisableButton(false)
+    }, countdown * 1000)
+  }
 
   const handleChange = (index, value) => {
     const newInputs = [...otpInputs]
@@ -55,10 +97,10 @@ export default function OTPModal({setShowOTPModal, isVisible, onClose, newEmail 
   const verifyOTP = async () => {
     const otp = otpInputs.join('')
 
-    const payload = { otp, newEmail }
+    const payload = { otp, newEmail, newPassword }
 
     try {
-      const r = await fetch(`${MB_EDIT_EMAIL}/${auth.id}`, {
+      const r = await fetch(`${MB_EDIT_INFO}/${auth.id}`, {
         method: 'post',
         body: JSON.stringify(payload),
         headers: {
@@ -68,13 +110,24 @@ export default function OTPModal({setShowOTPModal, isVisible, onClose, newEmail 
 
       const result = await r.json()
 
-      if(!result.success) {
-        setNotificationText('Invalid OTP')
+      if(!result.success){
+        if(result.code === 3){
+          setNotificationText('OTP has expired')
         setShowRedNotification(true)
+        } else if(result.code === 4){
+          setNotificationText('Invalid OTP')
+          setShowRedNotification(true)
+        }
       } else {
-        setNotificationText('Email updated successfully')
-        setShowGreenNotification(true)
-        setProcessCompleted(true)
+        if(result.code === 1){
+          setNotificationText('Email updated successfully')
+          setShowGreenNotification(true)
+          setProcessCompleted(true)
+        } else if (result.code === 2){
+          setNotificationText('Password updated successfully')
+          setShowGreenNotification(true)
+          setProcessCompleted(true)
+        }
       }
     } catch (ex) {
       console.log(ex)
@@ -113,7 +166,7 @@ export default function OTPModal({setShowOTPModal, isVisible, onClose, newEmail 
                   A security code has been sent to:
                 </div>
                 <div className="text-[14px] font-bold">
-                  currentEmail@mgail.com
+                  {auth.email}
                 </div>
               </div>
             </div>
@@ -131,9 +184,12 @@ export default function OTPModal({setShowOTPModal, isVisible, onClose, newEmail 
               If you haven't received an email, check your spam folder
             </div>
             <div className="flex justify-center">
-              <a href="#" className="underline hover:text-white text-[#9F9F9F]">
-                Resend code
-              </a>
+              <button
+              disabled={disableButton || processCompleted}
+              onClick={startCountdown}
+              className={`underline hover:text-white text-[#9F9F9F]`}>
+                Resend code {countdown === 60 || countdown < 1 ? '' : countdown}
+              </button>
             </div>
           </div>
         </div>

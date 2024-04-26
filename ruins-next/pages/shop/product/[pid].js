@@ -77,7 +77,7 @@ export default function Pid() {
     if (router.isReady) {
       //確保能得到pid
       const { pid } = router.query
-      console.log(pid)
+      // console.log(pid)
       // 有pid後，向伺服器要求資料
       getProductById(pid)
       getProductComment(pid)

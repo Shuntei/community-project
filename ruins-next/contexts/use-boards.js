@@ -1,5 +1,5 @@
-import { SN_POST_VIEWS } from '@/components/johnny/config/api-path'
-import { SN_POSTS, SN_BOARDS } from '@/components/johnny/config/api-path'
+import { SN_POST_VIEWS } from '@/components/config/johnny-api-path'
+import { SN_POSTS } from '@/components/config/johnny-api-path'
 import { createContext, useContext, useState } from 'react'
 import React from 'react'
 

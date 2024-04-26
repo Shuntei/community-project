@@ -23,6 +23,8 @@ import { IMG_SERVER } from '@/components/config/api-path'
 export default function Navbar({ className, navColor = 'white' }) {
   const { auth, logout } = useAuth()
   const [showModal, setShowModal] = useState(false)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
+  const [showLoginModal, setShowLoginModal] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
   const toggleNav = () => {
@@ -87,7 +89,11 @@ export default function Navbar({ className, navColor = 'white' }) {
                         width={30}
                         className="rounded-full min-h-[30px] max-h-[30px] object-cover"
                         height={30}
-                        src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
+                        src={
+                          auth.googlePhoto
+                            ? auth.profileUrl
+                            : `${IMG_SERVER}/${auth.profileUrl}`
+                        }
                         alt=""
                       />
                     ) : (
@@ -98,7 +104,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                     {auth.username}
                   </div>
                 </div>
-                <ProfileModal logout={logout} isVisible={showModal} />
+                <ProfileModal setShowModal={setShowModal} logout={logout} isVisible={showModal} />
               </div>
             </div>
           ) : (
@@ -134,7 +140,7 @@ export default function Navbar({ className, navColor = 'white' }) {
           className={`${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
           <div className={`${styles['nav-cart-mobile']}`}>
-          <CartModal />
+            <CartModal />
 
             {navColor === 'white' ? (
               <Image alt="" src={CartLine} />
@@ -146,6 +152,8 @@ export default function Navbar({ className, navColor = 'white' }) {
           <button
             onClick={() => {
               setShowModal(!showModal)
+              setShowLogoutModal(!showLogoutModal)
+              setShowLoginModal(!showLoginModal)
             }}
             href=""
             className={styles['profile-icon']}
@@ -155,7 +163,11 @@ export default function Navbar({ className, navColor = 'white' }) {
                 width={20}
                 className="rounded-full h-[20px] object-cover"
                 height={20}
-                src={auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`}
+                src={
+                  auth.googlePhoto
+                    ? auth.profileUrl
+                    : `${IMG_SERVER}/${auth.profileUrl}`
+                }
                 alt=""
               />
             ) : navColor === 'white' ? (
@@ -166,9 +178,9 @@ export default function Navbar({ className, navColor = 'white' }) {
           </button>
         </div>
         {auth.id ? (
-          <LogoutModal isVisible={showModal} />
+          <LogoutModal isVisible={showLogoutModal} />
         ) : (
-          <LoginModal isVisible={showModal} />
+          <LoginModal isVisible={showLoginModal} />
         )}
       </nav>
       {isOpen ? <NavbarPopup /> : ''}

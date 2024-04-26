@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { useBoards } from '@/contexts/use-boards'
 import { RiArrowDropDownLine, RiListCheck } from '@remixicon/react'
-import { SN_BOARDS } from './config/api-path'
+import { SN_BOARDS } from '../config/johnny-api-path'
 import { useRouter } from 'next/router'
 
 export default function Topics() {
@@ -30,7 +30,7 @@ export default function Topics() {
 
   return (
     <>
-      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] pb-20 bg-black overflow-y-scroll z-[998] rounded-b-3xl hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
+      <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] pb-20 overflow-y-scroll z-[998] bg-292929 rounded-b-3xl hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
         <div className="text-white px-10 pt-3 pb-1 text-[20px]  cursor-pointer">
           TOPICS
         </div>
@@ -52,6 +52,7 @@ export default function Topics() {
               return (
                 <li
                   className=" text-white px-10 py-3 flex cursor-pointer duration-200 hover:text-2xl"
+                  key={v.board_id}
                   onClick={() =>
                     router.push({
                       query: {

@@ -11,9 +11,20 @@ export const MB_GOOGLE_LOGIN = `${API_SERVER}/member/google-login`
 export const MB_EDIT_PROFILE = `${API_SERVER}/member/edit-profile`
 // check email and send otp
 export const MB_CHECK_EMAIL = `${API_SERVER}/member/check-email`
+// check password and send otp
+export const MB_CHECK_PASS = `${API_SERVER}/member/check-password`
 // edit email
-export const MB_EDIT_EMAIL = `${API_SERVER}/member/edit-email`
-
+export const MB_EDIT_INFO = `${API_SERVER}/member/edit-info`
+// send OTP 
+export const MB_SEND_CODE = `${API_SERVER}/member/send-code`
+// request email
+export const MB_REQ_EMAIL = `${API_SERVER}/member/request-email`
+// update password
+export const MB_UPDATE_PASS = `${API_SERVER}/member/update-password`
+// save preferences
+export const MB_SAVE_PREFERENCES = `${API_SERVER}/member/save-preferences`
+// get preference
+export const MB_GET_PREFERENCES = `${API_SERVER}/member/get-preferences`
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`
@@ -58,7 +69,9 @@ export const PRODUCT_MYONGOINGPO = `${API_SERVER}/product/api/getOngoingPo`
 export const PRODUCT_MYCOMPLETEDPO =`${API_SERVER}/product/api/getCompletedPo`
 
 // 揪團貼文列表
-export const TOUR_LIST =  `${API_SERVER}/tour/api`
+export const TOUR_LIST = `${API_SERVER}/tour/api`
 
 // 揪團貼文單筆
-export const TOUR_POST =  `${API_SERVER}/tour/api/getPost`
+export const TOUR_POST = `${API_SERVER}/tour/api/getPost`
+// get post information
+export const TOUR_GET_POST = `${API_SERVER}/tour/api/get-post`

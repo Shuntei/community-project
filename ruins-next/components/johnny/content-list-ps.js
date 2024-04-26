@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { API_SERVER } from './config/api-path'
+import { API_SERVER, SN_COMMUNITY } from '../config/johnny-api-path'
 import {
   RiChat4Fill,
   RiEyeFill,
@@ -7,13 +7,14 @@ import {
   RiMoreFill,
   RiArrowRightDoubleLine,
   RiArrowLeftDoubleLine,
+  RiHeartFill,
 } from '@remixicon/react'
 import Image from 'next/image'
 import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST, SN_PSPOSTS } from './config/api-path'
+import { SN_DELETE_POST, SN_PSPOSTS } from '../config/johnny-api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
@@ -51,10 +52,10 @@ export default function PersonalContent() {
     }
   }
 
-  const handlePush = (postId) => {
-    // router.push(`/community/main-post?postId=${postId}`);
-    handlePostId(postId)
-  }
+  // const handlePush = (postId) => {
+  //   // router.push(`/community/main-post?postId=${postId}`);
+  //   handlePostId(postId)
+  // }
 
   const removePost = async (postId) => {
     const MySwal = withReactContent(Swal)
@@ -63,10 +64,11 @@ export default function PersonalContent() {
       title: '確認刪除貼文?',
       showCancelButton: true,
       showCancelButton: true,
-      confirmButtonColor: '#006400',
+      confirmButtonColor: '#292929',
       cancelButtonColor: '#8B0000',
       confirmButtonText: '是',
       cancelButtonText: '否',
+      timer: 3000,
     }).then((rst) => {
       if (rst.isConfirmed) {
         MySwal.fire({
@@ -205,7 +207,7 @@ export default function PersonalContent() {
                         pathname: `/community/main-post`,
                         query: { postId: `${v.post_id}` },
                       }
-                      handlePush(v.post_id)
+                      // handlePush(v.post_id)
                       router.push(href)
                     }}
                     className="cursor-pointer"
@@ -224,13 +226,17 @@ export default function PersonalContent() {
                   </span>
                   <div className="text-[14px] text-292929">
                     <div className="flex gap-2">
-                      <span className="text-575757 pr-2 flex">
+                      <span className="text-575757 flex w-[55px]">
                         <RiEyeFill className="pr-1" />
                         {v.view_count}
                       </span>
-                      <span className="text-575757 flex">
+                      <span className="text-575757 flex w-[55px]">
                         <RiChat4Fill className="pr-1" />
                         {v.comment_count}
+                      </span>
+                      <span className="text-575757 flex w-[55px]">
+                        <RiHeartFill className="pr-1" />
+                        {v.likes}
                       </span>
                       <div className="relative">
                         <div
@@ -281,13 +287,13 @@ export default function PersonalContent() {
                 </div>
                 <Link
                   className="ml-6 w-[100px] pc:w-[150px] flex items-center justify-end flex-shrink-0 cursor-pointer"
-                  onClick={() => handlePush(v.post_id)}
+                  // onClick={() => handlePush(v.post_id)}
                   href={`/community/main-post?postId=${v.post_id}`}
                 >
                   {v.image_url && (
                     <Image
                       className="size-[100px] object-cover rounded-xl"
-                      src={`${API_SERVER}/${v.image_url}`}
+                      src={`${SN_COMMUNITY}/${v.image_url}`}
                       width={100}
                       height={100}
                       alt="上傳的無法顯示圖片"

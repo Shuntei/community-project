@@ -50,11 +50,13 @@ router.get("/boards/:board_id?", async (req, res) => {
       orderByClause = "ORDER BY p.posts_timestamp ASC";
       break;
     case "likes":
+      orderByClause = "ORDER BY p.likes DESC";
       break;
     case "views":
       orderByClause = "ORDER BY p.view_count DESC";
       break;
     case "comments":
+      orderByClause = "ORDER BY comment_count DESC";
       break;
     default:
       break;
@@ -95,20 +97,9 @@ router.get("/boards/:board_id?", async (req, res) => {
     ${orderByClause} 
     LIMIT ${(page - 1) * perPage}, ${perPage}`;
   // const selectedBdPosts = `SELECT * FROM sn_public_boards AS b JOIN sn_posts AS p USING(board_id) WHERE b.board_id = ? ORDER BY p.post_id DESC`;
-  console.log("sp", selectedBdPosts);
+  // console.log("sp", selectedBdPosts);
   const [selectedBdPostsRows] = await db.query(selectedBdPosts, [board_id]);
   // console.log(selectedBdPostsRows);
-
-  // 貼文0後端判斷移至前端,此處不用
-  // if (selectedBdPostsRows.length === 0) {
-  //   return res.json({
-  //     success: true,
-  //     page: 1,
-  //     totalPages: 1,
-  //     selectedBdPostsRows: [{ title: "無任何貼文", comment_count: 0 }],
-  //     // selectedBdPostsRows: false,
-  //   });
-  // }
 
   res.json({
     success: true,
@@ -153,11 +144,13 @@ router.get("/posts/:post_id?", async (req, res) => {
         orderByClause = "ORDER BY p.posts_timestamp ASC";
         break;
       case "likes":
+        orderByClause = "ORDER BY p.likes DESC";
         break;
       case "views":
         orderByClause = "ORDER BY p.view_count DESC";
         break;
       case "comments":
+        orderByClause = "ORDER BY comment_count DESC";
         break;
       default:
         break;
@@ -307,34 +300,43 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
   let result = {};
   // const sql = "INSERT INTO `sn_posts` SET ? ";
   try {
-    req.body.post_type = "yours";
-    console.log("this is photo:", req.file);
+    if (!req.body.userId) {
+      output.success = false;
+      output.errors = "no user id";
+      return;
+    }
 
+    req.body.post_type = "yours";
+    // console.log("this is photo:", req.file);
     if (!req.file) {
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `board_id`) VALUES ( ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.post_type,
         req.body.boardId,
+        req.body.userId,
+        req.body.emotion,
       ]);
     }
     if (req.file) {
       // console.log("來到圖片區但是沒有圖片");
       const newFilePath = req.file.path.slice(21);
       // "http://localhost:3001/community/" + req.file.path.slice(21);
-      console.log("newFilePath", newFilePath);
+      // console.log("newFilePath", newFilePath);
       // http://localhost:3001/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `image_url`, `board_id`) VALUES ( ?, ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `post_type`, `image_url`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.post_type,
         req.body.image_url,
         req.body.boardId,
+        req.body.userId,
+        req.body.emotion,
       ]);
     }
 

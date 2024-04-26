@@ -287,3 +287,27 @@ p.item-name {
     transform: rotate(90deg);
   }
 }
+
+.containerP {
+  display: flex;
+  overflow-x: auto; /* 允许水平滚动 */
+  
+}
+
+@keyframes scrollAnimation {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-100%); } /* 每次滚动到下一个产品项 */
+}
+
+.product-item {
+  animation: scrollAnimation 20s linear infinite; /* 水平滚动动画 */
+  flex: 0 0 auto; 
+  margin-right: 20px; 
+  /* 可以添加一些过渡效果 */
+  
+}
+
+/* 当鼠标悬停在产品项上时可以添加一些效果 */
+.product-item:hover {
+  transform: scale(1.05); /* 放大产品项 */
+}

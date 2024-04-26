@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { API_SERVER } from './config/api-path'
+import { API_SERVER, SN_COMMUNITY } from '../config/johnny-api-path'
 import {
   RiChat4Fill,
   RiEyeFill,
@@ -7,12 +7,13 @@ import {
   RiMoreFill,
   RiArrowRightDoubleLine,
   RiArrowLeftDoubleLine,
+  RiHeartFill,
 } from '@remixicon/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST } from './config/api-path'
+import { SN_DELETE_POST } from '../config/johnny-api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
@@ -20,26 +21,17 @@ import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
 
 export default function MainContent() {
-  const {
-    postsList,
-    selectedPosts,
-    postsShow,
-    handlePostId,
-    // handlePage,
-    handleBdPostsPage,
-    render,
-    setRender,
-  } = useBoards()
+  const { postsList, postsShow, handlePostId, setRender } = useBoards()
 
   const router = useRouter()
 
   const { removeBox, setRemoveBox } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
 
-  const handlePush = (postId) => {
-    // router.push(`/community/main-post?postId=${postId}`);
-    handlePostId(postId)
-  }
+  // const handlePush = (postId) => {
+  //   // router.push(`/community/main-post?postId=${postId}`);
+  //   handlePostId(postId)
+  // }
 
   const removePost = async (postId) => {
     const MySwal = withReactContent(Swal)
@@ -48,10 +40,11 @@ export default function MainContent() {
       title: '確認刪除貼文?',
       showConfirmButton: true,
       showCancelButton: true,
-      confirmButtonColor: '#006400',
+      confirmButtonColor: '#292929', //#006400
       cancelButtonColor: '#8B0000',
       confirmButtonText: '是',
       cancelButtonText: '否',
+      timer: 3000,
     }).then((rst) => {
       if (rst.isConfirmed) {
         MySwal.fire({
@@ -146,7 +139,7 @@ export default function MainContent() {
       {postsList?.totalPostsRows?.map((v, i) => {
         return (
           <main
-            className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative"
+            className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative "
             key={v.post_id}
           >
             {/*relative用於toggle垃圾桶*/}
@@ -167,7 +160,6 @@ export default function MainContent() {
               <div className="w-[70%]">
                 <Link
                   name="postId"
-                  onClick={() => handlePush(v.post_id)}
                   href={`/community/main-post?postId=${v.post_id}`}
                   className="cursor-pointer"
                 >
@@ -185,13 +177,17 @@ export default function MainContent() {
                 </Link>
                 <div className="text-[14px] text-292929">
                   <div className="flex gap-2">
-                    <span className="text-575757 pr-2 flex">
+                    <span className="text-575757 flex w-[55px]">
                       <RiEyeFill className="pr-1" />
                       {v.view_count}
                     </span>
-                    <span className="text-575757 flex cursor-pointer">
+                    <span className="text-575757 flex w-[55px]">
                       <RiChat4Fill className="pr-1" />
                       {v.comment_count}
+                    </span>
+                    <span className="text-575757 flex w-[55px]">
+                      <RiHeartFill className="pr-1" />
+                      {v.likes}
                     </span>
                     <div className="dropdown dropdown-right dropdown-end">
                       <div
@@ -218,13 +214,13 @@ export default function MainContent() {
               </div>
               <Link
                 className="ml-6 w-[100px] pc:w-[150px] flex items-center justify-end flex-shrink-0 cursor-pointer"
-                onClick={() => handlePush(v.post_id)}
+                // onClick={() => handlePush(v.post_id)}
                 href={`/community/main-post?postId=${v.post_id}`}
               >
                 {v.image_url && (
                   <Image
                     className="size-[100px] object-cover rounded-xl"
-                    src={`${API_SERVER}/${v.image_url}`}
+                    src={`${SN_COMMUNITY}/${v.image_url}`}
                     alt="上傳的圖片無法顯示"
                     width={100}
                     height={100}

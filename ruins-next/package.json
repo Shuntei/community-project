@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-spring/web": "^9.7.3",
+    "@googlemaps/js-api-loader": "^1.16.6",
     "@react-three/a11y": "^3.0.0",
     "@react-three/drei": "^9.0.1",
     "@react-three/fiber": "^8.16.1",
@@ -24,6 +25,7 @@
     "framer-motion": "^11.1.5",
     "html2canvas": "^1.4.1",
     "lamina": "^1.1.23",
+    "jsonwebtoken": "^9.0.2",
     "leva": "^0.9.35",
     "lodash": "^4.17.21",
     "lodash.debounce": "^4.0.8",

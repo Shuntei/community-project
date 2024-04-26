@@ -1,7 +1,7 @@
-import Navbar from "@/components/linda/navbar/navbar";
-import HomeContent from "@/components/linda/homeContent/homeContent";
-import Footer from "@/components/linda/footer/footer";
-import Head from "next/head";
+import Navbar from '@/components/linda/navbar/navbar'
+import HomeContent from '@/components/linda/homeContent/homeContent'
+import Footer from '@/components/linda/footer/footer'
+import Head from 'next/head'
 
 export default function Home() {
   return (
@@ -12,9 +12,9 @@ export default function Home() {
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
       </Head>
-      <Navbar/>
+      <Navbar />
       <HomeContent />
       <Footer />
     </>
-  );
+  )
 }
