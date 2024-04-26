@@ -57,9 +57,10 @@ export default function MainPost() {
   const isPostAuth = async (postId) => {
     const r = await fetch(`${SN_USER_INFO_POST}?postId=${postId}`)
     const result = await r.json()
-    // console.log(result)
+    console.log(result)
 
     // 圖片處理區
+
     const profilePicUrl = result[0].profile_pic_url
     const googleId = result[0].google_id
     googleId

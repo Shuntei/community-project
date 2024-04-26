@@ -16,7 +16,7 @@ export default function InfoMobile() {
           ABOUT ME
           <RiAddLine />
         </div>
-        <div className="border-b-2 w-[200px] ml-10 mr-5"></div>
+        <div className="border-b-2 w-[50%] ml-10"></div>
         <div className=" pl-10 pr-5 text-white py-3 ">{auth.aboutMe}</div>
         <div className=" pl-10 pr-5 text-white pb-3 flex gap-x-3">
           <Link href={auth.ytLink ? auth.ytLink : ''}>

@@ -33,42 +33,42 @@ export default function BoardsContextProvider({ children }) {
     }
   }
 
-  const handlePostId = async (postId) => {
-    try {
-      const r = await fetch(`${SN_POSTS}?postId=${postId}`)
-      //   const r = await fetch(`${SN_POSTS}/${postId}`);
-      const data = await r.json()
-      setGetPost(data)
-      // 純前端寫法(無紀錄儲存,僅狀態變更)
-      // const existingViewCounter = viewsCounter.find((v) => v.postId === postId)
+  // const handlePostId = async (postId) => {
+  //   try {
+  //     const r = await fetch(`${SN_POSTS}?postId=${postId}`)
+  //     //   const r = await fetch(`${SN_POSTS}/${postId}`);
+  //     const data = await r.json()
+  //     setGetPost(data)
+  //     // 純前端寫法(無紀錄儲存,僅狀態變更)
+  //     // const existingViewCounter = viewsCounter.find((v) => v.postId === postId)
 
-      // if (existingViewCounter) {
-      //   const updatedViewsCounter = viewsCounter.map((v) => {
-      //     if (v.postId === postId) {
-      //       return { ...v, count: v.count + 1 }
-      //     }
-      //     return v
-      //   })
-      //   setViewsCounter(updatedViewsCounter)
-      // } else {
-      //   // 如果 postId 不存在，則新增一個新的物件
-      //   const updatedViewsCounter = [
-      //     ...viewsCounter,
-      //     { postId: postId, count: 1 },
-      //   ]
-      //   setViewsCounter(updatedViewsCounter)
-      // }
-    } catch (err) {
-      console.log(err)
-    }
+  //     // if (existingViewCounter) {
+  //     //   const updatedViewsCounter = viewsCounter.map((v) => {
+  //     //     if (v.postId === postId) {
+  //     //       return { ...v, count: v.count + 1 }
+  //     //     }
+  //     //     return v
+  //     //   })
+  //     //   setViewsCounter(updatedViewsCounter)
+  //     // } else {
+  //     //   // 如果 postId 不存在，則新增一個新的物件
+  //     //   const updatedViewsCounter = [
+  //     //     ...viewsCounter,
+  //     //     { postId: postId, count: 1 },
+  //     //   ]
+  //     //   setViewsCounter(updatedViewsCounter)
+  //     // }
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
 
-    try {
-      const r = await fetch(`${SN_POST_VIEWS}/${postId}`)
-      await r.json()
-    } catch (err) {
-      console.log(err)
-    }
-  }
+  //   try {
+  //     const r = await fetch(`${SN_POST_VIEWS}/${postId}`)
+  //     await r.json()
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
   return (
     <BoardsContext.Provider
@@ -82,7 +82,7 @@ export default function BoardsContextProvider({ children }) {
         postsShow,
         getPost,
         setGetPost,
-        handlePostId,
+        // handlePostId,
         render,
         setRender,
         viewsCounter,

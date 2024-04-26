@@ -6,16 +6,19 @@ import CentralPersonal from './central-personal'
 import Navbar from '@/components/linda/navbar/navbar'
 import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/router'
+import Loader from '@/components/linda/loader/loader'
 
 export default function MainPersonal() {
   const { auth } = useAuth()
   const router = useRouter()
 
-  // useEffect(() => {
-  //   if (!auth.id) {
-  //     router.back()
-  //   }
-  // }, [auth, router])
+  useEffect(() => {
+    setTimeout(() => {
+      if (!auth.id) {
+        router.back()
+      }
+    }, 1000)
+  }, [auth, router])
 
   return (
     <>
@@ -28,18 +31,18 @@ export default function MainPersonal() {
           <CentralPersonal />
         </div>
       ) : (
-        <div className="flex justify-center items-center mt-[300px]">
-          {' '}
-          <div className="flex-col text-center">
-            <h1 className="text-white">返回上一頁</h1>
-            <div>
-              <span className="loading loading-ring loading-lg bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400"></span>
-              <span className="loading loading-ring loading-lg bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400"></span>
-              <span className="loading loading-ring loading-lg bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400"></span>
-              <span className="loading loading-ring loading-lg bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400"></span>
-            </div>
-          </div>
-        </div>
+        // <div className="flex justify-center items-center mt-[300px]">
+        //   <div className="flex-col text-center">
+        //     <h1 className="text-white">載入中</h1>
+        //     <div>
+        //       <span className="loading loading-ring loading-lg bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400"></span>
+        //       <span className="loading loading-ring loading-lg bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400"></span>
+        //       <span className="loading loading-ring loading-lg bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400"></span>
+        //       <span className="loading loading-ring loading-lg bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400"></span>
+        //     </div>
+        //   </div>
+        // </div>
+        <Loader />
       )}
     </>
   )
