@@ -153,6 +153,21 @@ router.get("/api/relatedProducts", async (req, res) => {
   res.json({ success: true, rows });
 });
 
+// 相關商品區：取得 全部商品 row.sub_category
+router.get("/api/allProducts", async (req, res) => {
+  const sub_category = +req.query.sub_category || 2;
+  const pid = +req.query.pid || 1;
+  const sql =
+    "SELECT * FROM `ca_products` ";
+
+  const [rows] = await db.query(sql, [sub_category, pid]);
+  if (!rows.length) {
+    return res.json({ success: false });
+  }
+
+  res.json({ success: true, rows });
+});
+
 // 取得全部歷史訂單
 router.get("/api/getAllPo/:mid", async (req, res) => {
   let output = {

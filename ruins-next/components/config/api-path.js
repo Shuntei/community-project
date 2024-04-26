@@ -41,6 +41,10 @@ export const PRODUCT_COMMENT_ADD = `${API_SERVER}/product/product-comment`
 // 相關商品10筆
 export const PRODUCT_RELATED = `${API_SERVER}/product/api/relatedProducts`
 
+
+// 所有產品
+export const PRODUCT_ALL = `${API_SERVER}/product/api/allProducts`
+
 // 購物車 - 取得會員資料
 export const CART_MEMBER_INFO = `${API_SERVER}/cart/member-info`
 
