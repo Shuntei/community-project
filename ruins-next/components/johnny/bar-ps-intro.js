@@ -11,6 +11,15 @@ import Link from 'next/link'
 export default function InfoBar() {
   const { auth } = useAuth()
 
+  const fetchAllFollows = () => {
+    fetch(`${SN_USER_INFO}`)
+      .then((r) => r.json())
+      .then((result) => {
+        console.log(result)
+        // setUserinfo(result)
+      })
+  }
+
   return (
     <>
       <section className="fixed mt-[40px] hidden bargone:block w-[300px] h-[600px] overflow-scroll pb-20 rounded-b-3xl z-[998] bg-292929">
