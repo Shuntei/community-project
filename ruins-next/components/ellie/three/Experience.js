@@ -5,20 +5,16 @@ import { Cylinder } from '@react-three/drei';
 import GirlController  from '../character/GirlController';
 import { useFrame } from '@react-three/fiber';
 import Ball from './ball';
-// import Box1 from './box';
+import { LayerMaterial, Depth, Noise } from "lamina";
+import * as THREE from 'three';
+
 
 export default function Experience() {
   const [hover, setHover ] = useState(false);
-  // const [state, setState] = useState({
-  //   controls: {
-  //     left: false,
-  //     right: false,
-  //   },
-  // });
   const cube = useRef();
-  const jump = () => {
-    cube.current.applyImpulse({ x:-5, y:2 , z:0 });
-  };
+  // const jump = () => {
+  //   cube.current.applyImpulse({ x:-5, y:2 , z:0 });
+  // };
 
   // const jumpPressed = useKeyboardControls((state) => state[Controls.jump]);
 
@@ -36,8 +32,6 @@ export default function Experience() {
   //   // 例如：設置事件監聽器，初始化動畫，等等
   // }, []);
   
-    cube.current.applyImpulse({ x: 0, y: 7, z: 0 })
-  }
 
   return (
     <>
@@ -48,8 +42,8 @@ export default function Experience() {
       <directionalLight position={[5,5,5]} intensity={0.8} castShadow color={"#9e69da"}/>
       {/* STAGE */}
       <RigidBody colliders={false} type="fixed" position-y={1}>
-        <CylinderCollider args={[0.5, 20]}/>
-        <Cylinder scale={[20,0.5,20]} receiveShadow>
+        <CylinderCollider args={[0.5, 30]}/>
+        <Cylinder scale={[30,0.5,30]} receiveShadow>
           <meshStandardMaterial color="white"/>
         </Cylinder>
       </RigidBody>
@@ -57,14 +51,16 @@ export default function Experience() {
         <Box 
           onPointerEnter={() => setHover(true)}
           onPointerLeave={() => setHover(false)}
-          onClick={jump}
+          // onClick={jump}
           >
           <meshStandardMaterial color={hover ? 'hotpink' : 'royalblue'} />
           </Box>
       </RigidBody>
       <Ball/>
       {/* <GirlController onPointerEnter={() => setHover(true)}/> */}
+      {/* <Background/> */}
     </group>
+   
     </>
   )
 }
