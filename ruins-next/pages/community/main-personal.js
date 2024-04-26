@@ -11,11 +11,11 @@ export default function MainPersonal() {
   const { auth } = useAuth()
   const router = useRouter()
 
-  useEffect(() => {
-    if (!auth.id) {
-      router.back()
-    }
-  }, [auth, router])
+  // useEffect(() => {
+  //   if (!auth.id) {
+  //     router.back()
+  //   }
+  // }, [auth, router])
 
   return (
     <>
