@@ -119,7 +119,7 @@ export default function MyOrder() {
                                 query: { poid: v.purchase_order_id },
                               },
                               undefined,
-                              { scroll: false }
+                              { scroll: true }
                             )
                           }}
                         >

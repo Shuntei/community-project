@@ -7,14 +7,14 @@ import home2 from '@/public/images/home2.jpg'
 import home3 from '@/public/images/home3.jpg'
 import arrowPng from '@/public/images/arrow.png'
 import product1 from '@/public/images/product1.jpeg'
-import { PRODUCT_RELATED } from '@/components/config/api-path'
+import { PRODUCT_ALL } from '@/components/config/api-path'
 import { useRouter } from 'next/router'
 export default function HomeContent() {
   const router = useRouter()
 
   const [products, setProducts] = useState()
   const getProducts = async () => {
-    const url = `${PRODUCT_RELATED}${location.search}`
+    const url = `${PRODUCT_ALL}${location.search}`
     try {
       const res = await fetch(url)
       const data = await res.json()
@@ -28,6 +28,21 @@ export default function HomeContent() {
   useEffect(() => {
     getProducts()
   }, [router])
+  useEffect(() => {
+    const container = document.querySelector(`.${styles['containerP']}`);
+  
+    const slide = () => {
+      container.scrollLeft += 0.5; // 控制滑动速度
+      if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
+        container.scrollLeft = 0;
+      }
+    };
+  
+    const sliderInterval = setInterval(slide, 20); // 调整滑动间隔
+  
+    return () => clearInterval(sliderInterval);
+  }, []);
+  
   return (
     <>
       <div
@@ -109,7 +124,7 @@ export default function HomeContent() {
             <div className={styles.ps5}></div>
             <p className={styles['cards-container-title']}>RECENTLY ADDED</p>
             <div className="flex w-full justify-between  md:px-24 px-4 py-5 flex-col space-y-5">
-              <div className={`flex md:gap-10 gap-5 ${styles['containerP']}`} >
+              <div className={`flex md:gap-10 gap-5 ${styles['containerP']} `} >
                 {products &&
                   products.rows.map((v, i) => {
                     return (
