@@ -9,10 +9,58 @@ import arrowPng from '@/public/images/arrow.png'
 import product1 from '@/public/images/product1.jpeg'
 import { PRODUCT_ALL } from '@/components/config/api-path'
 import { useRouter } from 'next/router'
+import { FaArrowLeftLong } from 'react-icons/fa6'
+import { FaArrowRightLong } from 'react-icons/fa6'
+import EmblaCarousel from '../emblaCarousel/EmblaCarousel'
+
 export default function HomeContent() {
   const router = useRouter()
 
   const [products, setProducts] = useState()
+  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const OPTIONS = { loop: true }
+  const SLIDE_COUNT = 5
+  const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
+  const slides = [
+    {
+      name: 'Title1',
+      image: 'https://i.ibb.co/qCkd9jS/img1.jpg',
+      description:
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+    },
+    {
+      name: 'Title2',
+      image: 'https://i.ibb.co/jrRb11q/img2.jpg',
+      description:
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+    },
+    {
+      name: 'Title3',
+      image: 'https://i.ibb.co/NSwVv8D/img3.jpg',
+      description:
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+    },
+    {
+      name: 'Title4',
+      image: 'https://i.ibb.co/Bq4Q0M8/img4.jpg',
+      description:
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+    },
+    {
+      name: 'Title5',
+      image: 'https://i.ibb.co/jTQfmTq/img5.jpg',
+      description:
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+    },
+    {
+      name: 'Title6',
+      image: 'https://i.ibb.co/RNkk6L0/img6.jpg',
+      description:
+        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+    },
+  ]
+
   const getProducts = async () => {
     const url = `${PRODUCT_ALL}${location.search}`
     try {
@@ -28,23 +76,54 @@ export default function HomeContent() {
   useEffect(() => {
     getProducts()
   }, [router])
+
   useEffect(() => {
-    const container = document.querySelector(`.${styles['containerP']}`);
-  
+    const container = document.querySelector(`.${styles['containerP']}`)
+
     const slide = () => {
-      container.scrollLeft += 0.5; // 控制滑动速度
-      if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
-        container.scrollLeft = 0;
+      container.scrollLeft += 0.5 // 控制滑动速度
+      if (
+        container.scrollLeft >=
+        container.scrollWidth - container.clientWidth
+      ) {
+        container.scrollLeft = 0
       }
-    };
-  
-    const sliderInterval = setInterval(slide, 20); // 调整滑动间隔
-  
-    return () => clearInterval(sliderInterval);
-  }, []);
-  
+    }
+
+    const sliderInterval = setInterval(slide, 20) // 调整滑动间隔
+
+    return () => {
+      clearInterval(sliderInterval)
+    }
+  }, [])
+
+  useEffect(() => {
+    const card1 = document.querySelector(`.${styles['card1']}`);
+
+    card1.classList.remove('animate');
+    void card1.offsetWidth; // Trigger reflow to restart the animation
+    card1.classList.add('animate');
+  }, [currentIndex])
+
   return (
     <>
+      {/* ------- Section One Start ---------- */}
+      <EmblaCarousel
+          setCurrentIndex={setCurrentIndex}
+          currentIndex={currentIndex}
+          className="absolute left-1/2 top-1/3"
+          slides={slides}
+          options={OPTIONS}
+        />
+      <div
+        style={{
+          backgroundImage: currentIndex > 0 ? `url(${slides[currentIndex - 1].image})` : `url(${slides[slides.length - 1].image})`,
+          width: '100%',
+        }}
+        className={`z-[-1] relative w-full h-lvh bg-cover brightness-50 ${styles['bg-transition']}`}
+      >
+      </div>
+      {/* ------- Section One End ---------- */}
       <div
         className={styles['homeSectionOne']}
         style={{
@@ -53,25 +132,7 @@ export default function HomeContent() {
         }}
       >
         {/* card start */}
-        <div className={`${styles['card1']}`}>
-          <div className={styles['card-info']}>
-            <span className={styles['title']}>NEW POST!</span>
-            <span className="font-medium md:text-[24px]">
-              Something <br />
-              Special For
-              <br />
-              Compulsive Hoarder:
-              <br />
-              Whimsical Pet
-            </span>
-          </div>
-          <button
-            className={`${styles['card-button']} cursor-pointer hover:bg-[#7A7A7A]`}
-          >
-            READ NOW
-          </button>
-        </div>
-        {/* card end  */}
+        
       </div>
       <div
         className={styles.homeSectionTwo}
@@ -124,7 +185,7 @@ export default function HomeContent() {
             <div className={styles.ps5}></div>
             <p className={styles['cards-container-title']}>RECENTLY ADDED</p>
             <div className="flex w-full justify-between  md:px-24 px-4 py-5 flex-col space-y-5">
-              <div className={`flex md:gap-10 gap-5 ${styles['containerP']} `} >
+              <div className={`flex md:gap-10 gap-5 ${styles['containerP']} `}>
                 {products &&
                   products.rows.map((v, i) => {
                     return (

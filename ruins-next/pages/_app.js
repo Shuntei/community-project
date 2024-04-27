@@ -4,6 +4,8 @@ import TogglesContextProvider from '@/contexts/use-toggles'
 import { AuthContextProvider } from '@/contexts/auth-context'
 
 import '@/styles/globals.css'
+import '@/styles/sandbox.css'
+import '@/styles/embla.css'
 import { CartProvider } from '@/hooks/use-cart'
 
 import { createRoot } from 'react-dom/client'
