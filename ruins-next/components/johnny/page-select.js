@@ -60,7 +60,10 @@ export default function PageSelect({ bgColor = 'bg-black', optionsStyle }) {
               return
             } else {
               setToggles({ ...toggles, follows: false, notification: false })
-              router.push('./main-personal')
+              router.push({
+                pathname: './main-personal',
+                query: { ...router.query, psUserId: auth.id },
+              })
             }
           }}
         >

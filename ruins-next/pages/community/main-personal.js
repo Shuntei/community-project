@@ -1,7 +1,7 @@
 import FollowsBar from '@/components/johnny/bar-follows-notify'
 import InfoBar from '@/components/johnny/bar-ps-intro'
 import PageSelect from '@/components/johnny/page-select'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import CentralPersonal from './central-personal'
 import Navbar from '@/components/linda/navbar/navbar'
 import { useAuth } from '@/contexts/auth-context'
@@ -12,17 +12,20 @@ export default function MainPersonal() {
   const { auth } = useAuth()
   const router = useRouter()
 
+  // console.log('psUserId', router.query.psUserId)
+  const psUserId = router.query.psUserId
   useEffect(() => {
+    if (!router.isReady) return
     setTimeout(() => {
-      if (!auth.id) {
+      if (!psUserId) {
         router.back()
       }
     }, 1000)
-  }, [auth, router])
+  }, [psUserId, router])
 
   return (
     <>
-      {auth.id ? (
+      {psUserId ? (
         <div className=" h-screen">
           <Navbar className="bg-gradient-to-b from-black to-gray-800" />
           <PageSelect />

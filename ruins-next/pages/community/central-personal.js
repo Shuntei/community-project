@@ -10,7 +10,6 @@ import SeeMoreNotification from '@/components/johnny/seemore-notification'
 import { useToggles } from '@/contexts/use-toggles'
 import PersonalContent from '@/components/johnny/content-list-ps'
 import InfoMobile from '@/components/johnny/ps-mobile-intro'
-import { SN_PSPOSTS } from '@/components/config/johnny-api-path'
 
 export default function CentralContentP() {
   const { postModal, setPostModal, toggles, removeBox, setRemoveBox } =
