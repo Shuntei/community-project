@@ -12,16 +12,13 @@ export default function FollowsBar() {
   const { toggles, setToggles } = useToggles()
   const [userInfo, setUserinfo] = useState('')
   const [keyword, setKeyword] = useState('')
-  const router = useRouter()
-  const query = { ...router.query, followsKeyword: keyword }
-  const queryString = new URLSearchParams(query).toString()
+
   // console.log(query)
   // console.log(queryString)
   const fetchAllFollows = () => {
     fetch(`${SN_USER_INFO}`)
       .then((r) => r.json())
       .then((result) => {
-        // console.log(result)
         setUserinfo(result)
       })
   }
@@ -31,9 +28,14 @@ export default function FollowsBar() {
     fetchAllFollows()
   })
 
+  const router = useRouter()
+  const query = { ...router.query, followsKeyword: keyword }
+  const queryString = new URLSearchParams(query).toString()
+
   const submitHandler = (e) => {
     e.preventDefault()
-    router.push({ pathname: '/community/main-page', query: queryString })
+    // router.push({ pathname: '/community/main-page', query: queryString })
+    // 這行寫了在personal會有問題,因為跳回main-page
 
     fetch(`${SN_USER_INFO}?${queryString}`)
       .then((r) => r.json())
@@ -70,7 +72,25 @@ export default function FollowsBar() {
             {userInfo &&
               userInfo.map((v, i) => {
                 return (
-                  <li key={v.id} className="text-white py-2 flex items-center">
+                  <li
+                    key={v.id}
+                    className="text-white py-2 flex items-center cursor-pointer"
+                    onClick={() => {
+                      console.log(v.id)
+                      router.push({
+                        pathname: '/community/main-personal',
+                        query: { ...router.query, psUserId: v.id },
+                      })
+                      //先確定v.id傳出後再關閉follows,免得先關了卻沒傳出會無法變更
+                      setTimeout(() => {
+                        setToggles({
+                          ...toggles,
+                          notification: false,
+                          follows: false,
+                        })
+                      }, 10)
+                    }}
+                  >
                     <img
                       className="w-[35px] h-[35px] object-cover overflow-hidden rounded-full mr-5 bg-zinc-300"
                       src={

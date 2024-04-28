@@ -10,7 +10,7 @@ import {
   RiHeartFill,
 } from '@remixicon/react'
 import Image from 'next/image'
-import img from './img/1868140_screenshots_20240115034222_1.jpg'
+// import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
@@ -29,9 +29,10 @@ export default function PersonalContent() {
   const [toggleMenu, setToggleMenu] = useState(false)
   const [psPosts, setPsPosts] = useState('')
   const { auth } = useAuth()
-  // console.log('me,right?', auth.id)
+  // console.log('my id:', auth.id)
 
-  const query = { ...router.query, psUserId: auth.id }
+  const psUserId = router.query.psUserId
+  const query = { ...router.query, psUserId: psUserId }
   const queryString = new URLSearchParams(query).toString()
   // console.log(queryString)
   // console.log(location.search) undefined
@@ -108,7 +109,7 @@ export default function PersonalContent() {
       allPsPostsShow()
       setRender(false)
     }
-  }, [router.query.page, router.isReady, router.query.psUserId, render])
+  }, [router.query.page, router.isReady, psUserId, render])
 
   // useEffect(() => {
   //   // 首次渲染及調用render都會執行
