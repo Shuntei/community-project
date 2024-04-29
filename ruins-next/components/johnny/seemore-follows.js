@@ -37,7 +37,7 @@ export default function SeeMoreFollows({ marginTop = `mt-5` }) {
 
     // router.push({ pathname: '/community/main-page', query: queryString })
     // 這行寫了在personal會有問題,因為跳回main-page
-
+    
     fetch(`${SN_USER_INFO}?${queryString}`)
       .then((r) => r.json())
       .then((result) => {

@@ -79,9 +79,9 @@ export default function Profile() {
             <Image
               src={
                 userInfo?.profile_pic_url
-                  ? (userInfo.google_photo
-                    ? userInfo.profile_pic_url
-                    : `${IMG_SERVER}/${userInfo.profile_pic_url}`)
+                  ? (userInfo?.google_photo
+                    ? userInfo?.profile_pic_url
+                    : `${IMG_SERVER}/${userInfo?.profile_pic_url}`)
                   : ''
               }
               // src={img}
