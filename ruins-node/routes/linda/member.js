@@ -845,7 +845,8 @@ router.get("/get-notifications/:id", async (req, res) => {
                       FROM mb_notifications n
                       JOIN mb_user ON n.sender_id = mb_user.id
                       WHERE user_id = ?
-                      AND DATE(n.created_at) = CURDATE()`;
+                      AND DATE(n.created_at) = CURDATE()
+                      ORDER BY created_at DESC`;
     const lastWeekSql = `SELECT n.*,
                         mb_user.username,
                         mb_user.profile_pic_url,
@@ -854,7 +855,8 @@ router.get("/get-notifications/:id", async (req, res) => {
                         JOIN mb_user ON n.sender_id = mb_user.id
                         WHERE user_id = ? 
                         AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-                        AND DATE(n.created_at) < CURDATE()`;
+                        AND DATE(n.created_at) < CURDATE()
+                        ORDER BY created_at DESC`;
     const lastMonth = `SELECT n.*,
                       mb_user.username,
                       mb_user.profile_pic_url,
@@ -863,8 +865,8 @@ router.get("/get-notifications/:id", async (req, res) => {
                       JOIN mb_user ON n.sender_id = mb_user.id
                       WHERE user_id = ? 
                       AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-                      AND DATE(n.created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`;
-
+                      AND DATE(n.created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                      ORDER BY created_at DESC`;
     const [todayRows] = await db.query(todaySql, id);
     const [lastWeekRows] = await db.query(lastWeekSql, id);
     const [lastMonthRows] = await db.query(lastMonth, id)
@@ -891,10 +893,14 @@ router.get("/get-tour-info",  async (req, res) => {
   try {
     const sql = `SELECT * FROM tony_tour_post p 
                 JOIN tony_tour_images i ON p.tour_id = i.tour_id 
-                WHERE 1 LIMIT 6`;
-                
+                WHERE 1 
+                ORDER BY p.tour_id DESC
+                LIMIT 6`;
+    const [rows] = await db.query(sql)
+    return res.json({success: true, data: rows})
   } catch (error) {
     console.log("Error getting tour info:", error);
+    return res.json({success: false, message: "Error getting tour info"})
   }
 })
 

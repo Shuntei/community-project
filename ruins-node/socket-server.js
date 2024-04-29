@@ -122,6 +122,6 @@ io.on('connection', socket => {
   socket.on('disconnecting', handleDisconnect)
 })
 
-server.listen(3030, () => {
+server.listen(3001, () => {
   console.log(`正在連線伺服器 ${port}`)
 })

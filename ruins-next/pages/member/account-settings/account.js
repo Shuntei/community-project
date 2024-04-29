@@ -312,9 +312,11 @@ export default function Account() {
                 width={110}
                 height={110}
                 src={
-                  avatarPreview || auth.googlePhoto
-                    ? auth.profileUrl
-                    : `${IMG_SERVER}/${auth.profileUrl}`
+                  avatarPreview
+                    ? avatarPreview
+                    : auth.googlePhoto
+                      ? auth.profileUrl
+                      : `${IMG_SERVER}/${auth.profileUrl}`
                 }
                 onMouseEnter={() => {
                   setIsHovered(true)

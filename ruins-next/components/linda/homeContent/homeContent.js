@@ -7,7 +7,7 @@ import home2 from '@/public/images/home2.jpg'
 import home3 from '@/public/images/home3.jpg'
 import arrowPng from '@/public/images/arrow.png'
 import product1 from '@/public/images/product1.jpeg'
-import { PRODUCT_ALL } from '@/components/config/api-path'
+import { PRODUCT_ALL, MB_GET_TOUR_INFO } from '@/components/config/api-path'
 import { useRouter } from 'next/router'
 import { FaArrowLeftLong } from 'react-icons/fa6'
 import { FaArrowRightLong } from 'react-icons/fa6'
@@ -18,51 +18,57 @@ export default function HomeContent() {
 
   const [products, setProducts] = useState()
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [slides, setSlides] = useState([])
 
   const OPTIONS = { loop: true }
-  const SLIDE_COUNT = 5
-  const SLIDES = Array.from(Array(SLIDE_COUNT).keys())
-  const slides = [
-    {
-      name: 'Title1',
-      image: 'https://source.unsplash.com/23fk429Ayok',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-    },
-    {
-      name: 'Title2',
-      image: 'https://source.unsplash.com/GSCtoEEqntQ',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-    },
-    {
-      name: 'Title3',
-      image: 'https://source.unsplash.com/F1VKXkx17RM',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-    },
-    {
-      name: 'Title4',
-      image: 'https://source.unsplash.com/t0DRQNoRuSw',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-    },
-    {
-      name: 'Title5',
-      image: 'https://source.unsplash.com/B2Eiil2Y0lo',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-    },
-    {
-      name: 'Title6',
-      image: 'https://source.unsplash.com/k5lSVBfhPm8',
-      description:
-        'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-    },
-  ]
+  // const slides = [
+  //   {
+  //     name: 'Title1',
+  //     image: 'https://source.unsplash.com/23fk429Ayok',
+  //     description:
+  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+  //   },
+  //   {
+  //     name: 'Title2',
+  //     image: 'https://source.unsplash.com/GSCtoEEqntQ',
+  //     description:
+  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+  //   },
+  //   {
+  //     name: 'Title3',
+  //     image: 'https://source.unsplash.com/F1VKXkx17RM',
+  //     description:
+  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+  //   },
+  //   {
+  //     name: 'Title4',
+  //     image: 'https://source.unsplash.com/t0DRQNoRuSw',
+  //     description:
+  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+  //   },
+  //   {
+  //     name: 'Title5',
+  //     image: 'https://source.unsplash.com/B2Eiil2Y0lo',
+  //     description:
+  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+  //   },
+  //   {
+  //     name: 'Title6',
+  //     image: 'https://source.unsplash.com/k5lSVBfhPm8',
+  //     description:
+  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
+  //   },
+  // ]
 
   const getTourInfo = async () => {
-    
+    try {
+      const r = await fetch(MB_GET_TOUR_INFO)
+      const result = await r.json()
+      console.log(result.data);
+      setSlides(result.data)
+    } catch (error) {
+      console.log("Failed to fetch tour info:", error);
+    }
   }
   // tour post join tour images 
 
@@ -80,6 +86,7 @@ export default function HomeContent() {
   }
   useEffect(() => {
     getProducts()
+    getTourInfo()
   }, [router])
 
   useEffect(() => {
@@ -116,7 +123,7 @@ export default function HomeContent() {
         />
       <div
         style={{
-          backgroundImage: currentIndex > 0 ? `url(${slides[currentIndex - 1].image})` : `url(${slides[slides.length - 1].image})`,
+          backgroundImage: currentIndex > 0 ? `url('/images/borou/${slides[currentIndex - 1]?.image_url}.jpg')` : `url('/images/borou/${slides[slides.length - 1]?.image_url}.jpg')`,
           width: '100%',
         }}
         className={`z-[-1] relative w-full h-lvh bg-center bg-cover brightness-50 ${styles['bg-transition']}`}
