@@ -5,6 +5,7 @@ import profile2 from "@/public/images/profile2.jpg";
 import AccountLayout from "@/components/linda/accountLayout";
 import { useAuth } from "@/contexts/auth-context";
 import { MB_GET_NOTIFICATIONS } from "@/components/config/api-path";
+import { IMG_SERVER } from "@/components/config/api-path";
 
 export default function Notifications() {
   const {auth} = useAuth()
@@ -23,6 +24,16 @@ export default function Notifications() {
       console.log("Error fetching notification info:", error);
     }
   }
+
+  const calculateTime = (timestamp) => {
+    const currentTime = new Date();
+    const notificationTime = new Date(timestamp)
+    const difference = currentTime - notificationTime
+    const hoursDifference = Math.floor(difference / (1000 * 60 * 60))
+    return `${hoursDifference}h`
+  }
+
+  console.log(today);
 
   const markAsRead = async ()=>{
 
@@ -44,24 +55,11 @@ export default function Notifications() {
                 <Notification
                 key={i}
                   name={v.username}
-                  src={v.profile_pic_url}
-                  text={"Going live in 1 hour!"}
-                  hour={"2h"}
+                  src={v.google_photo ? v.profile_pic_url : `${IMG_SERVER}/${v.profile_pic_url}`}
+                  text={'Left a comment on your post!'}
+                  hour={calculateTime(v.created_at)}
                 />
                 ))}
-                <Notification
-                  name={"celinelin"}
-                  src={profile2}
-                  text={"Edited the travel info. Go check it out!"}
-                  hour={"4h"}
-                />
-                <Notification
-                  name={"joseph1209"}
-                  src={profile1}
-                  text={"Mentioned you in"}
-                  highlight={" 1203 travel."}
-                  hour={"16h"}
-                />
                 <div className="py-[12px]">Last 7 days</div>
                 <Notification
                   name={"albert"}
