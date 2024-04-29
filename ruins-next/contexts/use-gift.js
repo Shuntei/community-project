@@ -4,10 +4,12 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import usePoint from './use-points';
 import useToggle from './use-toggle-show';
+import { useAuth } from './auth-context';
 
 const GiftContext = createContext(null)
 
 export function GiftContextProvider({ children }) {
+  const { auth } = useAuth()
   const { roomCode } = useToggle()
   const { pts, myPoints } = usePoint()
   const giftList = [
@@ -116,7 +118,7 @@ export function GiftContextProvider({ children }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          name: "Noah",
+          name: auth.username,
           gift: name,
           point: price
         })
@@ -133,7 +135,7 @@ export function GiftContextProvider({ children }) {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userId: 1,
+          userId: auth.id,
           points: price,
           source: name,
         }),
