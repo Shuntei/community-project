@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import 'tailwindcss/tailwind.css'
 import { RiSettings3Fill, RiEqualizerLine, RiAddLine } from '@remixicon/react'
 import PostModal from '@/components/johnny/modal-post'

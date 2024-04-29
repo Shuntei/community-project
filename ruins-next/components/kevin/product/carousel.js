@@ -44,10 +44,10 @@ const Carousel = () => {
           }
           style={{ backgroundImage: `url(${slide.image})` }}
         >
-          <div className={styles.content}>
+          {/* <div className={styles.content}>
             <h3>{slide.title}</h3>
             <p>{slide.description}</p>
-          </div>
+          </div> */}
         </div>
       ))}
     </div>

@@ -9,25 +9,30 @@ import { useRouter } from 'next/router'
 import CentralContentP from './central-personal'
 
 export default function EditLayout({ children }) {
-  const { editModal } = useToggles()
+  const { editModal, setEditModal } = useToggles()
   const router = useRouter()
   // console.log(editModal)
+  console.log(router)
 
+  console.log('test', router.query.test)
   // 編輯途中重整導回個人頁
   useEffect(() => {
     if (!editModal) {
       router.push(`/community/main-personal`)
     }
   }, [editModal])
+  // useEffect(() => {
+  //   setEditModal(true)
+  // }, [])
 
   return (
     <>
-      <div className="bg-black h-screen">
-        <Navbar className=" bg-black" />
+      <div className="h-screen">
+        <Navbar className="bg-gradient-to-b from-black to-gray-800" />
         <PageSelect />
         <InfoBar />
         <FollowsBar />
-        <CentralContentP />
+        {/* <CentralContentP /> */}
         {editModal && <>{children}</>}
       </div>
     </>

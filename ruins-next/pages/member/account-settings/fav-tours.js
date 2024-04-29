@@ -1,6 +1,7 @@
 import React from 'react'
 import AccountLayout from '@/components/linda/accountLayout'
 import Link from 'next/link'
+import { API_SERVER, TOUR_GET_FAVTOUR } from '@/components/config/api-path'
 
 export default function FavTours() {
   return (

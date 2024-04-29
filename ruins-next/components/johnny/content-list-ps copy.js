@@ -10,7 +10,7 @@ import {
   RiHeartFill,
 } from '@remixicon/react'
 import Image from 'next/image'
-// import img from './img/1868140_screenshots_20240115034222_1.jpg'
+import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
@@ -29,39 +29,31 @@ export default function PersonalContent() {
   const [toggleMenu, setToggleMenu] = useState(false)
   const [psPosts, setPsPosts] = useState('')
   const { auth } = useAuth()
-  // console.log('my id:', auth.id)
-
-  const psUserId = router.query.psUserId
-  const query = { ...router.query, psUserId: psUserId }
-  const queryString = new URLSearchParams(query).toString()
-  // console.log(queryString)
-  // console.log(location.search) undefined
+  console.log('me,right?', auth.id)
 
   const allPsPostsShow = async () => {
     // currentPage是?page=哪一頁
-    // const currentPage = location.search
-    router.push({ pathname: '/community/main-personal', query: queryString })
-
+    const currentPage = location.search
     try {
-      const r = await fetch(`${SN_PSPOSTS}?${queryString}`)
+      const r = await fetch(`${SN_PSPOSTS}${currentPage}&psUserId=${auth.id}`)
       const data = await r.json()
       setPsPosts(data)
-      console.log(data)
+      // console.log(data)
     } catch (err) {
       console.log(err)
     }
   }
 
-  // const handlePsPage = async (p) => {
-  //   try {
-  //     const r = await fetch(`${SN_PSPOSTS}?page=${p}&psUserId=${auth.id}`)
-  //     const data = await r.json()
-  //     setPsPosts(data)
-  //     // console.log(psPosts)
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
+  const handlePsPage = async (p) => {
+    try {
+      const r = await fetch(`${SN_PSPOSTS}?page=${p}&psUserId=${auth.id}`)
+      const data = await r.json()
+      setPsPosts(data)
+      // console.log(psPosts)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const removePost = async (postId) => {
     const MySwal = withReactContent(Swal)
@@ -104,25 +96,21 @@ export default function PersonalContent() {
   }
   useEffect(() => {
     if (router.isReady) {
-      // const currentPage = router.query.page
-      // handlePsPage(currentPage)
-      allPsPostsShow()
-      setRender(false)
+      const currentPage = router.query.page
+      handlePsPage(currentPage)
     }
-  }, [router.query.page, router.isReady, psUserId, render])
+  }, [router.query.page, router.isReady])
 
-  // useEffect(() => {
-  //   // 首次渲染及調用render都會執行
-  //   allPsPostsShow()
-  //   setRender(false)
-  // }, [render])
-  // // console.log(psPosts.totalPostsRows)
+  useEffect(() => {
+    // 首次渲染及調用render都會執行
+    allPsPostsShow()
+    setRender(false)
+  }, [render])
+  // console.log(psPosts.totalPostsRows)
 
   return (
     <>
-      {psPosts.totalPostsRows?.length === 0 ? (
-        <ul className=" flex justify-center text-xl"></ul>
-      ) : (
+      {psPosts && psPosts.totalPages && (
         <ul className="bg-neutral-300 flex justify-center text-xl py-2">
           <span
             className="border-s-2 px-3 py-3 flex items-center hover:hover1"
@@ -130,7 +118,7 @@ export default function PersonalContent() {
               router.push(
                 {
                   pathname: '/community/main-personal',
-                  query: { ...router.query, page: `${1}` },
+                  query: { page: `${1}` },
                 },
                 undefined,
                 { shallow: true }
@@ -154,7 +142,7 @@ export default function PersonalContent() {
                         router.push(
                           {
                             pathname: '/community/main-personal',
-                            query: { ...router.query, page: `${p}` },
+                            query: { page: `${p}` },
                           },
                           undefined,
                           { shallow: true }
@@ -175,7 +163,7 @@ export default function PersonalContent() {
               router.push(
                 {
                   pathname: '/community/main-personal',
-                  query: { ...router.query, page: `${psPosts.totalPages}` },
+                  query: { page: `${psPosts.totalPages}` },
                 },
                 undefined,
                 { shallow: true }
@@ -185,16 +173,6 @@ export default function PersonalContent() {
             <RiArrowRightDoubleLine />
           </span>
         </ul>
-      )}
-      {psPosts.totalPostsRows?.length === 0 ? (
-        <h1
-          className="flex bg-neutral-300 leading border-b-slate-500 justify-center 
-        text-[20px] font-semibold py-10 mb-10"
-        >
-          沒&nbsp;有&nbsp;任&nbsp;何&nbsp;貼&nbsp;文
-        </h1>
-      ) : (
-        ''
       )}
       {psPosts.totalPostsRows &&
         psPosts.totalPostsRows.map((v, i) => {
@@ -277,7 +255,7 @@ export default function PersonalContent() {
                               <li>
                                 <Link
                                   href={`/community/edit/${v.post_id}`}
-                                  onClick={() => setEditModal(true)}
+                                  // onClick={() => setEditModal(true)}
                                 >
                                   edit
                                 </Link>

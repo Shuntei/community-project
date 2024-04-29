@@ -34,8 +34,10 @@ export default function SeeMoreFollows({ marginTop = `mt-5` }) {
 
   const submitHandler = (e) => {
     e.preventDefault()
-    router.push({ pathname: '/community/main-page', query: queryString })
 
+    // router.push({ pathname: '/community/main-page', query: queryString })
+    // 這行寫了在personal會有問題,因為跳回main-page
+    
     fetch(`${SN_USER_INFO}?${queryString}`)
       .then((r) => r.json())
       .then((result) => {
@@ -50,12 +52,14 @@ export default function SeeMoreFollows({ marginTop = `mt-5` }) {
   return (
     <span ref={ref}>
       <div
-        className={`flex justify-end bg-neutral-300 ${marginTop} rounded-t-lg pt-5 px-5 cursor-pointer`}
-        onClick={() => {
-          setToggles({ ...toggles, follows: false })
-        }}
+        className={`flex justify-end bg-neutral-300 ${marginTop} rounded-t-lg pt-5 px-5 `}
       >
-        <RiCloseLine />
+        <RiCloseLine
+          className="cursor-pointer mt-5"
+          onClick={() => {
+            setToggles({ ...toggles, follows: false, notification: false })
+          }}
+        />
       </div>
       <div className="flex justify-center pb-5 px-10 mb-5 rounded-b-lg bg-neutral-300">
         <div className="flex-col items-center">
@@ -75,13 +79,28 @@ export default function SeeMoreFollows({ marginTop = `mt-5` }) {
             </button>
           </div>
           <div className="flex justify-center  gap-10">
-            <ul className="rounded-full flex flex-wrap justify-center pl-16">
+            <ul className="rounded-full flex flex-wrap pl-16">
               {userInfo &&
                 userInfo.map((v, i) => {
                   return (
                     <li
                       key={v.id}
-                      className="flex items-center py-2 w-[100%] sm:w-[50%] md:w-[33.3%]"
+                      className="flex items-center  py-2 w-[100%] sm:w-[50%] md:w-[33.3%] cursor-pointer"
+                      onClick={() => {
+                        // console.log(v.id)
+                        router.push({
+                          pathname: '/community/main-personal',
+                          query: { ...router.query, psUserId: v.id },
+                        })
+                        //先確定v.id傳出後再關閉follows,免得先關了卻沒傳出會無法變更
+                        setTimeout(() => {
+                          setToggles({
+                            ...toggles,
+                            notification: false,
+                            follows: false,
+                          })
+                        }, 10)
+                      }}
                     >
                       <img
                         className="size-[80px] object-cover rounded-full mr-3 bg-575757"

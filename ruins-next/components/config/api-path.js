@@ -25,6 +25,13 @@ export const MB_UPDATE_PASS = `${API_SERVER}/member/update-password`
 export const MB_SAVE_PREFERENCES = `${API_SERVER}/member/save-preferences`
 // get preference
 export const MB_GET_PREFERENCES = `${API_SERVER}/member/get-preferences`
+// get notification information
+export const MB_GET_NOTIFICATIONS = `${API_SERVER}/member/get-notifications`
+// mark notification as read
+export const MB_MARK_READ = `${API_SERVER}/member/mark-read`
+// create notifications
+export const MB_CREATE_NOTIFICATIONS = `${API_SERVER}/member/create-notifications`
+
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`
@@ -40,6 +47,10 @@ export const PRODUCT_COMMENT_ADD = `${API_SERVER}/product/product-comment`
 
 // 相關商品10筆
 export const PRODUCT_RELATED = `${API_SERVER}/product/api/relatedProducts`
+
+
+// 所有產品
+export const PRODUCT_ALL = `${API_SERVER}/product/api/allProducts`
 
 // 購物車 - 取得會員資料
 export const CART_MEMBER_INFO = `${API_SERVER}/cart/member-info`
@@ -73,5 +84,9 @@ export const TOUR_LIST = `${API_SERVER}/tour/api`
 
 // 揪團貼文單筆
 export const TOUR_POST = `${API_SERVER}/tour/api/getPost`
-// get post information
+
+// 個人揪團管理
 export const TOUR_GET_POST = `${API_SERVER}/tour/api/get-post`
+
+// 收藏行程管理
+export const TOUR_GET_FAVTOUR = `${API_SERVER}/tour/api/favtour`

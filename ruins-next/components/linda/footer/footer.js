@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./footer.module.css";
 import { FaDiscord } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
@@ -6,10 +6,54 @@ import { FaFacebook } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
 import { FaYoutube } from "react-icons/fa";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useAuth } from "@/contexts/auth-context";
+import NotifyRed from "../notify/notify-red";
 
 export default function Footer() {
+  const [email, setEmail] = useState('')
+  const [showNotification, setShowNotification] = useState(false)
+  const [text, setText] = useState(false)
+  const router = useRouter()
+  const {auth} = useAuth()
+
+  const handleChange = (e)=>{
+    setEmail(e.target.value)
+  }
+
+  const handleClick = ()=>{
+    if(auth.id){
+      showError()
+    } else {
+      router.push({
+        pathname: '/member/account/signup',
+        query: {email: email}
+      })
+    }
+  }
+
+  const showError = () =>{
+    setText('You are logged in already')
+    setShowNotification(true)
+  }
+
+  const onClose= ()=>{
+    setShowNotification(false)
+  }
+
+  useEffect(()=>{
+    if(showNotification){
+      const timer = setTimeout(()=>{
+        setShowNotification(false);
+        onClose()
+      }, 6000)
+      return ()=> clearTimeout(timer)
+    }
+  }, [showNotification])
+
   return (
     <>
+    <NotifyRed onClose={onClose} show={showNotification} text={text}/>
       <footer className={styles.footer}>
         <div className={styles["footer-content"]}>
           <div className={styles["footer-sec12"]}>
@@ -66,14 +110,17 @@ export default function Footer() {
             </div>
             <div className={styles["footer-sec3-bottom-section"]}>
               <div className={styles["email"]}>
-                <div className="text-[11px] font-medium">Email</div>
-                <input type="text" />
+                <label htmlFor="email" className="text-[11px] font-medium">Email</label>
+                <input type="text" name="email" id="email" 
+                  onChange={handleChange}
+                />
               </div>
               <div
                 className={`${styles["sec3-button-container"]} p-0 flex self-stretch`}
               >
                 <button
-                  className={`${styles["signup"]} font-medium text-[13px]`}
+                onClick={handleClick}
+                  className={`${styles["signup"]} w-full border border-white bg-black md:text-[15px] font-medium hover:bg-[#7A7A7A] text-[13px]`}
                 >
                   SIGN UP
                 </button>

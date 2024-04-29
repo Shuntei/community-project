@@ -1,5 +1,5 @@
 import 'tailwindcss/tailwind.css'
-import { RiSearchLine, RiListCheck } from '@remixicon/react'
+import { RiSearchLine, RiListCheck, RiLoopRightLine } from '@remixicon/react'
 import MainContent from '@/components/johnny/content-list'
 import MainContentBd from '@/components/johnny/content-list-bd'
 import SeeMoreFollows from '@/components/johnny/seemore-follows'
@@ -28,7 +28,7 @@ export default function CentralContent() {
   const query = { ...router.query, keyword: searchTerm }
   // console.log(query)
 
-  const queryHandler = (e) => {
+  const queryHandler = () => {
     const queryString = new URLSearchParams(query).toString()
     router.push({ pathname: '/community/main-page', query: queryString })
     console.log(queryString)
@@ -148,13 +148,13 @@ export default function CentralContent() {
                   >
                     <RiSearchLine />
                   </button>
-                </div>
+                </div>{' '}
               </div>
             </div>
           )}
 
           {toggles.follows ? (
-            <SeeMoreFollows marginTop={`mt-14`} />
+            <SeeMoreFollows marginTop={`mt-5`} />
           ) : toggles.notification ? (
             <SeeMoreNotification />
           ) : (
