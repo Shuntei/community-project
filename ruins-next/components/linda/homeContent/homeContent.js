@@ -81,7 +81,9 @@ export default function HomeContent() {
     const container = document.querySelector(`.${styles['containerP']}`)
 
     const slide = () => {
-      container.scrollLeft += 0.5 // 控制滑动速度
+
+      container.scrollLeft += 0.5 // 控制滑動速度
+
       if (
         container.scrollLeft >=
         container.scrollWidth - container.clientWidth
@@ -90,16 +92,12 @@ export default function HomeContent() {
       }
     }
 
-    const sliderInterval = setInterval(slide, 20) // 调整滑动间隔
 
-    return () => {
-      clearInterval(sliderInterval)
-    }
+    const sliderInterval = setInterval(slide, 20) //  調整滑動間隔
+
+    return () => clearInterval(sliderInterval)
   }, [])
 
-  useEffect(() => {
-    
-  }, [currentIndex])
 
   return (
     <>

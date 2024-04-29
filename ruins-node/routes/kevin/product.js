@@ -205,7 +205,7 @@ router.get("/api/getOngoingPo/:mid", async (req, res) => {
     return res.json({ success: false });
   }
 
-  res.json({ success: true, rows , test:"my-test"});
+  res.json({ success: true, rows });
 });
 
 // 取得歷史訂單 - status:已完成
@@ -280,5 +280,26 @@ router.post("/product-comment", async (req, res) => {
 
   res.json(output);
 });
+
+//收藏商品
+router.get("/api/getProductLiked/:mid", async (req, res) => {
+  let output = {
+    success: false,
+    rows: [],
+  };
+  // 取得 member_id 去搜尋
+  const mid = req.params.mid;
+
+  const sql =
+    "SELECT `like_id`, `mid`, `pid` FROM `ca_product_like` WHERE `mid` = ? ";
+
+  const [rows] = await db.query(sql, [mid]);
+  if (!rows.length) {
+    return res.json({ success: false });
+  }
+
+  res.json({ success: true, rows });
+})
+
 
 export default router;
