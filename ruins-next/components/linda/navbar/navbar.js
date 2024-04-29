@@ -137,7 +137,7 @@ export default function Navbar({ className, navColor = 'white' }) {
           </div>
         </div>
         <div
-          className={`${styles['navlink-container-mobile']} w-1/3 justify-end`}
+          className={`${isOpen ? 'text-white' : ''} ${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
           <div className={`${styles['nav-cart-mobile']}`}>
             <CartModal />

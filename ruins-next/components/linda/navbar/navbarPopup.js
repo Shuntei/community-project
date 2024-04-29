@@ -78,7 +78,7 @@ export default function NavbarPopup() {
             </p>
           </div>
         </div>
-        <div className={`${styles['pics']} space-x-12`}>
+        {/* <div className={`${styles['pics']} space-x-12`}>
           <div className="w-auto">
             <a href="#" className="aspect-video">
               <img
@@ -109,7 +109,7 @@ export default function NavbarPopup() {
               <p>FOR KIDS</p>
             </a>
           </div>
-        </div>
+        </div> */}
       </div>
     </nav>
   )
