@@ -1,12 +1,4 @@
 
-.homeSectionOne {
-  height: 100vh;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position: center bottom;
-  position: relative;
-}
-
 .homeSectionTwo {
   background-repeat: no-repeat;
   position: relative;
@@ -92,7 +84,7 @@ p.item-name {
   position: absolute;
   /* left: 193px;
   bottom: 250px; */
-  bottom: -30px;
+  bottom: 180px;
   left: -600px;
   max-width: 350px;
   padding: 30px 24px 60px 24px;
@@ -188,8 +180,8 @@ p.item-name {
 
 @media (max-width: 768px) {
   .card1 {
-    right: 21px;
-    bottom: 30%;
+    left: 21px;
+    top: -120%;
     padding: 20px 19px;
     position: absolute;
   }

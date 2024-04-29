@@ -16,6 +16,7 @@ export default function NotifyRed({ show, text, onClose }) {
         setIsVisible(false);
         onClose();
       }, 6000)
+      return ()=> clearTimeout(timer)
     }
   }, [isVisible, onClose])
 
@@ -31,7 +32,7 @@ export default function NotifyRed({ show, text, onClose }) {
           </div>
         </div>
           <IoMdClose 
-          onClick={onClose}
+          onClick={()=>{setIsVisible(false)}}
           className='text-[24px] text-black cursor-pointer' />
         </div>
         <div className="w-full bg-[#B8B8B8]">

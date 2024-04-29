@@ -25,6 +25,13 @@ export const MB_UPDATE_PASS = `${API_SERVER}/member/update-password`
 export const MB_SAVE_PREFERENCES = `${API_SERVER}/member/save-preferences`
 // get preference
 export const MB_GET_PREFERENCES = `${API_SERVER}/member/get-preferences`
+// get notification information
+export const MB_GET_NOTIFICATIONS = `${API_SERVER}/member/get-notifications`
+// mark notification as read
+export const MB_MARK_READ = `${API_SERVER}/member/mark-read`
+// create notifications
+export const MB_CREATE_NOTIFICATIONS = `${API_SERVER}/member/create-notifications`
+
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`

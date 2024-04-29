@@ -25,37 +25,37 @@ export default function HomeContent() {
   const slides = [
     {
       name: 'Title1',
-      image: 'https://i.ibb.co/qCkd9jS/img1.jpg',
+      image: 'https://source.unsplash.com/23fk429Ayok',
       description:
         'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
     },
     {
       name: 'Title2',
-      image: 'https://i.ibb.co/jrRb11q/img2.jpg',
+      image: 'https://source.unsplash.com/GSCtoEEqntQ',
       description:
         'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
     },
     {
       name: 'Title3',
-      image: 'https://i.ibb.co/NSwVv8D/img3.jpg',
+      image: 'https://source.unsplash.com/F1VKXkx17RM',
       description:
         'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
     },
     {
       name: 'Title4',
-      image: 'https://i.ibb.co/Bq4Q0M8/img4.jpg',
+      image: 'https://source.unsplash.com/t0DRQNoRuSw',
       description:
         'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
     },
     {
       name: 'Title5',
-      image: 'https://i.ibb.co/jTQfmTq/img5.jpg',
+      image: 'https://source.unsplash.com/B2Eiil2Y0lo',
       description:
         'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
     },
     {
       name: 'Title6',
-      image: 'https://i.ibb.co/RNkk6L0/img6.jpg',
+      image: 'https://source.unsplash.com/k5lSVBfhPm8',
       description:
         'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
     },
@@ -98,11 +98,7 @@ export default function HomeContent() {
   }, [])
 
   useEffect(() => {
-    const card1 = document.querySelector(`.${styles['card1']}`);
-
-    card1.classList.remove('animate');
-    void card1.offsetWidth; // Trigger reflow to restart the animation
-    card1.classList.add('animate');
+    
   }, [currentIndex])
 
   return (
@@ -111,7 +107,7 @@ export default function HomeContent() {
       <EmblaCarousel
           setCurrentIndex={setCurrentIndex}
           currentIndex={currentIndex}
-          className="absolute left-1/2 top-1/3"
+          className="absolute md:left-1/2 md:top-1/3 bottom-0 p-[20px] md:p-0"
           slides={slides}
           options={OPTIONS}
         />
@@ -120,20 +116,10 @@ export default function HomeContent() {
           backgroundImage: currentIndex > 0 ? `url(${slides[currentIndex - 1].image})` : `url(${slides[slides.length - 1].image})`,
           width: '100%',
         }}
-        className={`z-[-1] relative w-full h-lvh bg-cover brightness-50 ${styles['bg-transition']}`}
+        className={`z-[-1] relative w-full h-lvh bg-center bg-cover brightness-50 ${styles['bg-transition']}`}
       >
       </div>
       {/* ------- Section One End ---------- */}
-      <div
-        className={styles['homeSectionOne']}
-        style={{
-          backgroundImage: `url(${home1.src})`,
-          width: '100%',
-        }}
-      >
-        {/* card start */}
-        
-      </div>
       <div
         className={styles.homeSectionTwo}
         style={{
