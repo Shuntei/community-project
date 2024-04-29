@@ -4,7 +4,7 @@ import { RigidBody, useRapier } from '@react-three/rapier'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import * as THREE from 'three'
 import { useSpring, animated } from "@react-spring/web";
-// import { useGame } from './stores/useGame'
+import { useGame } from './store/useGame'
 
 export default function Ball(props) {
 
@@ -30,42 +30,61 @@ export default function Ball(props) {
     // immediate: true,
     // });
 
-    // const { rapier, world } = useRapier()
+    const { rapier, world } = useRapier()
 
-    // // const gamePhase = useGame((state) => state.phase)
-    // // const startGame = useGame((state) => state.start)
-    // // const restartGame = useGame((state) => state.restart)
+    // const gamePhase = useGame((state) => state.phase)
+    // const startGame = useGame((state) => state.start)
+    // const restartGame = useGame((state) => state.restart)
 
-    // const cameraProperties = useMemo(
-    //     () => ({
-    //         position: new THREE.Vector3(0, 20, 20),
-    //         target: new THREE.Vector3()
-    //     }),
-    //     []
-    // )
+    const cameraProperties = useMemo(
+        () => ({
+            position: new THREE.Vector3(0, 20, 20),
+            target: new THREE.Vector3()
+        }),
+        []
+    )
 
     const ballRef = useRef()
     const [subscribeKeys, getKeys] = useKeyboardControls()
 
-    // const jumpHandler = useCallback(() => {
-    //     // const rapierWorld = world.raw()
 
-    //     const ballPosition = ballRef.current.translation()
-    //     const groundDirection = { x: 0, y: -1, z: 0 }
-    //     const ray = new rapier.Ray(ballPosition, groundDirection)
-    //     const hit = rapierWorld.castRay(ray)
-    //     const isBallOnGround = hit?.toi < 1
+    const jumpHandler = useCallback(() => {
+        const rapierWorld = world
 
-    //     if (isBallOnGround) {
-    //         ballRef.current.applyImpulse({ x: 0, y: 15, z: 0 })
-    //     }
-    // }, [ballRef, rapier, world])
+        const ballPosition = ballRef.current.translation()
+        const groundDirection = { x: 0, y: -1, z: 0 }
+        const ray = new rapier.Ray(ballPosition, groundDirection)
+        const hit = rapierWorld.castRay(ray)
+        const isBallOnGround = hit?.toi < 1
+
+        if (isBallOnGround) {
+            ballRef.current.applyImpulse({ x: 0, y: 15, z: 0 })
+        }
+    }, [ballRef, rapier, world])
 
     const resetHandler = useCallback(() => {
         ballRef.current.setTranslation({ x: 0, y: 4, z: 0 })
         ballRef.current.setLinvel({ x: 0, y: 0, z: 0 })
         ballRef.current.setAngvel({ x: 0, y: 0, z: 0 })
     }, [ballRef])
+
+    useEffect(() => {
+        return subscribeKeys(
+            ({ jump }) => ({ jump }),
+            ({ jump }) => {
+                if (jump) jumpHandler()
+            }
+        )
+    }, [subscribeKeys, jumpHandler])
+
+    useEffect(() => {
+        return useGame.subscribe(
+            (state) => state.phase,
+            (phase) => {
+                if (phase === 'ready') resetHandler()
+            }
+        )
+    }, [resetHandler])
 
 
     useFrame((_, delta) => {
@@ -102,24 +121,26 @@ export default function Ball(props) {
           }
     })
 
-    // useFrame(({ camera }, delta) => {
-    //     const ballPosition = ballRef.current.translation()
+    useFrame(({ camera }, delta) => {
+        if (ballRef.current) {
+        const ballPosition = ballRef.current.translation()
 
-    //     const cameraPosition = new THREE.Vector3()
-    //     cameraPosition.copy(ballPosition)
-    //     cameraPosition.z += 8
-    //     cameraPosition.y += 3
+        const cameraPosition = new THREE.Vector3()
+        cameraPosition.copy(ballPosition)
+        cameraPosition.z += 8
+        cameraPosition.y += 3
 
-    //     const cameraTarget = new THREE.Vector3()
-    //     cameraTarget.copy(ballPosition)
-    //     cameraTarget.y += 0.5
+        const cameraTarget = new THREE.Vector3()
+        cameraTarget.copy(ballPosition)
+        cameraTarget.y += 0.5
 
-    //     cameraProperties.position.lerp(cameraPosition, 5 * delta)
-    //     cameraProperties.target.lerp(cameraTarget, 5 * delta)
+        cameraProperties.position.lerp(cameraPosition, 5 * delta)
+        cameraProperties.target.lerp(cameraTarget, 5 * delta)
 
-    //     camera.position.copy(cameraProperties.position)
-    //     camera.lookAt(cameraProperties.target)
-    // })
+        camera.position.copy(cameraProperties.position)
+        camera.lookAt(cameraProperties.target)
+        }
+    })
 
     
 

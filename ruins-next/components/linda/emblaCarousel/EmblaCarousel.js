@@ -92,7 +92,7 @@ const EmblaCarousel = (props) => {
             <div className="flex-none w-1/2 min-w-0 pl-4" key={index}>
               <img
                 className={`rounded block md:h-[300px] h-[150px] w-full object-cover`}
-                src={slide.image}
+                src={`/images/borou/${slide.image_url}.jpg`}
                 alt="Your alt text"
               />
             </div>
@@ -107,7 +107,7 @@ const EmblaCarousel = (props) => {
         </div>
 
         <div className="flex flex-wrap justify-end items-center gap-[10px]">
-          {scrollSnaps.map((_, index) => (
+          {scrollSnaps?.map((_, index) => (
             <DotButton
               key={index}
               onClick={() => onDotButtonClick(index)}
@@ -116,11 +116,11 @@ const EmblaCarousel = (props) => {
           ))}
         </div>
       </div>
-      {slides.map((slide, index)=> (
+      {slides?.map((slide, index)=> (
         <div className={`${styles['card1']} flex ${index === currentIndex ? 'block' : 'hidden'}`} key={index}>
           <div className="flex flex-col justify-center items-start gap-6 animate-duration-1000 animate-ease-in-out animate-fill-forwards">
             <span className="text-[14px] animate-duration-1000 animate-ease-in-out animate-fill-forwards"
-            >{slide.name}</span>
+            >{slide.title}</span>
             <span className="font-medium md:text-[24px]">
             {slide.description}
             </span>

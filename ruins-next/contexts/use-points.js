@@ -9,8 +9,8 @@ export function PointContextProvider({ children }) {
 
   const myPoints = async () => {
     try {
-      const r = await fetch(`${API_SERVER}/chat/05-streaming/u-point/1`, {
-        method: 'GET',
+      const r = await fetch(`${API_SERVER}/05-streaming/u-point/1`, {
+        method: "GET",
         headers: {
           'Content-Type': 'application/json',
         },
@@ -24,12 +24,10 @@ export function PointContextProvider({ children }) {
 
   useEffect(() => {
     myPoints()
-    // const intervalId = setInterval(myPoints, 1000);
-    // return () => clearInterval(intervalId);
-  }, [pts])
+  }, [])
 
   return (
-    <PointContext.Provider value={{ pts, setPts }}>
+    <PointContext.Provider value={{ pts, setPts, myPoints }}>
       {children}
     </PointContext.Provider>
   )

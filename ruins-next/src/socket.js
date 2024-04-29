@@ -1,5 +1,5 @@
 import { io } from 'socket.io-client';
+import { API_SERVER } from '@/components/config/api-path';
 
-const URL = `http://localhost:3030`;
+export const socket = io(API_SERVER);
 
-export const socket = io(URL);

@@ -1,14 +1,17 @@
-import React, { useEffect } from 'react'
-import { RiCheckboxFill } from "@remixicon/react";
-import { RiCloseLine } from "@remixicon/react";
-import styles from '@/styles/check-role.module.css'
-import { useState } from 'react';
+import styles from '@/styles/check-role.module.css';
+import { RiCheckboxFill, RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
+import { useAuth } from '@/contexts/auth-context';
+import Router from 'next/router';
 
 export default function CheckRole() {
   const [viewerHover, setViewerHover] = useState(false);
   const [streamerHover, setStreamerHover] = useState(false);
   const [onPhone, setOnPhone] = useState(false);
+  const { auth } = useAuth()
+  const [login, setLogin] = useState(false);
 
   const handleViewerMouseEnter = () => {
     setViewerHover(true);
@@ -36,6 +39,24 @@ export default function CheckRole() {
     sizeChange()
     window.addEventListener('resize', sizeChange)
   })
+
+  const handleSignInCheck = () => {
+    if (auth.id) {
+      Router.push('./chat/02-check-webcam-source')
+    } else {
+      Swal.fire({
+        toast: true,
+        width: 280,
+        position: onPhone ? "top" : "top-end",
+        icon: 'error',
+        iconColor: 'black',
+        title: '請先登入',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+      return;
+    }
+  }
 
   return (
     <>
@@ -74,7 +95,7 @@ export default function CheckRole() {
           </Link>
 
           {/* 主播區 */}
-          <Link href="./chat/02-check-webcam-source">
+          <div onClick={handleSignInCheck}>
             <div
               className={!viewerHover && !streamerHover ? styles['streamer-block'] : streamerHover ? `${styles['streamer-block']}` : `${styles['unhover']}`}
               onMouseEnter={handleStreamerMouseEnter}
@@ -97,9 +118,8 @@ export default function CheckRole() {
                 <div className='text-sm flex flex-row items-center max-md:hidden'><RiCheckboxFill />獲取禮物獎勵</div>
                 <div className='text-sm flex flex-row items-center max-md:hidden'><RiCheckboxFill />特有聊天室權限</div>
               </div>
-
             </div>
-          </Link>
+          </div>
         </div>
       </div>
     </>

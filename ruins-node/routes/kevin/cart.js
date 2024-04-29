@@ -1,5 +1,5 @@
 import express from "express";
-import db from "../../utils/kevin/mysql2-connect.js";
+import db from "../../utils/mysql2-connect.js";
 import dayjs from "dayjs";
 import { v4 as uuidv4 } from "uuid";
 import axios from "axios";
