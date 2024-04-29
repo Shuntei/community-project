@@ -62,9 +62,12 @@ export default function MainPost() {
     // 圖片處理區
 
     const profilePicUrl = result[0].profile_pic_url
+    console.log(profilePicUrl)
     const googleId = result[0].google_id
+    console.log(googleId)
     googleId
-      ? setProfilePic(profilePicUrl)
+      ? setProfilePic(profilePicUrl) ||
+        setProfilePic(`${IMG_SERVER}/${profilePicUrl}`)
       : setProfilePic(`${IMG_SERVER}/${profilePicUrl}`)
 
     // 其他資訊區
