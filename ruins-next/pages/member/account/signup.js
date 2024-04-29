@@ -34,7 +34,7 @@ const schemaBirthday = z
 
 export default function Signup() {
   const router = useRouter()
-  const { signup, auth } = useAuth()
+  const { signup, auth, dateInSec } = useAuth()
   const [submitted, setSubmitted] = useState(false)
   const [checked, setChecked] = useState(false)
   const [showPass, setShowPass] = useState(false)
@@ -61,6 +61,14 @@ export default function Signup() {
   useEffect(() => {
     if (auth.id) {
       router.back()
+    }
+
+    const {email} = router.query
+    if(email){
+      setMyForm(prevForm => ({
+        ...prevForm,
+        email: email.toString(),
+      }))
     }
   }, [auth, router])
 
@@ -206,9 +214,9 @@ export default function Signup() {
     e.preventDefault()
     setSubmitted(true)
 
-    const errorResult = updateError()
+    const passedValidation = updateError()
 
-    if (errorResult) {
+    if (passedValidation) {
       const result = await signup(myForm)
 
       if (!result.success) {
@@ -254,7 +262,7 @@ export default function Signup() {
                   </a>
                 </div>
                 <div className="flex items-end justify-end md:block hidden flex-1 text-[#9F9F9F] font-thin text-xl">
-                  001946995
+                  {dateInSec}
                 </div>
               </div>
               <div className="flex flex-col items-start self-stretch">

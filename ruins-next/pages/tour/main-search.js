@@ -1,10 +1,24 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useRouter } from 'next/router';
 import 'remixicon/fonts/remixicon.css'
 import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import Link from 'next/link'
 
 export default function MainSearch() {
+  const router = useRouter();
+  const [keyword, setKeyword] = useState('');
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (keyword.trim() !== '') {
+      router.push({
+        pathname: '/tour/all-search',
+        query: { keyword: encodeURIComponent(keyword.trim()) },
+      });
+    }
+  };
+
   return (
     <>
       <Navbar />
@@ -14,18 +28,22 @@ export default function MainSearch() {
           <h1 className="text-white text-[26px] font-semibold">
             找尋你的精彩冒險
           </h1>
-          <div className="relative">
-            <input
-              type="text"
-              className="md:w-1/3 w-[87%] pl-8 pr-5 py-2.5 opacity-90 rounded"
-              placeholder="想找什麼呢？"
-            />
-            <i className="ri-search-line ri-lg absolute left-2 top-[13px]"></i>
-          </div>
+          <form onSubmit={handleSearch}>
+            <div className="relative">
+              <input
+                type="text"
+                className="md:w-1/3 w-[87%] pl-8 pr-5 py-2.5 opacity-90 rounded"
+                placeholder="想找什麼呢？"
+                value={keyword}
+                onChange={(e) => setKeyword(e.target.value)}
+              />
+              <i className="ri-search-line ri-lg absolute left-2 top-[13px]"></i>
+            </div>
+          </form>
         </div>
       </div>
       <div className="md:px-[150px] px-5 py-5 space-y-5 relative">
-        <div className="flex justify-between">
+        {/* <div className="flex justify-between">
           <div className="md:flex md:space-x-3 font-['Noto Sans TC'] text-[13px] font-semibold">
             <button className="rounded bg-white px-2.5 py-[5px] md:inline-block hidden ">
               更多主題<i className="ri-arrow-down-s-line"></i>
@@ -50,7 +68,7 @@ export default function MainSearch() {
             </button>
           </div>
         </div>
-        <p className="text-white text-[13px]">215個探險</p>
+        <p className="text-white text-[13px]">215個探險</p> */}
       </div>
       <div className="md:px-[150px] px-5 space-y-10 pb-[50px]">
         <div className="space-y-4 font-['Noto Sans TC']">

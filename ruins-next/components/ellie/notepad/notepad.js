@@ -1,9 +1,39 @@
-import React from 'react'
+import React, { useState } from 'react'
 import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
 
 
+
 export default function Notepad({ onClose }) {
+  const [form, setForm] = useState({title:'', content:''})
+  const changeHandler = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+  const submitHandler = async (e) => {
+    e.preventDefault();
+
+    const newForm  = new FormData(e.currentTarget)
+    const urlencoded = new URLSearchParams(newForm)
+    // newForm.append('title',form.title)
+
+    const r = await fetch('http://localhost:3001/game/ruins_final/gm_note', {
+      method: "POST",
+      body: urlencoded.toString(),
+      // body: JSON.stringify(form),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    });
+    const result = await r.json();
+    console.log({ result });
+    // if(result.success){
+    //   // 
+    //   router.push(`/address-book`);
+    // } else {
+    //   // 
+    //   alert("資料新增發生錯誤")
+    // }
+  };
   return (
     <>
   <div className="container notepad absolute left-1/4 top-1/6">
@@ -49,80 +79,50 @@ export default function Notepad({ onClose }) {
         
       </div> {/* notepad bar */}
       <div className="blackLine">
-        <div className="barPadding">
-          <div className="title">Note - Title here</div>
+          <form className="barPadding" onSubmit={submitHandler}>
+            <input className="title" onChange={changeHandler} name='title' value={form.title} />
 
-      <div className="notepad-settings">
-        <div className="buttonLineUp">
-        <div className="buttonLineUp1">
-          <div className="notepad-button"><RiArrowGoBackLine/></div>
-          <div className="notepad-button"><RiArrowGoForwardLine/></div>
-        </div>
-        <div className="buttonLineUp2">
-          <div className="notepad-button"><RiBold/></div>
-          <div className="notepad-button"><RiItalic/></div>
-          <div className="notepad-button"><RiUnderline/></div>
-          <div className="notepad-button"><RiStrikethrough/></div>
-        </div>
-        </div>
-      </div>{/* notepad settings */}
-      {/* <label>
-      Edit your post:
-      <textarea
-        name="postContent"
-        defaultValue="I really enjoyed biking yesterday!"
-        rows={4}
-        cols={40}
-      />
-    </label> */}
-      <div className="notepad-content">
-        <p>OXOXOX</p> 
-        
-        <div className="mainEnd">
-          <div className="relative">
-              <div className="trashbin">
-                <RiDeleteBin6Fill/>
+            <div className="notepad-settings">
+              <div className="buttonLineUp">
+              <div className="buttonLineUp1">
+                <div className="notepad-button"><RiArrowGoBackLine/></div>
+                <div className="notepad-button"><RiArrowGoForwardLine/></div>
               </div>
-          </div>
-          <div className="relative">
-              <div className="saveOut">
-                <div className="saveInside">SAVE</div>
+              <div className="buttonLineUp2">
+                <div className="notepad-button"><RiBold/></div>
+                <div className="notepad-button"><RiItalic/></div>
+                <div className="notepad-button"><RiUnderline/></div>
+                <div className="notepad-button"><RiStrikethrough/></div>
               </div>
-          </div>
-        </div>
-        {/* mainEnd */}
-        
-        {/* <p>
-        Do me, I'mma do me <br>
-        I'mma make mine, I'mma make mine <br>
-        I fuck the shine, I said fuck the shine <br>
-        Bitch, I grind, bitch, I grind <br>
-        Yung Lean swerving in see me fucked up <br>
-        See me swervin' through, they want me locked up <br>
-        Been locked up, in my own mind <br>
-        My thoughts will never be shallow <br><br>
-
-        [Hook]<br>
-        Do me, I'mma do me<br>
-        I'mma make mine, I'mma make mine<br>
-        I fuck the shine, I said fuck the shine<br>
-        Bitch, I grind, bitch, I grind<br>
-        Yung Lean swerving in see me fucked up<br>
-        See me swervin' through, they want me locked up<br>
-        Been locked up, in my own mind<br>
-        My thoughts will never be shallow<br>
-        I'mma make her mine, I'mma make her mine<br>
-        I fuck the shine, I said fuck the shine<br>
-        Bitch, I grind, bitch, I grind<br>
-        Yung Lean swerving in see me fucked up<br>
-        See me swervin' through, they want me locked up<br>
-        Been locked up, in my own mind<br>
-        My thoughts will never be shallow<br><br>
-
-        </p> */}
-        
-      </div> {/* notepad-content */}
-    </div>
+              </div>
+            </div>{/* notepad settings */}
+            {/* <label>
+            Edit your post:
+            <textarea
+              name="postContent"
+              defaultValue="I really enjoyed biking yesterday!"
+              rows={4}
+              cols={40}
+            />
+          </label> */}
+            <div className="notepad-content">
+              <input onChange={changeHandler} name='content' value={form.content}/> 
+              
+              <div className="mainEnd">
+                <div className="relative">
+                    <div className="trashbin">
+                      <RiDeleteBin6Fill/>
+                    </div>
+                </div>
+                <div className="relative">
+                    <div className="saveOut">
+                      <button className="saveInside" type='submit'>SAVE</button>
+                    </div>
+                </div>
+              </div>
+              {/* mainEnd */}
+            </div> {/* notepad-content */}
+          </form>
     </div>
     </div> {/*<!-- notepad -->*/}
   </div> {/* container -->*/}

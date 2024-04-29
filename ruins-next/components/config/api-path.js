@@ -9,6 +9,29 @@ export const MB_LOGIN = `${API_SERVER}/member/login`
 export const MB_GOOGLE_LOGIN = `${API_SERVER}/member/google-login`
 // edit profile
 export const MB_EDIT_PROFILE = `${API_SERVER}/member/edit-profile`
+// check email and send otp
+export const MB_CHECK_EMAIL = `${API_SERVER}/member/check-email`
+// check password and send otp
+export const MB_CHECK_PASS = `${API_SERVER}/member/check-password`
+// edit email
+export const MB_EDIT_INFO = `${API_SERVER}/member/edit-info`
+// send OTP 
+export const MB_SEND_CODE = `${API_SERVER}/member/send-code`
+// request email
+export const MB_REQ_EMAIL = `${API_SERVER}/member/request-email`
+// update password
+export const MB_UPDATE_PASS = `${API_SERVER}/member/update-password`
+// save preferences
+export const MB_SAVE_PREFERENCES = `${API_SERVER}/member/save-preferences`
+// get preference
+export const MB_GET_PREFERENCES = `${API_SERVER}/member/get-preferences`
+// get notification information
+export const MB_GET_NOTIFICATIONS = `${API_SERVER}/member/get-notifications`
+// mark notification as read
+export const MB_MARK_READ = `${API_SERVER}/member/mark-read`
+// create notifications
+export const MB_CREATE_NOTIFICATIONS = `${API_SERVER}/member/create-notifications`
+
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`
@@ -19,8 +42,15 @@ export const PRODUCT_ONE = `${API_SERVER}/product/api/getProduct`
 //產品評論
 export const PRODUCT_COMMENT = `${API_SERVER}/product/api/getProductComment`
 
+// 新增商品評論
+export const PRODUCT_COMMENT_ADD = `${API_SERVER}/product/product-comment`
+
 // 相關商品10筆
 export const PRODUCT_RELATED = `${API_SERVER}/product/api/relatedProducts`
+
+
+// 所有產品
+export const PRODUCT_ALL = `${API_SERVER}/product/api/allProducts`
 
 // 購物車 - 取得會員資料
 export const CART_MEMBER_INFO = `${API_SERVER}/cart/member-info`
@@ -40,11 +70,23 @@ export const CART_LINEPAY = `${API_SERVER}/cart/createLinePayOrder` // POST
 // 購物車 - 與 LINE Pay 確認訂單
 export const CART_LINEPAYCONFIRM = `${API_SERVER}/cart/linePay/confirm`
 
+// 歷史訂單 - status:全部
+export const PRODUCT_MYALLPO =`${API_SERVER}/product/api/getAllPo`
+
 // 歷史訂單 - status:訂單處理中
 export const PRODUCT_MYONGOINGPO = `${API_SERVER}/product/api/getOngoingPo`
 
 // 歷史訂單 - status:已完成
 export const PRODUCT_MYCOMPLETEDPO =`${API_SERVER}/product/api/getCompletedPo`
 
-// 揪團貼文
-export const TOUR_POST =  `${API_SERVER}/tour/api`
+// 揪團貼文列表
+export const TOUR_LIST = `${API_SERVER}/tour/api`
+
+// 揪團貼文單筆
+export const TOUR_POST = `${API_SERVER}/tour/api/getPost`
+
+// 個人揪團管理
+export const TOUR_GET_POST = `${API_SERVER}/tour/api/get-post`
+
+// 收藏行程管理
+export const TOUR_GET_FAVTOUR = `${API_SERVER}/tour/api/favtour`

@@ -18,14 +18,13 @@ const defaultAuth = {
   email: '',
   profileUrl: '',
   coverUrl: '',
-  googlePhoto:'',
+  googlePhoto: false,
   aboutMe: '',
   showContactInfo: false,
   ytLink: '',
   fbLink: '',
   igLink: '',
   gmailLink: '',
-  googleLogin: false,
   token: '',
 }
 
@@ -34,7 +33,8 @@ const storageKey = 'ruins-auth'
 export function AuthContextProvider({ children }) {
   const googleAuth = new GoogleAuthProvider()
   const [auth, setAuth] = useState(defaultAuth)
-  const [update, setUpdate] = useState(false);
+  const [update, setUpdate] = useState(false)
+  const [dateInSec, setDateInSec] = useState(null)
 
   const signup = async (formData) => {
     try {
@@ -85,11 +85,12 @@ export function AuthContextProvider({ children }) {
       let account = user.email
       let username = user.displayName
       let photoUrl = user.photoURL
+      let googleId = user.uid
 
       if (account && username) {
         const r = await fetch(MB_GOOGLE_LOGIN, {
           method: 'post',
-          body: JSON.stringify({ account, username, photoUrl }),
+          body: JSON.stringify({ account, username, photoUrl, googleId }),
           headers: {
             'Content-Type': 'application/json',
           },
@@ -122,6 +123,11 @@ export function AuthContextProvider({ children }) {
   }
 
   useEffect(() => {
+    const dateInSec = Math.floor(Date.now() / 1000) 
+    setDateInSec(dateInSec)
+  }, [])
+
+  useEffect(() => {
     const str = localStorage.getItem(storageKey)
     try {
       const data = JSON.parse(str)
@@ -132,7 +138,9 @@ export function AuthContextProvider({ children }) {
   }, [update])
 
   return (
-    <AuthContext.Provider value={{ login, logout, signup, auth, googleLogin, update, setUpdate }}>
+    <AuthContext.Provider
+      value={{ login, logout, signup, auth, googleLogin, update, setUpdate, dateInSec }}
+    >
       {children}
     </AuthContext.Provider>
   )

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { RiCloseLargeLine } from '@remixicon/react'
 import Image from 'next/image'
 
-function CommentModal() {
+function TourJoinModal() {
   const [isOpen, setIsOpen] = useState(false)
 
   const openModal = () => setIsOpen(true)
@@ -27,7 +27,7 @@ function CommentModal() {
             onClick={closeModal}
           >
             <div className=" bg-white absolute text-center px-5 py-2.5 md:w-[160px] h-[150px] border rounded text-black">
-              <option className="">1位參加者</option>
+              <div className="">1位參加者</div>
               <div className="">2位參加者</div>
               <div className="">3位參加者</div>
               <div className="">4位參加者</div>
@@ -39,7 +39,7 @@ function CommentModal() {
   )
 }
 
-export default CommentModal
+export default TourJoinModal
 
 
 {/* <div className="absolute text-center px-5 py-2.5 w-[160px] h-[150px] -top-2.5 -left-2.5 border rounded">

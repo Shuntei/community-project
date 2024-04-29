@@ -5,7 +5,6 @@ import { API_SERVER } from '@/components/config/api-path'
 const PointContext = createContext()
 
 export function PointContextProvider({ children }) {
-
   const [pts, setPts] = useState(0)
 
   const myPoints = async () => {
@@ -13,13 +12,13 @@ export function PointContextProvider({ children }) {
       const r = await fetch(`${API_SERVER}/05-streaming/u-point/1`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       })
       const data = await r.json()
       setPts(data)
     } catch (ex) {
-      console.log(ex);
+      console.log(ex)
     }
   }
 

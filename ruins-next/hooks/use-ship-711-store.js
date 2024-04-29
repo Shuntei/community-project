@@ -142,7 +142,7 @@ export function useShip711StoreOpener(
   }
 }
 
-export function useShip711StoreCallback(keyLocalStorage = 'fyt-store711') {
+export function useShip711StoreCallback(keyLocalStorage = 'store711') {
   const [storedValue, setValue] = useLocalStorage(keyLocalStorage, {
     storeid: '',
     storename: '',

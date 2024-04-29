@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { useGLTF } from '@react-three/drei'
 
 export function Model(props) {
-  const { nodes, materials } = useGLTF('/3Ddemo/gltf/try0001.glb')
+  const { nodes, materials } = useGLTF('/3Ddemo/gltf/nicetry.glb')
   return (
     <group {...props} dispose={null} scale={5}>
       <mesh
@@ -889,15 +889,6 @@ export function Model(props) {
         rotation={[Math.PI / 2, 0, 0]}
         scale={0.01}
       />
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Disc.geometry}
-        material={nodes.Disc.material}
-        position={[0, -0.989, -0.009]}
-        rotation={[Math.PI / 2, 0, 0]}
-        scale={0.01}
-      />
       <group position={[0, -1.02, 0]} rotation={[Math.PI / 2, 0, -0.908]} scale={0.01}>
         <mesh
           castShadow
@@ -1342,7 +1333,7 @@ export function Model(props) {
             receiveShadow
             geometry={nodes.Cylinder_2_2_3.geometry}
             material={nodes.Cylinder_2_2_3.material}
-            position={[0, -18.799, 0]}
+            position={[0, -18.798, 0]}
           />
         </group>
         <group position={[0, -204.681, -148.71]} rotation={[-0.942, 0, 0]}>
@@ -1351,7 +1342,7 @@ export function Model(props) {
             receiveShadow
             geometry={nodes.Cylinder_1_3.geometry}
             material={nodes.Cylinder_1_3.material}
-            position={[0, 18.799, 0]}
+            position={[0, 18.798, 0]}
           />
           <mesh
             castShadow
@@ -1374,7 +1365,7 @@ export function Model(props) {
             receiveShadow
             geometry={nodes.Cylinder_4.geometry}
             material={nodes.Cylinder_4.material}
-            position={[0, -18.798, 0]}
+            position={[0, -18.799, 0]}
           />
         </group>
         <group position={[0, -253, 0]} rotation={[-Math.PI / 2, 0, 0]}>
@@ -1422,7 +1413,7 @@ export function Model(props) {
             receiveShadow
             geometry={nodes.Cylinder_7.geometry}
             material={nodes.Cylinder_7.material}
-            position={[0, -18.798, 0]}
+            position={[0, -18.799, 0]}
           />
         </group>
         <group position={[0, -148.71, 204.681]} rotation={[-2.513, 0, 0]}>
@@ -1447,7 +1438,7 @@ export function Model(props) {
             receiveShadow
             geometry={nodes.Cylinder_1_9.geometry}
             material={nodes.Cylinder_1_9.material}
-            position={[0, 18.799, 0]}
+            position={[0, 18.798, 0]}
           />
           <mesh
             castShadow
@@ -1799,7 +1790,7 @@ export function Model(props) {
               receiveShadow
               geometry={nodes.Tube_14_14.geometry}
               material={nodes.Tube_14_14.material}
-              position={[0, 0, 45.321]}
+              position={[0, 0, 45.32]}
             />
             <mesh
               castShadow
@@ -2221,7 +2212,7 @@ export function Model(props) {
               receiveShadow
               geometry={nodes.Tube_14_20.geometry}
               material={nodes.Tube_14_20.material}
-              position={[0, 0, 45.321]}
+              position={[0, 0, 45.32]}
             />
             <mesh
               castShadow
@@ -3542,4 +3533,4 @@ export function Model(props) {
   )
 }
 
-useGLTF.preload('/try0001.glb')
+useGLTF.preload('/nicetry.glb')

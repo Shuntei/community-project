@@ -2,11 +2,12 @@ import express from "express";
 import multer from "multer";
 import communityRouter from "./routes/johnny/community-one.js";
 import communityRouterTwo from "./routes/johnny/community-two.js";
+import communityRouterThree from "./routes/johnny/community-three.js";
 import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js";
 import cartRouter from "./routes/kevin/cart.js";
 import tourRouter from "./routes/tony/tour.js";
-import chatRouter from "./routes/tyler/server.js";
+// import chatRouter from "./routes/tyler/server.js";
 import db from "./utils/mysql2-connect.js";
 import cors from "cors";
 import gameRouter from "./routes/ellie/game.js";
@@ -25,7 +26,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
-app.use(express.static('public'));
+app.use(express.static("public"));
 app.use("/member", memberRouter);
 //產品路由
 app.use("/product", productRouter);
@@ -37,6 +38,7 @@ app.use("/tour", tourRouter);
 app.use("/chat", chatRouter);
 app.use("/community", communityRouter);
 app.use("/community", communityRouterTwo);
+app.use("/community", communityRouterThree);
 app.use("/tour", tourRouter);
 
 app.use((req, res) => {

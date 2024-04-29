@@ -6,16 +6,20 @@ import { MdOutlineKeyboardArrowRight } from 'react-icons/md'
 import { PiWarningFill } from 'react-icons/pi'
 import AccountLayout from '@/components/linda/accountLayout'
 import Link from 'next/link'
-import ChangeEmailPopup from '@/components/linda/modals/changeEmailModal'
-import ChangePasswordPopup from '@/components/linda/modals/changePasswordModal'
-import OTPModal from '@/components/linda/modals/OTPModal'
+import ChangeEmailPopup from '@/components/linda/modals/change-email-modal'
+import ChangePasswordPopup from '@/components/linda/modals/change-password-modal'
+import OTPModal from '@/components/linda/modals/otp-modal'
 import { useAuth } from '@/contexts/auth-context'
+import NotifyRed from '@/components/linda/notify/notify-red'
 
 export default function EmailAndPassword() {
   const [showEmailModal, setShowEmailModal] = useState(false)
   const [showPasswordModal, setShowPasswordModal] = useState(false)
   const [showOTPModal, setShowOTPModal] = useState(false)
-  const {auth} = useAuth()
+  const [newEmail, setNewEmail] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const { auth } = useAuth()
+  const [text, setText] = useState('')
 
   useEffect(() => {
     if (showOTPModal) {
@@ -54,8 +58,8 @@ export default function EmailAndPassword() {
             >
               <div className="text-[12px] md:text-base w-1/3">Email</div>
               <div className="text-[12px] md:text-base w-1/3">{auth.email}</div>
-              <div className='flex w-1/3 justify-end'>
-              <MdOutlineKeyboardArrowRight  />
+              <div className="flex w-1/3 justify-end">
+                <MdOutlineKeyboardArrowRight />
               </div>
             </div>
             <div className="flex flex-col w-full justify-start md:flex-row gap-[12px] items-start">
@@ -71,7 +75,6 @@ export default function EmailAndPassword() {
             </div>
           </div>
           <div
-            // href="/member/account-settings/edit-password"
             onClick={() => {
               setShowPasswordModal(true)
             }}
@@ -81,8 +84,8 @@ export default function EmailAndPassword() {
             <div className="flex flex-nowrap justify-start w-1/3 text-[12px] md:text-base">
               ********
             </div>
-            <div className='flex w-1/3 justify-end'>
-            <MdOutlineKeyboardArrowRight />
+            <div className="flex w-1/3 justify-end">
+              <MdOutlineKeyboardArrowRight />
             </div>
           </div>
         </div>
@@ -93,14 +96,22 @@ export default function EmailAndPassword() {
         onClose={() => {
           setShowEmailModal(false)
         }}
+        setShowEmailModal
+        setNewEmail={setNewEmail}
       />
       <ChangePasswordPopup
+        setShowOTPModal={setShowOTPModal}
         isVisible={showPasswordModal}
         onClose={() => {
           setShowPasswordModal(false)
         }}
+        setShowPasswordModal={setShowPasswordModal}
+        setNewPassword={setNewPassword}
       />
       <OTPModal
+        setShowOTPModal={setShowOTPModal}
+        newEmail={newEmail}
+        newPassword={newPassword}
         isVisible={showOTPModal}
         onClose={() => {
           setShowOTPModal(false)

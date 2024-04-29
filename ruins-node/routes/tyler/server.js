@@ -45,18 +45,18 @@ router.get('/user-pic/:pid', async (req, res) => {
 })
 
 // 計算所有點數
-router.get('/05-streaming/u-point/:pid', async (req, res) => {
-  let pid = req.params.pid
+// router.get('/05-streaming/u-point/:pid', async (req, res) => {
+//   let pid = req.params.pid
 
-  // 共擁有多少點數
-  const t_sql = `SELECT * FROM tyler_get_point WHERE user_id=?`
-  let [t_rows] = await db.query(t_sql, [pid])
-  let totalGet = t_rows.reduce((acc, row) => acc + row.has_point, 0);
+//   // 共擁有多少點數
+//   const t_sql = `SELECT * FROM tyler_get_point WHERE user_id=?`
+//   let [t_rows] = await db.query(t_sql, [pid])
+//   let totalGet = t_rows.reduce((acc, row) => acc + row.has_point, 0);
 
-  // 共消耗多少點數
-  const u_sql = `SELECT * FROM tyler_use_point WHERE user_id=?`
-  let [u_rows] = await db.query(u_sql, [pid])
-  let totalUse = u_rows.reduce((acc, row) => acc + row.point_use, 0);
+//   // 共消耗多少點數
+//   const u_sql = `SELECT * FROM tyler_use_point WHERE user_id=?`;
+//   let [u_rows] = await db.query(u_sql, [pid]);
+//   let totalUse = u_rows.reduce((acc, row) => acc + row.point_use, 0);
 
   let leftPoints = totalGet - totalUse
 

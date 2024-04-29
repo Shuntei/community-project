@@ -23,21 +23,20 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
   // console.log("the bodyData: ", output.bodyData);
 
   let postId = +req.params.postId || 0;
-  console.log(postId);
+  // console.log(postId);
 
   let result = {};
   // const sql = "INSERT INTO `sn_posts` SET ? ";
   try {
-    req.body.post_type = "yours";
     // console.log("this is photo:", req.file);
 
     if (!req.file) {
-      const sql = `UPDATE sn_posts SET title=? , content=?, post_type=?, board_id=? WHERE post_id=${postId}`;
+      const sql = `UPDATE sn_posts SET title=? , content=?, board_id=?, emotion=? WHERE post_id=${postId}`;
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
-        req.body.post_type,
         req.body.boardId,
+        req.body.emotion,
       ]);
     }
     if (req.file) {
@@ -47,13 +46,13 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
       console.log("newFilePath", newFilePath);
       // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
-      const sql = `UPDATE sn_posts SET title=?, content=?, post_type=?, image_url=?, board_id=? WHERE post_id=${postId}`;
+      const sql = `UPDATE sn_posts SET title=?, content=?, image_url=?, board_id=?, emotion=? WHERE post_id=${postId}`;
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
-        req.body.post_type,
         req.body.image_url,
         req.body.boardId,
+        req.body.emotion,
       ]);
     }
 
@@ -62,38 +61,48 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
   } catch (err) {
     console.log(err);
   }
-  console.log(output);
+  // console.log(output);
   res.json(output);
 });
 
-router.get("/toggle-like/:postId?", async (req, res) => {
+router.get("/toggle-like", async (req, res) => {
   // http://localhost:3001/community/toggle-like
-  let postId = +req.params.postId;
+  let postId = +req.query.postId;
+  let userId = +req.query.userId;
+
   const output = {
     success: false,
     action: "",
+    likes: "",
     error: "",
+    likesCountError: "",
     code: 0,
     rows: "",
+    userIdExist: "",
   };
-  // jwt部分先掠過
 
+  // console.log(postId);
+  // console.log(userId);
   // 確認有無這則貼文的like
-  if (!postId) {
+  if (!postId || !userId) {
     return;
   } else {
     // console.log(`postId: ${postId} came, keep going`);
   }
-  const isLikeRowsSql = `SELECT pl.like_id, ps.post_id FROM sn_post_likes pl 
+
+  const isLikeRowsSql = `SELECT pl.like_id, ps.post_id, pl.user_id FROM sn_post_likes pl 
   INNER JOIN sn_posts ps ON pl.post_id = ps.post_id WHERE ps.post_id=?`;
+  // 先找出該like列表
   const [likeRows, field] = await db.query(isLikeRowsSql, [postId]);
-  console.log("start:", likeRows);
-  console.log("field:", field);
 
-  if (likeRows.length) {
-    const unlikeSql = `DELETE FROM sn_post_likes WHERE post_id=${postId}`;
+  console.log("likeRows", likeRows);
+  // console.log("field:", field);
+  const userIdExist = likeRows.map((v) => v.user_id).includes(userId);
+  // console.log("userIdExist:", userIdExist);
+
+  if (likeRows.length && userIdExist) {
+    const unlikeSql = `DELETE FROM sn_post_likes WHERE post_id=${postId} AND user_id=${userId}`;
     const [result] = await db.query(unlikeSql);
-
     if (result.affectedRows) {
       output.success = true;
       output.action = "remove";
@@ -105,8 +114,11 @@ router.get("/toggle-like/:postId?", async (req, res) => {
       return res.json(output);
     }
   }
-  if (!likeRows.length) {
-    const likeSql = `INSERT INTO sn_post_likes (post_id) VALUES (${postId})`;
+
+  if (!likeRows.length || (likeRows.length && !userIdExist)) {
+    // console.log("why", likeRows[0].user_id);
+
+    const likeSql = `INSERT INTO sn_post_likes (post_id, user_id) VALUES (${postId}, ${userId})`;
     const [result] = await db.query(likeSql);
     if (result.affectedRows) {
       output.success = true;
@@ -119,11 +131,29 @@ router.get("/toggle-like/:postId?", async (req, res) => {
       return res.json(output);
     }
   }
-  console.log("end:", likeRows);
 
-  console.log(output);
+  const likesCount = `SELECT COUNT(1) FROM sn_post_likes WHERE post_id=${postId}`;
+  const [result] = await db.query(likesCount);
+  const likes = result[0]["COUNT(1)"];
+  // console.log(likes);
+
+  const addResultToPosts = `UPDATE sn_posts SET likes=${likes} WHERE post_id=${postId}`;
+  const [likesCounted] = await db.query(addResultToPosts);
+  // console.log(likesCounted);
+  if (likesCounted.affectedRows) {
+    output.success = true;
+    output.action = "counted";
+    output.likes = "總讚數成功";
+  } else {
+    // 萬一沒有更新讚數成功
+    output.code = 430;
+    output.likesCountError = "無法更新總讚數";
+    return res.json(output);
+  }
+  // console.log(output);
   res.json(output);
 });
+
 router.get("/like-state/:postId?", async (req, res) => {
   // http://localhost:3001/community/toggle-like
   let postId = +req.params.postId;
@@ -134,18 +164,16 @@ router.get("/like-state/:postId?", async (req, res) => {
     code: 0,
     rows: "",
   };
-  // jwt部分先掠過
-
+  console.log("postId(toggle-like)", postId);
   // 確認有無這則貼文的like
   if (!postId) {
     return;
   } else {
     // console.log(`postId: ${postId} came, keep going`);
   }
-  const isLikeRowsSql = `SELECT pl.like_id, ps.post_id FROM sn_post_likes pl 
+  const isLikeRowsSql = `SELECT pl.like_id, ps.post_id, pl.user_id FROM sn_post_likes pl 
   INNER JOIN sn_posts ps ON pl.post_id = ps.post_id WHERE ps.post_id=?`;
   const [likeRows, field] = await db.query(isLikeRowsSql, [postId]);
-  // console.log("start:", likeRows);
   // console.log("field:", field);
 
   output.rows = likeRows;
@@ -210,10 +238,20 @@ router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
   try {
     // console.log("this is photo:", req.file);
 
+    if (!req.body.userId) {
+      output.success = false;
+      output.errors = "no user id";
+      return;
+    }
+
     if (!req.file) {
       const sql =
-        "INSERT INTO `sn_comments` ( `content`, `post_id`) VALUES ( ?, ? )";
-      [result] = await db.query(sql, [req.body.content, req.body.postId]);
+        "INSERT INTO `sn_comments` ( `content`, `post_id`, `user_id`) VALUES ( ?, ?, ? )";
+      [result] = await db.query(sql, [
+        req.body.content,
+        req.body.postId,
+        req.body.userId,
+      ]);
       output.success = true;
     }
 
@@ -225,11 +263,12 @@ router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
       // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
       const sql =
-        "INSERT INTO `sn_comments` ( `content`, `image_url`, `post_id`) VALUES ( ?, ?, ?)";
+        "INSERT INTO `sn_comments` ( `content`, `image_url`, `post_id`, `user_id`) VALUES ( ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.content,
         req.body.image_url,
         req.body.postId,
+        req.body.user_id,
       ]);
 
       output.success = true;
@@ -317,7 +356,7 @@ router.put(
 
 router.get("/updateviewcount/:postId?", async (req, res) => {
   let postId = +req.params.postId;
-
+  console.log(postId);
   const output = {
     success: false,
     message: "",

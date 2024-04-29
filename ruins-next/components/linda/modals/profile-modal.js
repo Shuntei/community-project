@@ -1,11 +1,33 @@
-import React from 'react'
+import {useEffect, useRef} from 'react'
 import Link from 'next/link'
 
-export default function ProfileModal({ isVisible, logout }) {
+export default function ProfileModal({ setShowModal, onClose, isVisible, logout }) {
+  const modalRef = useRef(null)
+
+  useEffect(()=>{
+    function handleClickOutside(event) {
+      if(modalRef.current && !modalRef.current.contains(event.target)){
+        setShowModal(false)
+      }
+    }
+
+    if(isVisible){
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return ()=>{
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isVisible, onClose])
+
+  
+
   if (!isVisible) return null
   return (
     <>
-      <div className=" absolute top-[30px] right-0 w-[381px] h-[239px] pl-6 pr-[26px] py-[39px] bg-zinc-950 border border-white justify-start items-start gap-6 inline-flex">
+      <div ref={modalRef} className="absolute top-[30px] right-0 w-[381px] h-[239px] pl-6 pr-[26px] py-[39px] bg-zinc-950 border border-white justify-start items-start gap-6 inline-flex">
         <div className="w-[197px] self-stretch justify-start items-start gap-2.5 flex">
           <div className="w-[197px] self-stretch p-[30px] justify-start items-start gap-2.5 flex">
             <img

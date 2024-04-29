@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { BackendPortForImg } from './config/api-path'
+import { SN_COMMUNITY } from '../config/johnny-api-path'
 import {
   RiChat4Fill,
   RiEyeFill,
@@ -7,17 +7,20 @@ import {
   RiMoreFill,
   RiArrowRightDoubleLine,
   RiArrowLeftDoubleLine,
+  RiHeartFill,
 } from '@remixicon/react'
 import Image from 'next/image'
-import img from './img/1868140_screenshots_20240115034222_1.jpg'
+// import img from './img/1868140_screenshots_20240115034222_1.jpg'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
 import { useToggles } from '@/contexts/use-toggles'
-import { SN_DELETE_POST, SN_PSPOSTS } from './config/api-path'
+import { SN_DELETE_POST, SN_PSPOSTS } from '../config/johnny-api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function PersonalContent() {
   const router = useRouter()
@@ -25,12 +28,22 @@ export default function PersonalContent() {
   const { removeBox, setRemoveBox, editModal, setEditModal } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
   const [psPosts, setPsPosts] = useState('')
+  const { auth } = useAuth()
+  // console.log('my id:', auth.id)
+
+  const psUserId = router.query.psUserId
+  const query = { ...router.query, psUserId: psUserId }
+  const queryString = new URLSearchParams(query).toString()
+  // console.log(queryString)
+  // console.log(location.search) undefined
 
   const allPsPostsShow = async () => {
     // currentPage是?page=哪一頁
-    const currentPage = location.search
+    // const currentPage = location.search
+    router.push({ pathname: '/community/main-personal', query: queryString })
+
     try {
-      const r = await fetch(`${SN_PSPOSTS}${currentPage}`)
+      const r = await fetch(`${SN_PSPOSTS}?${queryString}`)
       const data = await r.json()
       setPsPosts(data)
       console.log(data)
@@ -39,21 +52,16 @@ export default function PersonalContent() {
     }
   }
 
-  const handlePsPage = async (p) => {
-    try {
-      const r = await fetch(`${SN_PSPOSTS}?page=${p}`)
-      const data = await r.json()
-      setPsPosts(data)
-      // console.log(psPosts)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  const handlePush = (postId) => {
-    // router.push(`/community/main-post?postId=${postId}`);
-    handlePostId(postId)
-  }
+  // const handlePsPage = async (p) => {
+  //   try {
+  //     const r = await fetch(`${SN_PSPOSTS}?page=${p}&psUserId=${auth.id}`)
+  //     const data = await r.json()
+  //     setPsPosts(data)
+  //     // console.log(psPosts)
+  //   } catch (err) {
+  //     console.log(err)
+  //   }
+  // }
 
   const removePost = async (postId) => {
     const MySwal = withReactContent(Swal)
@@ -62,10 +70,11 @@ export default function PersonalContent() {
       title: '確認刪除貼文?',
       showCancelButton: true,
       showCancelButton: true,
-      confirmButtonColor: '#006400',
+      confirmButtonColor: '#292929',
       cancelButtonColor: '#8B0000',
       confirmButtonText: '是',
       cancelButtonText: '否',
+      timer: 3000,
     }).then((rst) => {
       if (rst.isConfirmed) {
         MySwal.fire({
@@ -95,29 +104,37 @@ export default function PersonalContent() {
   }
   useEffect(() => {
     if (router.isReady) {
-      const currentPage = router.query.page
-      handlePsPage(currentPage)
+      // const currentPage = router.query.page
+      // handlePsPage(currentPage)
+      allPsPostsShow()
+      setRender(false)
     }
-  }, [router.query.page, router.isReady])
+  }, [router.query.page, router.isReady, psUserId, render])
 
-  useEffect(() => {
-    // 首次渲染及調用render都會執行
-    allPsPostsShow()
-    setRender(false)
-  }, [render])
-  // console.log(psPosts.totalPostsRows)
+  // useEffect(() => {
+  //   // 首次渲染及調用render都會執行
+  //   allPsPostsShow()
+  //   setRender(false)
+  // }, [render])
+  // // console.log(psPosts.totalPostsRows)
 
   return (
     <>
-      {psPosts && psPosts.totalPages && (
+      {psPosts.totalPostsRows?.length === 0 ? (
+        <ul className=" flex justify-center text-xl"></ul>
+      ) : (
         <ul className="bg-neutral-300 flex justify-center text-xl py-2">
           <span
             className="border-s-2 px-3 py-3 flex items-center hover:hover1"
             onClick={() => {
-              router.push({
-                pathname: '/community/main-personal',
-                query: { page: `${1}` },
-              })
+              router.push(
+                {
+                  pathname: '/community/main-personal',
+                  query: { ...router.query, page: `${1}` },
+                },
+                undefined,
+                { shallow: true }
+              )
             }}
           >
             <RiArrowLeftDoubleLine />
@@ -134,10 +151,14 @@ export default function PersonalContent() {
                     <span
                       // href={`?page=${p}`}
                       onClick={() => {
-                        router.push({
-                          pathname: '/community/main-personal',
-                          query: { page: `${p}` },
-                        })
+                        router.push(
+                          {
+                            pathname: '/community/main-personal',
+                            query: { ...router.query, page: `${p}` },
+                          },
+                          undefined,
+                          { shallow: true }
+                        )
                       }}
                       className={`border-s-2 px-5 flex py-3 hover:hover1 cursor-pointer
                      active:bg-white ${p === psPosts.page ? 'bg-white' : ''} `}
@@ -151,15 +172,29 @@ export default function PersonalContent() {
           <span
             className="border-x-2 px-3 py-3 flex items-center hover:hover1"
             onClick={() => {
-              router.push({
-                pathname: '/community/main-personal',
-                query: { page: `${psPosts.totalPages}` },
-              })
+              router.push(
+                {
+                  pathname: '/community/main-personal',
+                  query: { ...router.query, page: `${psPosts.totalPages}` },
+                },
+                undefined,
+                { shallow: true }
+              )
             }}
           >
             <RiArrowRightDoubleLine />
           </span>
         </ul>
+      )}
+      {psPosts.totalPostsRows?.length === 0 ? (
+        <h1
+          className="flex bg-neutral-300 leading border-b-slate-500 justify-center 
+        text-[20px] font-semibold py-10 mb-10"
+        >
+          沒&nbsp;有&nbsp;任&nbsp;何&nbsp;貼&nbsp;文
+        </h1>
+      ) : (
+        ''
       )}
       {psPosts.totalPostsRows &&
         psPosts.totalPostsRows.map((v, i) => {
@@ -192,24 +227,36 @@ export default function PersonalContent() {
                         pathname: `/community/main-post`,
                         query: { postId: `${v.post_id}` },
                       }
-                      handlePush(v.post_id)
+                      // handlePush(v.post_id)
                       router.push(href)
                     }}
                     className="cursor-pointer"
                   >
-                    <div className="text-[20px] font-semibold">{v.title}</div>
+                    <div className="text-[20px] font-semibold flex items-center justify-between">
+                      <span>{v.title}</span>
+                      <span className="hidden pc:flex text-[12px]">
+                        {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
+                      </span>
+                    </div>
                     <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
                     <span>{v.content}</span>
+                    <div className="text-[12px] pc:hidden">
+                      {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
+                    </div>
                   </span>
                   <div className="text-[14px] text-292929">
                     <div className="flex gap-2">
-                      <span className="text-575757 pr-2 flex">
+                      <span className="text-575757 flex w-[55px]">
                         <RiEyeFill className="pr-1" />
                         {v.view_count}
                       </span>
-                      <span className="text-575757 flex">
+                      <span className="text-575757 flex w-[55px]">
                         <RiChat4Fill className="pr-1" />
                         {v.comment_count}
+                      </span>
+                      <span className="text-575757 flex w-[55px]">
+                        <RiHeartFill className="pr-1" />
+                        {v.likes}
                       </span>
                       <div className="relative">
                         <div
@@ -260,16 +307,16 @@ export default function PersonalContent() {
                 </div>
                 <Link
                   className="ml-6 w-[100px] pc:w-[150px] flex items-center justify-end flex-shrink-0 cursor-pointer"
-                  onClick={() => handlePush(v.post_id)}
+                  // onClick={() => handlePush(v.post_id)}
                   href={`/community/main-post?postId=${v.post_id}`}
                 >
                   {v.image_url && (
                     <Image
                       className="size-[100px] object-cover rounded-xl"
-                      src={`http://localhost:${BackendPortForImg}/community/${v.image_url}`}
+                      src={`${SN_COMMUNITY}/${v.image_url}`}
                       width={100}
                       height={100}
-                      alt="Description of image"
+                      alt="上傳的無法顯示圖片"
                     />
                   )}
                 </Link>

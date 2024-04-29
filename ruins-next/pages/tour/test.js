@@ -39,7 +39,7 @@ export default function App() {
       <SwiperSlide className="border">Slide 6</SwiperSlide>
     </Swiper>
 
-    <Swiper navigation={true} modules={[Navigation]} className="mySwiper bg-green-600 h-48">
+    <Swiper slidesPerView={3} spaceBetween={30} navigation={true} modules={[Navigation]} className="mySwiper bg-green-600 h-48">
         <SwiperSlide>Slide 1</SwiperSlide>
         <SwiperSlide>Slide 2</SwiperSlide>
         <SwiperSlide>Slide 3</SwiperSlide>
