@@ -1,8 +1,13 @@
 import React from 'react'
 import AccountLayout from '@/components/linda/accountLayout'
 import Link from 'next/link'
+import { useAuth } from '@/contexts/auth-context'
+import dayjs from 'dayjs'
 
 export default function MyTrips() {
+  const { auth } = useAuth()
+  // const [myTour, setMyTour] = useState([])
+
   return (
     <>
       <div className="flex w-full flex-col md:p-0 p-[30px] gap-[37px]">
@@ -62,7 +67,7 @@ export default function MyTrips() {
                     </div>
                   </Link>
                 </div>
-                <div id="tourCard" className="md:w-[30%]">
+                {/* <div id="tourCard" className="md:w-[30%]">
                   <Link
                     href=""
                     className="flex py-2.5 md:gap-8 gap-4 items-center"
@@ -103,7 +108,7 @@ export default function MyTrips() {
                       </span>
                     </div>
                   </Link>
-                </div>
+                </div> */}
               </div>
             </div>
             {/* finished tour */}
@@ -154,132 +159,6 @@ export default function MyTrips() {
                     </div>
                   </Link>
                 </div>
-                <div id="tourCard" className="md:w-[30%]">
-                  <Link
-                    href=""
-                    className="flex py-2.5 md:gap-8 gap-4 items-center"
-                  >
-                    <img
-                      src="/images/tempuse.jpg"
-                      className="md:w-[100px] w-20 aspect-square rounded object-cover"
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-2.5">
-                      <span className="md:text-xl text-[13px]">大安飛碟屋</span>
-                      <span className="md:text-[15px] text-[13px]">
-                        探險達人
-                      </span>
-                      <span className="md:text-[15px] text-[13px]">
-                        2024年10月25日
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-                <div id="tourCard" className="md:w-[30%]">
-                  <Link
-                    href=""
-                    className="flex py-2.5 md:gap-8 gap-4 items-center"
-                  >
-                    <img
-                      src="/images/tempuse.jpg"
-                      className="md:w-[100px] w-20 aspect-square rounded object-cover"
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-2.5">
-                      <span className="md:text-xl text-[13px]">大安飛碟屋</span>
-                      <span className="md:text-[15px] text-[13px]">
-                        探險達人
-                      </span>
-                      <span className="md:text-[15px] text-[13px]">
-                        2024年10月25日
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-                <div id="tourCard" className="md:w-[30%]">
-                  <Link
-                    href=""
-                    className="flex py-2.5 md:gap-8 gap-4 items-center"
-                  >
-                    <img
-                      src="/images/tempuse.jpg"
-                      className="md:w-[100px] w-20 aspect-square rounded object-cover"
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-2.5">
-                      <span className="md:text-xl text-[13px]">大安飛碟屋</span>
-                      <span className="md:text-[15px] text-[13px]">
-                        探險達人
-                      </span>
-                      <span className="md:text-[15px] text-[13px]">
-                        2024年10月25日
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-                <div id="tourCard" className="md:w-[30%]">
-                  <Link
-                    href=""
-                    className="flex py-2.5 md:gap-8 gap-4 items-center"
-                  >
-                    <img
-                      src="/images/tempuse.jpg"
-                      className="md:w-[100px] w-20 aspect-square rounded object-cover"
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-2.5">
-                      <span className="md:text-xl text-[13px]">大安飛碟屋</span>
-                      <span className="md:text-[15px] text-[13px]">
-                        探險達人
-                      </span>
-                      <span className="md:text-[15px] text-[13px]">
-                        2024年10月25日
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-                <div id="tourCard" className="md:w-[30%]">
-                  <Link
-                    href=""
-                    className="flex py-2.5 md:gap-8 gap-4 items-center"
-                  >
-                    <img
-                      src="/images/tempuse.jpg"
-                      className="md:w-[100px] w-20 aspect-square rounded object-cover"
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-2.5">
-                      <span className="md:text-xl text-[13px]">大安飛碟屋</span>
-                      <span className="md:text-[15px] text-[13px]">
-                        探險達人
-                      </span>
-                      <span className="md:text-[15px] text-[13px]">
-                        2024年10月25日
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-                <div id="tourCard" className="md:w-[30%]">
-                  <Link
-                    href=""
-                    className="flex py-2.5 md:gap-8 gap-4 items-center"
-                  >
-                    <img
-                      src="/images/tempuse.jpg"
-                      className="md:w-[100px] w-20 aspect-square rounded object-cover"
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-2.5">
-                      <span className="md:text-xl text-[13px]">大安飛碟屋</span>
-                      <span className="md:text-[15px] text-[13px]">
-                        探險達人
-                      </span>
-                      <span className="md:text-[15px] text-[13px]">
-                        2024年10月25日
-                      </span>
-                    </div>
-                  </Link>
-                </div>
               </div>
             </div>
             {/* cancelled tour */}
@@ -288,69 +167,6 @@ export default function MyTrips() {
                 已取消的行程
               </div>
               <div className="md:flex flex-wrap gap-[53px]">
-                <div id="tourCard" className="md:w-[30%]">
-                  <Link
-                    href=""
-                    className="flex py-2.5 md:gap-8 gap-4 items-center"
-                  >
-                    <img
-                      src="/images/tempuse.jpg"
-                      className="md:w-[100px] w-20 aspect-square rounded object-cover"
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-2.5">
-                      <span className="md:text-xl text-[13px]">大安飛碟屋</span>
-                      <span className="md:text-[15px] text-[13px]">
-                        探險達人
-                      </span>
-                      <span className="md:text-[15px] text-[13px]">
-                        2024年10月25日
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-                <div id="tourCard" className="md:w-[30%]">
-                  <Link
-                    href=""
-                    className="flex py-2.5 md:gap-8 gap-4 items-center"
-                  >
-                    <img
-                      src="/images/tempuse.jpg"
-                      className="md:w-[100px] w-20 aspect-square rounded object-cover"
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-2.5">
-                      <span className="md:text-xl text-[13px]">大安飛碟屋</span>
-                      <span className="md:text-[15px] text-[13px]">
-                        探險達人
-                      </span>
-                      <span className="md:text-[15px] text-[13px]">
-                        2024年10月25日
-                      </span>
-                    </div>
-                  </Link>
-                </div>
-                <div id="tourCard" className="md:w-[30%]">
-                  <Link
-                    href=""
-                    className="flex py-2.5 md:gap-8 gap-4 items-center"
-                  >
-                    <img
-                      src="/images/tempuse.jpg"
-                      className="md:w-[100px] w-20 aspect-square rounded object-cover"
-                      alt=""
-                    />
-                    <div className="flex flex-col gap-2.5">
-                      <span className="md:text-xl text-[13px]">大安飛碟屋</span>
-                      <span className="md:text-[15px] text-[13px]">
-                        探險達人
-                      </span>
-                      <span className="md:text-[15px] text-[13px]">
-                        2024年10月25日
-                      </span>
-                    </div>
-                  </Link>
-                </div>
                 <div id="tourCard" className="md:w-[30%]">
                   <Link
                     href=""

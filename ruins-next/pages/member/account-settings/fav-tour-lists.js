@@ -81,7 +81,7 @@ export default function FavTourLists() {
               <div id="favCard" className="md:w-fit py-2.5">
                 <Link href="" className="py-2.5 space-y-2.5">
                   <img
-                    src="/images/borou/hourse05.jpg"
+                    src="/images/borou/horse05.jpg"
                     className="md:w-[250px] w-36 aspect-square rounded object-cover"
                     alt=""
                   />

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-function FilterModal({ onSubmit }) {
+function FilterModal({ onSubmitOrder }) {
   const [isOpen, setIsOpen] = useState(false)
   const [order, setOrder] = useState()
 
@@ -17,9 +17,9 @@ function FilterModal({ onSubmit }) {
   //   setStartSoon(startSoon)
   // }
   const handleOrder = (order) => {
-    setOrder(order); // Set the selected order
+    setOrder(order) // Set the selected order
     // Pass the selected order to the parent component
-    onSubmit(order); 
+    onSubmitOrder(order)
   }
 
   useEffect(() => {
@@ -61,10 +61,14 @@ function FilterModal({ onSubmit }) {
             >
               最新上架
             </div>
-            <div className={`hover:bg-blue-100 px-2 py-1 ${order === '最愛' ? 'text-red-700' : ''}`}
+            <div
+              className={`hover:bg-blue-100 px-2 py-1 ${order === '最愛' ? 'text-red-700' : ''}`}
               onClick={() => {
                 handleOrder('最愛')
-              }}>最受歡迎</div>
+              }}
+            >
+              最受歡迎
+            </div>
             <div
               className={`hover:bg-blue-100 px-2 py-1 ${order === '最快' ? 'text-red-700' : ''}`}
               onClick={() => {

@@ -70,5 +70,9 @@ export const TOUR_LIST = `${API_SERVER}/tour/api`
 
 // 揪團貼文單筆
 export const TOUR_POST = `${API_SERVER}/tour/api/getPost`
-// get post information
+
+// 個人揪團管理
 export const TOUR_GET_POST = `${API_SERVER}/tour/api/get-post`
+
+// 收藏行程管理
+export const TOUR_GET_FAVTOUR = `${API_SERVER}/tour/api/favtour`

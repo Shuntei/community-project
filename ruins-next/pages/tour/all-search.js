@@ -10,6 +10,11 @@ import CategoryModal from '@/components/tony/modal-category'
 import FilterModal from '@/components/tony/modal-filter'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/contexts/auth-context'
+import { Swiper, SwiperSlide } from 'swiper/react'
+
+// Import Swiper styles
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 export default function AllSearch() {
   const { auth } = useAuth()
@@ -39,7 +44,6 @@ export default function AllSearch() {
   const fetchAllTourData = async (page) => {
     const response = await fetch(`${TOUR_LIST}?page=${page}`)
     const result = await response.json()
-
     // 若 result 或 result.rows undefined, 直接結束
     if (!result || !result.rows) {
       return
@@ -170,7 +174,7 @@ export default function AllSearch() {
   const handleOrder = (selectedOrder) => {
     setPageNumber(1) // Reset page number
     setTourList([]) // Clear old tour list
-
+    setOrder(selectedOrder)
     // Fetch filtered data with the selected order
     fetchFilteredTourData(
       1,
@@ -220,9 +224,6 @@ export default function AllSearch() {
       <div className="md:px-[150px] px-5 py-5 space-y-5 relative">
         <div className="flex justify-between">
           <div className="md:flex md:space-x-3 font-['Noto Sans TC'] text-[13px] font-semibold">
-            {/* <button className="rounded bg-white px-2.5 py-[5px] md:inline-block hidden ">
-              更多主題<i className="ri-arrow-down-s-line"></i>
-            </button> */}
             <CategoryModal onSubmit={handleSubmit} />
             <div className="md:space-x-3 space-x-2 flex flex-nowrap">
               <button
@@ -294,10 +295,6 @@ export default function AllSearch() {
             </div>
           </div>
           <div className="md:relative absolute -top-[60px] right-4 md:top-0 md:right-0">
-            {/* <button className="font-['Noto Sans TC'] md:text-[13px] text-xl me:font-semibold md:rounded rounded-full bg-white md:opacity-100 opacity-90 px-2.5 py-[5px]">
-              <i className="ri-equalizer-line"></i>
-              <span className="md:inline hidden">排序</span>
-            </button> */}
             <FilterModal onSubmitOrder={handleOrder} />
           </div>
         </div>
@@ -323,7 +320,7 @@ export default function AllSearch() {
                     >
                       <img
                         className="h-[250px] max-w-full object-cover"
-                        src={v.image_url}
+                        src={`/images/borou/${v.image_url}.jpg`}
                         alt=""
                       />
                       <div className="flex justify-between px-5">
