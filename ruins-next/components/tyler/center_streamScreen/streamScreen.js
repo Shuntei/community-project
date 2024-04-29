@@ -1,4 +1,4 @@
-import Title from '@/components/title/title';
+import Title from '../title/title';
 import useGift from '@/contexts/use-gift';
 import useToggle from '@/contexts/use-toggle-show';
 import { RiArrowLeftSLine, RiArrowRightSLine, RiCloseLine, RiCoinFill } from "@remixicon/react";
@@ -8,7 +8,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import GiftShow from '../giftShow/giftShow';
 import styles from './streamScreen.module.css';
-const StreamContent = dynamic(() => import('@/components/stream/stream'), {
+const StreamContent = dynamic(() => import('../stream/stream'), {
   ssr: false,
 })
 

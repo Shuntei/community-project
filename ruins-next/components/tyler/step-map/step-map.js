@@ -12,13 +12,13 @@ export default function StepMap() {
   const router = useRouter()
   const finalPrepPage = router.pathname.includes("/03");
   const [turnPage, setTurnPage] = useState([{
-    url: '/'
+    url: '/chat'
   }, {
-    url: '/02-check-webcam-source'
+    url: '/chat/02-check-webcam-source'
   }, {
-    url: '/03-insert-live-details'
+    url: '/chat/03-insert-live-details'
   }, {
-    url: '/05-streaming/streamer'
+    url: '/chat/05-streaming/streamer'
   }])
 
   const handlePageChange = () => {
