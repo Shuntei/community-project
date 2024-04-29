@@ -284,7 +284,7 @@ export default function Account() {
             <div
               className="bg-cover bg-center absolute inset-0"
               style={{
-                backgroundImage: `url(${coverPreview ? coverPreview : auth.coverUrl ? `${IMG_SERVER}/${auth.coverUrl}` : home2.src})`,
+                backgroundImage: `url(${coverPreview ? coverPreview : `${IMG_SERVER}/${auth.coverUrl}`})`,
                 width: '100%',
                 height: 'auto',
               }}
@@ -307,19 +307,14 @@ export default function Account() {
             >
               <Image
                 priority
-                className={`${avatarPreview || auth.profileUrl ? 'max-h-[110px] min-h-[110px]' : ''} object-cover min-w-[110px] rounded-full hover:border`}
+                className={`${avatarPreview ? 'max-h-[110px] min-h-[110px]' : ''} object-cover min-w-[110px] rounded-full hover:border`}
                 alt=""
                 width={110}
                 height={110}
                 src={
-                  avatarPreview ||
-                  (auth.profileUrl
-                    ? auth.googlePhoto
-                      ? auth.profileUrl
-                      : `${IMG_SERVER}/${auth.profileUrl}`
-                    : isHovered
-                      ? ProfileIconBold
-                      : ProfileIcon)
+                  avatarPreview || auth.googlePhoto
+                    ? auth.profileUrl
+                    : `${IMG_SERVER}/${auth.profileUrl}`
                 }
                 onMouseEnter={() => {
                   setIsHovered(true)

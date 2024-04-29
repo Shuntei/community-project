@@ -16,7 +16,6 @@ export default function Notifications() {
     try {
       const r = await fetch(`${MB_GET_NOTIFICATIONS}/${auth.id}`)
       const result = await r.json()
-      console.log(result.data);
       setToday(result.data.today)
       setWeek(result.data.week)
       setMonth(result.data.month)
@@ -41,12 +40,15 @@ export default function Notifications() {
               <div className="font-semibold text-[20px]">NOTIFICATIONS</div>
               <div className="flex flex-col gap-[10px] md:pr-[70px]">
                 <div className="py-[12px]">Today</div>
+                {today && today.map((v, i) => (
                 <Notification
-                  name={"albert"}
-                  src={profile1}
+                key={i}
+                  name={v.username}
+                  src={v.profile_pic_url}
                   text={"Going live in 1 hour!"}
                   hour={"2h"}
                 />
+                ))}
                 <Notification
                   name={"celinelin"}
                   src={profile2}
