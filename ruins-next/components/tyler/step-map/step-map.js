@@ -38,7 +38,7 @@ export default function StepMap() {
         timer: 2000,
       })
       return
-    }
+    } 
 
     if (currentPageIndex !== -1 && currentPageIndex < turnPage.length - 1) {
       const nextPageUrl = turnPage[currentPageIndex + 1].url

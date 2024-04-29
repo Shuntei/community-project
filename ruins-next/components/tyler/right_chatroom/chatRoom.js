@@ -6,8 +6,11 @@ import Image from 'next/image';
 import { useEffect, useRef, useState } from "react";
 import { API_SERVER } from "@/components/config/api-path";
 import styles from './chatRoom.module.css';
+import { useAuth } from "@/contexts/auth-context";
+import { IMG_SERVER } from "@/components/config/api-path";
 
 export default function ChatRoom({ isConnected, comment, setComment }) {
+  const { auth } = useAuth()
   const { onPhone, showChatroom, handleShowGift, handleShowMemberlist, role, roomCode, joinRoom } = useToggle()
   const [replyTarget, setreplyTarget] = useState("")
   const [replyTargetName, setreplyTargetName] = useState("")
@@ -74,8 +77,8 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
         if (inputComment !== "") {
           const newComment = {
             id: newId,
-            name: "陳泰勒",
-            profile: userProfile,
+            name: auth.username,
+            profile: auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
             comment: inputComment,
             reply: replyTarget,
           }

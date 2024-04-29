@@ -8,11 +8,13 @@ import Image from 'next/image';
 import Link from 'next/link';
 import GiftShow from '../giftShow/giftShow';
 import styles from './streamScreen.module.css';
+import AuthContext, { useAuth } from '@/contexts/auth-context';
 const StreamContent = dynamic(() => import('../stream/stream'), {
   ssr: false,
 })
 
 export default function StreamScreen({ isConnected }) {
+  const { auth } = useAuth()
   const { gList, giftRain, handleGiveGift } = useGift()
   const { onPhone, showChatroom, showSidebar, showGift, handleChatroom, handleSidebarHide } = useToggle()
 
@@ -43,7 +45,7 @@ export default function StreamScreen({ isConnected }) {
       </div>
 
       {/* 跳回上一頁 */}
-      <Link href="./index">
+      <Link href="/">
         <RiCloseLine className={styles['cancel']} />
       </Link>
 

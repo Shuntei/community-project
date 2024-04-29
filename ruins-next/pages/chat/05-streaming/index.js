@@ -11,13 +11,7 @@ export default function Streaming() {
   const [isConnected, setIsConnected] = useState(socket.connected);
 
   // 留言功能
-  const [comment, setComment] = useState([{
-    id: 1,
-    name: "陳泰勒",
-    profile: "/images/face-id.png",
-    comment: "第一個留言",
-    reply: ""
-  }])
+  const [comment, setComment] = useState([])
 
   useEffect(() => {
     if (!socket.connected) {
