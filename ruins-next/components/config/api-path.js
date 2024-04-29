@@ -31,6 +31,8 @@ export const MB_GET_NOTIFICATIONS = `${API_SERVER}/member/get-notifications`
 export const MB_MARK_READ = `${API_SERVER}/member/mark-read`
 // create notifications
 export const MB_CREATE_NOTIFICATIONS = `${API_SERVER}/member/create-notifications`
+// get tour info
+export const MB_GET_TOUR_INFO= `${API_SERVER}/member/get-tour-info`
 
 
 //商品列表

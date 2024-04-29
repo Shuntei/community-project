@@ -840,30 +840,33 @@ router.get("/get-notifications/:id", async (req, res) => {
   try {
     const todaySql = `SELECT n.*,
                       mb_user.username,
-                      mb_user.profile_pic_url
+                      mb_user.profile_pic_url,
+                      mb_user.google_photo
                       FROM mb_notifications n
-                      JOIN mb_user ON n.user_id = mb_user.id
+                      JOIN mb_user ON n.sender_id = mb_user.id
                       WHERE user_id = ?
                       AND DATE(n.created_at) = CURDATE()`;
     const lastWeekSql = `SELECT n.*,
                         mb_user.username,
-                        mb_user.profile_pic_url
+                        mb_user.profile_pic_url,
+                        mb_user.google_photo
                         FROM mb_notifications n
-                        JOIN mb_user ON n.user_id = mb_user.id
+                        JOIN mb_user ON n.sender_id = mb_user.id
                         WHERE user_id = ? 
                         AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
                         AND DATE(n.created_at) < CURDATE()`;
     const lastMonth = `SELECT n.*,
                       mb_user.username,
-                      mb_user.profile_pic_url
+                      mb_user.profile_pic_url,
+                      mb_user.google_photo
                       FROM mb_notifications n
-                      JOIN mb_user ON n.user_id = mb_user.id
+                      JOIN mb_user ON n.sender_id = mb_user.id
                       WHERE user_id = ? 
                       AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
                       AND DATE(n.created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`;
 
-    const [todayRows] = await db.query(lastWeekSql, id);
-    const [lastWeekRows] = await db.query(todaySql, id);
+    const [todayRows] = await db.query(todaySql, id);
+    const [lastWeekRows] = await db.query(lastWeekSql, id);
     const [lastMonthRows] = await db.query(lastMonth, id)
 
     return res.json({
@@ -883,5 +886,16 @@ router.get("/get-notifications/:id", async (req, res) => {
 router.post("/mark-read/:id", async (req, res) => {});
 
 router.post("/create-notifications/:id", async (req, res) => {});
+
+router.get("/get-tour-info",  async (req, res) => {
+  try {
+    const sql = `SELECT * FROM tony_tour_post p 
+                JOIN tony_tour_images i ON p.tour_id = i.tour_id 
+                WHERE 1 LIMIT 6`;
+                
+  } catch (error) {
+    console.log("Error getting tour info:", error);
+  }
+})
 
 export default router;

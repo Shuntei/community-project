@@ -61,6 +61,9 @@ export default function HomeContent() {
     },
   ]
 
+  const getTourInfo = async () => {
+    
+  }
   // tour post join tour images 
 
   const getProducts = async () => {
