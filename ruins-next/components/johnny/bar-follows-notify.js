@@ -7,12 +7,13 @@ import { SN_USER_INFO } from '../config/johnny-api-path'
 import { IMG_SERVER } from '../config/api-path'
 import { useRouter } from 'next/router'
 import useOutsideClick from './utils/out-side-click'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function FollowsBar() {
   const { toggles, setToggles } = useToggles()
   const [userInfo, setUserinfo] = useState('')
   const [keyword, setKeyword] = useState('')
-
+  const { auth } = useAuth()
   // console.log(query)
   // console.log(queryString)
   const fetchAllFollows = () => {
@@ -70,40 +71,43 @@ export default function FollowsBar() {
           </div>
           <ul className="h-[200px] overflow-auto hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
             {userInfo &&
-              userInfo.map((v, i) => {
-                return (
-                  <li
-                    key={v.id}
-                    className="text-white py-2 flex items-center cursor-pointer"
-                    onClick={() => {
-                      console.log(v.id)
-                      router.push({
-                        pathname: '/community/main-personal',
-                        query: { ...router.query, psUserId: v.id },
-                      })
-                      //先確定v.id傳出後再關閉follows,免得先關了卻沒傳出會無法變更
-                      setTimeout(() => {
-                        setToggles({
-                          ...toggles,
-                          notification: false,
-                          follows: false,
+              userInfo
+                .filter((v) => v.id !== auth.id)
+                .map((v, i) => {
+                  return (
+                    <li
+                      key={v.id}
+                      className="text-white py-2 flex items-center cursor-pointer"
+                      onClick={() => {
+                        console.log(v.id)
+                        router.push({
+                          // pathname: '/community/main-personal',
+                          pathname: '/community/main-page',
+                          query: { ...router.query, psUserId: v.id },
                         })
-                      }, 10)
-                    }}
-                  >
-                    <img
-                      className="w-[35px] h-[35px] object-cover overflow-hidden rounded-full mr-5 bg-zinc-300"
-                      src={
-                        v.google_id
-                          ? v.profile_pic_url
-                          : `${IMG_SERVER}/${v.profile_pic_url}`
-                      }
-                      alt=""
-                    />
-                    {v.username}
-                  </li>
-                )
-              })}
+                        //先確定v.id傳出後再關閉follows,免得先關了卻沒傳出會無法變更
+                        setTimeout(() => {
+                          setToggles({
+                            ...toggles,
+                            notification: false,
+                            follows: false,
+                          })
+                        }, 10)
+                      }}
+                    >
+                      <img
+                        className="w-[35px] h-[35px] object-cover overflow-hidden rounded-full mr-5 bg-zinc-300"
+                        src={
+                          v.google_id
+                            ? v.profile_pic_url
+                            : `${IMG_SERVER}/${v.profile_pic_url}`
+                        }
+                        alt=""
+                      />
+                      {v.username}
+                    </li>
+                  )
+                })}
           </ul>
           <div
             className="text-white flex justify-end mr-5 text-[14px] font-semibold  hover:cursor-pointer "

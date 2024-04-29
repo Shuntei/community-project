@@ -8,6 +8,7 @@ import {
 import { firebaseAuth } from '@/components/config/firebase'
 import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
+import Router, { useRouter } from 'next/router'
 
 const AuthContext = createContext()
 
@@ -35,6 +36,7 @@ export function AuthContextProvider({ children }) {
   const [auth, setAuth] = useState(defaultAuth)
   const [update, setUpdate] = useState(false)
   const [dateInSec, setDateInSec] = useState(null)
+  const router = useRouter()
 
   const signup = async (formData) => {
     try {
@@ -117,13 +119,15 @@ export function AuthContextProvider({ children }) {
       await signOut(firebaseAuth)
       localStorage.removeItem(storageKey)
       setAuth(defaultAuth)
+
+      router.push('/')
     } catch (error) {
       console.error('Error logging out:', error)
     }
   }
 
   useEffect(() => {
-    const dateInSec = Math.floor(Date.now() / 1000) 
+    const dateInSec = Math.floor(Date.now() / 1000)
     setDateInSec(dateInSec)
   }, [])
 
@@ -139,7 +143,16 @@ export function AuthContextProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ login, logout, signup, auth, googleLogin, update, setUpdate, dateInSec }}
+      value={{
+        login,
+        logout,
+        signup,
+        auth,
+        googleLogin,
+        update,
+        setUpdate,
+        dateInSec,
+      }}
     >
       {children}
     </AuthContext.Provider>

@@ -58,13 +58,13 @@ export default function ProfileModal({ setShowModal, onClose, isVisible, logout 
               >
                 SETTINGS
               </Link>
-              <Link
-                href="#"
+              <span
+                // href="#"
                 onClick={logout}
                 className="text-rose-400 text-base uppercase"
               >
                 LOGOUT
-              </Link>
+              </span>
             </div>
           </div>
         </div>

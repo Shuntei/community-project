@@ -63,7 +63,7 @@ export default function NavbarPopup() {
                     return
                   } else {
                     router.push({
-                      pathname: './main-personal',
+                      pathname: '/community/main-personal',
                       query: { ...router.query, psUserId: auth.id },
                     })
                   }
