@@ -2,7 +2,7 @@ import React,{ useState, useRef, useEffect, Suspense, useMemo } from 'react'
 import { Html } from '@react-three/drei';
 import { Canvas, useLoader, useFrame, useThree, extend  } from '@react-three/fiber'
 import { Physics } from "@react-three/rapier"
-import { Stats, OrbitControls, Environment } from '@react-three/drei'
+import { Sky, PointerLockControls, KeyboardControls, Stats, OrbitControls, Environment } from "@react-three/drei"
 import { Model } from './model'
 import { folder, useControls } from 'leva'
 import { useSpring, animated } from '@react-spring/three'
@@ -55,15 +55,20 @@ const Background = () => {
   );
 };
 
-// export const Controls ={
-//   forward: "forward",
-//   back:"back",
-//   left:"left",
-//   right:"right",
-//   jump:"jump",
-// }
+export const Controls ={
+  forward: "forward",
+  back:"back",
+  left:"left",
+  right:"right",
+  jump:"jump",
+}
 
-// const map = useMemo(() => [
+
+
+
+export default function TestC() {
+
+//   const map = useMemo(() => [
 //   { name: Controls.forward, keys: ["ArrowUp", "KeyW"]},
 //   { name: Controls.back, keys: ["ArrowDown", "KeyS"]},
 //   { name: Controls.left, keys: ["ArrowLeft", "KeyA"]},
@@ -72,23 +77,30 @@ const Background = () => {
 // ], []);
 
 
-export default function TestC() {
-
-
   return (
     <>
     <div className='h-svh'>
       <div>
         <Link href="/game"><RiCornerDownLeftLine className='text-white w-8 h-8'/></Link>
       </div>
-      <NavigationControls>
-      {/* <KeyboardControls map={map}> */}
+      {/* <NavigationControls> */}
+      <KeyboardControls map={[
+        { name: "forward", keys: ["ArrowUp", "w", "W"] },
+        { name: "backward", keys: ["ArrowDown", "s", "S"] },
+        { name: "left", keys: ["ArrowLeft", "a", "A"] },
+        { name: "right", keys: ["ArrowRight", "d", "D"] },
+        { name: "jump", keys: ["Space"] },
+      ]}>
       <Canvas className='bg-neutral-100' shadowmap="true" camera={{ position: [30, 2.8, -1.5], fov:48 }} >
+      <Sky sunPosition={[100, 20, 100]} />
       {/* <OrbitControls/> */}
         {/* <color attach="background" args={["#dbecfb"]}/> */}
         {/* <fog attach="fog" args={["#dbecfb",30,40]}/> */}
         <Suspense>
-          <Physics debug>
+          <Physics 
+          // debug
+          gravity={[0, -15, 0]}
+          >
             <Experience/>
           </Physics>
           
@@ -97,9 +109,10 @@ export default function TestC() {
           <ambientLight intensity={1} />
           <Background/>
         </Suspense>
+        <PointerLockControls />
       </Canvas>
-      {/* </KeyboardControls> */}
-      </NavigationControls>
+      </KeyboardControls>
+      {/* </NavigationControls> */}
     </div>
     <style jsx>{`
     *
