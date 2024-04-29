@@ -84,27 +84,27 @@ export default function Navbar({ className, navColor = 'white' }) {
                 >
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
                   <div className="absolute top-[-6px] left-[-35px]">
-                    {auth.profileUrl ? (
-                      <Image
-                        width={30}
-                        className="rounded-full min-h-[30px] max-h-[30px] object-cover"
-                        height={30}
-                        src={
-                          auth.googlePhoto
-                            ? auth.profileUrl
-                            : `${IMG_SERVER}/${auth.profileUrl}`
-                        }
-                        alt=""
-                      />
-                    ) : (
-                      <CgProfile className="text-[25px]" />
-                    )}
+                    <Image
+                      width={30}
+                      className="rounded-full min-h-[30px] max-h-[30px] object-cover"
+                      height={30}
+                      src={
+                        auth.googlePhoto
+                          ? auth.profileUrl
+                          : `${IMG_SERVER}/${auth.profileUrl}`
+                      }
+                      alt=""
+                    />
                   </div>
                   <div className="tracking-wide before:py-[10px]">
                     {auth.username}
                   </div>
                 </div>
-                <ProfileModal setShowModal={setShowModal} logout={logout} isVisible={showModal} />
+                <ProfileModal
+                  setShowModal={setShowModal}
+                  logout={logout}
+                  isVisible={showModal}
+                />
               </div>
             </div>
           ) : (
@@ -123,15 +123,12 @@ export default function Navbar({ className, navColor = 'white' }) {
             }  ${styles['navlinks']}`}
           >
             <CartModal />
-            {/* <Link href="/shop/cart">CART</Link> */}
-
             <div className={`${styles['cart-number']}`}>
               {navColor === 'white' ? (
                 <Image alt="" src={CartSvg} />
               ) : (
                 <Image alt="" src={CartLineBlack} />
               )}
-
               <span>{totalItems}</span>
             </div>
           </div>
@@ -158,23 +155,17 @@ export default function Navbar({ className, navColor = 'white' }) {
             href=""
             className={styles['profile-icon']}
           >
-            {auth.profileUrl ? (
-              <Image
-                width={20}
-                className="rounded-full h-[20px] object-cover"
-                height={20}
-                src={
-                  auth.googlePhoto
-                    ? auth.profileUrl
-                    : `${IMG_SERVER}/${auth.profileUrl}`
-                }
-                alt=""
-              />
-            ) : navColor === 'white' ? (
-              <Image alt="" src={ProfileIcon} />
-            ) : (
-              <Image alt="" src={ProfileIconBlack} />
-            )}
+            <Image
+              width={20}
+              className="rounded-full h-[20px] object-cover"
+              height={20}
+              src={
+                auth.googlePhoto
+                  ? auth.profileUrl
+                  : `${IMG_SERVER}/${auth.profileUrl}`
+              }
+              alt=""
+            />
           </button>
         </div>
         {auth.id ? (

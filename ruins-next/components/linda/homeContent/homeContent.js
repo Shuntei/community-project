@@ -61,6 +61,8 @@ export default function HomeContent() {
     },
   ]
 
+  // tour post join tour images 
+
   const getProducts = async () => {
     const url = `${PRODUCT_ALL}${location.search}`
     try {

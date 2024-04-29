@@ -838,17 +838,29 @@ router.get("/get-notifications/:id", async (req, res) => {
   const id = req.params.id;
 
   try {
-    const todaySql = `SELECT * FROM mb_notifications 
-                      WHERE user_id = ? 
-                      AND DATE(created_at) = CURDATE()`;
-    const lastWeekSql = `SELECT * FROM mb_notifications 
+    const todaySql = `SELECT n.*,
+                      mb_user.username,
+                      mb_user.profile_pic_url
+                      FROM mb_notifications n
+                      JOIN mb_user ON n.user_id = mb_user.id
+                      WHERE user_id = ?
+                      AND DATE(n.created_at) = CURDATE()`;
+    const lastWeekSql = `SELECT n.*,
+                        mb_user.username,
+                        mb_user.profile_pic_url
+                        FROM mb_notifications n
+                        JOIN mb_user ON n.user_id = mb_user.id
                         WHERE user_id = ? 
-                        AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-                        AND DATE(created_at) < CURDATE()`;
-    const lastMonth = `SELECT * FROM mb_notifications 
+                        AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                        AND DATE(n.created_at) < CURDATE()`;
+    const lastMonth = `SELECT n.*,
+                      mb_user.username,
+                      mb_user.profile_pic_url
+                      FROM mb_notifications n
+                      JOIN mb_user ON n.user_id = mb_user.id
                       WHERE user_id = ? 
-                      AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-                      AND DATE(created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`;
+                      AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+                      AND DATE(n.created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`;
 
     const [todayRows] = await db.query(lastWeekSql, id);
     const [lastWeekRows] = await db.query(todaySql, id);
