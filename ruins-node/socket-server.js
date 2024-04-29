@@ -1,22 +1,7 @@
-import express from "express";
-import multer from "multer";
-import communityRouter from "./routes/johnny/community-one.js";
-import communityRouterTwo from "./routes/johnny/community-two.js";
-import communityRouterThree from "./routes/johnny/community-three.js";
-import memberRouter from "./routes/linda/member.js";
-import productRouter from "./routes/kevin/product.js";
-import cartRouter from "./routes/kevin/cart.js";
-import tourRouter from "./routes/tony/tour.js";
-import chatRouter from "./routes/tyler/server.js";
-import db from "./utils/mysql2-connect.js";
-import cors from "cors";
-import gameRouter from "./routes/ellie/game.js";
-
-const app = express();
-
-// Socket.io Connection
+import express from 'express';
 import { Server as HttpServer } from 'http';
 import { Server as SocketIOServer } from 'socket.io';
+const app = express()
 const server = new HttpServer(app);
 const io = new SocketIOServer(server, {
   cors: {
@@ -24,40 +9,17 @@ const io = new SocketIOServer(server, {
   },
 });
 
-// top level middleware
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+import cors from "cors";
+import db from './utils/mysql2_connect.js';
 const corsOptions = {
   credentials: true,
   origin: (origin, callback) => {
     callback(null, true);
   },
 };
-
 app.use(cors(corsOptions));
-app.use(express.static("public"));
-app.use("/member", memberRouter);
-//產品路由
-app.use("/product", productRouter);
-//購物車路由
-app.use("/cart", cartRouter);
-app.use("/game", gameRouter);
-app.use("/tour", tourRouter);
-// 聊天室路由
-app.use("/chat", chatRouter);
-app.use("/community", communityRouter);
-app.use("/community", communityRouterTwo);
-app.use("/community", communityRouterThree);
-app.use("/tour", tourRouter);
-
-app.use((req, res) => {
-  res.status(404).send(`<h2>404 wrong path</h2>`);
-});
-
-
-// Socket.io content
-
 
 let viewerIdList = [];
 // let roomName = ""
@@ -119,7 +81,7 @@ io.on('connection', socket => {
   const handleJoinStreamerRoom = (roomCode) => {
     socket.join(roomCode)
     updateLiveStatus(roomCode);
-    console.log({ roomCode });
+    console.log({roomCode});
     console.log(`一人登入 ${roomCode}`)
   }
 
@@ -160,15 +122,6 @@ io.on('connection', socket => {
   socket.on('disconnecting', handleDisconnect)
 })
 
-
-
-
-
-const port = process.env.WEB_PORT || 3002;
-// app.listen(port, () => {
-//   console.log(`server started at ${port}`);
-// });
-
-server.listen(port, () => {
-  console.log(`server started at ${port}`);
+server.listen(3030, () => {
+  console.log(`正在連線伺服器 ${port}`)
 })
