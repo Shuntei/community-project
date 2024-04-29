@@ -1,16 +1,14 @@
+import cors from "cors";
 import express from "express";
-import multer from "multer";
+import gameRouter from "./routes/ellie/game.js";
 import communityRouter from "./routes/johnny/community-one.js";
-import communityRouterTwo from "./routes/johnny/community-two.js";
 import communityRouterThree from "./routes/johnny/community-three.js";
-import memberRouter from "./routes/linda/member.js";
-import productRouter from "./routes/kevin/product.js";
+import communityRouterTwo from "./routes/johnny/community-two.js";
 import cartRouter from "./routes/kevin/cart.js";
+import productRouter from "./routes/kevin/product.js";
+import memberRouter from "./routes/linda/member.js";
 import tourRouter from "./routes/tony/tour.js";
 import chatRouter from "./routes/tyler/server.js";
-import db from "./utils/mysql2-connect.js";
-import cors from "cors";
-import gameRouter from "./routes/ellie/game.js";
 
 const app = express();
 
@@ -57,8 +55,6 @@ app.use((req, res) => {
 
 
 // Socket.io content
-
-
 let viewerIdList = [];
 // let roomName = ""
 
@@ -159,10 +155,6 @@ io.on('connection', socket => {
   socket.on('showGift', handleShowGift)
   socket.on('disconnecting', handleDisconnect)
 })
-
-
-
-
 
 const port = process.env.WEB_PORT || 3002;
 // app.listen(port, () => {
