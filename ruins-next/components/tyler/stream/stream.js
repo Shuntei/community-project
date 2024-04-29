@@ -141,7 +141,7 @@ export default function Stream() {
             點擊連線主播
             <RiArrowRightSFill className='h-4 mt-1.5'></RiArrowRightSFill>
           </div>
-          <div className='absolute right-10 top-9 flex gap-3 mb-3 items-center cursor-pointer hover:scale-125 transition-all duration-300 max-md:z-50 max-md:left-3 max-md:top-3' onClick={callStreamer}>
+          <div className='absolute right-10 z-50 top-9 flex gap-3 mb-3 items-center cursor-pointer hover:scale-125 transition-all duration-300 max-md:z-50 max-md:left-3 max-md:top-3' onClick={callStreamer}>
             <img
               src="/images/radio.png"
               className={`bg-white rounded-full p-1 h-[34px] ${joinRoom ? "" : "grayscale"}`} />
