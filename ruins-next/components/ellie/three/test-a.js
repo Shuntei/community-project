@@ -19,22 +19,22 @@ import { LayerMaterial, Depth, Noise } from "lamina";
 import * as THREE from 'three';
 
 // Function to get player input from keyboard and mouse
-function getInput(keyboard, mouse) {
-  let [x, y, z] = [0, 0, 0];
-  // Checking keyboard inputs to determine movement direction
-  if (keyboard["s"]) z += 1.0; // Move backward
-  if (keyboard["w"]) z -= 1.0; // Move forward
-  if (keyboard["d"]) x += 1.0; // Move right
-  if (keyboard["a"]) x -= 1.0; // Move left
-  if (keyboard[" "]) y += 1.0; // Jump
+// function getInput(keyboard, mouse) {
+//   let [x, y, z] = [0, 0, 0];
+//   // Checking keyboard inputs to determine movement direction
+//   if (keyboard["s"]) z += 1.0; // Move backward
+//   if (keyboard["w"]) z -= 1.0; // Move forward
+//   if (keyboard["d"]) x += 1.0; // Move right
+//   if (keyboard["a"]) x -= 1.0; // Move left
+//   if (keyboard[" "]) y += 1.0; // Jump
 
-  // Returning an object with the movement and look direction
-  return {
-    move: [x, y, z],
-    look: [mouse.x / window.innerWidth, mouse.y / window.innerHeight], // Mouse look direction
-    running: keyboard["Shift"], // Boolean to determine if the player is running (Shift key pressed)
-  };
-}
+//   // Returning an object with the movement and look direction
+//   return {
+//     move: [x, y, z],
+//     look: [mouse.x / window.innerWidth, mouse.y / window.innerHeight], // Mouse look direction
+//     running: keyboard["Shift"], // Boolean to determine if the player is running (Shift key pressed)
+//   };
+// }
 
 const BG_SPEED = 0.1; 
 const Background = () => {
@@ -53,7 +53,6 @@ const Background = () => {
   // }, []);
   return (
     <mesh scale={50} ref={ref} >
-      {/* <shapeGeometry args={[1,64,64]}/> */}
       <sphereGeometry args={[1, 64, 64]} />
       {/* <meshBasicMaterial color={"red"} side={THREE.BackSide}/> */}
       <LayerMaterial side={THREE.BackSide}>
@@ -97,7 +96,10 @@ export default function TestA() {
       <Canvas className='bg-neutral-100' shadowmap="true" camera={{ position: [24, 4, 1.5], fov:42 }} >
         {/* <color attach="background" args={["#dbecfb"]}/> */}
         {/* <fog attach="fog" args={["#dbecfb",30,40]}/> */}
-        <Suspense>
+        <Suspense 
+        fallback={null} 
+        // gravity={[0, -30, 0]}
+        >
           <Physics debug>
             <Experience/>
           </Physics>
