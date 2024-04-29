@@ -5,8 +5,10 @@ import { Peer } from "peerjs";
 import { useEffect, useRef, useState } from 'react';
 import { API_SERVER } from '@/components/config/api-path';
 import { RiArrowRightSFill } from '@remixicon/react';
+import { useAuth } from '@/contexts/auth-context';
 
 export default function Stream() {
+  const { auth } = useAuth()
   const router = useRouter()
   const [streamRoom, setStreamRoom] = useState('')
   const { streamId, setStreamId, role, setRole, viewerId, setViewerId, roomCode, setRoomCode, vSocketId, setVSocketId, joinRoom, setJoinRoom } = useToggle()
@@ -43,7 +45,8 @@ export default function Stream() {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            streamId: id,
+            streamId: auth.id,
+            streamerName: auth.username,
           })
         })
       })

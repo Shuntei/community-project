@@ -52,19 +52,19 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
 
   const [userProfile, setUserProfile] = useState("/images/face-id.png")
 
-  const getUserProfile = async () => {
-    const r = await fetch(`${API_SERVER}/user-pic/12`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-    const data = await r.json()
-    setUserProfile(data[0].profile_pic_url)
-  }
-  useEffect(() => {
-    getUserProfile()
-  }, [comment])
+  // const getUserProfile = async () => {
+  //   const r = await fetch(`${API_SERVER}/user-pic/${auth.id}`, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //   const data = await r.json()
+  //   setUserProfile(data[0].profile_pic_url)
+  // }
+  // useEffect(() => {
+  //   getUserProfile()
+  // }, [comment])
 
   const handleCommentSubmit = (e) => {
 
@@ -201,7 +201,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
       let userId = 1
       fetch(`${API_SERVER}/add-point`, {
         method: 'POST',
-        body: JSON.stringify({ userId }),
+        body: JSON.stringify({ id: auth.id }),
         headers: {
           'Content-Type': 'application/json'
         }

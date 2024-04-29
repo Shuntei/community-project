@@ -11,20 +11,20 @@ router.get('/try-connect', async (req, res) => {
 })
 
 // 抓用戶資料
-router.get('/05-streaming/u-info/:pid', async (req, res) => {
-  let pid = req.params.pid
-  const sql = `SELECT * FROM mb_user WHERE id=?`
-  let [rows] = await db.query(sql, [pid])
-  res.json(rows)
-})
+// router.get('/05-streaming/u-info/:pid', async (req, res) => {
+//   let pid = req.params.pid
+//   const sql = `SELECT * FROM mb_user WHERE id=?`
+//   let [rows] = await db.query(sql, [pid])
+//   res.json(rows)
+// })
 
 // 抓用戶圖片
-router.get('/user-pic/:pid', async (req, res) => {
-  let pid = req.params.pid
-  const sql = `SELECT * FROM mb_user_profile WHERE user_id=?`
-  let [rows] = await db.query(sql, [pid])
-  res.json(rows)
-})
+// router.get('/user-pic/:pid', async (req, res) => {
+//   let pid = req.params.pid
+//   const sql = `SELECT * FROM mb_user_profile WHERE user_id=?`
+//   let [rows] = await db.query(sql, [pid])
+//   res.json(rows)
+// })
 
 // 計算所有點數
 router.get('/05-streaming/u-point/:pid', async (req, res) => {
@@ -48,7 +48,7 @@ router.get('/05-streaming/u-point/:pid', async (req, res) => {
 // 新增點數
 router.post('/add-point', async (req, res) => {
 
-  const { userId } = req.body
+  const { id } = req.body
   let points = 1000;
   let source = "頭像獎勵"
 
@@ -71,8 +71,7 @@ router.post('/use-point', async (req, res) => {
 // 登陸主播號碼
 router.post('/stream-logon', async (req, res) => {
 
-  const { streamId } = req.body
-  const streamerName = "tyler"
+  const { streamId, streamerName } = req.body
 
   let sql = 'INSERT INTO tyler_stream (stream_code, time, streamer_name	) VALUES (?,  CURRENT_TIMESTAMP(),?)'
   let [rows] = await db.query(sql, [streamId, streamerName])
