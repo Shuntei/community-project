@@ -23,7 +23,7 @@ export default function CheckWebcamSource() {
       {/* 最大框 */}
       <div className={styles['container']}>
 
-        <Link href="./index">
+        <Link href="/">
           <RiCloseLine className={styles['cancel']} />
         </Link>
 
