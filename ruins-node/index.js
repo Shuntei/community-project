@@ -7,7 +7,7 @@ import memberRouter from "./routes/linda/member.js";
 import productRouter from "./routes/kevin/product.js";
 import cartRouter from "./routes/kevin/cart.js";
 import tourRouter from "./routes/tony/tour.js";
-// import chatRouter from "./routes/tyler/server.js";
+import chatRouter from "./routes/tyler/server.js";
 import db from "./utils/mysql2-connect.js";
 import cors from "cors";
 import gameRouter from "./routes/ellie/game.js";

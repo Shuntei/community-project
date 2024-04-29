@@ -1,6 +1,6 @@
 import StreamScreen from '@/components/tyler/center_streamScreen/streamScreen';
 import MemberList from '@/components/tyler/left_memberList/memberList';
-import ChatRoom from '@/components/right_chatroom/chatRoom';
+import ChatRoom from '@/components/tyler/right_chatroom/chatRoom';
 import useGift from '@/contexts/use-gift';
 import { socket } from '@/src/socket';
 import styles from '@/styles/streaming.module.css';

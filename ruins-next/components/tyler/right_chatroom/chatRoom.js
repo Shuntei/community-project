@@ -1,4 +1,3 @@
-import useE from "@/contexts/use-effect";
 import usePoint from "@/contexts/use-points";
 import useToggle from "@/contexts/use-toggle-show";
 import { socket } from "@/src/socket";
@@ -10,7 +9,6 @@ import styles from './chatRoom.module.css';
 
 export default function ChatRoom({ isConnected, comment, setComment }) {
   const { onPhone, showChatroom, handleShowGift, handleShowMemberlist, role, roomCode, joinRoom } = useToggle()
-  const { handleEffectTab } = useE()
   const [replyTarget, setreplyTarget] = useState("")
   const [replyTargetName, setreplyTargetName] = useState("")
   const [peopleOnline, setPeopleOnline] = useState(0)
@@ -310,7 +308,6 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
           <div className='flex gap-1 '>
             <RiMoneyDollarCircleFill
               className='cursor-pointer'
-              onClick={handleEffectTab}
             ></RiMoneyDollarCircleFill>
             <div>{pts} pts</div>
           </div>

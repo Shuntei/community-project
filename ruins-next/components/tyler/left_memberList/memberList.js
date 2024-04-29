@@ -1,4 +1,4 @@
-import Member from '@/components/member/member';
+import Member from '../member/member';
 import useToggle from '@/contexts/use-toggle-show';
 import { socket } from '@/src/socket';
 import { RiCornerUpLeftFill } from "@remixicon/react";
