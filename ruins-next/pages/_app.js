@@ -11,11 +11,10 @@ import { CartProvider } from '@/hooks/use-cart'
 import { createRoot } from 'react-dom/client'
 // import { Canvas } from '@react-three/fiber'
 
-import { PointContextProvider } from '@/contexts/use-points'
-import { AnimateContextProvider } from '@/contexts/use-animate'
-import { ViewToggleContextProvider } from '@/contexts/use-toggle-show'
-import { GiftContextProvider } from '@/contexts/use-gift'
-import { EffectContextProvider } from '@/contexts/use-effect'
+import { PointContextProvider } from "@/contexts/use-points";
+import { ViewToggleContextProvider } from "@/contexts/use-toggle-show";
+import { GiftContextProvider } from "@/contexts/use-gift";
+import { StreamInfoContextProvider } from '@/contexts/use-streamInfo'
 
 export default function App({ Component, pageProps }) {
   const getLayout = Component.getLayout ?? ((page) => page)
@@ -24,17 +23,15 @@ export default function App({ Component, pageProps }) {
       <CartProvider>
         <BoardsContextProvider>
           <TogglesContextProvider>
-            <ViewToggleContextProvider>
-              <PointContextProvider>
-                <AnimateContextProvider>
+            <StreamInfoContextProvider>
+              <ViewToggleContextProvider>
+                <PointContextProvider>
                   <GiftContextProvider>
-                    <EffectContextProvider>
-                      {getLayout(<Component {...pageProps} />)}
-                    </EffectContextProvider>
+                    {getLayout(<Component {...pageProps} />)}
                   </GiftContextProvider>
-                </AnimateContextProvider>
-              </PointContextProvider>
-            </ViewToggleContextProvider>
+                </PointContextProvider>
+              </ViewToggleContextProvider>
+            </StreamInfoContextProvider>
           </TogglesContextProvider>
         </BoardsContextProvider>
       </CartProvider>

@@ -34,8 +34,8 @@ app.use("/product", productRouter);
 app.use("/cart", cartRouter);
 app.use("/game", gameRouter);
 app.use("/tour", tourRouter);
-// app.use("/chat", chatRouter);
-// 社群路由 one主頁 two修改及貼文 three好友通知
+// 聊天室路由
+app.use("/chat", chatRouter);
 app.use("/community", communityRouter);
 app.use("/community", communityRouterTwo);
 app.use("/community", communityRouterThree);

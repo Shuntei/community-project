@@ -1,5 +1,17 @@
-import express from 'express'
-import db from '../../utils/tyler/mysql2_connect.js';
+import express from 'express';
+import db from '../../utils/tyler/mysql2_connect';
+import { Server as HttpServer } from 'http';
+import { Server as SocketIOServer } from 'socket.io';
+const router = express.Router();
+const server = new HttpServer(router);
+const io = new SocketIOServer(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+  },
+});
+
+router.use(express.json());
+
 import cors from "cors";
 const corsOptions = {
   credentials: true,
@@ -7,9 +19,6 @@ const corsOptions = {
     callback(null, true);
   },
 };
-
-const router = express.Router();
-router.use(express.json());
 router.use(cors(corsOptions));
 
 // 確認有連線
@@ -30,7 +39,7 @@ router.get('/05-streaming/u-info/:pid', async (req, res) => {
 // 抓用戶圖片
 router.get('/user-pic/:pid', async (req, res) => {
   let pid = req.params.pid
-  const sql = `SELECT * FROM mb_user WHERE id=?`
+  const sql = `SELECT * FROM mb_user_profile WHERE user_id=?`
   let [rows] = await db.query(sql, [pid])
   res.json(rows)
 })
@@ -49,30 +58,172 @@ router.get('/user-pic/:pid', async (req, res) => {
 //   let [u_rows] = await db.query(u_sql, [pid]);
 //   let totalUse = u_rows.reduce((acc, row) => acc + row.point_use, 0);
 
-//   let leftPoints = totalGet - totalUse;
+  let leftPoints = totalGet - totalUse
 
-//   res.json(leftPoints);
-// });
+  res.json(leftPoints);
+})
 
-// // 新增點數
-// router.post("/add-point", async (req, res) => {
-//   const { userId } = req.body;
-//   let points = 100;
-//   let source = "頭像獎勵";
+// 新增點數
+router.post('/add-point', async (req, res) => {
 
-//   const sql = `INSERT INTO tyler_get_point (user_id, has_point, source, time_has_point) VALUES (?, ?, ?, CURRENT_TIMESTAMP())`;
-//   let [rows] = await db.query(sql, [userId, points, source]);
-//   res.json(rows);
-// });
+  const { userId } = req.body
+  let points = 1000;
+  let source = "頭像獎勵"
 
-// // 刪除點數
-// router.post("/use-point", async (req, res) => {
-//   const { userId, points, source } = req.body;
-//   console.log(req.body);
-
-  const sql = `INSERT INTO tyler_use_point (user_id, point_use, effect_id, time_use_point) VALUES (?, ?, ?, CURRENT_TIMESTAMP())`
+  const sql = `INSERT INTO tyler_get_point (user_id, has_point, source, time_has_point) VALUES (?, ?, ?, CURRENT_TIMESTAMP())`
   let [rows] = await db.query(sql, [userId, points, source])
   res.json(rows)
+})
+
+// 刪除點數
+router.post('/use-point', async (req, res) => {
+
+  const { userId, points, source } = req.body
+  console.log(req.body);
+
+  const sql = `INSERT INTO tyler_use_point (user_id, point_use, gift, time_use_point) VALUES (?, ?, ?, CURRENT_TIMESTAMP())`
+  let [rows] = await db.query(sql, [userId, points, source])
+  res.json(rows)
+})
+
+// 登陸主播號碼
+router.post('/stream-logon', async (req, res) => {
+
+  const { streamId } = req.body
+  const streamerName = "tyler"
+
+  let sql = 'INSERT INTO tyler_stream (stream_code, time, streamer_name	) VALUES (?,  CURRENT_TIMESTAMP(),?)'
+  let [rows] = await db.query(sql, [streamId, streamerName])
+  res.json(rows)
+})
+
+router.get('/watch-stream/:name', async (req, res) => {
+
+  const name = req.params.name
+
+  const sql = `SELECT * FROM tyler_stream WHERE streamer_name=? ORDER BY time DESC LIMIT 1`
+  let [rows] = await db.query(sql, [name])
+  res.json(rows)
+})
+
+router.post('/give-streamer-point', async (req, res) => {
+
+  const { name, gift, point } = req.body
+
+  let sql = 'INSERT INTO tyler_streamer_get_point (streamer_name, gift, get_point, time) VALUES (?, ?, ?, CURRENT_TIMESTAMP())'
+  let [rows] = await db.query(sql, [name, gift, point])
+  res.json(rows)
+})
+
+router.get('/totalBonus/:name', async (req, res) => {
+  const name = req.params.name
+
+  const sql = `SELECT * FROM tyler_streamer_get_point WHERE streamer_name=?`
+  let [rows] = await db.query(sql, [name])
+  let totalPoints = rows.reduce((acc, row) => acc + row.get_point, 0);
+  res.json(totalPoints)
+})
+
+
+let viewerIdList = [];
+// let roomName = ""
+
+// 確認連線
+io.on('connection', socket => {
+
+  const handleSendComment = (newComment, room) => {
+    io.to(room).emit('receiveComment', newComment)
+  }
+
+  const handlePinnedComment = (pinI, pinP, pinN, pinC, roomCode) => {
+    io.to(roomCode).emit('pinnedAll', pinI, pinP, pinN, pinC)
+  }
+
+  const handleUnpinComment = (roomCode) => {
+    io.to(roomCode).emit("unpinAll")
+  }
+
+
+  // FIXME:人數在離開時對不上
+  const updateLiveStatus = (room) => {
+    const users = io.sockets.adapter.rooms.get(room);
+    if (users) {
+      const liveNum = users.size;
+      console.log(` 目前 '${room}' 中有 ${liveNum} 人`);
+      io.to(room).emit("updateLiveNum", liveNum)
+    } else {
+      console.log(`房間 ${room} 没有用戶`);
+      io.to(room).emit("updateLiveNum", 0)
+    }
+  }
+
+  const handleUpdateBonus = (data, roomCode) => {
+    socket.to(roomCode).emit("updateBonus", data)
+  }
+
+  socket.on('sendComment', handleSendComment)
+  socket.on('pinnedComment', handlePinnedComment)
+  socket.on('unpinComment', handleUnpinComment)
+  socket.on('totalBonus', handleUpdateBonus)
+
+  // 視訊
+  const handleCheckRole = (id, role) => {
+
+    if (role == 'isStreamer') {
+      socket.emit('streamerStart', id)
+      socket.join(id)
+      console.log(`主播 ${id} 登入`);
+      updateLiveStatus(id);
+      // roomName = id;
+      // console.log({roomName});
+    } else {
+      socket.emit('viewerGo', id, socket.id)
+      console.log(`觀眾 ${id} 登入`);
+    }
+  };
+
+  const handleJoinStreamerRoom = (roomCode) => {
+    socket.join(roomCode)
+    updateLiveStatus(roomCode);
+    console.log({roomCode});
+    console.log(`一人登入 ${roomCode}`)
+  }
+
+  const handleUserEnter = (userData, roomCode) => {
+    const item = viewerIdList.find(el => el.viewerId === userData.viewerId)
+
+    if (item) {
+      console.log('已經在聊天室了');
+    } else if (userData.viewerId === "") {
+      console.log(`你送空ID`);
+    } else {
+      viewerIdList.push(userData)
+      io.to(roomCode).emit('userGo', viewerIdList)
+      console.log({ viewerIdList });
+    }
+  }
+
+  const handleShowGift = (roomCode, giftRain) => {
+    io.to(roomCode).emit('showGift', giftRain)
+  }
+
+  const handleDisconnect = () => {
+    const i = viewerIdList.findIndex(viewer => viewer.socketId === socket.id);
+    console.log({ i });
+    if (i !== -1) {
+      viewerIdList.splice(i, 1)
+      io.emit('userGo', viewerIdList)
+    }
+    // updateLiveStatus(roomName)
+    // console.log(`退出房${roomName}`);
+    console.log(`${socket.id}用戶退出`);
+  }
+
+  socket.on('check-role', handleCheckRole)
+  socket.on('joinRoom', handleJoinStreamerRoom)
+  socket.on('userEnter', handleUserEnter)
+  socket.on('showGift', handleShowGift)
+  socket.on('disconnecting', handleDisconnect)
 })
 
 export default router

@@ -1,9 +1,7 @@
-import React, { useEffect } from 'react'
-import { RiCheckboxFill } from "@remixicon/react";
-import { RiCloseLine } from "@remixicon/react";
-import styles from '@/styles/check-role.module.css'
-import { useState } from 'react';
+import styles from '@/styles/check-role.module.css';
+import { RiCheckboxFill, RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 export default function CheckRole() {
   const [viewerHover, setViewerHover] = useState(false);
@@ -48,7 +46,7 @@ export default function CheckRole() {
         <div className={styles['content-block']}>
 
           {/* 觀眾區 */}
-          <Link href="./chat/05-streaming">
+          <Link href="./05-streaming">
             <div
               className={!viewerHover && !streamerHover ? styles['viewer-block'] : viewerHover ? `${styles['viewer-block']}` : `${styles['unhover']}`}
               onMouseEnter={handleViewerMouseEnter}
@@ -74,7 +72,7 @@ export default function CheckRole() {
           </Link>
 
           {/* 主播區 */}
-          <Link href="./chat/02-check-webcam-source">
+          <Link href="./02-check-webcam-source">
             <div
               className={!viewerHover && !streamerHover ? styles['streamer-block'] : streamerHover ? `${styles['streamer-block']}` : `${styles['unhover']}`}
               onMouseEnter={handleStreamerMouseEnter}

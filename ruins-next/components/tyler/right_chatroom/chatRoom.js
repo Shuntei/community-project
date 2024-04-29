@@ -2,22 +2,19 @@ import useE from "@/contexts/use-effect";
 import usePoint from "@/contexts/use-points";
 import useToggle from "@/contexts/use-toggle-show";
 import { socket } from "@/src/socket";
-import { RiCloseFill, RiGift2Line, RiMoneyDollarCircleFill, RiPushpinFill, RiReplyFill, RiSpam3Line, RiStoreLine, RiUser3Fill, RiUserFill } from "@remixicon/react";
+import { RiCloseFill, RiGift2Line, RiMoneyDollarCircleFill, RiPushpinFill, RiReplyFill, RiUser3Fill, RiUserFill } from "@remixicon/react";
 import Image from 'next/image';
 import { useEffect, useRef, useState } from "react";
-import { API_SERVER, IMG_SERVER } from "@/components/config/api-path";
+import { API_SERVER } from "@/components/config/api-path";
 import styles from './chatRoom.module.css';
-import { useAuth } from "@/contexts/auth-context";
 
 export default function ChatRoom({ isConnected, comment, setComment }) {
-  const { auth } = useAuth()
-  const { onPhone, showChatroom, handleShowGift, handleShowMemberlist } = useToggle()
+  const { onPhone, showChatroom, handleShowGift, handleShowMemberlist, role, roomCode, joinRoom } = useToggle()
   const { handleEffectTab } = useE()
   const [replyTarget, setreplyTarget] = useState("")
   const [replyTargetName, setreplyTargetName] = useState("")
-  const room = "liveChatRoom"
   const [peopleOnline, setPeopleOnline] = useState(0)
-  const { pts, setPts } = usePoint()
+  const { pts, myPoints } = usePoint()
   const [pin, setPin] = useState(false)
   const [pinnedData, setPinnedData] = useState({
     commentId: null,
@@ -26,28 +23,20 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
     name: "",
   })
   const handleCommentFocus = useRef()
-
+  const SendButton = useRef()
+  const [clickedIds, setClickedIds] = useState([])
 
   useEffect(() => {
-
-    const handelConnection = () => {
-      socket.emit("joinRoom", room);
-    }
 
     const handlePeopleOnline = (liveNum) => {
       setPeopleOnline(liveNum)
     }
-
-    socket.on('connect', handelConnection)
     socket.on('updateLiveNum', handlePeopleOnline)
 
     return () => {
-      socket.off('connect', handelConnection)
-
       socket.off('updateLiveNum', handlePeopleOnline)
       socket.disconnect();
     }
-
   }, [])
 
   let isComposing = false;
@@ -63,42 +52,69 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
   const [userProfile, setUserProfile] = useState("/images/face-id.png")
 
   const getUserProfile = async () => {
-    const r = await fetch(`${API_SERVER}/chat/user-pic/${auth.id}`, {
+    const r = await fetch(`${API_SERVER}/user-pic/12`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     })
     const data = await r.json()
-    setUserProfile(data.profileUrl)
+    setUserProfile(data[0].profile_pic_url)
   }
-
   useEffect(() => {
     getUserProfile()
   }, [comment])
 
   const handleCommentSubmit = (e) => {
-    if (e.key === "Enter" && !isComposing) {
-      const inputComment = e.target.value.trim();
+
+    if (e.target !== SendButton.current) {
+
+      if (e.key === "Enter" && !isComposing) {
+        const inputComment = e.target.value.trim();
+        let newId = Date.now();;
+
+        if (inputComment !== "") {
+          const newComment = {
+            id: newId,
+            name: "陳泰勒",
+            profile: userProfile,
+            comment: inputComment,
+            reply: replyTarget,
+          }
+
+          if (isConnected) {
+            socket.emit('sendComment', newComment, roomCode)
+            console.log({ newComment }, { roomCode });
+            e.target.value = ""
+            setreplyTarget("")
+          } else {
+            console.log(`socket尚未連線`);
+          }
+        }
+      }
+    } else if (e.target == SendButton.current) {
+
+      const inputComment = handleCommentFocus.current.value.trim();
       let newId = Date.now();;
 
       if (inputComment !== "") {
         const newComment = {
           id: newId,
           name: "陳泰勒",
-          profile: userProfile ? (auth.googlePhoto ? userProfile : `${IMG_SERVER}/${userProfile}`) : "/images/face-id.png" ,
+          profile: userProfile,
           comment: inputComment,
           reply: replyTarget,
         }
 
         if (isConnected) {
-          socket.emit('sendComment', newComment, room)
-          console.log({ newComment }, { room });
-          e.target.value = ""
+          socket.emit('sendComment', newComment, roomCode)
+          console.log({ newComment }, { roomCode });
+          handleCommentFocus.current.value = ""
           setreplyTarget("")
         } else {
           console.log(`socket尚未連線`);
         }
+
       }
     }
   }
@@ -116,32 +132,6 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
     setreplyTarget("")
     setreplyTargetName("")
   }
-
-  const [blockComment, setBlockComment] = useState(true)
-  const [blockWord, setBlockWord] = useState([])
-
-  const handleBlockComment = () => {
-    setBlockComment(!blockComment)
-  }
-
-  const handleBlockWord = (e) => {
-    setBlockWord(e.target.value.split(","))
-    console.log(blockWord);
-  }
-
-  useEffect(() => {
-    const updatedComments = comment.map(c => {
-      let updatedComment = c.comment;
-      blockWord.forEach(word => {
-        if (updatedComment.includes(word)) {
-          updatedComment = updatedComment.replace(word, "***");
-        }
-      });
-      return { ...c, comment: updatedComment };
-    });
-    setComment(updatedComments);
-  }, [blockWord]);
-
 
   // 置頂功能
   useEffect(() => {
@@ -164,12 +154,12 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
       name: pinN,
     })
 
-    socket.emit('pinnedComment', pinI, pinP, pinN, pinC);
+    socket.emit('pinnedComment', pinI, pinP, pinN, pinC, roomCode);
   }
 
   const handleUnpin = () => {
     setPin(false)
-    socket.emit('unpinComment')
+    socket.emit('unpinComment', roomCode)
   }
 
   useEffect(() => {
@@ -179,28 +169,36 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
   })
 
   // 點數功能
-  const [clickedIds, setClickedIds] = useState([])
+
 
   useEffect(() => {
-    let newId = Date.now();;
-    const getPoints = setInterval(() => {
-      const newComment = {
-        id: newId,
-        name: "系統",
-        profile: "/images/treasure.png",
-        comment: "點頭貼，領點數！",
-      }
-      socket.emit('sendComment', newComment, room)
-    }, 100000);
 
-    return () => clearInterval(getPoints)
-  }, [])
+    if (joinRoom) {
+      const getPoints = setInterval(() => {
+        let newId = Date.now();;
+        const newComment = {
+          id: newId,
+          name: "系統",
+          profile: "/images/treasure.png",
+          comment: "點頭貼，領點數！",
+        }
+        console.log({ newId });
+
+        setComment(prev => [...prev, newComment])
+
+        if (newComment.name !== "系統") {
+          socket.emit('sendComment', newComment, roomCode)
+        }
+      }, 60000);
+
+      return () => clearInterval(getPoints)
+    }
+  }, [joinRoom])
 
   const handleGetPoints = (profile, id) => {
     if (profile == "/images/treasure.png" && !clickedIds.includes(id)) {
-
       let userId = 1
-      fetch(`${API_SERVER}/chat/add-point`, {
+      fetch(`${API_SERVER}/add-point`, {
         method: 'POST',
         body: JSON.stringify({ userId }),
         headers: {
@@ -211,6 +209,8 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
         .then(data => {
           console.log(`新增 ${data} 點數`);
           setClickedIds(prevIds => [...prevIds, id]);
+          console.log((clickedIds));
+          myPoints()
         })
     }
   }
@@ -248,13 +248,15 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
                       className='bg-white rounded-full p-1' />
                     <div className='shrink-0'>{c.name}</div>
                   </div>
-                  <div className='flex w-6/12 justify-end'>
-                    <RiPushpinFill className={styles.icon_reply} onClick={() => { handlePin(c.id, c.profile, c.name, c.comment) }} />
+                  {role === "isStreamer" && c.name !== "系統" &&
+                    <div className='flex w-6/12 justify-end'>
+                      <RiPushpinFill className={styles.icon_reply} onClick={() => { handlePin(c.id, c.profile, c.name, c.comment) }} />
+                    </div>}
+                  {c.name !== "系統" &&
                     <RiReplyFill
                       className={styles.icon_reply}
                       onClick={() => { handleClickIcon(c.comment, c.name) }}
-                    />
-                  </div>
+                    />}
                 </div>
 
                 <div className='w-[200px] ml-9 break-words'>{c.comment}</div>
@@ -263,16 +265,16 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
           })}
         </div>
 
-        {/* 置頂文字 */}
+        {/* 釘選文字 */}
         <div className={`flex flex-col items-start mb-2 ${pin ? "" : "hidden"}`}>
           <div className='flex justify-between w-full text-center'>
             <div className='flex w-6/12 gap-2 items-center justify-start'>
               <Image width={30} height={30} alt='大頭貼' src={pinnedData.profile} className='bg-white rounded-full p-1' />
               <div className='shrink-0'>{pinnedData.name}</div>
             </div>
-            <div className='w-6/12 flex justify-end items-center'>
+            {role === "isStreamer" && <div className='w-6/12 flex justify-end items-center'>
               <RiCloseFill className=' cursor-pointer h-5' onClick={handleUnpin}></RiCloseFill>
-            </div>
+            </div>}
           </div>
           <div className='w-[210px] ml-9 break-words'>{pinnedData.comment}</div>
         </div>
@@ -296,7 +298,11 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
             ref={handleCommentFocus}
           />
 
-          <button className={styles['sticker-comment']}>{onPhone ? "送出" : ""}</button>
+          <button
+            className="absolute top-1 right-2 font-medium text-black"
+            onClick={handleCommentSubmit}
+            ref={SendButton}
+          >{onPhone ? "送出" : ""}</button>
         </div>
 
         {/* 點數與禮物框 */}
@@ -318,17 +324,8 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
                 className={styles.iconstore}
                 onClick={handleShowMemberlist}
               ></RiUserFill>
-              <RiStoreLine
-                className={styles.iconstore}
-              ></RiStoreLine></>
+            </>
               : ""}
-
-            <RiSpam3Line className={styles.iconstore} id='block' onClick={handleBlockComment}></RiSpam3Line>
-            <input type="text" id='block'
-              className={` transition-width duration-300 ease-in-out ${blockComment ? "w-0" : "w-[140px]"} max-md:${blockComment ? "w-0" : "w-[100px]"} text-black`}
-              value={blockWord}
-              onChange={handleBlockWord}
-              maxLength={20} />
           </div>
         </div>
       </div>
