@@ -50,6 +50,15 @@ export const PRODUCT_COMMENT_ADD = `${API_SERVER}/product/product-comment`
 // 相關商品10筆
 export const PRODUCT_RELATED = `${API_SERVER}/product/api/relatedProducts`
 
+// 商品收藏紀錄
+export const PRODUCT_FAV =`${API_SERVER}/product/product-fav`
+
+// 商品加入收藏
+export const PRODUCT_ADD_FAV = `${API_SERVER}/product/add-product-fav` // POST
+
+// 商品移除收藏
+export const PRODUCT_REMOVE_FAV = `${API_SERVER}/product/remove-product-fav` // POST
+
 
 // 所有產品
 export const PRODUCT_ALL = `${API_SERVER}/product/api/allProducts`

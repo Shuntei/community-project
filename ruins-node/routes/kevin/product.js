@@ -281,8 +281,8 @@ router.post("/product-comment", async (req, res) => {
   res.json(output);
 });
 
-//收藏商品
-router.get("/api/getProductLiked/:mid", async (req, res) => {
+//取得收藏商品
+router.get("/product-fav/:mid", async (req, res) => {
   let output = {
     success: false,
     rows: [],
@@ -301,5 +301,50 @@ router.get("/api/getProductLiked/:mid", async (req, res) => {
   res.json({ success: true, rows });
 })
 
+// 商品加入收藏
+router.post('/add-product-fav', async (req, res) => {
+  const output = {
+    success: false,
+    postData: req.body,
+  }
+  const { member_id, product_sid } = req.body
+
+  try {
+    const sql = `
+    INSERT INTO product_collection(member_id, product_sid) VALUES (?, ?)
+    `
+    const [result] = await db.query(sql, [member_id, product_sid])
+
+    output.result = result
+    output.success = !!result.affectedRows
+  } catch (ex) {
+    console.log(ex)
+  }
+
+  return res.json(output)
+})
+
+// 商品移除收藏
+router.post('/remove-product-fav', async (req, res) => {
+  const output = {
+    success: false,
+    postData: req.body,
+  }
+  const { member_id, product_sid } = req.body
+
+  try {
+    const sql = `
+    DELETE FROM product_collection WHERE member_id = ? AND product_sid = ?
+    `
+    const [result] = await db.query(sql, [member_id, product_sid])
+
+    output.result = result
+    output.success = !!result.affectedRows
+  } catch (ex) {
+    console.log(ex)
+  }
+
+  return res.json(output)
+})
 
 export default router;
