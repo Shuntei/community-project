@@ -43,9 +43,9 @@ export default function PersonalBackground() {
           objectFit="cover"
           src={
             userInfo?.cover_pic_url
-              ? (userInfo.google_photo
-                ? userInfo.cover_pic_url
-                : `${IMG_SERVER}/${userInfo.cover_pic_url}`)
+              ? (userInfo?.google_photo
+                ? userInfo?.cover_pic_url
+                : `${IMG_SERVER}/${userInfo?.cover_pic_url}`)
               : ''
           }
           alt="背景圖片"
