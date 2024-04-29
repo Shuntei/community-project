@@ -29,20 +29,23 @@ export default function HomeContent() {
     getProducts()
   }, [router])
   useEffect(() => {
-    const container = document.querySelector(`.${styles['containerP']}`);
-  
+    const container = document.querySelector(`.${styles['containerP']}`)
+
     const slide = () => {
-      container.scrollLeft += 0.5; // 控制滑动速度
-      if (container.scrollLeft >= container.scrollWidth - container.clientWidth) {
-        container.scrollLeft = 0;
+      container.scrollLeft += 0.5 // 控制滑動速度
+      if (
+        container.scrollLeft >=
+        container.scrollWidth - container.clientWidth
+      ) {
+        container.scrollLeft = 0
       }
-    };
-  
-    const sliderInterval = setInterval(slide, 20); // 调整滑动间隔
-  
-    return () => clearInterval(sliderInterval);
-  }, []);
-  
+    }
+
+    const sliderInterval = setInterval(slide, 20) //  調整滑動間隔
+
+    return () => clearInterval(sliderInterval)
+  }, [])
+
   return (
     <>
       <div
@@ -124,7 +127,7 @@ export default function HomeContent() {
             <div className={styles.ps5}></div>
             <p className={styles['cards-container-title']}>RECENTLY ADDED</p>
             <div className="flex w-full justify-between  md:px-24 px-4 py-5 flex-col space-y-5">
-              <div className={`flex md:gap-10 gap-5 ${styles['containerP']} `} >
+              <div className={`flex md:gap-10 gap-5 ${styles['containerP']} `}>
                 {products &&
                   products.rows.map((v, i) => {
                     return (

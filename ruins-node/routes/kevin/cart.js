@@ -182,10 +182,6 @@ router.post("/createLinePayOrder", async (req, res) => {
   linePayOrder.amount = total_amount;
   // linePayOrder.packages.id = packageId
 
-  // console.log('createLinePayOrder', orders)
-  // console.log("createLinePayOrder", linePayOrder);
-  // console.log('createLinePayOrder', linePayOrder.packages[0].products[0])
-  // console.log('createLinePayOrder', linePayOrder.packages.products[1])
 
   try {
     const linePayBody = {
