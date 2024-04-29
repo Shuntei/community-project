@@ -1,8 +1,11 @@
 import Link from 'next/link'
 import React from 'react'
 import styles from './navbarPopup.module.css'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function NavbarPopup() {
+  const { auth } = useAuth()
+
   return (
     <nav
       className={`fixed z-[999] top-0 left-0 bg-black w-full flex-col items-center py-9`}
@@ -26,7 +29,17 @@ export default function NavbarPopup() {
               <a href="/community/main-page">COMMUNITY</a>
             </p>
             <p className="font-['IBM Plex Mono']">
-              <a href="/community/main-personal">PERSONAL</a>
+              {/* <a href={`/community/main-personal?psUserId=${auth.id}`}>
+                PERSONAL
+              </a> 用a會有順序問題導致跳回來*/}
+              <Link
+                href={{
+                  pathname: '/community/main-personal',
+                  query: { psUserId: auth.id },
+                }}
+              >
+                PERSONAL
+              </Link>
             </p>
             <p className="font-['IBM Plex Mono']">
               <a href="/community/main-messenger">MESSENGER</a>

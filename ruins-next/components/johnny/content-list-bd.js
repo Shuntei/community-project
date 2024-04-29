@@ -88,7 +88,7 @@ export default function MainContentBd() {
 
   return (
     <>
-      {selectedPosts.selectedBdPostsRows.length === 0 ? (
+      {selectedPosts.selectedBdPostsRows?.length === 0 ? (
         <ul className=" flex justify-center mt-[90px] text-xl"></ul>
       ) : (
         <ul className=" flex justify-center mt-[90px] text-xl">
@@ -141,7 +141,7 @@ export default function MainContentBd() {
           </span>
         </ul>
       )}
-      {selectedPosts.selectedBdPostsRows.length === 0 ? (
+      {selectedPosts.selectedBdPostsRows?.length === 0 ? (
         <h1
           className="flex bg-neutral-300 leading border-b-slate-500 justify-center 
         text-[20px] font-semibold py-10"

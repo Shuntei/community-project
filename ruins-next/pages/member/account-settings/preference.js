@@ -49,7 +49,12 @@ export default function Preference() {
   const fetchInfo = async ()=>{
     const r = await fetch(`${MB_GET_PREFERENCES}/${auth.id}`)
     const result = await r.json()
-    console.log(result);
+    const data = result.data
+    setLive(data.live)
+    setProduct(data.product)
+    setTrip(data.trip)
+    setGame(data.game)
+    setAll(data.all)
   }
 
   useEffect(()=>{
@@ -60,8 +65,11 @@ export default function Preference() {
       setGame(false)
     }
 
-    
   }, [all])
+
+  useEffect(()=>{
+    fetchInfo()
+  }, [])
 
   return (
     <>

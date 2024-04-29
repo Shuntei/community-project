@@ -214,6 +214,25 @@ function generateOutputData(rows) {
   };
 }
 
+const insertUserPreference = async (id) => {
+  try {
+    const defaultPreferences = {
+      live: true,
+      product: true,
+      trip: true,
+      game: true,
+      all: false,
+    };
+
+    const sqlInsert = `INSERT INTO mb_user_preference SET ?, user_id = ?`;
+    await db.query(sqlInsert, [defaultPreferences, id]);
+
+    console.log("User preferences inserted successfully");
+  } catch (error) {
+    console.log("Error inserting user preference:", error);
+  }
+};
+
 const defaultData = {
   id: 0,
   username: "",
@@ -285,11 +304,17 @@ router.post("/signup", async (req, res) => {
         birthday,
       ]);
       output.success = !!rows.affectedRows;
+      await insertUserPreference(rows.insertId);
+      const id = rows.insertId;
 
       if (output.success) {
-        const sql = "SELECT * FROM mb_user WHERE username=?";
-        const [rows] = await db.query(sql, username);
-        output.data = generateOutputData(rows[0]);
+        try {
+          const userSql = `SELECT * FROM mb_user WHERE id=?`;
+          const [userRows] = await db.query(userSql, id);
+          output.data = generateOutputData(userRows);
+        } catch (error) {
+          console.log("Something happened with the sql", error);
+        }
       }
     } catch (ex) {
       console.log(ex);
@@ -378,6 +403,7 @@ router.post("/google-login", async (req, res) => {
             output.data = generateOutputData(rows);
             output.success = true;
             output.message = "New info was inserted";
+            await insertUserPreference(rows[0].id);
           }
         } else {
           output.success = false;
@@ -782,38 +808,68 @@ router.post("/update-password", async (req, res) => {
   return res.json({ success: true, message: "Updated the password" });
 });
 
-router.get("get-preferences/:id")
-
-router.post("/save-preferences/:id", async (req, res) => {
-  const id = req.params.id
+router.get("/get-preferences/:id", async (req, res) => {
+  const id = req.params.id;
 
   try {
     const sql = `SELECT * FROM mb_user_preference WHERE user_id = ?`;
-    const [rows] = await db.query(sql, id)
-  
-    if(rows.length){
-      try {
-        const sql = `UPDATE mb_user_preference SET ? WHERE user_id = ?`;
-        const [result] = await db.query(sql, [req.body, id])
-        return res.json({success: true, message: "Updated successfully"})
-      } catch (error) {
-        console.log("Failed to update:", error);
-        return res.json({success: false, message: "Failed to update"})
-      }
-    } else {
-      try {
-        const sql = `INSERT INTO mb_user_preference SET ?, user_id = ?`;
-        const [result] = await db.query(sql, [req.body, id])
-        return res.json({success: true, message: "Inserted successfully"})
-      } catch (error) {
-        console.log("Failed to update:", error);
-        return res.json({success: false, message: "Failed to insert"})
-      }
-    }
+    const [rows] = await db.query(sql, id);
+    return res.json({ success: true, data: rows[0] });
   } catch (error) {
-    console.log("Something's wrong with the sql", error);
-    return res.json({success: false, message: "Something went wrong"})
+    console.log("Error getting data", error);
+    return res.json({ success: false, message: "Something happened with sql" });
   }
 });
+
+router.post("/save-preferences/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const sql = `UPDATE mb_user_preference SET ? WHERE user_id = ?`;
+    const [result] = await db.query(sql, [req.body, id]);
+    return res.json({ success: true, message: "Updated successfully" });
+  } catch (error) {
+    console.log("Failed to update:", error);
+    return res.json({ success: false, message: "Failed to update" });
+  }
+});
+
+router.get("/get-notifications/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const todaySql = `SELECT * FROM mb_notifications 
+                      WHERE user_id = ? 
+                      AND DATE(created_at) = CURDATE()`;
+    const lastWeekSql = `SELECT * FROM mb_notifications 
+                        WHERE user_id = ? 
+                        AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                        AND DATE(created_at) < CURDATE()`;
+    const lastMonth = `SELECT * FROM mb_notifications 
+                      WHERE user_id = ? 
+                      AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+                      AND DATE(created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`;
+
+    const [todayRows] = await db.query(lastWeekSql, id);
+    const [lastWeekRows] = await db.query(todaySql, id);
+    const [lastMonthRows] = await db.query(lastMonth, id)
+
+    return res.json({
+      success: true,
+      data: {
+        today: todayRows,
+        week: lastWeekRows,
+        month: lastMonthRows,
+      }
+    });
+  } catch (ex) {
+    console.log("Error getting notification information:", ex);
+    return res.json({ success: false });
+  }
+});
+
+router.post("/mark-read/:id", async (req, res) => {});
+
+router.post("/create-notifications/:id", async (req, res) => {});
 
 export default router;
