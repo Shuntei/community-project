@@ -62,6 +62,14 @@ export default function Signup() {
     if (auth.id) {
       router.back()
     }
+
+    const {email} = router.query
+    if(email){
+      setMyForm(prevForm => ({
+        ...prevForm,
+        email: email.toString(),
+      }))
+    }
   }, [auth, router])
 
   const today = new Date().toISOString().split('T')[0]

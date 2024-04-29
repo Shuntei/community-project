@@ -85,13 +85,13 @@ const EmblaCarousel = (props) => {
   }, [emblaApi, tweenOpacity, currentIndex])
 
   return (
-    <div className={`max-w-[30rem] h-[300px] ${className}`}>
+    <div className={`max-w-[30rem] ${className}`}>
       <div className="overflow-hidden" ref={emblaRef}>
         <div className=" flex touch-pan-y">
           {slides.map((slide, index) => (
             <div className="flex-none w-1/2 min-w-0 pl-4" key={index}>
               <img
-                className={`rounded block min-h-[300px] w-full object-cover`}
+                className={`rounded block md:h-[300px] h-[150px] w-full object-cover`}
                 src={slide.image}
                 alt="Your alt text"
               />

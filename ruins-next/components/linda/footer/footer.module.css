@@ -138,15 +138,6 @@
     outline: none;
   }
   
-  .footer-sec3 .signup {
-    width: 100%;
-    border: 1px solid #fff;
-    background: #000;
-    font-size: 15px;
-    font-weight: 500;
-    color: white;
-  }
-  
   .footer-sec3-bottom-section {
     display: flex;
     align-items: flex-start;
@@ -186,10 +177,6 @@
   
     .footer-sec3-text {
       font-size: 12px;
-    }
-  
-    .footer-sec3 .signup {
-      font-size: 13px;
     }
   
     .footer-sec3-bottom-section {

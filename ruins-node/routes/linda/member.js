@@ -304,8 +304,8 @@ router.post("/signup", async (req, res) => {
         birthday,
       ]);
       output.success = !!rows.affectedRows;
-      await insertUserPreference(rows.insertId)
-      const id = rows.insertId
+      await insertUserPreference(rows.insertId);
+      const id = rows.insertId;
 
       if (output.success) {
         try {
@@ -833,5 +833,43 @@ router.post("/save-preferences/:id", async (req, res) => {
     return res.json({ success: false, message: "Failed to update" });
   }
 });
+
+router.get("/get-notifications/:id", async (req, res) => {
+  const id = req.params.id;
+
+  try {
+    const todaySql = `SELECT * FROM mb_notifications 
+                      WHERE user_id = ? 
+                      AND DATE(created_at) = CURDATE()`;
+    const lastWeekSql = `SELECT * FROM mb_notifications 
+                        WHERE user_id = ? 
+                        AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                        AND DATE(created_at) < CURDATE()`;
+    const lastMonth = `SELECT * FROM mb_notifications 
+                      WHERE user_id = ? 
+                      AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+                      AND DATE(created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`;
+
+    const [todayRows] = await db.query(lastWeekSql, id);
+    const [lastWeekRows] = await db.query(todaySql, id);
+    const [lastMonthRows] = await db.query(lastMonth, id)
+
+    return res.json({
+      success: true,
+      data: {
+        today: todayRows,
+        week: lastWeekRows,
+        month: lastMonthRows,
+      }
+    });
+  } catch (ex) {
+    console.log("Error getting notification information:", ex);
+    return res.json({ success: false });
+  }
+});
+
+router.post("/mark-read/:id", async (req, res) => {});
+
+router.post("/create-notifications/:id", async (req, res) => {});
 
 export default router;
