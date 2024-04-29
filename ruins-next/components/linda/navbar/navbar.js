@@ -35,7 +35,7 @@ export default function Navbar({ className, navColor = 'white' }) {
     <>
       <nav
         className={`${styles.navbar} ${isOpen ? '' : className} ${
-          navColor === 'white' ? 'text-white' : 'text-black'
+          isOpen ? navColor = 'white' : (navColor === 'white' ? 'text-white' : 'text-black') 
         } relative select-none`}
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
@@ -49,7 +49,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                   className={`w-full h-[2px] ${
                     navColor === 'white' ? 'bg-white' : 'bg-black'
                   } transform transition duration-500 ease-in-out ${
-                    isOpen ? 'rotate-45 md:translate-y-1.5 translate-y-1.5' : ''
+                    isOpen ? 'rotate-45 md:translate-y-1.5 translate-y-1.5 bg-white' : ''
                   } `}
                 ></div>
                 <div
@@ -57,22 +57,22 @@ export default function Navbar({ className, navColor = 'white' }) {
                     navColor === 'white' ? 'bg-white' : 'bg-black'
                   }  md:mt-[10px] mt-[6px] transform  transition duration-500 ease-in-out ${
                     isOpen
-                      ? '-rotate-45 md:-translate-y-1.5 -translate-y-[0.125rem]'
+                      ? '-rotate-45 md:-translate-y-1.5 -translate-y-[0.125rem] bg-white'
                       : ''
                   }`}
                 ></div>
               </div>
             </div>
-            <span className="md:block hidden text-[15px] pl-[40px]">MAIN</span>
+            <span className={`${isOpen ? 'text-white' : ''} md:block hidden text-[15px] pl-[40px]`}>MAIN</span>
           </div>
         </div>
         <Link
           href="/"
-          className="md:text-[40px] text-[20px] font-medium justify-center flex w-1/3"
+          className={`${isOpen ? 'text-white' : ''} md:text-[40px] text-[20px] font-medium justify-center flex w-1/3`}
         >
           Ruins
         </Link>
-        <div className={`${styles['navlink-container']} relative w-1/3`}>
+        <div className={`${isOpen ? 'text-white' : ''} ${styles['navlink-container']} relative w-1/3`}>
           {auth.id ? (
             <div>
               <div className="relative cursor-pointer">
