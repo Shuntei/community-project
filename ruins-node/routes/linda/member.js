@@ -148,7 +148,7 @@ router.post("/login", async (req, res) => {
       email: row.email,
       profileUrl: row.profile_pic_url,
       coverUrl: row.cover_pic_url,
-      googlePhoto: row.google_photo,
+      googlePhoto: row.google_photo ? true : false,
       aboutMe: row.about_me,
       showContactInfo: row.allow_contact_info_visibility,
       ytLink: row.youtube_link,

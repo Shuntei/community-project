@@ -1,10 +1,10 @@
+import useGift from '@/contexts/use-gift'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import useAni from '@/contexts/use-animate';
 
 export default function GiftShow({ giftrain, size }) {
 
-  // const { isAnimating, setIsAnimating } = useAni()
+  const { setIsAnimating, isAnimating, setGiftRain } = useGift()
 
   const gift_appear = {
 
@@ -14,37 +14,33 @@ export default function GiftShow({ giftrain, size }) {
     },
 
     visible: {
-      y: [-200, 900],
+      y: [-200, 2000],
+      zIndex: 600,
       opacity: 1,
       transition: {
-        duration: 1.5,
-        ease: "easeIn",
-        repeat: 1,
+        duration: 4,
+        ease: "easeInOut",
+        repeat: 0,
         delay: Math.random() * 2
       }
     },
-
-    exit: {
-      y: 900,
-      opacity: 0,
-    }
-
   }
 
-console.log('跑動畫');
   return (
     <motion.div
       variants={gift_appear}
       initial="hidden"
       animate="visible"
-      exit="exit"
       style={{ position: 'absolute', left: `${Math.random() * 100}%` }}
-      onAnimationComplete={() => { 
-        // setIsAnimating(false) 
-        }
-      }
+      onAnimationComplete={() => {
+
+        setIsAnimating(false);
+        setGiftRain([]);
+        console.log(`動畫結束 ${isAnimating}`);
+
+      }}
     >
-      <Image width={size} height={size} src={giftrain} />
+      <Image width={size} height={size} src={giftrain} alt='動畫' />
     </motion.div>
   )
 }

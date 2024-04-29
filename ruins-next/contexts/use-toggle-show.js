@@ -1,14 +1,20 @@
-import { createContext, useContext, useState, useEffect } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react';
 
 const ViewToggleContext = createContext(null)
 
 export function ViewToggleContextProvider({ children }) {
-
+  const [streamId, setStreamId] = useState('');
+  const [viewerId, setViewerId] = useState("")
   const [onPhone, setOnPhone] = useState(false);
   const [showChatroom, setShowChatroom] = useState(true);
   const [showSidebar, setShowSidebar] = useState(true);
   const [showGift, setShowGift] = useState(false);
   const [showMember, setShowMember] = useState(false);
+  const [role, setRole] = useState("")
+  const [roomCode, setRoomCode] = useState('')
+  const [isStreaming, setIsStreaming] = useState(false)
+  const [vSocketId, setVSocketId] = useState('')
+  const [joinRoom, setJoinRoom] = useState(false)
 
   // 手機上顯示
   useEffect(() => {
@@ -31,7 +37,6 @@ export function ViewToggleContextProvider({ children }) {
   }
 
   // 顯示禮物介面（手機）
-
   const handleShowGift = () => {
     setShowGift(!showGift)
   }
@@ -42,7 +47,10 @@ export function ViewToggleContextProvider({ children }) {
   }
 
   return (
-    <ViewToggleContext.Provider value={{onPhone,showChatroom,showSidebar,showGift,showMember,handleChatroom,handleSidebarHide,handleShowGift,handleShowMemberlist}}>
+    <ViewToggleContext.Provider value={{
+      onPhone, showChatroom, showSidebar, showGift, showMember, handleChatroom, handleSidebarHide, handleShowGift, handleShowMemberlist, role, setRole, streamId, setStreamId,
+      viewerId, setViewerId, roomCode, setRoomCode, isStreaming, setIsStreaming, vSocketId, setVSocketId, joinRoom, setJoinRoom
+    }}>
       {children}
     </ViewToggleContext.Provider>
   )

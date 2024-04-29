@@ -1,4 +1,4 @@
-import Sidebar from '@/components/common/sidebar/sidebar';
+import Sidebar from '@/components/tyler/sidebar/sidebar';
 import { RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -23,7 +23,6 @@ export default function CheckWebcamSource() {
       {/* 最大框 */}
       <div className={styles['container']}>
 
-      {/* FIXME:連結用不了 */}
         <Link href="./index">
           <RiCloseLine className={styles['cancel']} />
         </Link>

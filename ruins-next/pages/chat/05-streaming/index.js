@@ -20,9 +20,14 @@ export default function Streaming() {
   }])
 
   useEffect(() => {
-    socket.connect();
+    if (!socket.connected) {
+      socket.connect();
+    }
+
     return () => {
-      socket.disconnect();
+      if (socket.connected) {
+        socket.disconnect();
+      }
     }
   }, [])
 

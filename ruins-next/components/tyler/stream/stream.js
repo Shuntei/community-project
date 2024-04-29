@@ -1,117 +1,189 @@
+import useToggle from '@/contexts/use-toggle-show';
 import { socket } from '@/src/socket';
 import { useRouter } from "next/router";
 import { Peer } from "peerjs";
 import { useEffect, useRef, useState } from 'react';
+import { API_SERVER } from '@/components/config/api-path';
+import { RiArrowRightSFill } from '@remixicon/react';
 
 export default function Stream() {
   const router = useRouter()
-  const [role, setRole] = useState("")
-  const [streamerRoom, setStreamerRoom] = useState(null);
-  const myVidsRef = useRef(null)
-  const [streamId, setStreamId] = useState('');
-  const [viewerId, setViewerId] = useState("")
+  const [streamRoom, setStreamRoom] = useState('')
+  const { streamId, setStreamId, role, setRole, viewerId, setViewerId, roomCode, setRoomCode, vSocketId, setVSocketId, joinRoom, setJoinRoom } = useToggle()
+  const localVidsRef = useRef(null)
+  const remoteVidsRef = useRef(null)
+  const peer = useRef()
 
   useEffect(() => {
     if (router.isReady) {
       const room = router.query.streamerPath;
-      console.log({ room });
-      setStreamerRoom(room);
+      setStreamRoom(room)
       const newRole = room ? "isStreamer" : "isViewer";
       setRole(newRole);
+      createPeer(newRole)
     }
   }, [router.isReady, router.query.streamerPath]);
 
-  useEffect(() => {
-    const myPeer = new Peer();
+  const createPeer = (role) => {
+    if (!peer.current) {
+      peer.current = new Peer();
+      peer.current.on('open', (id) => {
+        console.log(`我的PeerID是${id}`);
+        console.log(`我的身份是${role}`);
+        socket.emit('check-role', id, role);
+      });
 
-    myPeer.on('open', id => {
-      socket.emit('join-room', streamerRoom, id, role);
-      console.log(`我的ID是${id}`);
-      console.log(`我的身份是${role}`);
-    });
+      socket.on('streamerStart', async (id) => {
+        setStreamId(id)
+        setRoomCode(id)
 
-    socket.on('streamerStart', (id) => {
-      setStreamId(id)
-    })
-
-    socket.on('viewerGo', (id) => {
-      setViewerId(id)
-    })
-
-    if (role === "isStreamer") {
-      navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true
-      })
-        .then(myStream => {
-          addStream(myVidsRef.current, myStream)
-          myPeer.on('call', call => {
-            call.answer(myStream)
+        await fetch(`${API_SERVER}/stream-logon`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            streamId: id,
           })
         })
-    }
+      })
 
-    const call = (streamerId) => {
-      if (role === 'isViewer' && streamerId) {
-        const call = myPeer.call(streamerId, null)
-        call.on('stream', stream => {
-          addStream(myVidsRef, stream)
+      socket.on('viewerGo', (id, sId) => {
+        setViewerId(id)
+        setVSocketId(sId)
+      })
+
+      if (role === 'isStreamer') {
+        socket.emit('joinRoom', roomCode)
+        navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "user"
+          },
+          audio: true
         })
+          .then(stream => {
+            localVidsRef.current.srcObject = stream;
+            localVidsRef.current.play();
+            localVidsRef.current.muted = true
+
+            peer.current.on('call', (call) => {
+              call.answer(stream)
+            })
+          })
+
       }
     }
+  }
 
-    //   const skip=()={
-    //   // const getMedia = async () => {
-    //   //   const myStream = await navigator.mediaDevices.getUserMedia({
-    //   //     video: true,
-    //   //     audio: true
-    //   //   });
+  const calling = async () => {
+    try {
+      const r = await fetch(`${API_SERVER}/watch-stream/tyler`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
 
-    //   //   addStream(myVidsRef.current, myStream);
-    //   //   const call = myPeer.call(viewerId, myStream)
-    //   //   call.answer(myStream)
-    //   //   call.on('stream', (myStream) =>
-    //   //     addStream(myVidsRef.current, myStream)
-    //   //   );
-    //   // };
+      const data = await r.json()
+      setRoomCode(data[0].stream_code)
+      setStreamId(roomCode)
+    }
+    catch (err) {
+      console.log("沒有抓到資料");
+    }
+  }
 
-    //   // if (role === "isStreamer") {
-    //   //   getMedia()
-    //   // }
-    // }
+  useEffect(() => {
+    calling()
+  })
 
-    return () => {
-      myPeer.destroy();
-      socket.off('streamerStart');
-      socket.off('viewerGo');
-    };
+  const callStreamer = async () => {
 
-  }, [role, streamerRoom]);
+    if (!peer.current || !streamId || !viewerId) {
+      console.error(`有空值 -> Peer: ${peer.current}, streamId: ${streamId}`);
+      return
+    } else {
+      socket.emit('joinRoom', roomCode)
+      socket.emit('userEnter', { name: "tyler", viewerId: viewerId, socketId: vSocketId }, roomCode)
+      setJoinRoom(true)
+    }
 
-  const addStream = (video, myStream) => {
-    video.srcObject = myStream;
-    video.playsInline = true;
-    video.autoplay = true;
-    video.muted = (role === "isStreamer");
-
-    video.addEventListener('loadedmetadata', () => {
-      video.play()
+    navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "environment"
+      },
+      audio: true
     })
+      .then(stream => {
+        localVidsRef.current.srcObject = stream;
+        localVidsRef.current.play();
 
-    video.onended = () => {
-      video.srcObject = null;
-      video.remove();
-    };
+        const call = peer.current.call(streamId, stream)
+
+        if (!call) {
+          console.log(`叫不到主播 ${streamId}`);
+          return;
+        }
+
+        call.on('stream', (stream) => {
+          remoteVidsRef.current.srcObject = stream;
+          remoteVidsRef.current.play();
+        })
+      })
   }
 
   return (
     <>
-      <input value={streamId} onChange={e => setStreamId(e.target.value)} className="text-black" />
-      <button onClick={() => { () => call(streamId) }}>text</button>
+      {role === "isViewer" &&
+
+        <div>
+          <div className={`text-black flex absolute right-20 top-10 animate-bounce font-medium text-xl ${joinRoom ? "hidden" : ""} `}>
+            點擊連線主播
+            <RiArrowRightSFill className='h-4 mt-1.5'></RiArrowRightSFill>
+          </div>
+          <div className='absolute right-10 top-9 flex gap-3 mb-3 items-center cursor-pointer hover:scale-125 transition-all duration-300 max-md:z-50 max-md:left-3 max-md:top-3' onClick={callStreamer}>
+            <img
+              src="/images/radio.png"
+              className={`bg-white rounded-full p-1 h-[34px] ${joinRoom ? "" : "grayscale"}`} />
+          </div>
+        </div>
+
+      }
       <div
         id='stream-block'
         className=' bg-black w-full flex flex-col mt-2 mb-2 max-h-[75vh] max-md:mt-10'>
-        <video ref={myVidsRef} className='aspect-video object-contain max-h-[75vh] '></video>
+
+        {role === "isStreamer" ?
+          <>
+            <video
+              ref={localVidsRef}
+              className={`aspect-video object-contain max-h-[75vh]`}
+              controls
+              autoPlay
+              playsInline
+            >
+            </video>
+          </>
+          :
+          <>
+            <video
+              ref={localVidsRef}
+              className={`aspect-video object-contain max-h-[75vh]`}
+              controls
+              autoPlay
+              playsInline
+              muted
+              hidden
+            >
+            </video>
+            <video
+              ref={remoteVidsRef}
+              className={`aspect-video object-contain max-h-[75vh]`}
+              controls
+              autoPlay
+              playsInline>
+            </video>
+          </>}
       </div>
     </>
   )
