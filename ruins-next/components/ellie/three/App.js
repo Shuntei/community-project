@@ -26,7 +26,7 @@ export default function App() {
       ]}>
       {/* <NavigationControls> */}
       <Canvas shadows camera={{ fov: 45 }}>
-        <Camera fov={42} />
+        {/* <Camera fov={42} /> */}
         <Sky sunPosition={[100, 20, 100]} />
         <ambientLight intensity={0.3} />
         <pointLight castShadow intensity={0.8} position={[100, 100, 100]} />

@@ -14,22 +14,7 @@ import { useMouseCapture } from './MouseCapture'
 import { NavigationControls } from './NavigationControls'
 
 // Function to get player input from keyboard and mouse
-function getInput(keyboard, mouse) {
-  let [x, y, z] = [0, 0, 0];
-  // Checking keyboard inputs to determine movement direction
-  if (keyboard["s"]) z += 1.0; // Move backward
-  if (keyboard["w"]) z -= 1.0; // Move forward
-  if (keyboard["d"]) x += 1.0; // Move right
-  if (keyboard["a"]) x -= 1.0; // Move left
-  if (keyboard[" "]) y += 1.0; // Jump
 
-  // Returning an object with the movement and look direction
-  return {
-    move: [x, y, z],
-    look: [mouse.x / window.innerWidth, mouse.y / window.innerHeight], // Mouse look direction
-    running: keyboard["Shift"], // Boolean to determine if the player is running (Shift key pressed)
-  };
-}
 
 export default function Entrance() {
 
@@ -45,12 +30,11 @@ export default function Entrance() {
             <Box position={[-8, 2,-4]} />
             <Box2 position={[-1.2, 2, 9]} />
             <Box3 position={[9, 2, -3]} />
-          {/* <OrbitControls target={[0, 1, 0]}/> */}
-          <OrbitControls/>
+          <OrbitControls target={[0, -0.5, 0]}/>
           <ambientLight intensity={1} />
         </Canvas>
       </NavigationControls>
-      <Stats />
+      {/* <Stats /> */}
     </div>
 
 </>

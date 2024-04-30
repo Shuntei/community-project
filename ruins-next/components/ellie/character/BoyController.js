@@ -6,6 +6,7 @@ import { useKeyboardControls } from '@react-three/drei'
 import * as THREE from 'three'
 import { useSpring, animated } from "@react-spring/web";
 import { useGame } from '../three/store/useGame';
+  
 
 export default function BoyController(props) {
 
@@ -116,6 +117,8 @@ useFrame(({ camera }, delta) => {
 
   camera.position.copy(cameraProperties.position)
   camera.lookAt(cameraProperties.target)
+      // update camera
+      // camera.position.copy(ref.current.translation())
   }
 })
 
