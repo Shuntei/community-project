@@ -1,8 +1,11 @@
 import {useEffect, useRef} from 'react'
 import Link from 'next/link'
+import { IMG_SERVER } from '@/components/config/api-path'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function ProfileModal({ setShowModal, onClose, isVisible, logout }) {
   const modalRef = useRef(null)
+  const {auth} = useAuth()
 
   useEffect(()=>{
     function handleClickOutside(event) {
@@ -31,8 +34,8 @@ export default function ProfileModal({ setShowModal, onClose, isVisible, logout 
         <div className="w-[197px] self-stretch justify-start items-start gap-2.5 flex">
           <div className="w-[197px] self-stretch p-[30px] justify-start items-start gap-2.5 flex">
             <img
-              className="w-[137px] h-[101px] relative"
-              src="https://via.placeholder.com/137x101"
+              className="w-[137px] h-[101px] relative object-cover"
+              src={auth.googlePhoto ? auth.profileUrl : (IMG_SERVER ? `${IMG_SERVER}/${auth.profileUrl}` : '')}
             />
           </div>
         </div>

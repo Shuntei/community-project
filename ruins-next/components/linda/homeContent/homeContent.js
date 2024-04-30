@@ -21,50 +21,11 @@ export default function HomeContent() {
   const [slides, setSlides] = useState([])
 
   const OPTIONS = { loop: true }
-  // const slides = [
-  //   {
-  //     name: 'Title1',
-  //     image: 'https://source.unsplash.com/23fk429Ayok',
-  //     description:
-  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-  //   },
-  //   {
-  //     name: 'Title2',
-  //     image: 'https://source.unsplash.com/GSCtoEEqntQ',
-  //     description:
-  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-  //   },
-  //   {
-  //     name: 'Title3',
-  //     image: 'https://source.unsplash.com/F1VKXkx17RM',
-  //     description:
-  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-  //   },
-  //   {
-  //     name: 'Title4',
-  //     image: 'https://source.unsplash.com/t0DRQNoRuSw',
-  //     description:
-  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-  //   },
-  //   {
-  //     name: 'Title5',
-  //     image: 'https://source.unsplash.com/B2Eiil2Y0lo',
-  //     description:
-  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-  //   },
-  //   {
-  //     name: 'Title6',
-  //     image: 'https://source.unsplash.com/k5lSVBfhPm8',
-  //     description:
-  //       'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ab, eum!',
-  //   },
-  // ]
 
   const getTourInfo = async () => {
     try {
       const r = await fetch(MB_GET_TOUR_INFO)
       const result = await r.json()
-      console.log(result.data);
       setSlides(result.data)
     } catch (error) {
       console.log("Failed to fetch tour info:", error);

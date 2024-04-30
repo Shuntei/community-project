@@ -7,6 +7,7 @@ import {
 } from './EmblaCarouselArrowButtons'
 import { DotButton, useDotButton } from './EmblaCarouselDotButton'
 import styles from '../homeContent/homeContent.module.css'
+import Link from 'next/link'
 
 const TWEEN_FACTOR_BASE = 0.84
 
@@ -125,11 +126,12 @@ const EmblaCarousel = (props) => {
             {slide.description}
             </span>
           </div>
-          <button
+          <Link
+          href={`http://localhost:3000/tour/tourpost/${slide.tour_id}`}
             className={`${styles['card-button']} cursor-pointer hover:bg-[#7A7A7A]`}
           >
             READ NOW
-          </button>
+          </Link>
         </div>
       ))}
     </div>
