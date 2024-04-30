@@ -1,5 +1,5 @@
-export const API_SERVER = "http://localhost:3001"
-export const IMG_SERVER = "http://localhost:3001/img"
+export const API_SERVER = 'http://localhost:3001'
+export const IMG_SERVER = 'http://localhost:3001/img'
 
 // signup
 export const MB_SIGNUP = `${API_SERVER}/member/signup`
@@ -15,7 +15,7 @@ export const MB_CHECK_EMAIL = `${API_SERVER}/member/check-email`
 export const MB_CHECK_PASS = `${API_SERVER}/member/check-password`
 // edit email
 export const MB_EDIT_INFO = `${API_SERVER}/member/edit-info`
-// send OTP 
+// send OTP
 export const MB_SEND_CODE = `${API_SERVER}/member/send-code`
 // request email
 export const MB_REQ_EMAIL = `${API_SERVER}/member/request-email`
@@ -33,7 +33,6 @@ export const MB_MARK_READ = `${API_SERVER}/member/mark-read`
 export const MB_CREATE_NOTIFICATIONS = `${API_SERVER}/member/create-notifications`
 // get tour info
 export const MB_GET_TOUR_INFO= `${API_SERVER}/member/get-tour-info`
-
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`
@@ -59,7 +58,6 @@ export const PRODUCT_ADD_FAV = `${API_SERVER}/product/add-product-fav` // POST
 // 商品移除收藏
 export const PRODUCT_REMOVE_FAV = `${API_SERVER}/product/remove-product-fav` // POST
 
-
 // 所有產品
 export const PRODUCT_ALL = `${API_SERVER}/product/api/allProducts`
 
@@ -82,22 +80,25 @@ export const CART_LINEPAY = `${API_SERVER}/cart/createLinePayOrder` // POST
 export const CART_LINEPAYCONFIRM = `${API_SERVER}/cart/linePay/confirm`
 
 // 歷史訂單 - status:全部
-export const PRODUCT_MYALLPO =`${API_SERVER}/product/api/getAllPo`
+export const PRODUCT_MYALLPO = `${API_SERVER}/product/api/getAllPo`
 
 // 歷史訂單 - status:訂單處理中
 export const PRODUCT_MYONGOINGPO = `${API_SERVER}/product/api/getOngoingPo`
 
 // 歷史訂單 - status:已完成
-export const PRODUCT_MYCOMPLETEDPO =`${API_SERVER}/product/api/getCompletedPo`
+export const PRODUCT_MYCOMPLETEDPO = `${API_SERVER}/product/api/getCompletedPo`
 
 // 揪團貼文列表
 export const TOUR_LIST = `${API_SERVER}/tour/api`
 
 // 揪團貼文單筆
-export const TOUR_POST = `${API_SERVER}/tour/api/getPost`
+export const TOUR_POST = `${API_SERVER}/tour/api/tourpost`
 
 // 個人揪團管理
 export const TOUR_GET_POST = `${API_SERVER}/tour/api/get-post`
 
 // 收藏行程管理
-export const TOUR_GET_FAVTOUR = `${API_SERVER}/tour/api/favtour`
+export const TOUR_GET_FAVTOURBOOK = `${API_SERVER}/tour/api/favtourbook`
+
+// 收藏行程細項
+export const TOUR_GET_FAVTOURS = `${API_SERVER}/tour/api/favtours`

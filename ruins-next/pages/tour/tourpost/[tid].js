@@ -319,7 +319,7 @@ export default function TourPost() {
                   活動詳情
                 </h2>
                 <div className="md:space-y-[15px] space-y-2 md:text-base text-[13px]">
-                  <p>目前參加人數：7/{tourPost.max_groupsize} 人</p>
+                  <p>目前參加人數：{tourPost.member_count}/{tourPost.max_groupsize} 人</p>
                   <p>
                     出發時間：{dayjs(tourPost.event_date).format('YYYY/MM/DD')},{' '}
                     {dayjs(tourPost.event_date).format('A') === 'AM'
@@ -603,3 +603,11 @@ export default function TourPost() {
     </>
   )
 }
+
+// 用來sql更新參加人數
+// UPDATE tony_tour_post
+// SET tour_member_count = (
+//     SELECT COUNT(CASE WHEN tour_id = tony_tour_post.tour_id THEN 1 END)
+//     FROM tony_tour_members
+//     WHERE tour_id = tony_tour_post.tour_id
+// );

@@ -1,5 +1,5 @@
 import express from "express";
-import db from "../../utils/tony/mysql2-connect.js";
+import db from "../../utils/mysql2-connect.js";
 
 const router = express.Router();
 
@@ -97,9 +97,8 @@ const getTourList = async (req, res) => {
 };
 
 // 取得單筆文章所需內容
-const getTourPost = async (req, res) => {
+const getTourPost = async (req, tid) => {
   try {
-    const tid = +req.params.tid;
     // 文章列表+圖片+地點(廢墟名)+主題分類
     const sql = `SELECT tour_post.*, tour_images.*, tour_location.*, tour_category.category_name
       FROM tony_tour_post AS tour_post
@@ -123,15 +122,19 @@ const getTourPost = async (req, res) => {
   }
 };
 
-// 以會員編號取得收藏行程資料
-const getFavTour = async (req, res) =>{
+// 會員收藏行程分類
+const getFavTourBook = async (req, res) =>{
   try {
     const id = req.params.id;
-    const sql = `SELECT favtour_list.*, favtour_book.book_name
-    FROM tony_favtour_list AS favtour_list
+    // 加入第二個 subquery 為每個 tour_id 抓一張照片當封面
+    const sql = `SELECT favtour_list.*, favtour_book.book_name, 
+    (SELECT image_url 
+    FROM tony_tour_images AS tour_images 
+    WHERE tour_images.tour_id = favtour_list.tour_id 
+    ORDER BY favtour_list.tour_id ASC LIMIT 1 ) AS image_url 
+    FROM tony_favtour_list AS favtour_list 
     LEFT JOIN tony_favtour_book AS favtour_book 
-    ON favtour_list.bid = favtour_book.bid
-    WHERE user_id = ?`
+    ON favtour_list.bid = favtour_book.bid WHERE favtour_list.user_id = ?`
     const [rows] = await db.query(sql, id)
 
     if(!rows.length){
@@ -144,23 +147,31 @@ const getFavTour = async (req, res) =>{
   }
 }
 
+// 收藏細項
+const getFavTours = async ( bid) => {
+  try {
+    const sql = `SELECT tour_post.*,  favlist.*,
+    (SELECT image_url 
+    FROM tony_tour_images AS tour_images 
+    WHERE tour_images.tour_id = tour_post.tour_id 
+    ORDER BY tour_post.tour_id ASC LIMIT 1 ) AS image_url 
+    FROM tony_tour_post AS tour_post
+    LEFT JOIN tony_favtour_list AS favlist
+    ON tour_post.tour_id = favlist.tour_id
+    WHERE favlist.bid = ?`
+    
+    const [rows] = await db.query(sql, bid);
+    
+    if (!rows.length) {
+      return { success: false };
+    }
+    const row = rows;
 
-// 揪團圖片資料
-const getTourImages = async (req, res) => {
-  const t_sql = `SELECT COUNT(1) totalRows FROM tony_tour_images`;
-  const [[{ totalRows }]] = await db.query(t_sql);
-
-  let rows = [];
-  if (totalRows) {
-    const sql = `SELECT * FROM tony_tour_images`;
-    [rows] = await db.query(sql);
+    return { success: true, row };
+  } catch (error) {
+    return { success: false, message: "Internal server error" };
   }
-  return {
-    success: true,
-    totalRows,
-    rows,
-  };
-};
+}
 
 // 從資料庫取得表單資料
 router.get("/api", async (req, res) => {
@@ -173,10 +184,11 @@ router.get("/api", async (req, res) => {
 });
 
 // 取得單筆資料
-router.get("/api/getPost/:tid", async (req, res) => {
-  const result = await getTourPost(req);
+router.get("/api/tourpost/:tid", async (req, res) => {
+  const tid = req.params.tid
+  const result = await getTourPost(req, tid);
   res.json(result);
-});
+})
 
 // 以會員編號取得發文資料
 router.get("/api/get-post/:id", async (req, res) => {
@@ -208,16 +220,20 @@ router.get("/api/get-post/:id", async (req, res) => {
   res.json(output);
 });
 
-// 取得會員收藏行程
-router.get("/api/favtour/:id", async(req, res)=>{
-  const result = await getFavTour(req);
+// 會員收藏行程分類
+router.get("/api/favtourbook/:id", async(req, res)=>{
+  const result = await getFavTourBook(req);
   res.json(result);
 })
 
-// 定義路由名稱, 取得圖片資料
-router.get("/img", async (req, res) => {
-  res.json(await getTourImages(req));
-});
+// 會員收藏細項
+router.get("/api/favtours/:bid", async(req, res)=>{
+  const bid = +req.params.bid
+  console.log('bid',bid);
+  const result = await getFavTours(bid)
+
+  res.json(result);
+})
 
 // 只是測試路徑頁面
 router.get("/test", (req, res) => {
