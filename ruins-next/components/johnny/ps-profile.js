@@ -21,9 +21,12 @@ export default function Profile() {
   console.log(auth.id)
   const [postsTable, setPostsTable] = useState('')
   const [userInfo, setUserinfo] = useState('')
-  const [addFollows, setAddFollows] = useState(false)
   const [showRelation, setShowRelation] = useState(false)
-  const [followStatus, setFollowStatus] = useState('unfollow')
+  const [followStatus, setFollowStatus] = useState('')
+  const [sendStatus, setSendStatus] = useState(false)
+
+  // console.log('有?', userInfo.id)
+  // console.log('followStatus', followStatus)
 
   const ref = useRef()
   useOutsideClick(ref, () => {
@@ -60,12 +63,27 @@ export default function Profile() {
       console.log(err)
     }
   }
+
+  const statusQuery = new URLSearchParams(followStatus).toString()
+  console.log(statusQuery)
+  const relationChange = () => {
+    console.log(location.search)
+    fetch(`http://localhost:3001/community/followedstatus?${statusQuery}`)
+      .then((r) => r.json())
+      .then((result) => console.log(result))
+  }
+
   useEffect(() => {
     fetchSnPostsTable()
     if (psUserId) {
       fetchAllFollows()
     }
   }, [render, psUserId])
+
+  useEffect(() => {
+    relationChange()
+    setSendStatus(false)
+  }, [sendStatus])
 
   return (
     <>
@@ -116,38 +134,37 @@ export default function Profile() {
                 </li>
                 <li
                   className="text-[14px] pc:text-[16px] cursor-pointer"
-                  onClick={() =>
+                  onClick={() => {
                     setToggles({
                       ...toggles,
                       notification: false,
                       follows: true,
                     })
-                  }
+                  }}
                 >
-                  FOLLOWS <div>234</div>
+                  FOLLOWS <div>15</div>
                 </li>
                 <li className="text-[14px] pc:text-[16px]">
-                  FOLLOWERS <div>66</div>
+                  FOLLOWERS <div>7</div>
                 </li>
               </ul>
               <ul className="hidden pc:flex w-[120px]">
-                {router.pathname.includes('main-personal') && (
-                  <>
+                {router.pathname.includes('/main-personal') && (
+                  <ul>
                     <li>
-                      <RiDraftLine className="text=[24px]" />
+                      <RiDraftLine className="text-[24px]" />
                     </li>
                     <li>
                       <RiBookmarkFill className="text-[24px]" />
                     </li>
-                  </>
+                  </ul>
                 )}
-
-                {router.pathname.includes('main-page') && (
+                {router.pathname.includes('/main-page') && (
                   <li className="relative">
                     <div className="cursor-pointer relative" ref={ref}>
                       <div
                         className="flex items-center"
-                        onClick={() => setShowRelation(!showRelation)}
+                        onClick={() => setShowRelation(true)}
                       >
                         {relationHandler(followStatus.status)}
                       </div>
@@ -158,8 +175,11 @@ export default function Profile() {
                               onClick={() => {
                                 setFollowStatus({
                                   ...followStatus,
+                                  psUserId: userInfo.id,
+                                  authId: auth.id,
                                   status: 'follow',
                                 })
+                                setSendStatus(true)
                                 // setIsFormChanged(true)
                               }}
                             >
@@ -171,8 +191,11 @@ export default function Profile() {
                               onClick={() => {
                                 setFollowStatus({
                                   ...followStatus,
+                                  psUserId: userInfo.id,
+                                  authId: auth.id,
                                   status: 'unfollow',
                                 })
+                                setSendStatus(true)
                                 // setIsFormChanged(true)
                               }}
                             >
@@ -186,9 +209,64 @@ export default function Profile() {
                 )}
               </ul>
             </div>
+
             <div className="flex justify-end pc:hidden pr-5 gap-3 mt-1">
-              <RiDraftLine className="text=[24px]" />
-              <RiBookmarkFill className="text-[24px]" />
+              {router.pathname.includes('/main-personal') && (
+                <>
+                  <RiDraftLine className="text=[24px]" />
+                  <RiBookmarkFill className="text-[24px]" />
+                </>
+              )}
+            </div>
+            <div className="flex justify-end pc:hidden pr-5 gap-3 mt-1">
+              {router.pathname.includes('/main-page') && (
+                <li className="relative">
+                  <div className="cursor-pointer relative" ref={ref}>
+                    <div
+                      className="flex items-center"
+                      onClick={() => setShowRelation(true)}
+                    >
+                      {relationHandler(followStatus.status)}
+                    </div>
+                    {showRelation && (
+                      <ul className="menu bg-base-100 rounded-lg w-32 text-black absolute mt-2">
+                        <li>
+                          <a
+                            onClick={() => {
+                              setFollowStatus({
+                                ...followStatus,
+                                psUserId: userInfo.id,
+                                authId: auth.id,
+                                status: 'follow',
+                              })
+                              setSendStatus(true)
+                              // setIsFormChanged(true)
+                            }}
+                          >
+                            FOLLOW
+                          </a>
+                        </li>
+                        <li>
+                          <a
+                            onClick={() => {
+                              setFollowStatus({
+                                ...followStatus,
+                                psUserId: userInfo.id,
+                                authId: auth.id,
+                                status: 'unfollow',
+                              })
+                              setSendStatus(true)
+                              // setIsFormChanged(true)
+                            }}
+                          >
+                            UNFOLLOW
+                          </a>
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                </li>
+              )}
             </div>
           </div>
         </div>

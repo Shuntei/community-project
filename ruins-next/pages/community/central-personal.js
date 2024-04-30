@@ -61,7 +61,7 @@ export default function CentralContentP() {
               <div className="  px-10 bg-neutral-500 flex-col my-5 rounded-t-lg text-white mb-0">
                 <div className="flex items-center justify-between py-2">
                   <div className="pc:pl-10 text-[20px]">POSTS</div>
-                  <div className="flex gap-5">
+                  {/* <div className="flex gap-5">
                     <span>
                       <RiEqualizerLine />
                     </span>
@@ -71,7 +71,7 @@ export default function CentralContentP() {
                         onClick={() => setRemoveBox(!removeBox)}
                       />
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               </div>
             </>

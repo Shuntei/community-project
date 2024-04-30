@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { API_SERVER } from '../../../components/config/johnny-api-path'
+import {
+  API_SERVER,
+  SN_COMMUNITY,
+} from '../../../components/config/johnny-api-path'
 import Link from 'next/link'
 import Image from 'next/image'
 import { z } from 'zod'
@@ -292,10 +295,10 @@ export default function EditModal() {
                       覺得興奮 */}
                       {emotionHandler(postForm.emotion)}
                     </div>
-                    <div className="text-[14px] pc:text-[16px] flex">
+                    {/* <div className="text-[14px] pc:text-[16px] flex">
                       <RiMapPinFill className="mr-2" />
                       光華商場
-                    </div>
+                    </div> */}
                   </div>
                   {/* <!-- 輸入區域 --> */}
                   <textarea
@@ -329,7 +332,7 @@ export default function EditModal() {
                               return (
                                 <Image
                                   className="size-[150px] object-cover rounded-lg"
-                                  src={`${API_SERVER}/${postForm.image_url}`}
+                                  src={`${SN_COMMUNITY}/${postForm.image_url}`}
                                   width={150}
                                   height={150}
                                   alt=""
@@ -344,10 +347,10 @@ export default function EditModal() {
             </div>
 
             <div className="flex gap-5 pc:gap-10 justify-center text-white ">
-              <button className="flex items-center">
+              {/* <button className="flex items-center">
                 <RiVideoOnFill className="mr-2 text-[24px]" />
                 <span className="hidden pc:flex">VIDEO</span>
-              </button>
+              </button> */}
               <label className="flex items-center cursor-pointer">
                 <input
                   type="file"
@@ -360,10 +363,10 @@ export default function EditModal() {
                 <RiImageFill className="mr-2 text-[24px]" />
                 <span className="hidden pc:flex">PHOTO</span>
               </label>
-              <button className="flex items-center">
+              {/* <button className="flex items-center">
                 <RiMapPinFill className="mr-2 text-[24px]" />
                 <span className="hidden pc:flex">LOCATION</span>
-              </button>
+              </button> */}
               <button className="flex items-center">
                 <RiPriceTag3Fill className="mr-2 text-[24px]" />
                 <span className="hidden pc:flex">TAGS</span>
