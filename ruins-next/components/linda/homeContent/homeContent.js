@@ -157,7 +157,7 @@ export default function HomeContent() {
             <div className={styles.ps5}></div>
             <p className={styles['cards-container-title']}>RECENTLY ADDED</p>
             <div className="flex w-full justify-between  md:px-24 px-4 py-5 flex-col space-y-5">
-              <div className={`flex md:gap-10 gap-5 ${styles['containerP']} `}>
+              <div className={`flex md:gap-10 gap-5  ${styles['containerP']} `}>
                 {products &&
                   products.rows.map((v, i) => {
                     return (
@@ -165,7 +165,7 @@ export default function HomeContent() {
                         key={v.pid}
                         href={`/shop/product/${v.pid}`}
                         className={`md:w-1/5 w-1/2 ${styles['product-item']} flex-col  gap-5 flex transition duration-200 hover:skew-y-2`}
-                        style={{ minWidth: '20%' }}
+                        
                       >
                         <img
                           className="w-full aspect-square  rounded-xl"
