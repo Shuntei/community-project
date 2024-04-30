@@ -240,10 +240,10 @@ export default function PostModal() {
                   <div className="text-[14px] pc:text-[16px] flex">
                     {emotionHandler(postForm.emotion)}
                   </div>
-                  <div className="text-[14px] pc:text-[16px] flex">
+                  {/* <div className="text-[14px] pc:text-[16px] flex">
                     <RiMapPinFill className="mr-2" />
                     光華商場
-                  </div>{' '}
+                  </div> */}
                 </div>
                 {/* <!-- 輸入區域 --> */}
                 <textarea
@@ -277,10 +277,10 @@ export default function PostModal() {
           </div>
 
           <div className="flex gap-5 pc:gap-10 justify-center text-white ">
-            <button className="flex items-center">
+            {/* <button className="flex items-center">
               <RiVideoOnFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">VIDEO</span>
-            </button>
+            </button> */}
             <label className="flex items-center cursor-pointer">
               <input
                 type="file"
@@ -293,10 +293,10 @@ export default function PostModal() {
               <RiImageFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">PHOTO</span>
             </label>
-            <button className="flex items-center">
+            {/* <button className="flex items-center">
               <RiMapPinFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">LOCATION</span>
-            </button>
+            </button> */}
             <button className="flex items-center">
               <RiPriceTag3Fill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">TAGS</span>

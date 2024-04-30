@@ -217,18 +217,18 @@ export default function CommentEditModal({
               </div> */}
               <div className="rounded-lg bg-slate-300 text-black">
                 <div className="flex justify-center gap-2 pc:gap-5 py-3">
-                  <div className="text-[14px] pc:text-[16px] flex">
+                  {/* <div className="text-[14px] pc:text-[16px] flex">
                     <RiPriceTag3Fill className="mr-2" />
                     黃曉桂
                   </div>
                   <div className="text-[14px pc:text-[16px] flex">
                     <RiEmotionLaughFill className="mr-2" />
                     覺得興奮
-                  </div>
-                  <div className="text-[14px] pc:text-[16px] flex">
+                  </div> */}
+                  {/* <div className="text-[14px] pc:text-[16px] flex">
                     <RiMapPinFill className="mr-2" />
                     光華商場
-                  </div>
+                  </div> */}
                 </div>
                 {/* <!-- 輸入區域 --> */}
                 <textarea
@@ -259,37 +259,6 @@ export default function CommentEditModal({
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="flex gap-5 pc:gap-10 justify-center text-white ">
-            <button className="flex items-center">
-              <RiVideoOnFill className="mr-2 text-[24px]" />
-              <span className="hidden pc:flex">VIDEO</span>
-            </button>
-            <label className="flex items-center cursor-pointer">
-              {/* <input
-                type="file"
-                hidden
-                onChange={handleFileChange}
-                multiple
-                accept="image/*"
-                name="photo"
-              /> */}
-              <RiImageFill className="mr-2 text-[24px]" />
-              <span className="hidden pc:flex">PHOTO</span>
-            </label>
-            <button className="flex items-center">
-              <RiMapPinFill className="mr-2 text-[24px]" />
-              <span className="hidden pc:flex">LOCATION</span>
-            </button>
-            <button className="flex items-center">
-              <RiPriceTag3Fill className="mr-2 text-[24px]" />
-              <span className="hidden pc:flex">TAGS</span>
-            </button>
-            <button className="flex items-center">
-              <RiEmotionLaughFill className="mr-2 text-[24px]" />
-              <span className="hidden pc:flex">FEELING</span>
-            </button>
           </div>
         </div>
       </form>

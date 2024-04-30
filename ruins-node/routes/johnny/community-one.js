@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
-import db from "../../utils/johnny/mysql2-connect.js";
+import db from "../../utils/mysql2-connect.js";
+
 import uploadImgs from "../../utils/johnny/upload-imgs.js";
 import bodyParser from "body-parser";
 

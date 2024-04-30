@@ -97,9 +97,9 @@ export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
                 </div>
                 <div className="likeZone:flex gap-2 items-center flex">
                   <span>Feb 13(3 hr ago)</span>
-                  <span>
+                  {/* <span>
                     <RiHeartLine />
-                  </span>
+                  </span> */}
                   <span
                     className="dropdown dropdown-end"
                     onClick={() => setToggleMenu(!toggleMenu)}

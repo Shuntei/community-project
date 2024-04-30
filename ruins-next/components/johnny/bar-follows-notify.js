@@ -69,7 +69,7 @@ export default function FollowsBar() {
               <RiSearchLine />
             </button>
           </div>
-          <ul className="h-[200px] overflow-auto hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
+          <ul className="h-[400px] overflow-auto hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
             {userInfo &&
               userInfo
                 .filter((v) => v.id !== auth.id)
@@ -81,9 +81,9 @@ export default function FollowsBar() {
                       onClick={() => {
                         console.log(v.id)
                         router.push({
-                          // pathname: '/community/main-personal',
                           pathname: '/community/main-page',
-                          query: { ...router.query, psUserId: v.id },
+                          // query: { ...router.query, psUserId: v.id },
+                          query: { psUserId: v.id },
                         })
                         //先確定v.id傳出後再關閉follows,免得先關了卻沒傳出會無法變更
                         setTimeout(() => {
@@ -99,7 +99,9 @@ export default function FollowsBar() {
                         className="w-[35px] h-[35px] object-cover overflow-hidden rounded-full mr-5 bg-zinc-300"
                         src={
                           v.google_id
-                            ? v.profile_pic_url
+                            ? v.profile_pic_url.includes('https')
+                              ? v.profile_pic_url
+                              : `${IMG_SERVER}/${v.profile_pic_url}`
                             : `${IMG_SERVER}/${v.profile_pic_url}`
                         }
                         alt=""
@@ -123,7 +125,7 @@ export default function FollowsBar() {
           </div>
         </div>
 
-        <div className="notification rounded-xl w-[240px]">
+        {/* <div className="notification rounded-xl w-[240px]">
           <div className="text-white px-6 py-1 text-[20px] ">NOTIFICATION</div>
           <div className="border-b-2 mx-6 mb-2 w-[200px]"></div>
           <ul className="overflow-auto h-[180px] hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
@@ -182,7 +184,7 @@ export default function FollowsBar() {
           >
             MORE...
           </div>
-        </div>
+        </div> */}
       </section>
     </span>
   )

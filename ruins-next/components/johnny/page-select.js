@@ -73,7 +73,7 @@ export default function PageSelect({ bgColor = 'bg-black', optionsStyle }) {
         >
           PERSONAL
         </span>
-        <span
+        {/* <span
           className={
             pathname.includes('main-messenger')
               ? // ? `${optionsStyle} bg-zinc-600`
@@ -87,7 +87,7 @@ export default function PageSelect({ bgColor = 'bg-black', optionsStyle }) {
           }}
         >
           MESSENGER
-        </span>
+        </span> */}
       </div>
       {/* 用於main page 頂部padding 滾軸時不會透出 */}
     </>

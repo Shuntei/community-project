@@ -110,7 +110,8 @@ export default function SeeMoreFollows({ marginTop = `` }) {
                           className="size-[80px] object-cover rounded-full mr-3 bg-575757"
                           src={
                             v.google_id
-                              ? v.profile_pic_url
+                              ? v.profile_pic_url ||
+                                `${IMG_SERVER}/${v.profile_pic_url}`
                               : `${IMG_SERVER}/${v.profile_pic_url}`
                           }
                           alt=""

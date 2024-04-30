@@ -62,9 +62,12 @@ export default function MainPost() {
     // 圖片處理區
 
     const profilePicUrl = result[0].profile_pic_url
+    console.log(profilePicUrl)
     const googleId = result[0].google_id
+    console.log(googleId)
     googleId
-      ? setProfilePic(profilePicUrl)
+      ? setProfilePic(profilePicUrl) ||
+        setProfilePic(`${IMG_SERVER}/${profilePicUrl}`)
       : setProfilePic(`${IMG_SERVER}/${profilePicUrl}`)
 
     // 其他資訊區
@@ -140,10 +143,10 @@ export default function MainPost() {
             </div>
             {/* <!-- 文章 --> */}
             <div className="flex mb-2 pc:my-5 gap-5 text-gray-400">
-              <div className="flex">
+              {/* <div className="flex">
                 <RiMapPinFill className="mr-2" />
                 <span className="hidden pc:inline-block">待老坑山</span>
-              </div>
+              </div> */}
               <div className="flex">
                 <RiPriceTag3Fill className="mr-2" />
                 <span className="hidden pc:inline-block">

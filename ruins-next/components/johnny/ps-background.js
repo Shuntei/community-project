@@ -24,7 +24,7 @@ export default function PersonalBackground() {
         console.log(result)
         if (!psUserId) return
         let selectedUser = result.find((v, i) => v.id == psUserId)
-        // console.log(selectedUser)
+        console.log(selectedUser)
         setUserinfo(selectedUser)
       })
   }
@@ -43,12 +43,19 @@ export default function PersonalBackground() {
           width={1000}
           height={256}
           objectFit="cover"
+          // src={
+          //   userInfo?.cover_pic_url
+          //     ? userInfo?.google_photo
+          //       ? userInfo?.cover_pic_url
+          //       : `${IMG_SERVER}/${userInfo?.cover_pic_url}`
+          //     : ''
+          // }
           src={
             userInfo?.cover_pic_url
-              ? userInfo?.google_photo
-                ? userInfo?.cover_pic_url
-                : `${IMG_SERVER}/${userInfo?.cover_pic_url}`
-              : ''
+              ? `${IMG_SERVER}/${userInfo?.cover_pic_url}`
+              : userInfo?.google_photo
+                ? userInfo?.google_photo
+                : ''
           }
           alt="背景圖片"
         />
