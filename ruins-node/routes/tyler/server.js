@@ -53,7 +53,7 @@ router.post('/add-point', async (req, res) => {
   let source = "頭像獎勵"
 
   const sql = `INSERT INTO tyler_get_point (user_id, has_point, source, time_has_point) VALUES (?, ?, ?, CURRENT_TIMESTAMP())`
-  let [rows] = await db.query(sql, [userId, points, source])
+  let [rows] = await db.query(sql, [id, points, source])
   res.json(rows)
 })
 

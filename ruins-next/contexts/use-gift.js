@@ -74,7 +74,7 @@ export function GiftContextProvider({ children }) {
   // 禮物列表
   const fetchTotalBonus = async () => {
     try {
-      const response = await fetch(`${API_SERVER}/totalBonus/Noah`, {
+      const response = await fetch(`${API_SERVER}/chat/totalBonus/${auth.username}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json'
@@ -112,7 +112,7 @@ export function GiftContextProvider({ children }) {
     setGList(updateList)
 
     if (pts > price && remain > 0) {
-      await fetch(`${API_SERVER}/give-streamer-point`, {
+      await fetch(`${API_SERVER}/chat/give-streamer-point`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'
@@ -129,7 +129,7 @@ export function GiftContextProvider({ children }) {
           fetchTotalBonus()
         })
 
-      await fetch(`${API_SERVER}/use-point`, {
+      await fetch(`${API_SERVER}/chat/use-point`, {
         method: "POST",
         headers: {
           'Content-Type': 'application/json'

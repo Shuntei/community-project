@@ -39,7 +39,7 @@ export default function Stream() {
         setStreamId(id)
         setRoomCode(id)
 
-        await fetch(`${API_SERVER}/stream-logon`, {
+        await fetch(`${API_SERVER}/chat/stream-logon`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
@@ -80,7 +80,7 @@ export default function Stream() {
 
   const calling = async () => {
     try {
-      const r = await fetch(`${API_SERVER}/watch-stream/tyler`, {
+      const r = await fetch(`${API_SERVER}/chat/watch-stream/${auth.username}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json'
