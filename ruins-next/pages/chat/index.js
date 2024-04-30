@@ -54,6 +54,7 @@ export default function CheckRole() {
         showConfirmButton: false,
         timer: 2000,
       })
+      Router.push('../member/account/login')
       return;
     }
   }

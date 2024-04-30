@@ -199,7 +199,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
   const handleGetPoints = (profile, id) => {
     if (profile == "/images/treasure.png" && !clickedIds.includes(id)) {
       let userId = 1
-      fetch(`${API_SERVER}/add-point`, {
+      fetch(`${API_SERVER}/chat/add-point`, {
         method: 'POST',
         body: JSON.stringify({ id: auth.id }),
         headers: {
