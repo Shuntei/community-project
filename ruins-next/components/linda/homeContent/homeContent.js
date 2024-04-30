@@ -7,11 +7,12 @@ import home2 from '@/public/images/home2.jpg'
 import home3 from '@/public/images/home3.jpg'
 import arrowPng from '@/public/images/arrow.png'
 import product1 from '@/public/images/product1.jpeg'
-import { PRODUCT_ALL, MB_GET_TOUR_INFO } from '@/components/config/api-path'
+import { PRODUCT_ALL, MB_GET_TOUR_INFO, MB_GET_POST } from '@/components/config/api-path'
 import { useRouter } from 'next/router'
 import { FaArrowLeftLong } from 'react-icons/fa6'
 import { FaArrowRightLong } from 'react-icons/fa6'
 import EmblaCarousel from '../emblaCarousel/EmblaCarousel'
+import { SN_COMMUNITY } from '@/components/config/johnny-api-path'
 
 export default function HomeContent() {
   const router = useRouter()
@@ -19,6 +20,7 @@ export default function HomeContent() {
   const [products, setProducts] = useState()
   const [currentIndex, setCurrentIndex] = useState(0)
   const [slides, setSlides] = useState([])
+  const [post, setPost] = useState([])
 
   const OPTIONS = { loop: true }
 
@@ -29,6 +31,17 @@ export default function HomeContent() {
       setSlides(result.data)
     } catch (error) {
       console.log("Failed to fetch tour info:", error);
+    }
+  }
+
+  const getPost = async () => {
+    try {
+      const r = await fetch(MB_GET_POST)
+      const result = await r.json()
+      setPost(result.data)
+      console.log(result.data[0]);
+    } catch (error) {
+      console.log("Failed to fetch post info:", error);
     }
   }
   // tour post join tour images 
@@ -48,6 +61,7 @@ export default function HomeContent() {
   useEffect(() => {
     getProducts()
     getTourInfo()
+    getPost()
   }, [router])
 
   useEffect(() => {
@@ -94,11 +108,12 @@ export default function HomeContent() {
       <div
         className={styles.homeSectionTwo}
         style={{
-          backgroundImage: `url(${home2.src})`,
+          backgroundImage: `url(${SN_COMMUNITY}/${post.image_url})`,
           width: '100%',
         }}
       >
         {/* card start */}
+
         <div className={styles.card2}>
           <div className={styles['card-info']}>
             <span className={styles.title}>NEW POST!</span>
