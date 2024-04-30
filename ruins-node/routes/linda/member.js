@@ -901,4 +901,15 @@ router.get("/get-tour-info",  async (req, res) => {
   }
 })
 
+router.get("/get-post", async (req, res) => {
+  try {
+    const sql = `SELECT * FROM sn_posts WHERE image_url IS NOT NULL ORDER BY view_count DESC LIMIT 1`
+    const [rows] = await db.query(sql)
+    return res.json({success: true, data: rows})
+  } catch (error) {
+    console.log("Error getting post info:", error);
+    return res.json({success: false, message: "Error getting post info"})
+  }
+})
+
 export default router;

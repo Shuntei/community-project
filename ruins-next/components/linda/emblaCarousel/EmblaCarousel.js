@@ -127,7 +127,7 @@ const EmblaCarousel = (props) => {
             </span>
           </div>
           <Link
-          href={`http://localhost:3000/tour/tourpost/${slide.tour_id}`}
+          href={currentIndex === 0 ? `http://localhost:3000/tour/tourpost/${slides[slides.length - 1].tour_id}` : `http://localhost:3000/tour/tourpost/${slides[currentIndex - 1].tour_id}`}
             className={`${styles['card-button']} cursor-pointer hover:bg-[#7A7A7A]`}
           >
             READ NOW

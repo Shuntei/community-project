@@ -18,7 +18,6 @@ import 'swiper/css/navigation'
 
 export default function AllSearch() {
   const { auth } = useAuth()
-  console.log(auth) //login only
 
   const router = useRouter() // 接收 mainsearch 搜尋 keyword
   const [tourList, setTourList] = useState([])
@@ -53,6 +52,7 @@ export default function AllSearch() {
       ...item,
       key: item.tour_id,
     }))
+    console.log(newData);
     setTourList((prevList) => [...prevList, ...newData])
     setPageNumber(page + 1)
     setTotalRows(result.totalRows)
