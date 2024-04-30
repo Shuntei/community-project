@@ -316,6 +316,7 @@ export default function AllSearch() {
                   >
                     <Link
                       href={`/tour/tourpost/${v.tour_id}`}
+                      // {`/tour/tourpost/${v.tour_id}`}
                       className="space-y-5"
                     >
                       <img
