@@ -1,13 +1,9 @@
 import express from "express";
-import multer from "multer";
-import db from "./../../utils/linda/mysql2-connect.js";
+import db from "./../../utils/mysql2-connect.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import upload from "./../../utils/linda/upload-imgs.js";
 import nodemailer from "nodemailer";
-import path from "path";
-import { isExternal } from "util/types";
-import { log } from "console";
 
 const router = express.Router();
 const transporter = nodemailer.createTransport({
@@ -892,10 +888,11 @@ router.post("/create-notifications/:id", async (req, res) => {});
 router.get("/get-tour-info",  async (req, res) => {
   try {
     const sql = `SELECT * FROM tony_tour_post p 
-                JOIN tony_tour_images i ON p.tour_id = i.tour_id 
-                WHERE 1 
-                ORDER BY p.tour_id DESC
-                LIMIT 6`;
+                  JOIN tony_tour_images i ON p.tour_id = i.tour_id 
+                  WHERE 1 
+                  GROUP BY i.tour_id
+                  ORDER BY i.tour_id DESC
+                  LIMIT 6`;
     const [rows] = await db.query(sql)
     return res.json({success: true, data: rows})
   } catch (error) {
