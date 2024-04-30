@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import img from './img/90.jpg'
+// import img from './img/90.jpg'
 import { RiDraftLine, RiBookmarkFill } from '@remixicon/react'
 import { useToggles } from '@/contexts/use-toggles'
 import { useAuth } from '@/contexts/auth-context'
@@ -8,6 +8,9 @@ import { IMG_SERVER } from '../config/api-path'
 import { SN_PSPOSTS, SN_USER_INFO } from '../config/johnny-api-path'
 import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'
+import relationHandler from './utils/relationHandler'
+import useOutsideClick from './utils/out-side-click'
+import SeeMoreFollows from '@/components/johnny/seemore-follows'
 
 export default function Profile() {
   const { toggles, setToggles } = useToggles()
@@ -15,9 +18,17 @@ export default function Profile() {
   const { auth } = useAuth()
   const router = useRouter()
   // console.log(router)
-  console.log(auth)
+  console.log(auth.id)
   const [postsTable, setPostsTable] = useState('')
   const [userInfo, setUserinfo] = useState('')
+  const [addFollows, setAddFollows] = useState(false)
+  const [showRelation, setShowRelation] = useState(false)
+  const [followStatus, setFollowStatus] = useState('unfollow')
+
+  const ref = useRef()
+  useOutsideClick(ref, () => {
+    setShowRelation(false)
+  })
 
   const psUserId = router.query.psUserId
   const query = { ...router.query, psUserId: psUserId }
@@ -38,7 +49,7 @@ export default function Profile() {
   }
 
   const fetchSnPostsTable = async () => {
-    router.push({ pathname: '/community/main-personal', query: queryString })
+    // router.push({ pathname: '/community/main-personal', query: queryString })
     try {
       const r = await fetch(`${SN_PSPOSTS}?${queryString}`)
       const data = await r.json()
@@ -79,9 +90,9 @@ export default function Profile() {
             <Image
               src={
                 userInfo?.profile_pic_url
-                  ? (userInfo.google_photo
-                    ? userInfo.profile_pic_url
-                    : `${IMG_SERVER}/${userInfo.profile_pic_url}`)
+                  ? userInfo?.google_photo
+                    ? userInfo?.profile_pic_url
+                    : `${IMG_SERVER}/${userInfo?.profile_pic_url}`
                   : ''
               }
               // src={img}
@@ -120,12 +131,59 @@ export default function Profile() {
                 </li>
               </ul>
               <ul className="hidden pc:flex w-[120px]">
-                <li>
-                  <RiDraftLine className="text=[24px]" />
-                </li>
-                <li>
-                  <RiBookmarkFill className="text-[24px]" />
-                </li>
+                {router.pathname.includes('main-personal') && (
+                  <>
+                    <li>
+                      <RiDraftLine className="text=[24px]" />
+                    </li>
+                    <li>
+                      <RiBookmarkFill className="text-[24px]" />
+                    </li>
+                  </>
+                )}
+
+                {router.pathname.includes('main-page') && (
+                  <li className="relative">
+                    <div className="cursor-pointer relative" ref={ref}>
+                      <div
+                        className="flex items-center"
+                        onClick={() => setShowRelation(!showRelation)}
+                      >
+                        {relationHandler(followStatus.status)}
+                      </div>
+                      {showRelation && (
+                        <ul className="menu bg-base-100 rounded-lg w-32 text-black absolute mt-2">
+                          <li>
+                            <a
+                              onClick={() => {
+                                setFollowStatus({
+                                  ...followStatus,
+                                  status: 'follow',
+                                })
+                                // setIsFormChanged(true)
+                              }}
+                            >
+                              FOLLOW
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              onClick={() => {
+                                setFollowStatus({
+                                  ...followStatus,
+                                  status: 'unfollow',
+                                })
+                                // setIsFormChanged(true)
+                              }}
+                            >
+                              UNFOLLOW
+                            </a>
+                          </li>
+                        </ul>
+                      )}
+                    </div>
+                  </li>
+                )}
               </ul>
             </div>
             <div className="flex justify-end pc:hidden pr-5 gap-3 mt-1">

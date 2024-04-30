@@ -1,13 +1,9 @@
 import express from "express";
-import multer from "multer";
-import db from "./../../utils/linda/mysql2-connect.js";
+import db from "./../../utils/mysql2-connect.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import upload from "./../../utils/linda/upload-imgs.js";
 import nodemailer from "nodemailer";
-import path from "path";
-import { isExternal } from "util/types";
-import { log } from "console";
 
 const router = express.Router();
 const transporter = nodemailer.createTransport({
@@ -838,20 +834,37 @@ router.get("/get-notifications/:id", async (req, res) => {
   const id = req.params.id;
 
   try {
-    const todaySql = `SELECT * FROM mb_notifications 
-                      WHERE user_id = ? 
-                      AND DATE(created_at) = CURDATE()`;
-    const lastWeekSql = `SELECT * FROM mb_notifications 
+    const todaySql = `SELECT n.*,
+                      mb_user.username,
+                      mb_user.profile_pic_url,
+                      mb_user.google_photo
+                      FROM mb_notifications n
+                      JOIN mb_user ON n.sender_id = mb_user.id
+                      WHERE user_id = ?
+                      AND DATE(n.created_at) = CURDATE()
+                      ORDER BY created_at DESC`;
+    const lastWeekSql = `SELECT n.*,
+                        mb_user.username,
+                        mb_user.profile_pic_url,
+                        mb_user.google_photo
+                        FROM mb_notifications n
+                        JOIN mb_user ON n.sender_id = mb_user.id
                         WHERE user_id = ? 
-                        AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
-                        AND DATE(created_at) < CURDATE()`;
-    const lastMonth = `SELECT * FROM mb_notifications 
+                        AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                        AND DATE(n.created_at) < CURDATE()
+                        ORDER BY created_at DESC`;
+    const lastMonth = `SELECT n.*,
+                      mb_user.username,
+                      mb_user.profile_pic_url,
+                      mb_user.google_photo
+                      FROM mb_notifications n
+                      JOIN mb_user ON n.sender_id = mb_user.id
                       WHERE user_id = ? 
-                      AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
-                      AND DATE(created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)`;
-
-    const [todayRows] = await db.query(lastWeekSql, id);
-    const [lastWeekRows] = await db.query(todaySql, id);
+                      AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+                      AND DATE(n.created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+                      ORDER BY created_at DESC`;
+    const [todayRows] = await db.query(todaySql, id);
+    const [lastWeekRows] = await db.query(lastWeekSql, id);
     const [lastMonthRows] = await db.query(lastMonth, id)
 
     return res.json({
@@ -871,5 +884,21 @@ router.get("/get-notifications/:id", async (req, res) => {
 router.post("/mark-read/:id", async (req, res) => {});
 
 router.post("/create-notifications/:id", async (req, res) => {});
+
+router.get("/get-tour-info",  async (req, res) => {
+  try {
+    const sql = `SELECT * FROM tony_tour_post p 
+                  JOIN tony_tour_images i ON p.tour_id = i.tour_id 
+                  WHERE 1 
+                  GROUP BY i.tour_id
+                  ORDER BY i.tour_id DESC
+                  LIMIT 6`;
+    const [rows] = await db.query(sql)
+    return res.json({success: true, data: rows})
+  } catch (error) {
+    console.log("Error getting tour info:", error);
+    return res.json({success: false, message: "Error getting tour info"})
+  }
+})
 
 export default router;

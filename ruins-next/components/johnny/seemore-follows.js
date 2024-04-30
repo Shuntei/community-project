@@ -7,12 +7,13 @@ import { SN_USER_INFO } from '../config/johnny-api-path'
 import { IMG_SERVER } from '../config/api-path'
 import { useRouter } from 'next/router'
 import useOutsideClick from './utils/out-side-click'
+import { useAuth } from '@/contexts/auth-context'
 
-export default function SeeMoreFollows({ marginTop = `mt-5` }) {
+export default function SeeMoreFollows({ marginTop = `` }) {
   const { toggles, setToggles } = useToggles()
   const [userInfo, setUserinfo] = useState('')
   const [keyword, setKeyword] = useState('')
-
+  const { auth } = useAuth()
   const fetchAllFollows = () => {
     fetch(`${SN_USER_INFO}`)
       .then((r) => r.json())
@@ -81,40 +82,43 @@ export default function SeeMoreFollows({ marginTop = `mt-5` }) {
           <div className="flex justify-center  gap-10">
             <ul className="rounded-full flex flex-wrap pl-16">
               {userInfo &&
-                userInfo.map((v, i) => {
-                  return (
-                    <li
-                      key={v.id}
-                      className="flex items-center  py-2 w-[100%] sm:w-[50%] md:w-[33.3%] cursor-pointer"
-                      onClick={() => {
-                        // console.log(v.id)
-                        router.push({
-                          pathname: '/community/main-personal',
-                          query: { ...router.query, psUserId: v.id },
-                        })
-                        //先確定v.id傳出後再關閉follows,免得先關了卻沒傳出會無法變更
-                        setTimeout(() => {
-                          setToggles({
-                            ...toggles,
-                            notification: false,
-                            follows: false,
+                userInfo
+                  .filter((v) => v.id !== auth.id)
+                  .map((v, i) => {
+                    return (
+                      <li
+                        key={v.id}
+                        className="flex items-center  py-2 w-[100%] sm:w-[50%] md:w-[33.3%] cursor-pointer"
+                        onClick={() => {
+                          // console.log(v.id)
+                          router.push({
+                            // pathname: '/community/main-personal',
+                            pathname: '/community/main-page',
+                            query: { ...router.query, psUserId: v.id },
                           })
-                        }, 10)
-                      }}
-                    >
-                      <img
-                        className="size-[80px] object-cover rounded-full mr-3 bg-575757"
-                        src={
-                          v.google_id
-                            ? v.profile_pic_url
-                            : `${IMG_SERVER}/${v.profile_pic_url}`
-                        }
-                        alt=""
-                      />
-                      <div>{v.username}</div>
-                    </li>
-                  )
-                })}
+                          //先確定v.id傳出後再關閉follows,免得先關了卻沒傳出會無法變更
+                          setTimeout(() => {
+                            setToggles({
+                              ...toggles,
+                              notification: false,
+                              follows: false,
+                            })
+                          }, 10)
+                        }}
+                      >
+                        <img
+                          className="size-[80px] object-cover rounded-full mr-3 bg-575757"
+                          src={
+                            v.google_id
+                              ? v.profile_pic_url
+                              : `${IMG_SERVER}/${v.profile_pic_url}`
+                          }
+                          alt=""
+                        />
+                        <div>{v.username}</div>
+                      </li>
+                    )
+                  })}
             </ul>
           </div>
         </div>

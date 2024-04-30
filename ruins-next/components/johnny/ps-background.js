@@ -6,6 +6,8 @@ import { IMG_SERVER } from '../config/api-path'
 import { SN_USER_INFO } from '../config/johnny-api-path'
 import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'
+import SeeMoreFollows from '@/components/johnny/seemore-follows'
+import { useToggles } from '@/contexts/use-toggles'
 
 export default function PersonalBackground() {
   // const { auth } = useAuth()
@@ -43,9 +45,9 @@ export default function PersonalBackground() {
           objectFit="cover"
           src={
             userInfo?.cover_pic_url
-              ? (userInfo.google_photo
-                ? userInfo.cover_pic_url
-                : `${IMG_SERVER}/${userInfo.cover_pic_url}`)
+              ? userInfo?.google_photo
+                ? userInfo?.cover_pic_url
+                : `${IMG_SERVER}/${userInfo?.cover_pic_url}`
               : ''
           }
           alt="背景圖片"

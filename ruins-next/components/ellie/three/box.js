@@ -38,6 +38,7 @@ export default function Box1(props) {
 
   return (
     <mesh
+    
       {...props}
       ref={ref}
       scale={clicked ? 1.5 : 1}

@@ -40,8 +40,7 @@ export default function PersonalContent() {
   const allPsPostsShow = async () => {
     // currentPage是?page=哪一頁
     // const currentPage = location.search
-    router.push({ pathname: '/community/main-personal', query: queryString })
-
+    // router.push({ pathname: '/community/main-personal', query: queryString })
     try {
       const r = await fetch(`${SN_PSPOSTS}?${queryString}`)
       const data = await r.json()
@@ -51,17 +50,6 @@ export default function PersonalContent() {
       console.log(err)
     }
   }
-
-  // const handlePsPage = async (p) => {
-  //   try {
-  //     const r = await fetch(`${SN_PSPOSTS}?page=${p}&psUserId=${auth.id}`)
-  //     const data = await r.json()
-  //     setPsPosts(data)
-  //     // console.log(psPosts)
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
 
   const removePost = async (postId) => {
     const MySwal = withReactContent(Swal)

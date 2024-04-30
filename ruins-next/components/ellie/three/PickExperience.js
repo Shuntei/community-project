@@ -8,6 +8,8 @@ import { Cylinder } from '@react-three/drei';
 // import {AvatarController3} from '/ruins-next/components/ellie/character/AvatarController3'
 import GirlController  from '../character/GirlController';
 import BoyController  from '../character/BoyController';
+import ArrorLeft from './ArrorLeft';
+import ArrorRight from './ArrorRight';
 import Picker from './AvatarPicker';
 
 
@@ -32,7 +34,9 @@ export default function Experience() {
       <AvatarController2 onPointerEnter={() => setHover(true)}/>
       <AvatarController3 onPointerEnter={() => setHover(true)}/> */}
       <GirlController />
-      <BoyController />
+      {/* <BoyController /> */}
+      <ArrorLeft />
+      <ArrorRight />
       {/* <Picker/> */}
     </group>
     </>

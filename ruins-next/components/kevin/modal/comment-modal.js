@@ -120,7 +120,7 @@ function CommentModal({ p, getdetailPo }) {
                       <RiStarFill
                         key={index}
                         className={
-                          index <= rating ? 'text-black' : 'text-gray-300'
+                          index <= rating ? 'text-black cursor-pointer' : 'text-gray-300 cursor-pointer'
                         }
                         onClick={() => handleRatingChange(index)}
                       />

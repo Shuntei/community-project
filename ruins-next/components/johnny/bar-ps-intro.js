@@ -55,13 +55,13 @@ export default function InfoBar() {
           <Link href={userInfo?.youtube_link ? userInfo.youtube_link : ''}>
             <FaYoutube className="text-[24px] cursor-pointer hover:text-red-500" />
           </Link>
-          <Link href={userInfo.facebook_link ? userInfo.facebook_link : ''}>
+          <Link href={userInfo?.facebook_link ? userInfo.facebook_link : ''}>
             <FaFacebook className="text-[24px] cursor-pointer hover:text-sky-600" />
           </Link>
-          <Link href={userInfo.instagram_link ? userInfo.instagram_link : ''}>
+          <Link href={userInfo?.instagram_link ? userInfo.instagram_link : ''}>
             <AiFillInstagram className="text-[24px] cursor-pointer hover:text-pink-400" />
           </Link>
-          <Link href={userInfo.gmailLink ? userInfo.gmailLink : ''}>
+          <Link href={userInfo?.gmailLink ? userInfo.gmailLink : ''}>
             <MdEmail className="text-[24px] cursor-pointer hover:text-amber-400" />
           </Link>
           {/* <div class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 transform rotate-45"></div> */}

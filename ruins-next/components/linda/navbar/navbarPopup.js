@@ -2,9 +2,28 @@ import Link from 'next/link'
 import React from 'react'
 import styles from './navbarPopup.module.css'
 import { useAuth } from '@/contexts/auth-context'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
+import { useRouter } from 'next/router'
 
 export default function NavbarPopup() {
   const { auth } = useAuth()
+
+  const router = useRouter()
+  const notify = () => {
+    const MySwal = withReactContent(Swal)
+    MySwal.fire({
+      title: '請先登入會員',
+      icon: 'info',
+      showConfirmButton: true,
+      showCancelButton: true,
+      confirmButtonText: `<a href="http://localhost:3000/member/account/login">點擊登入</a>`,
+      cancelButtonText: `取消登入`,
+      confirmButtonColor: '#292929', //#006400
+      cancelButtonColor: '#8B0000',
+      timer: 5000,
+    })
+  }
 
   return (
     <nav
@@ -32,14 +51,26 @@ export default function NavbarPopup() {
               {/* <a href={`/community/main-personal?psUserId=${auth.id}`}>
                 PERSONAL
               </a> 用a會有順序問題導致跳回來*/}
-              <Link
-                href={{
-                  pathname: '/community/main-personal',
-                  query: { psUserId: auth.id },
+              <p
+                className="cursor-pointer"
+                // href={{
+                //   pathname: '/community/main-personal',
+                //   query: { psUserId: auth.id },
+                // }}
+                onClick={() => {
+                  if (!auth.id) {
+                    notify()
+                    return
+                  } else {
+                    router.push({
+                      pathname: '/community/main-personal',
+                      query: { ...router.query, psUserId: auth.id },
+                    })
+                  }
                 }}
               >
                 PERSONAL
-              </Link>
+              </p>
             </p>
             <p className="font-['IBM Plex Mono']">
               <a href="/community/main-messenger">MESSENGER</a>
@@ -78,7 +109,7 @@ export default function NavbarPopup() {
             </p>
           </div>
         </div>
-        <div className={`${styles['pics']} space-x-12`}>
+        {/* <div className={`${styles['pics']} space-x-12`}>
           <div className="w-auto">
             <a href="#" className="aspect-video">
               <img
@@ -109,7 +140,7 @@ export default function NavbarPopup() {
               <p>FOR KIDS</p>
             </a>
           </div>
-        </div>
+        </div> */}
       </div>
     </nav>
   )

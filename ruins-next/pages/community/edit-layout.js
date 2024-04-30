@@ -6,7 +6,7 @@ import InfoBar from '@/components/johnny/bar-ps-intro'
 import PageSelect from '@/components/johnny/page-select'
 import Navbar from '@/components/linda/navbar/navbar'
 import { useRouter } from 'next/router'
-import CentralContentP from './central-personal'
+// import CentralContentP from './central-personal'
 
 export default function EditLayout({ children }) {
   const { editModal, setEditModal } = useToggles()
@@ -28,7 +28,7 @@ export default function EditLayout({ children }) {
   return (
     <>
       <div className="h-screen">
-        <Navbar className="bg-gradient-to-b from-black to-gray-800" />
+        <Navbar className="bg-black" />
         <PageSelect />
         <InfoBar />
         <FollowsBar />

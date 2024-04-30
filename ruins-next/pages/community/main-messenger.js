@@ -10,7 +10,8 @@ export default function MainMessenger() {
 
   return (
     <div className="bg-292929 h-screen">
-      <Navbar className="bg-gradient-to-b from-black to-gray-800" />
+      {/* <Navbar className="bg-gradient-to-b from-black to-gray-800" /> */}
+      <Navbar className="bg-gray-950" />
       <PageSelect />
       <div
         className={`mt-[40px] pc:h-[10px] h-[15px] fixed w-full z-10 ${paddingBG}`}

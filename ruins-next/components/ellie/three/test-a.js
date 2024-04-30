@@ -19,22 +19,22 @@ import { LayerMaterial, Depth, Noise } from "lamina";
 import * as THREE from 'three';
 
 // Function to get player input from keyboard and mouse
-function getInput(keyboard, mouse) {
-  let [x, y, z] = [0, 0, 0];
-  // Checking keyboard inputs to determine movement direction
-  if (keyboard["s"]) z += 1.0; // Move backward
-  if (keyboard["w"]) z -= 1.0; // Move forward
-  if (keyboard["d"]) x += 1.0; // Move right
-  if (keyboard["a"]) x -= 1.0; // Move left
-  if (keyboard[" "]) y += 1.0; // Jump
+// function getInput(keyboard, mouse) {
+//   let [x, y, z] = [0, 0, 0];
+//   // Checking keyboard inputs to determine movement direction
+//   if (keyboard["s"]) z += 1.0; // Move backward
+//   if (keyboard["w"]) z -= 1.0; // Move forward
+//   if (keyboard["d"]) x += 1.0; // Move right
+//   if (keyboard["a"]) x -= 1.0; // Move left
+//   if (keyboard[" "]) y += 1.0; // Jump
 
-  // Returning an object with the movement and look direction
-  return {
-    move: [x, y, z],
-    look: [mouse.x / window.innerWidth, mouse.y / window.innerHeight], // Mouse look direction
-    running: keyboard["Shift"], // Boolean to determine if the player is running (Shift key pressed)
-  };
-}
+//   // Returning an object with the movement and look direction
+//   return {
+//     move: [x, y, z],
+//     look: [mouse.x / window.innerWidth, mouse.y / window.innerHeight], // Mouse look direction
+//     running: keyboard["Shift"], // Boolean to determine if the player is running (Shift key pressed)
+//   };
+// }
 
 const BG_SPEED = 0.1; 
 const Background = () => {
@@ -53,7 +53,6 @@ const Background = () => {
   // }, []);
   return (
     <mesh scale={50} ref={ref} >
-      {/* <shapeGeometry args={[1,64,64]}/> */}
       <sphereGeometry args={[1, 64, 64]} />
       {/* <meshBasicMaterial color={"red"} side={THREE.BackSide}/> */}
       <LayerMaterial side={THREE.BackSide}>
@@ -82,10 +81,22 @@ const Background = () => {
 
 export default function TestA() {
 
+  const random = useRef(Math.floor(Math.random()*(3-1)+1))
+
 //   const sizes = {
 //     width: window.innerWidth,
 //     height: window.innerHeight
 // }
+
+    const posData = [
+      [[-8, 2,-4], [-1.2, 2, 9],[9, 2, -3]],
+      [[-1.2, 2, 9],[-8, 2,-4],[9, 2, -3]],
+      [[-1.2, 2, 9],[9, 2, -3],[-8, 2,-4]],
+    ]
+
+    console.log(random.current)
+
+    const posDisplay = posData[random.current-1]
 
   return (
     <>
@@ -97,7 +108,10 @@ export default function TestA() {
       <Canvas className='bg-neutral-100' shadowmap="true" camera={{ position: [24, 4, 1.5], fov:42 }} >
         {/* <color attach="background" args={["#dbecfb"]}/> */}
         {/* <fog attach="fog" args={["#dbecfb",30,40]}/> */}
-        <Suspense>
+        <Suspense 
+        fallback={null} 
+        // gravity={[0, -30, 0]}
+        >
           <Physics debug>
             <Experience/>
           </Physics>
@@ -105,11 +119,10 @@ export default function TestA() {
           <Model position={[0, 6, 0]} rotation={[0,230,0]}/>
           {/* <Environment files="/3Ddemo/hdr/150_hdrmaps_com_free_10K.exr" background blur={0.5} /> */}
             <directionalLight position={[3.3, 1.0, 4.4]} intensity={4} />
-            <Box position={[-8, 2,-4]} />
-            <Box2 position={[-1.2, 2, 9]} />
-            <Box3 position={[9, 2, -3]} />
+            <Box position={posDisplay[0]}/>
+            <Box2 position={posDisplay[1]}/>
+            <Box3 position={posDisplay[2]} />
           {/* <OrbitControls target={[0, 1, 0]}/> */}
-          {/* <OrbitControls/> */}
           <ambientLight intensity={1} />
           <Background/>
         </Suspense>

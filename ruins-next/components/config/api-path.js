@@ -31,6 +31,8 @@ export const MB_GET_NOTIFICATIONS = `${API_SERVER}/member/get-notifications`
 export const MB_MARK_READ = `${API_SERVER}/member/mark-read`
 // create notifications
 export const MB_CREATE_NOTIFICATIONS = `${API_SERVER}/member/create-notifications`
+// get tour info
+export const MB_GET_TOUR_INFO= `${API_SERVER}/member/get-tour-info`
 
 //商品列表
 export const PRODUCT_LIST = `${API_SERVER}/product/api`
@@ -46,6 +48,15 @@ export const PRODUCT_COMMENT_ADD = `${API_SERVER}/product/product-comment`
 
 // 相關商品10筆
 export const PRODUCT_RELATED = `${API_SERVER}/product/api/relatedProducts`
+
+// 商品收藏紀錄
+export const PRODUCT_FAV =`${API_SERVER}/product/product-fav`
+
+// 商品加入收藏
+export const PRODUCT_ADD_FAV = `${API_SERVER}/product/add-product-fav` // POST
+
+// 商品移除收藏
+export const PRODUCT_REMOVE_FAV = `${API_SERVER}/product/remove-product-fav` // POST
 
 // 所有產品
 export const PRODUCT_ALL = `${API_SERVER}/product/api/allProducts`
