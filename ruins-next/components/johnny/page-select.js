@@ -38,8 +38,10 @@ export default function PageSelect({ bgColor = 'bg-black', optionsStyle }) {
         <span
           className={
             pathname.includes('main-page')
-              ? `${optionsStyle} bg-zinc-600 `
-              : `${optionsStyle} bg-zinc-900`
+              ? // ? `${optionsStyle} bg-zinc-600 `
+                // : `${optionsStyle} bg-zinc-900`
+                `${optionsStyle} bg-292929 `
+              : `${optionsStyle} bg-gray-950`
           }
           onClick={() => {
             setToggles({ ...toggles, follows: false, notification: false })
@@ -51,8 +53,10 @@ export default function PageSelect({ bgColor = 'bg-black', optionsStyle }) {
         <span
           className={
             pathname.includes('main-personal')
-              ? `${optionsStyle} bg-zinc-600`
-              : `${optionsStyle} bg-zinc-900`
+              ? // ? `${optionsStyle} bg-zinc-600`
+                // : `${optionsStyle} bg-zinc-900`
+                `${optionsStyle} bg-292929 `
+              : `${optionsStyle} bg-gray-950`
           }
           onClick={() => {
             if (!auth.id) {
@@ -72,8 +76,10 @@ export default function PageSelect({ bgColor = 'bg-black', optionsStyle }) {
         <span
           className={
             pathname.includes('main-messenger')
-              ? `${optionsStyle} bg-zinc-600`
-              : `${optionsStyle} bg-zinc-900`
+              ? // ? `${optionsStyle} bg-zinc-600`
+                // : `${optionsStyle} bg-zinc-900`
+                `${optionsStyle} bg-292929 `
+              : `${optionsStyle} bg-gray-950`
           }
           onClick={() => {
             setToggles({ ...toggles, follows: false, notification: false })

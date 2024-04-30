@@ -35,7 +35,7 @@ export default function Navbar({ className, navColor = 'white' }) {
     <>
       <nav
         className={`${styles.navbar} ${isOpen ? '' : className} ${
-          navColor === 'white' ? 'text-white' : 'text-black'
+          isOpen ? navColor = 'white' : (navColor === 'white' ? 'text-white' : 'text-black') 
         } relative select-none`}
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
@@ -49,7 +49,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                   className={`w-full h-[2px] ${
                     navColor === 'white' ? 'bg-white' : 'bg-black'
                   } transform transition duration-500 ease-in-out ${
-                    isOpen ? 'rotate-45 md:translate-y-1.5 translate-y-1.5' : ''
+                    isOpen ? 'rotate-45 md:translate-y-1.5 translate-y-1.5 bg-white' : ''
                   } `}
                 ></div>
                 <div
@@ -57,22 +57,22 @@ export default function Navbar({ className, navColor = 'white' }) {
                     navColor === 'white' ? 'bg-white' : 'bg-black'
                   }  md:mt-[10px] mt-[6px] transform  transition duration-500 ease-in-out ${
                     isOpen
-                      ? '-rotate-45 md:-translate-y-1.5 -translate-y-[0.125rem]'
+                      ? '-rotate-45 md:-translate-y-1.5 -translate-y-[0.125rem] bg-white'
                       : ''
                   }`}
                 ></div>
               </div>
             </div>
-            <span className="md:block hidden text-[15px] pl-[40px]">MAIN</span>
+            <span className={`${isOpen ? 'text-white' : ''} md:block hidden text-[15px] pl-[40px]`}>MAIN</span>
           </div>
         </div>
         <Link
           href="/"
-          className="md:text-[40px] text-[20px] font-medium justify-center flex w-1/3"
+          className={`${isOpen ? 'text-white' : ''} md:text-[40px] text-[20px] font-medium justify-center flex w-1/3`}
         >
           Ruins
         </Link>
-        <div className={`${styles['navlink-container']} relative w-1/3`}>
+        <div className={`${isOpen ? 'text-white' : ''} ${styles['navlink-container']} relative w-1/3`}>
           {auth.id ? (
             <div>
               <div className="relative cursor-pointer">
@@ -84,27 +84,27 @@ export default function Navbar({ className, navColor = 'white' }) {
                 >
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
                   <div className="absolute top-[-6px] left-[-35px]">
-                    {auth.profileUrl ? (
-                      <Image
-                        width={30}
-                        className="rounded-full min-h-[30px] max-h-[30px] object-cover"
-                        height={30}
-                        src={
-                          auth.googlePhoto
-                            ? auth.profileUrl
-                            : `${IMG_SERVER}/${auth.profileUrl}`
-                        }
-                        alt=""
-                      />
-                    ) : (
-                      <CgProfile className="text-[25px]" />
-                    )}
+                    <Image
+                      width={30}
+                      className="rounded-full min-h-[30px] max-h-[30px] object-cover"
+                      height={30}
+                      src={
+                        auth.googlePhoto
+                          ? auth.profileUrl
+                          : `${IMG_SERVER}/${auth.profileUrl}`
+                      }
+                      alt=""
+                    />
                   </div>
                   <div className="tracking-wide before:py-[10px]">
                     {auth.username}
                   </div>
                 </div>
-                <ProfileModal setShowModal={setShowModal} logout={logout} isVisible={showModal} />
+                <ProfileModal
+                  setShowModal={setShowModal}
+                  logout={logout}
+                  isVisible={showModal}
+                />
               </div>
             </div>
           ) : (
@@ -123,21 +123,18 @@ export default function Navbar({ className, navColor = 'white' }) {
             }  ${styles['navlinks']}`}
           >
             <CartModal />
-            {/* <Link href="/shop/cart">CART</Link> */}
-
             <div className={`${styles['cart-number']}`}>
               {navColor === 'white' ? (
                 <Image alt="" src={CartSvg} />
               ) : (
                 <Image alt="" src={CartLineBlack} />
               )}
-
               <span>{totalItems}</span>
             </div>
           </div>
         </div>
         <div
-          className={`${styles['navlink-container-mobile']} w-1/3 justify-end`}
+          className={`${isOpen ? 'text-white' : ''} ${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
           <div className={`${styles['nav-cart-mobile']}`}>
             <CartModal />
@@ -158,23 +155,17 @@ export default function Navbar({ className, navColor = 'white' }) {
             href=""
             className={styles['profile-icon']}
           >
-            {auth.profileUrl ? (
-              <Image
-                width={20}
-                className="rounded-full h-[20px] object-cover"
-                height={20}
-                src={
-                  auth.googlePhoto
-                    ? auth.profileUrl
-                    : `${IMG_SERVER}/${auth.profileUrl}`
-                }
-                alt=""
-              />
-            ) : navColor === 'white' ? (
-              <Image alt="" src={ProfileIcon} />
-            ) : (
-              <Image alt="" src={ProfileIconBlack} />
-            )}
+            <Image
+              width={20}
+              className="rounded-full h-[20px] object-cover"
+              height={20}
+              src={
+                auth.googlePhoto
+                  ? auth.profileUrl
+                  : `${IMG_SERVER}/${auth.profileUrl}`
+              }
+              alt=""
+            />
           </button>
         </div>
         {auth.id ? (

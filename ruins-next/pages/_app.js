@@ -3,19 +3,17 @@ import TogglesContextProvider from '@/contexts/use-toggles'
 
 import { AuthContextProvider } from '@/contexts/auth-context'
 
+import { CartProvider } from '@/hooks/use-cart'
+import '@/styles/embla.css'
 import '@/styles/globals.css'
 import '@/styles/sandbox.css'
-import '@/styles/embla.css'
-import { CartProvider } from '@/hooks/use-cart'
 
-import { createRoot } from 'react-dom/client'
 // import { Canvas } from '@react-three/fiber'
 
-import { PointContextProvider } from '@/contexts/use-points'
-import { AnimateContextProvider } from '@/contexts/use-animate'
-import { ViewToggleContextProvider } from '@/contexts/use-toggle-show'
-import { GiftContextProvider } from '@/contexts/use-gift'
-import { EffectContextProvider } from '@/contexts/use-effect'
+import { GiftContextProvider } from "@/contexts/use-gift"
+import { PointContextProvider } from "@/contexts/use-points"
+import { StreamInfoContextProvider } from '@/contexts/use-streamInfo'
+import { ViewToggleContextProvider } from "@/contexts/use-toggle-show"
 
 export default function App({ Component, pageProps }) {
   const getLayout = Component.getLayout ?? ((page) => page)
@@ -24,17 +22,15 @@ export default function App({ Component, pageProps }) {
       <CartProvider>
         <BoardsContextProvider>
           <TogglesContextProvider>
-            <ViewToggleContextProvider>
-              <PointContextProvider>
-                <AnimateContextProvider>
+            <StreamInfoContextProvider>
+              <ViewToggleContextProvider>
+                <PointContextProvider>
                   <GiftContextProvider>
-                    <EffectContextProvider>
-                      {getLayout(<Component {...pageProps} />)}
-                    </EffectContextProvider>
+                    {getLayout(<Component {...pageProps} />)}
                   </GiftContextProvider>
-                </AnimateContextProvider>
-              </PointContextProvider>
-            </ViewToggleContextProvider>
+                </PointContextProvider>
+              </ViewToggleContextProvider>
+            </StreamInfoContextProvider>
           </TogglesContextProvider>
         </BoardsContextProvider>
       </CartProvider>
