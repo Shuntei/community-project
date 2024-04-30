@@ -81,10 +81,22 @@ const Background = () => {
 
 export default function TestA() {
 
+  const random = useRef(Math.floor(Math.random()*(3-1)+1))
+
 //   const sizes = {
 //     width: window.innerWidth,
 //     height: window.innerHeight
 // }
+
+    const posData = [
+      [[-8, 2,-4], [-1.2, 2, 9],[9, 2, -3]],
+      [[-1.2, 2, 9],[-8, 2,-4],[9, 2, -3]],
+      [[-1.2, 2, 9],[9, 2, -3],[-8, 2,-4]],
+    ]
+
+    console.log(random.current)
+
+    const posDisplay = posData[random.current-1]
 
   return (
     <>
@@ -107,11 +119,10 @@ export default function TestA() {
           <Model position={[0, 6, 0]} rotation={[0,230,0]}/>
           {/* <Environment files="/3Ddemo/hdr/150_hdrmaps_com_free_10K.exr" background blur={0.5} /> */}
             <directionalLight position={[3.3, 1.0, 4.4]} intensity={4} />
-            <Box position={[-8, 2,-4]} />
-            <Box2 position={[-1.2, 2, 9]} />
-            <Box3 position={[9, 2, -3]} />
+            <Box position={posDisplay[0]}/>
+            <Box2 position={posDisplay[1]}/>
+            <Box3 position={posDisplay[2]} />
           {/* <OrbitControls target={[0, 1, 0]}/> */}
-          {/* <OrbitControls/> */}
           <ambientLight intensity={1} />
           <Background/>
         </Suspense>

@@ -121,26 +121,26 @@ export default function Ball(props) {
           }
     })
 
-    useFrame(({ camera }, delta) => {
-        if (ballRef.current) {
-        const ballPosition = ballRef.current.translation()
+    // useFrame(({ camera }, delta) => {
+    //     if (ballRef.current) {
+    //     const ballPosition = ballRef.current.translation()
 
-        const cameraPosition = new THREE.Vector3()
-        cameraPosition.copy(ballPosition)
-        cameraPosition.z += 8
-        cameraPosition.y += 3
+    //     const cameraPosition = new THREE.Vector3()
+    //     cameraPosition.copy(ballPosition)
+    //     cameraPosition.z += 8
+    //     cameraPosition.y += 3
 
-        const cameraTarget = new THREE.Vector3()
-        cameraTarget.copy(ballPosition)
-        cameraTarget.y += 0.5
+    //     const cameraTarget = new THREE.Vector3()
+    //     cameraTarget.copy(ballPosition)
+    //     cameraTarget.y += 0.5
 
-        cameraProperties.position.lerp(cameraPosition, 5 * delta)
-        cameraProperties.target.lerp(cameraTarget, 5 * delta)
+    //     cameraProperties.position.lerp(cameraPosition, 5 * delta)
+    //     cameraProperties.target.lerp(cameraTarget, 5 * delta)
 
-        camera.position.copy(cameraProperties.position)
-        camera.lookAt(cameraProperties.target)
-        }
-    })
+    //     camera.position.copy(cameraProperties.position)
+    //     camera.lookAt(cameraProperties.target)
+    //     }
+    // })
 
     
 

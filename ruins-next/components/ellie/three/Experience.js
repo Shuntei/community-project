@@ -7,11 +7,16 @@ import { useFrame } from '@react-three/fiber';
 import Ball from './ball';
 import { LayerMaterial, Depth, Noise } from "lamina";
 import * as THREE from 'three';
+import { GameLevel, useGameStore } from './newStore'
+// import { treasure } from './Constents';
+import { ObjSpots } from './objSpots';
 
 
 export default function Experience() {
   const [hover, setHover ] = useState(false);
   const cube = useRef();
+  //  console.log(GameLevel({thStages:3}));
+  const startGame = useGameStore((state)=>state.startGame)
   
 
   return (
@@ -42,6 +47,7 @@ export default function Experience() {
       </group> 
       <Ball/>
       <BoyController onPointerEnter={() => setHover(true)}/>
+      <ObjSpots/>
       {/* <Background/> */}
     </group>
    

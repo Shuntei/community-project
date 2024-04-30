@@ -34,7 +34,7 @@ export default function Experience() {
       <AvatarController2 onPointerEnter={() => setHover(true)}/>
       <AvatarController3 onPointerEnter={() => setHover(true)}/> */}
       <GirlController />
-      <BoyController />
+      {/* <BoyController /> */}
       <ArrorLeft />
       <ArrorRight />
       {/* <Picker/> */}
