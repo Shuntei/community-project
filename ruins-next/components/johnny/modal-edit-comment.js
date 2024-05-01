@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Image from 'next/image'
-import img from './img/90.jpg'
+// import img from './img/90.jpg'
 import { z } from 'zod'
 import { useToggles } from '@/contexts/use-toggles'
 import Swal from 'sweetalert2'
@@ -8,22 +8,12 @@ import withReactContent from 'sweetalert2-react-content'
 import toast, { Toaster } from 'react-hot-toast'
 
 import {
-  RiVideoOnFill,
-  RiImageFill,
-  RiMapPinFill,
-  RiPriceTag3Fill,
-  RiEmotionLaughFill,
   RiEqualizerLine,
   RiSendPlane2Fill,
   RiDraftLine,
   RiCloseLargeLine,
 } from '@remixicon/react'
-import {
-  SN_ADD_COMMENT,
-  SN_EDIT_COMMENT,
-  SN_SELECTED_COMMENT,
-} from '../config/johnny-api-path'
-import { useBoards } from '@/contexts/use-boards'
+import { SN_EDIT_COMMENT, SN_SELECTED_COMMENT } from '../config/johnny-api-path'
 import { useAuth } from '@/contexts/auth-context'
 import { IMG_SERVER } from '../config/api-path'
 
@@ -50,18 +40,6 @@ export default function CommentEditModal({
     setPostForm({ ...postForm, [e.target.name]: e.target.value })
     setIsFormChanged(true)
   }
-
-  // 目前沒還要圖片
-  // const handleFileChange = (e) => {
-  //   const file = e.target.files[0]
-  //   setPostForm({ ...postForm, photo: file })
-  //   if (file) {
-  //     const fileUrl = URL.createObjectURL(file)
-  //     setPreviewUrl(fileUrl)
-  //   } else {
-  //     setPreviewUrl('')
-  //   }
-  // }
 
   //  { message: '使用toast代替' }
   const schemaContent = z.string().min(3)

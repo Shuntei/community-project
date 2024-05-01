@@ -54,7 +54,7 @@ export default function FollowsBar() {
       <section className="fixed right-0 mt-[40px] pt-[10px] w-[260px] hidden bargone:block h-[600px] overflow-scroll pb-20 mr-10 pl-5 rounded-b-3xl z-[998] bg-292929">
         <div className="mb-5">
           <div></div>
-          <div className="text-white py-1 text-[20px] ">FOLLOWS</div>
+          <div className="text-white py-1 text-[20px] ">ALL USERS</div>
           <div className="border-b-2 mb-2 w-[200px]"></div>
           <div className="flex py-1">
             <input
@@ -69,7 +69,7 @@ export default function FollowsBar() {
               <RiSearchLine />
             </button>
           </div>
-          <ul className="h-[400px] overflow-auto hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
+          <ul className="h-[300px] overflow-auto hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
             {userInfo &&
               userInfo
                 .filter((v) => v.id !== auth.id)

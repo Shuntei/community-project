@@ -66,8 +66,8 @@ export default function MainPost() {
     const googleId = result[0].google_id
     console.log(googleId)
     googleId
-      ? setProfilePic(profilePicUrl) ||
-        setProfilePic(`${IMG_SERVER}/${profilePicUrl}`)
+      ? setProfilePic(`${IMG_SERVER}/${profilePicUrl}`) ||
+        setProfilePic(profilePicUrl)
       : setProfilePic(`${IMG_SERVER}/${profilePicUrl}`)
 
     // 其他資訊區
