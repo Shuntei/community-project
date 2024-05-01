@@ -2,16 +2,14 @@ import { API_SERVER } from '@/components/config/api-path';
 import { socket } from '@/src/socket';
 import { createContext, useContext, useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { useAuth } from './auth-context';
 import usePoint from './use-points';
 import useToggle from './use-toggle-show';
-import { useAuth } from './auth-context';
-import { useRouter } from 'next/router';
 
 const GiftContext = createContext(null)
 
 export function GiftContextProvider({ children }) {
   const { auth } = useAuth()
-  const router = useRouter()
   const { roomCode, joinRoom, role, setStreamerName, streamerName } = useToggle()
   const { pts, myPoints } = usePoint()
   const giftList = [
@@ -139,7 +137,7 @@ export function GiftContextProvider({ children }) {
 
     if (pts > price && remain > 0) {
 
-      if (joinRoom || role==="isStreamer") {
+      if (joinRoom || role === "isStreamer") {
         await fetch(`${API_SERVER}/chat/give-streamer-point`, {
           method: "POST",
           headers: {
@@ -187,7 +185,7 @@ export function GiftContextProvider({ children }) {
         setGiftRain(createGiftArray)
 
         socket.emit('showGift', roomCode, createGiftArray)
-      }else{
+      } else {
         return;
       }
 
