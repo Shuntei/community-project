@@ -9,6 +9,7 @@ import productRouter from "./routes/kevin/product.js";
 import memberRouter from "./routes/linda/member.js";
 import tourRouter from "./routes/tony/tour.js";
 import chatRouter from "./routes/tyler/server.js";
+import db from "./utils/mysql2-connect.js";
 
 const app = express();
 
@@ -92,17 +93,10 @@ io.on('connection', socket => {
     socket.to(roomCode).emit("updateBonus", data)
   }
 
-  const handleStreamerName = (name, room) => {
-    streamerName = name
-    io.to(room).emit('streamerSend', streamerName)
-    console.log({ streamerName, room });
-  }
-
   socket.on('sendComment', handleSendComment)
   socket.on('pinnedComment', handlePinnedComment)
   socket.on('unpinComment', handleUnpinComment)
   socket.on('totalBonus', handleUpdateBonus)
-  socket.on('streamerName', handleStreamerName)
 
   // 視訊
   const handleCheckRole = (id, role) => {
@@ -145,14 +139,18 @@ io.on('connection', socket => {
     io.to(roomCode).emit('showGift', giftRain)
   }
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
     const i = viewerIdList.findIndex(viewer => viewer.socketId === socket.id);
     console.log({ i });
     if (i !== -1) {
       viewerIdList.splice(i, 1)
       io.emit('userGo', viewerIdList)
     }
-    // updateLiveStatus(roomName)
+
+    const sql = `SELECT * FROM tyler_stream ORDER BY time DESC LIMIT 1`
+    let [rows] = await db.query(sql)
+    
+    updateLiveStatus(rows[0].stream_code)
     // console.log(`退出房${roomName}`);
     console.log(`${socket.id}用戶退出`);
   }
