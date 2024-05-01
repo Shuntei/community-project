@@ -1,16 +1,53 @@
 import React, { useState } from 'react'
 import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
-
-
-
+import { useRouter } from 'next/router';
 export default function Notepad({ onClose }) {
-  const [form, setForm] = useState({title:'', content:''})
+ const router=useRouter()
+  const [form, setForm] = useState({
+    title:'', 
+    memo:'',
+  })
+  //呈現錯誤狀態
+  // const [errors, setErrors] = useState({
+  //   hasErrors: false, //狀態判斷有沒有錯誤
+  //   title:'', 
+  //   memo:'',
+  // })
   const changeHandler = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
   const submitHandler = async (e) => {
     e.preventDefault();
+
+  //   //檢查資料欄位
+  //   let initErrors = 
+  //   { hasErrors: false, //狀態判斷有沒有錯誤
+  //   title:'', 
+  //   content:'',
+  // };
+  //   const r1 = schemaTitle.safeParse(form.title);
+  //   if (!r1.success) {
+  //     initErrors= {
+  //       ...initErrors,
+  //       hasErrors: true,
+  //       title: r1.error.issues[0].massage,
+  //     };
+  //   }
+  //   const r2 = schemaContent.safeParse(form.content);
+  //   if (!r2.success) {
+  //     initErrors= {
+  //       ...initErrors,
+  //       hasErrors: true,
+  //       content: r2.error.issues[0].massage,
+  //     };
+  //   }
+
+  //   if(initErrors.hasErrors) {
+  //     setErrors(initErrors);
+  //     return; //欄位檢查時,有錯誤的話,就不發ajax
+  //   }
+
 
     const newForm  = new FormData(e.currentTarget)
     const urlencoded = new URLSearchParams(newForm)
@@ -25,14 +62,15 @@ export default function Notepad({ onClose }) {
       },
     });
     const result = await r.json();
-    console.log({ result });
-    // if(result.success){
-    //   // 
-    //   router.push(`/address-book`);
-    // } else {
-    //   // 
-    //   alert("資料新增發生錯誤")
-    // }
+    console.log({ r });
+    if(result.success){
+      // 
+      // router.push(`/game`);
+      alert("資料新增成功")
+    } else {
+      // 
+      alert("資料新增發生錯誤")
+    }
   };
   return (
     <>
@@ -80,14 +118,22 @@ export default function Notepad({ onClose }) {
       </div> {/* notepad bar */}
       <div className="blackLine">
           <form className="barPadding" onSubmit={submitHandler}>
-            <input className="title" onChange={changeHandler} name='title' value={form.title} />
+            <input 
+            
+            className="title" 
+            onChange={changeHandler} 
+            name='title' 
+            value={form.title} 
+            // defaultValue="Title Here :)"
+            placeholder="Title Here"
+            />
 
             <div className="notepad-settings">
               <div className="buttonLineUp">
-              <div className="buttonLineUp1">
+              {/* <div className="buttonLineUp1">
                 <div className="notepad-button"><RiArrowGoBackLine/></div>
                 <div className="notepad-button"><RiArrowGoForwardLine/></div>
-              </div>
+              </div> */}
               <div className="buttonLineUp2">
                 <div className="notepad-button"><RiBold/></div>
                 <div className="notepad-button"><RiItalic/></div>
@@ -106,7 +152,11 @@ export default function Notepad({ onClose }) {
             />
           </label> */}
             <div className="notepad-content">
-              <input onChange={changeHandler} name='content' value={form.content}/> 
+              <textarea onChange={changeHandler} name='memo' value={form.memo} 
+              placeholder="Type something :)"
+              rows={15}
+              cols={65}
+              /> 
               
               <div className="mainEnd">
                 <div className="relative">
@@ -284,6 +334,7 @@ export default function Notepad({ onClose }) {
 	float: left;
 	display: inline-flex;
 	/* margin-left: 10px; */
+  margin-top: 5px;
 	margin-bottom: 5px;
 }
 
@@ -380,7 +431,7 @@ export default function Notepad({ onClose }) {
 .buttonLineUp2 {
 	height: 100%; 
 	display: inline-flex; 
-	gap: 2px;
+	gap: 4px;
   padding: 2px;
 }
 .title {
