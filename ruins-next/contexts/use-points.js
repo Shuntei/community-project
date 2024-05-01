@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useContext, createContext } from 'react'
 import { API_SERVER } from '@/components/config/api-path'
+import { createContext, useContext, useEffect, useState } from 'react'
 import { useAuth } from './auth-context'
 
 const PointContext = createContext()
@@ -25,8 +24,10 @@ export function PointContextProvider({ children }) {
   }
 
   useEffect(() => {
-    myPoints()
-  }, [])
+    if (auth.id) {
+      myPoints()
+    }
+  }, [auth.id])
 
   return (
     <PointContext.Provider value={{ pts, setPts, myPoints }}>

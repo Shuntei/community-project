@@ -50,7 +50,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
     }
   }
 
-  const [userProfile, setUserProfile] = useState("/images/face-id.png")
+  // const [userProfile, setUserProfile] = useState("/images/face-id.png")
 
   // const getUserProfile = async () => {
   //   const r = await fetch(`${API_SERVER}/user-pic/${auth.id}`, {
@@ -101,8 +101,8 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
       if (inputComment !== "") {
         const newComment = {
           id: newId,
-          name: "陳泰勒",
-          profile: userProfile,
+          name: auth.username,
+          profile: auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
           comment: inputComment,
           reply: replyTarget,
         }
@@ -198,7 +198,6 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
 
   const handleGetPoints = (profile, id) => {
     if (profile == "/images/treasure.png" && !clickedIds.includes(id)) {
-      let userId = 1
       fetch(`${API_SERVER}/chat/add-point`, {
         method: 'POST',
         body: JSON.stringify({ id: auth.id }),
