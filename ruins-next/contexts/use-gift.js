@@ -5,12 +5,14 @@ import Swal from 'sweetalert2';
 import usePoint from './use-points';
 import useToggle from './use-toggle-show';
 import { useAuth } from './auth-context';
+import { useRouter } from 'next/router';
 
 const GiftContext = createContext(null)
 
 export function GiftContextProvider({ children }) {
   const { auth } = useAuth()
-  const { roomCode } = useToggle()
+  const router = useRouter()
+  const { roomCode, joinRoom, role, setStreamerName, streamerName } = useToggle()
   const { pts, myPoints } = usePoint()
   const giftList = [
     {
@@ -71,10 +73,28 @@ export function GiftContextProvider({ children }) {
     })
   }, [])
 
-  // 禮物列表
-  const fetchTotalBonus = async () => {
+  const fetchStreamerName = async () => {
     try {
-      const response = await fetch(`${API_SERVER}/chat/totalBonus/${auth.username}`, {
+      const r = await fetch(`${API_SERVER}/chat/getStreamerName`, {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+      )
+      const data = await r.json()
+      setStreamerName(data[0].streamer_name)
+      console.log(data[0].streamer_name);
+    }
+    catch (e) {
+      console.log({ e });
+    }
+  }
+  // 禮物列表
+  const fetchTotalBonus = async (streamerName) => {
+    try {
+      fetchStreamerName()
+      const response = await fetch(`${API_SERVER}/chat/totalBonus/${streamerName}`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json'
@@ -89,11 +109,17 @@ export function GiftContextProvider({ children }) {
   };
 
   useEffect(() => {
-    fetchTotalBonus();
-    socket.on('updateBonus', data => {
-      setTotalBonus(data)
-    })
-  }, []);
+    fetchStreamerName()
+    if (joinRoom || role === "isStreamer") {
+      fetchTotalBonus(streamerName);
+      console.log({ streamerName });
+      socket.on('updateBonus', data => {
+        setTotalBonus(data)
+      })
+    } else {
+      setTotalBonus(0)
+    }
+  }, [streamerName, joinRoom, role]);
 
   const handleGiveGift = async (price, name, pic) => {
 
@@ -112,53 +138,60 @@ export function GiftContextProvider({ children }) {
     setGList(updateList)
 
     if (pts > price && remain > 0) {
-      await fetch(`${API_SERVER}/chat/give-streamer-point`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: auth.username,
-          gift: name,
-          point: price
+
+      if (joinRoom) {
+        await fetch(`${API_SERVER}/chat/give-streamer-point`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: streamerName,
+            gift: name,
+            point: price
+          })
         })
-      })
-        .then(r => r.json())
-        .then(data => {
-          console.log(`新增 ${data.points} 禮物`);
-          fetchTotalBonus()
+          .then(r => r.json())
+          .then(data => {
+            console.log(`新增 ${data.points} 禮物`);
+            fetchTotalBonus(streamerName)
+          })
+
+        await fetch(`${API_SERVER}/chat/use-point`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: auth.id,
+            points: price,
+            source: name,
+          }),
         })
+          .then(r => r.json())
+          .then(data => {
+            console.log(`減少 ${data.points} 點數`)
+            fetchTotalBonus(streamerName)
+            myPoints()
+          }
+          )
 
-      await fetch(`${API_SERVER}/chat/use-point`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: auth.id,
-          points: price,
-          source: name,
-        }),
-      })
-        .then(r => r.json())
-        .then(data => {
-          console.log(`減少 ${data.points} 點數`)
-          fetchTotalBonus()
-          myPoints()
-        }
-        )
+        // 動畫開始
+        setGiftRain([]);
+        setIsAnimating(true)
+        const createGiftArray = Array.from({ length: 40 }).map((_, i) => ({
+          id: i,
+          gift: pic,
+          size: `${parseInt(Math.random() * (70 - 10) + 50)}`
+        }))
+        setGiftRain(createGiftArray)
 
-      // 動畫開始
-      setGiftRain([]);
-      setIsAnimating(true)
-      const createGiftArray = Array.from({ length: 40 }).map((_, i) => ({
-        id: i,
-        gift: pic,
-        size: `${parseInt(Math.random() * (70 - 10) + 50)}`
-      }))
-      setGiftRain(createGiftArray)
+        socket.emit('showGift', roomCode, createGiftArray)
+      }else{
+        return;
+      }
 
-      socket.emit('showGift', roomCode, createGiftArray)
+
 
     } else {
       Swal.fire({

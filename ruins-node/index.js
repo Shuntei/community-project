@@ -57,6 +57,7 @@ app.use((req, res) => {
 // Socket.io content
 let viewerIdList = [];
 // let roomName = ""
+let streamerName = ""
 
 // 確認連線
 io.on('connection', socket => {
@@ -91,10 +92,17 @@ io.on('connection', socket => {
     socket.to(roomCode).emit("updateBonus", data)
   }
 
+  const handleStreamerName = (name, room) => {
+    streamerName = name
+    io.to(room).emit('streamerSend', streamerName)
+    console.log({ streamerName, room });
+  }
+
   socket.on('sendComment', handleSendComment)
   socket.on('pinnedComment', handlePinnedComment)
   socket.on('unpinComment', handleUnpinComment)
   socket.on('totalBonus', handleUpdateBonus)
+  socket.on('streamerName', handleStreamerName)
 
   // 視訊
   const handleCheckRole = (id, role) => {
@@ -158,9 +166,6 @@ io.on('connection', socket => {
 
 
 const port = process.env.WEB_PORT || 3002;
-// app.listen(port, () => {
-//   console.log(`server started at ${port}`);
-// });
 
 server.listen(port, () => {
   console.log(`server started at ${port}`);

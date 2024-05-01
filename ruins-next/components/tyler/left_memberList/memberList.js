@@ -38,6 +38,7 @@ export default function MemberList({ totalBonus }) {
           {members.map((m, i) => (
             <Member
               key={m.viewerId}
+              image={m.image}
               index={m.viewerId}
               name={m.name}></Member>
           ))}
