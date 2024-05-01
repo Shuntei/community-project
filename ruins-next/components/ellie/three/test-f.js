@@ -1,8 +1,8 @@
-import React,{ useState, useRef, useEffect, Suspense, useMemo } from 'react'
-import { Html ,PresentationControls } from '@react-three/drei';
+import React,{ useRef, Suspense} from 'react'
+import { PresentationControls } from '@react-three/drei';
 import { Canvas, useLoader, useFrame, useThree, extend  } from '@react-three/fiber'
 import { Physics } from "@react-three/rapier"
-import { Sky, PointerLockControls, KeyboardControls, Stats, OrbitControls, Environment } from "@react-three/drei"
+import { Sky } from "@react-three/drei"
 import { Model } from './model'
 import Experience from './forMainpage'
 import _JSXStyle from 'styled-jsx/style'
@@ -49,10 +49,7 @@ const Background = () => {
 };
 
 
-
 export default function TestF() {
-
-
 
   return (
     <>
@@ -62,8 +59,7 @@ export default function TestF() {
       <Canvas className='bg-neutral-100' shadowmap="true" camera={{ position: [80, 11.8, -1.5], fov:48 }} >
       <Sky sunPosition={[100, 20, 100]} />
       <PresentationControls 
-      // global polar={[-0.4,0.2]} azimuth={[-0.4,0.2]}
-      snap global zoom={0.8} rotation={[0, -Math.PI / 16, 0]} polar={[0, Math.PI / 4]} azimuth={[-Math.PI / 8, Math.PI / 8]}
+      snap global zoom={0.8} rotation={[0, -Math.PI / 16, 0]} polar={[0, Math.PI / 4]} azimuth={[-Math.PI / 2, Math.PI / 2]}
       >
         <Suspense>
           <Physics >
