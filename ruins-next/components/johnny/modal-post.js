@@ -8,9 +8,7 @@ import withReactContent from 'sweetalert2-react-content'
 import toast, { Toaster } from 'react-hot-toast'
 import emotionHandler from './utils/emotionHandler'
 import {
-  RiVideoOnFill,
   RiImageFill,
-  RiMapPinFill,
   RiPriceTag3Fill,
   RiEqualizerLine,
   RiSendPlane2Fill,

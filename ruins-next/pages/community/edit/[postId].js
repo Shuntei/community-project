@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {
-  API_SERVER,
-  SN_COMMUNITY,
-} from '../../../components/config/johnny-api-path'
+import { SN_COMMUNITY } from '../../../components/config/johnny-api-path'
 import Link from 'next/link'
 import Image from 'next/image'
 import { z } from 'zod'
@@ -23,9 +20,7 @@ import { IMG_SERVER } from '@/components/config/api-path'
 import emotionHandler from '@/components/johnny/utils/emotionHandler'
 import Emotion from '@/components/johnny/modal-post-options/emotion'
 import {
-  RiVideoOnFill,
   RiImageFill,
-  RiMapPinFill,
   RiPriceTag3Fill,
   RiEqualizerLine,
   RiSendPlane2Fill,
@@ -101,8 +96,12 @@ export default function EditModal() {
             .then((result) => {
               if (result.success) {
                 setRender(true)
-                setEditModal(false)
-                router.back()
+                // 這裡與發文不同,因為檔案路徑不同不能使用router.back() :會拿不到psUserId
+                router.push({
+                  pathname: '/community/main-personal',
+                  query: { psUserId: auth.id },
+                })
+                // setEditModal(false)
               } else {
                 toast.error('編輯貼文失敗')
               }

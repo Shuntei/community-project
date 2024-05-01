@@ -22,10 +22,10 @@ export default function InfoBar() {
     fetch(`${SN_USER_INFO}`)
       .then((r) => r.json())
       .then((result) => {
-        console.log(result)
+        // console.log(result)
         if (!psUserId) return
         let selectedUser = result.find((v, i) => v.id == psUserId)
-        console.log(selectedUser)
+        // console.log(selectedUser)
         setUserinfo(selectedUser)
       })
   }
