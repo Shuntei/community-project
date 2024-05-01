@@ -3,6 +3,7 @@ import TestA from '@/components/ellie/three/test-a'
 import TestB from '@/components/ellie/three/test-b'
 import TestC from '@/components/ellie/three/test-c'
 import TestD from '@/components/ellie/three/test-d'
+import TestF from '@/components/ellie/three/test-f'
 import AvatarPicker from '@/components/ellie/three/AvatarPicker'
 import { useAuth } from '@/contexts/auth-context';
 import Router from 'next/router'
@@ -22,7 +23,7 @@ export default function ThreeIndex() {
   // console.log(GameLevel({thStages}))
   return (
     <>
-      <TestA/>
+      <TestF/>
     </>
   )
 }
