@@ -10,22 +10,6 @@ router.get('/try-connect', async (req, res) => {
   res.json(rows)
 })
 
-// 抓用戶資料
-// router.get('/05-streaming/u-info/:pid', async (req, res) => {
-//   let pid = req.params.pid
-//   const sql = `SELECT * FROM mb_user WHERE id=?`
-//   let [rows] = await db.query(sql, [pid])
-//   res.json(rows)
-// })
-
-// 抓用戶圖片
-// router.get('/user-pic/:pid', async (req, res) => {
-//   let pid = req.params.pid
-//   const sql = `SELECT * FROM mb_user_profile WHERE user_id=?`
-//   let [rows] = await db.query(sql, [pid])
-//   res.json(rows)
-// })
-
 // 計算所有點數
 router.get('/05-streaming/u-point/:pid', async (req, res) => {
   let pid = req.params.pid
@@ -62,7 +46,6 @@ router.post('/add-point', async (req, res) => {
 router.post('/use-point', async (req, res) => {
 
   const { userId, points, source } = req.body
-  // console.log(req.body);
 
   const sql = `INSERT INTO tyler_use_point (user_id, point_use, gift, time_use_point) VALUES (?, ?, ?, CURRENT_TIMESTAMP())`
   let [rows] = await db.query(sql, [userId, points, source])
@@ -104,12 +87,10 @@ router.get('/totalBonus/:name', async (req, res) => {
   res.json(totalPoints)
 })
 
-router.get('/getStreamerName', async (req,res)=>{
+router.get('/getStreamerName', async (req, res) => {
   const sql = `SELECT * FROM tyler_stream ORDER BY time DESC LIMIT 1`
   let [rows] = await db.query(sql)
   res.json(rows)
 })
-
-
 
 export default router

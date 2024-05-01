@@ -139,7 +139,7 @@ export function GiftContextProvider({ children }) {
 
     if (pts > price && remain > 0) {
 
-      if (joinRoom) {
+      if (joinRoom || role==="isStreamer") {
         await fetch(`${API_SERVER}/chat/give-streamer-point`, {
           method: "POST",
           headers: {
