@@ -1,11 +1,11 @@
+import { API_SERVER, IMG_SERVER } from '@/components/config/api-path';
+import { useAuth } from '@/contexts/auth-context';
 import useToggle from '@/contexts/use-toggle-show';
 import { socket } from '@/src/socket';
+import { RiArrowRightSFill } from '@remixicon/react';
 import { useRouter } from "next/router";
 import { Peer } from "peerjs";
 import { useEffect, useRef, useState } from 'react';
-import { API_SERVER, IMG_SERVER } from '@/components/config/api-path';
-import { RiArrowRightSFill } from '@remixicon/react';
-import { useAuth } from '@/contexts/auth-context';
 
 export default function Stream() {
   const { auth } = useAuth()

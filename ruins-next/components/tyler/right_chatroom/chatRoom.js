@@ -1,13 +1,12 @@
+import { API_SERVER, IMG_SERVER } from "@/components/config/api-path";
+import { useAuth } from "@/contexts/auth-context";
 import usePoint from "@/contexts/use-points";
 import useToggle from "@/contexts/use-toggle-show";
 import { socket } from "@/src/socket";
 import { RiCloseFill, RiGift2Line, RiMoneyDollarCircleFill, RiPushpinFill, RiReplyFill, RiUser3Fill, RiUserFill } from "@remixicon/react";
 import Image from 'next/image';
 import { useEffect, useRef, useState } from "react";
-import { API_SERVER } from "@/components/config/api-path";
 import styles from './chatRoom.module.css';
-import { useAuth } from "@/contexts/auth-context";
-import { IMG_SERVER } from "@/components/config/api-path";
 
 export default function ChatRoom({ isConnected, comment, setComment }) {
   const { auth } = useAuth()

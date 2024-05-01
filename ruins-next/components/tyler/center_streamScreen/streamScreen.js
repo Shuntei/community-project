@@ -1,4 +1,4 @@
-import Title from '../title/title';
+import { useAuth } from '@/contexts/auth-context';
 import useGift from '@/contexts/use-gift';
 import useToggle from '@/contexts/use-toggle-show';
 import { RiArrowLeftSLine, RiArrowRightSLine, RiCloseLine, RiCoinFill } from "@remixicon/react";
@@ -7,8 +7,8 @@ import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import Link from 'next/link';
 import GiftShow from '../giftShow/giftShow';
+import Title from '../title/title';
 import styles from './streamScreen.module.css';
-import AuthContext, { useAuth } from '@/contexts/auth-context';
 const StreamContent = dynamic(() => import('../stream/stream'), {
   ssr: false,
 })
