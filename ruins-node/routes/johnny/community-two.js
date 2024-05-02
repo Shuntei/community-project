@@ -31,12 +31,13 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
     // console.log("this is photo:", req.file);
 
     if (!req.file) {
-      const sql = `UPDATE sn_posts SET title=? , content=?, board_id=?, emotion=? WHERE post_id=${postId}`;
+      const sql = `UPDATE sn_posts SET title=? , content=?, board_id=?, emotion=?, tags=? WHERE post_id=${postId}`;
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.boardId,
         req.body.emotion,
+        req.body.tags,
       ]);
     }
     if (req.file) {
@@ -46,13 +47,14 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
       console.log("newFilePath", newFilePath);
       // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
-      const sql = `UPDATE sn_posts SET title=?, content=?, image_url=?, board_id=?, emotion=? WHERE post_id=${postId}`;
+      const sql = `UPDATE sn_posts SET title=?, content=?, image_url=?, board_id=?, emotion=?, tags=? WHERE post_id=${postId}`;
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.image_url,
         req.body.boardId,
         req.body.emotion,
+        req.body.tags,
       ]);
     }
 

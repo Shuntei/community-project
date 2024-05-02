@@ -7,12 +7,16 @@ import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast, { Toaster } from 'react-hot-toast'
 import emotionHandler from './utils/emotionHandler'
+import tagsHandler from './utils/tagsHandler'
+
 import {
   RiImageFill,
   RiPriceTag3Fill,
   RiEqualizerLine,
   RiSendPlane2Fill,
   RiDraftLine,
+  RiCloseCircleLine,
+  RiCloseLine,
   RiCloseLargeLine,
   RiArrowDropDownLine,
 } from '@remixicon/react'
@@ -21,6 +25,7 @@ import { useBoards } from '@/contexts/use-boards'
 import { useAuth } from '@/contexts/auth-context'
 import { IMG_SERVER } from '../config/api-path'
 import Emotion from './modal-post-options/emotion'
+import Tags from './modal-post-options/tags'
 
 export default function PostModal() {
   const { auth } = useAuth()
@@ -32,6 +37,7 @@ export default function PostModal() {
     boardId: '',
     userId: '',
     emotion: '',
+    tags: '',
   })
   const [isFormChanged, setIsFormChanged] = useState(false) //發文用不到,但編輯有用到,因同一個表情元件不傳遞發文會故障
 
@@ -67,6 +73,7 @@ export default function PostModal() {
     formData.append('boardId', postForm.boardId)
     formData.append('userId', auth.id)
     formData.append('emotion', postForm.emotion)
+    formData.append('tags', postForm.tags)
     // console.log(postForm)
     // http:localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg
     const MySwal = withReactContent(Swal)
@@ -232,11 +239,30 @@ export default function PostModal() {
               <div className="rounded-lg bg-slate-300">
                 <div className="flex justify-center gap-2 pc:gap-5 py-3">
                   <div className="text-[14px] pc:text-[16px] flex">
-                    <RiPriceTag3Fill className="mr-2" />
-                    黃曉桂
+                    {tagsHandler(postForm.tags)}
+                    {postForm.tags && (
+                      <span
+                        onClick={() => {
+                          setPostForm({ ...postForm, tags: '' })
+                          setIsFormChanged(true)
+                        }}
+                      >
+                        <RiCloseCircleLine className="size-4 ml-1 cursor-pointer" />
+                      </span>
+                    )}
                   </div>{' '}
                   <div className="text-[14px] pc:text-[16px] flex">
                     {emotionHandler(postForm.emotion)}
+                    {postForm.emotion && (
+                      <span
+                        onClick={() => {
+                          setPostForm({ ...postForm, emotion: '' })
+                          setIsFormChanged(true)
+                        }}
+                      >
+                        <RiCloseCircleLine className="size-4 ml-1 cursor-pointer" />
+                      </span>
+                    )}
                   </div>
                   {/* <div className="text-[14px] pc:text-[16px] flex">
                     <RiMapPinFill className="mr-2" />
@@ -291,14 +317,11 @@ export default function PostModal() {
               <RiImageFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">PHOTO</span>
             </label>
-            {/* <button className="flex items-center">
-              <RiMapPinFill className="mr-2 text-[24px]" />
-              <span className="hidden pc:flex">LOCATION</span>
-            </button> */}
-            <button className="flex items-center">
-              <RiPriceTag3Fill className="mr-2 text-[24px]" />
-              <span className="hidden pc:flex">TAGS</span>
-            </button>
+            <Tags
+              postForm={postForm}
+              setPostForm={setPostForm}
+              setIsFormChanged={setIsFormChanged}
+            />
             {/* <button className="flex items-center">
               <RiEmotionLaughFill className="mr-2 text-[24px]" />
               <span className="hidden pc:flex">FEELING</span>

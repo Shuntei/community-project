@@ -321,13 +321,14 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
     // console.log("this is photo:", req.file);
     if (!req.file) {
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `board_id`, `user_id`, `emotion`, `tags`) VALUES ( ?, ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.boardId,
         req.body.userId,
         req.body.emotion,
+        req.body.tags,
       ]);
       output.success = !!result.affectedRows;
     }
@@ -339,7 +340,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
       // http://localhost:3001/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `image_url`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `image_url`, `board_id`, `user_id`, `emotion`, `tags`) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
@@ -347,6 +348,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
         req.body.boardId,
         req.body.userId,
         req.body.emotion,
+        req.body.tags,
       ]);
     }
 
