@@ -1,5 +1,6 @@
 import { API_SERVER, IMG_SERVER } from '@/components/config/api-path';
 import { useAuth } from '@/contexts/auth-context';
+import useStreamInfo from '@/contexts/use-streamInfo';
 import useToggle from '@/contexts/use-toggle-show';
 import { socket } from '@/src/socket';
 import { RiArrowRightSFill } from '@remixicon/react';
@@ -10,13 +11,14 @@ import { useEffect, useRef, useState } from 'react';
 export default function Stream() {
   const { auth } = useAuth()
   const router = useRouter()
+  const { streamTitle, streamDesciption } = useStreamInfo()
   const [streamRoom, setStreamRoom] = useState('')
-  const { streamId, setStreamId, role, setRole, viewerId, setViewerId, roomCode, setRoomCode, vSocketId, setVSocketId, joinRoom, setJoinRoom, streamerName, setStreamerName } = useToggle()
+  const { streamId, setStreamId, role, setRole, viewerId, setViewerId, roomCode, setRoomCode, vSocketId, setVSocketId, joinRoom, setJoinRoom, streamerName, setStreamerName, haveStream, setHaveStream } = useToggle()
   const localVidsRef = useRef(null)
   const remoteVidsRef = useRef(null)
   const peer = useRef()
 
-  console.log({ streamerName });
+  // console.log({ streamerName });
 
   useEffect(() => {
     if (router.isReady) {
@@ -64,6 +66,8 @@ export default function Stream() {
       })
 
       if (role === 'isStreamer') {
+        setHaveStream(true)
+        socket.emit('setTitle', streamTitle, streamDesciption)
         socket.emit('joinRoom', roomCode)
         navigator.mediaDevices.getUserMedia({
           video: {
@@ -83,6 +87,12 @@ export default function Stream() {
       }
     }
   }
+
+  useEffect(() => {
+    socket.emit('haveStream', { room: roomCode, stream: haveStream })
+  }, [haveStream])
+  console.log(`是否有人在直播1：${haveStream}`);
+
 
   const calling = async () => {
     try {

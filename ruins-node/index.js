@@ -54,9 +54,11 @@ app.use((req, res) => {
   res.status(404).send(`<h2>404 wrong path</h2>`);
 });
 
-
 // Socket.io content
 let viewerIdList = [];
+let streamStatus = false
+let title = ""
+let description = ""
 
 // 確認連線
 io.on('connection', socket => {
@@ -89,16 +91,25 @@ io.on('connection', socket => {
     socket.to(roomCode).emit("updateBonus", data)
   }
 
-  const handleSetTitle = (data) => {
-    io.to(data.roomCode).emit('setTitle', data)
+  const handleSetTitle = (streamTitle, streamDesciption) => {
+    console.log({ streamTitle, streamDesciption });
+    title = streamTitle
+    description = streamDesciption
+    io.emit('setTitle', title, description)
   }
-  
+
+  const handleHaveStream = (data) => {
+    streamStatus = data.stream
+    socket.to(data.room).emit('haveStream', streamStatus)
+    console.log(streamStatus);
+  }
 
   socket.on('sendComment', handleSendComment)
   socket.on('pinnedComment', handlePinnedComment)
   socket.on('unpinComment', handleUnpinComment)
   socket.on('totalBonus', handleUpdateBonus)
   socket.on('setTitle', handleSetTitle)
+  socket.on('haveStream', handleHaveStream)
 
   // 視訊
   const handleCheckRole = (id, role) => {
@@ -132,6 +143,7 @@ io.on('connection', socket => {
       viewerIdList.push(userData)
       io.to(roomCode).emit('userGo', viewerIdList)
       console.log({ viewerIdList });
+      socket.emit('setTitle', title, description);
     }
   }
 
@@ -141,7 +153,7 @@ io.on('connection', socket => {
 
   const handleDisconnect = async () => {
     const i = viewerIdList.findIndex(viewer => viewer.socketId === socket.id);
-    console.log({ i });
+    // console.log({ i });
     if (i !== -1) {
       viewerIdList.splice(i, 1)
       io.emit('userGo', viewerIdList)

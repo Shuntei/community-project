@@ -1,17 +1,19 @@
+import { useAuth } from '@/contexts/auth-context';
+import useToggle from '@/contexts/use-toggle-show';
+import { socket } from '@/src/socket';
 import styles from '@/styles/check-role.module.css';
 import { RiCheckboxFill, RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
+import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
-import { useAuth } from '@/contexts/auth-context';
-import Router from 'next/router';
 
 export default function CheckRole() {
   const [viewerHover, setViewerHover] = useState(false);
   const [streamerHover, setStreamerHover] = useState(false);
   const [onPhone, setOnPhone] = useState(false);
   const { auth } = useAuth()
-  const [login, setLogin] = useState(false);
+  const { haveStream, setHaveStream } = useToggle()
 
   const handleViewerMouseEnter = () => {
     setViewerHover(true);
@@ -40,7 +42,32 @@ export default function CheckRole() {
     window.addEventListener('resize', sizeChange)
   })
 
+  useEffect(() => {
+
+    socket.on('haveStream', haveStream => {
+      setHaveStream(haveStream)
+      console.log(`是否有人在直播3：${haveStream}`);
+    })
+
+  }, [])
+  console.log(`是否有人在直播2：${haveStream}`);
+
   const handleSignInCheck = () => {
+
+    if (haveStream) {
+      Swal.fire({
+        toast: true,
+        width: 280,
+        position: onPhone ? "top" : "top-end",
+        icon: 'error',
+        iconColor: 'black',
+        title: '已有人直播，請稍候',
+        showConfirmButton: false,
+        timer: 2000,
+      })
+    }
+
+
     if (auth.id) {
       Router.push('./chat/02-check-webcam-source')
     } else {
