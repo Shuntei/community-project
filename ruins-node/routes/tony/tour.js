@@ -1,7 +1,34 @@
 import express from "express";
 import db from "../../utils/mysql2-connect.js";
+import multer from "multer";
+import bodyParser from "body-parser";
 
 const router = express.Router();
+router.use(bodyParser.json());
+
+// 用來篩選檔案, 並且決定副檔名
+// const exts = {
+//   "image/png": ".png",
+//   "image/jpeg": ".jpg",
+//   "image/webp": ".webp",
+// };
+
+// const fileFilter = (req, file, callback) => {
+//   callback(null, !!exts[file.mimetype]);
+// };
+
+// 設定 multer 儲存位置 public/images/borou
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "public/img");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname); // You can customize the filename if needed
+  },
+});
+// Configure multer
+const upload = multer({ limits: { fileSize: 1000000 }, storage: storage });
+// const upload = multer({ fileFilter, storage: storage });
 
 // 取得揪團文章列表
 const getTourList = async (req, res) => {
@@ -46,7 +73,7 @@ const getTourList = async (req, res) => {
     order += ` ORDER BY tour_post.created_at DESC`;
   }
   // 最受歡迎
-  
+
   // 最快出發,即日期最早
   if (soon) {
     order += ` ORDER BY tour_post.event_date`;
@@ -123,7 +150,7 @@ const getTourPost = async (req, tid) => {
 };
 
 // 會員收藏行程分類
-const getFavTourBook = async (req, res) =>{
+const getFavTourBook = async (req, res) => {
   try {
     const id = req.params.id;
     // 加入第二個 subquery 為每個 tour_id 抓一張照片當封面
@@ -134,21 +161,21 @@ const getFavTourBook = async (req, res) =>{
     ORDER BY favtour_list.tour_id ASC LIMIT 1 ) AS image_url 
     FROM tony_favtour_list AS favtour_list 
     LEFT JOIN tony_favtour_book AS favtour_book 
-    ON favtour_list.bid = favtour_book.bid WHERE favtour_list.user_id = ?`
-    const [rows] = await db.query(sql, id)
+    ON favtour_list.bid = favtour_book.bid WHERE favtour_list.user_id = ?`;
+    const [rows] = await db.query(sql, id);
 
-    if(!rows.length){
-      return {success: false, message: "no favorite tour found"}
+    if (!rows.length) {
+      return { success: false, message: "no favorite tour found" };
     }
     const row = rows;
-    return {success:true, row}
+    return { success: true, row };
   } catch (error) {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
-}
+};
 
 // 收藏細項
-const getFavTours = async ( bid) => {
+const getFavTours = async (bid) => {
   try {
     const sql = `SELECT tour_post.*,  favlist.*,
     (SELECT image_url 
@@ -158,10 +185,10 @@ const getFavTours = async ( bid) => {
     FROM tony_tour_post AS tour_post
     LEFT JOIN tony_favtour_list AS favlist
     ON tour_post.tour_id = favlist.tour_id
-    WHERE favlist.bid = ?`
-    
+    WHERE favlist.bid = ?`;
+
     const [rows] = await db.query(sql, bid);
-    
+
     if (!rows.length) {
       return { success: false };
     }
@@ -171,7 +198,76 @@ const getFavTours = async ( bid) => {
   } catch (error) {
     return { success: false, message: "Internal server error" };
   }
-}
+};
+
+// 發文表單資料
+const handleAddPost = async (req, res) => {
+  const output = {
+    success: false,
+    formData: req.body,
+  };
+
+  try {
+    // Extract form data from the request body
+    const formData = req.body;
+    // Access uploaded images
+    const images = req.files;
+
+    // Insert data into the 'tony_tour_post' table
+    const postSql = `
+      INSERT INTO tony_tour_post 
+        (user_id, ruin_id, event_date, max_groupsize, event_period, level_id, title, description, content, created_at) 
+      VALUES 
+        (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+    `;
+    const postValues = [
+      formData.user_id,
+      formData.ruin_id,
+      formData.event_date,
+      formData.max_groupsize,
+      formData.event_period,
+      formData.level_id,
+      formData.title,
+      formData.description,
+      formData.content,
+    ];
+    await db.query(postSql, postValues);
+
+    // Get the last inserted tour_id
+    const [lastInsertIdRows] = await db.query(
+      "SELECT LAST_INSERT_ID() AS tour_id"
+    );
+    const lastInsertId = lastInsertIdRows[0].tour_id;
+
+    // Insert data into the 'tony_tour_images' table
+    const imagesSql = `
+      INSERT INTO tony_tour_images
+        (tour_id, image_url, image_descrip)
+      VALUES
+        (?, ?, ?)
+    `;
+    // 多圖上傳, you would loop through them and execute the query for each image
+    for (const image of images) {
+      const imagesValues = [
+        lastInsertId, // Using the last inserted tour_id
+        image.image_url,
+        image.image_descrip,
+      ];
+      await db.query(imagesSql, imagesValues);
+    }
+
+    output.success = true;
+    res.json(output);
+  } catch (error) {
+    console.error("Error handling form submission:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+// 處理發文加入資料庫, 加上 middleware
+router.post("/api/add-post", upload.array('images', 10), async(req, res)=>{
+  const data = await handleAddPost(req);
+  res.json(data);
+});
 
 // 從資料庫取得表單資料
 router.get("/api", async (req, res) => {
@@ -185,10 +281,10 @@ router.get("/api", async (req, res) => {
 
 // 取得單筆資料
 router.get("/api/tourpost/:tid", async (req, res) => {
-  const tid = req.params.tid
+  const tid = req.params.tid;
   const result = await getTourPost(req, tid);
   res.json(result);
-})
+});
 
 // 以會員編號取得發文資料
 router.get("/api/get-post/:id", async (req, res) => {
@@ -221,19 +317,19 @@ router.get("/api/get-post/:id", async (req, res) => {
 });
 
 // 會員收藏行程分類
-router.get("/api/favtourbook/:id", async(req, res)=>{
+router.get("/api/favtourbook/:id", async (req, res) => {
   const result = await getFavTourBook(req);
   res.json(result);
-})
+});
 
 // 會員收藏細項
-router.get("/api/favtours/:bid", async(req, res)=>{
-  const bid = +req.params.bid
-  console.log('bid',bid);
-  const result = await getFavTours(bid)
+router.get("/api/favtours/:bid", async (req, res) => {
+  const bid = +req.params.bid;
+  console.log("bid", bid);
+  const result = await getFavTours(bid);
 
   res.json(result);
-})
+});
 
 // 只是測試路徑頁面
 router.get("/test", (req, res) => {
