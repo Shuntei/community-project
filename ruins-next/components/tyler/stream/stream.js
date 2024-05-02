@@ -91,7 +91,7 @@ export default function Stream() {
   useEffect(() => {
     socket.emit('haveStream', { room: roomCode, stream: haveStream })
   }, [haveStream])
-  console.log(`是否有人在直播1：${haveStream}`);
+  console.log(`是否有人在直播1：${haveStream} 房間：${roomCode}`);
 
 
   const calling = async () => {

@@ -97,8 +97,6 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
           reply: replyTarget,
         }
 
-        // { name: auth.id ? auth.username : "探險家", viewerId: viewerId, socketId: vSocketId, image: !auth.id ? "/images/adventure.png" : auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}` }
-
         if (isConnected) {
           socket.emit('sendComment', newComment, roomCode)
           console.log({ newComment }, { roomCode });
@@ -235,9 +233,9 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
 
                 <div className='flex justify-between w-full text-center'>
                   <div className='flex w-6/12 gap-2 items-center justify-start'>
-                    <Image width={27} height={27} alt='大頭貼' src={c.profile}
+                    <img alt='大頭貼' src={c.profile}
                       onClick={() => handleGetPoints(c.profile, c.id)}
-                      className='bg-white rounded-full p-1' />
+                      className='bg-white rounded-full p-0.5 h-[34px] w-[34px] object-cover' />
                     <div className='shrink-0'>{c.name}</div>
                   </div>
                   {role === "isStreamer" && c.name !== "系統" &&
