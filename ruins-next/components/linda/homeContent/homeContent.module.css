@@ -24,6 +24,36 @@
   order: 2;
 }
 
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-30%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(30%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-from-right {
+  animation: slideInFromRight 0.5s ease-out forwards;
+}
+
+.slide-in-from-left {
+  animation: slideInFromLeft 0.5s ease-out forwards;
+}
+
 .sec3-text {
   display: flex;
   flex-direction: column;
@@ -217,6 +247,7 @@ p.item-name {
     padding: 20px 0px 18px 19px;
     left: 17px;
     bottom: 35%;
+    gap: 30px;
   }
 
   .card2-button {

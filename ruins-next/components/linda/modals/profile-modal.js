@@ -3,29 +3,8 @@ import Link from 'next/link'
 import { IMG_SERVER } from '@/components/config/api-path'
 import { useAuth } from '@/contexts/auth-context'
 
-export default function ProfileModal({ setShowModal, onClose, isVisible, logout }) {
-  const modalRef = useRef(null)
-  const {auth} = useAuth()
-
-  useEffect(()=>{
-    function handleClickOutside(event) {
-      if(modalRef.current && !modalRef.current.contains(event.target)){
-        setShowModal(false)
-      }
-    }
-
-    if(isVisible){
-      document.addEventListener('mousedown', handleClickOutside)
-    } else {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-
-    return ()=>{
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [isVisible, onClose])
-
-  
+export default function ProfileModal({ isVisible, modalRef }) {
+  const {auth, logout} = useAuth()
 
   if (!isVisible) return null
   return (
@@ -62,7 +41,6 @@ export default function ProfileModal({ setShowModal, onClose, isVisible, logout 
                 SETTINGS
               </Link>
               <span
-                // href="#"
                 onClick={logout}
                 className="text-rose-400 text-base uppercase"
               >
