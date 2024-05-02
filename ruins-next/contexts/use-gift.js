@@ -82,7 +82,6 @@ export function GiftContextProvider({ children }) {
       )
       const data = await r.json()
       setStreamerName(data[0].streamer_name)
-      console.log(data[0].streamer_name);
     }
     catch (e) {
       console.log({ e });

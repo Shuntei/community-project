@@ -25,6 +25,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
   const handleCommentFocus = useRef()
   const SendButton = useRef()
   const [clickedIds, setClickedIds] = useState([])
+  const containerHeight = useRef(null)
 
   useEffect(() => {
 
@@ -39,6 +40,12 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
     }
   }, [])
 
+  useEffect(() => {
+    if (containerHeight.current) {
+      containerHeight.current.scrollTop = containerHeight.current.scrollHeight
+    }
+  }, [comment])
+
   let isComposing = false;
 
   const handleComposition = (e) => {
@@ -48,22 +55,6 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
       isComposing = true;
     }
   }
-
-  // const [userProfile, setUserProfile] = useState("/images/face-id.png")
-
-  // const getUserProfile = async () => {
-  //   const r = await fetch(`${API_SERVER}/user-pic/${auth.id}`, {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   })
-  //   const data = await r.json()
-  //   setUserProfile(data[0].profile_pic_url)
-  // }
-  // useEffect(() => {
-  //   getUserProfile()
-  // }, [comment])
 
   const handleCommentSubmit = (e) => {
 
@@ -76,8 +67,8 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
         if (inputComment !== "") {
           const newComment = {
             id: newId,
-            name: auth.username,
-            profile: auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
+            name: auth.id ? auth.username : "探險家",
+            profile: !auth.id ? "/images/adventure.png" : auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
             comment: inputComment,
             reply: replyTarget,
           }
@@ -100,11 +91,13 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
       if (inputComment !== "") {
         const newComment = {
           id: newId,
-          name: auth.username,
-          profile: auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
+          name: auth.id ? auth.username : "探險家",
+          profile: !auth.id ? "/images/adventure.png" : auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
           comment: inputComment,
           reply: replyTarget,
         }
+
+        // { name: auth.id ? auth.username : "探險家", viewerId: viewerId, socketId: vSocketId, image: !auth.id ? "/images/adventure.png" : auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}` }
 
         if (isConnected) {
           socket.emit('sendComment', newComment, roomCode)
@@ -229,7 +222,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
         </>}
 
         {/* 聊天內容 */}
-        <div className={styles.chat}>
+        <div className={styles.chat} ref={containerHeight}>
           {comment.map((c) => {
             return (
               <div key={c.id} className='flex flex-col items-start mb-4'>
