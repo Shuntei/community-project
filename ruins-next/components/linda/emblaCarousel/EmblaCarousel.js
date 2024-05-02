@@ -3,7 +3,7 @@ import useEmblaCarousel from 'embla-carousel-react'
 import {
   NextButton,
   PrevButton,
-  usePrevNextButtons
+  usePrevNextButtons,
 } from './EmblaCarouselArrowButtons'
 import { DotButton, useDotButton } from './EmblaCarouselDotButton'
 import styles from '../homeContent/homeContent.module.css'
@@ -26,7 +26,7 @@ const EmblaCarousel = (props) => {
     prevBtnDisabled,
     nextBtnDisabled,
     onPrevButtonClick,
-    onNextButtonClick
+    onNextButtonClick,
   } = usePrevNextButtons(emblaApi)
 
   const setTweenFactor = useCallback((emblaApi) => {
@@ -79,10 +79,9 @@ const EmblaCarousel = (props) => {
       .on('reInit', setTweenFactor)
       .on('reInit', tweenOpacity)
       .on('scroll', tweenOpacity)
-      .on('select', ()=>{
+      .on('select', () => {
         setCurrentIndex(emblaApi.selectedScrollSnap())
       })
-
   }, [emblaApi, tweenOpacity, currentIndex])
 
   return (
@@ -117,17 +116,25 @@ const EmblaCarousel = (props) => {
           ))}
         </div>
       </div>
-      {slides?.map((slide, index)=> (
-        <div className={`${styles['card1']} flex ${index === currentIndex ? 'block' : 'hidden'}`} key={index}>
+      {slides?.map((slide, index) => (
+        <div
+          className={`${styles['card1']} flex ${index === currentIndex ? 'block' : 'hidden'}`}
+          key={index}
+        >
           <div className="flex flex-col justify-center items-start gap-6 animate-duration-1000 animate-ease-in-out animate-fill-forwards">
-            <span className="text-[14px] animate-duration-1000 animate-ease-in-out animate-fill-forwards"
-            >{slide.title}</span>
+            <span className="text-[14px] animate-duration-1000 animate-ease-in-out animate-fill-forwards">
+              {slide.title}
+            </span>
             <span className="font-medium md:text-[24px]">
-            {slide.description}
+              {slide.description}
             </span>
           </div>
           <Link
-          href={currentIndex === 0 ? `http://localhost:3000/tour/tourpost/${slides[slides.length - 1].tour_id}` : `http://localhost:3000/tour/tourpost/${slides[currentIndex - 1].tour_id}`}
+            href={
+              currentIndex === 0
+                ? `http://localhost:3000/tour/tourpost/${slides[slides.length - 1].tour_id}`
+                : `http://localhost:3000/tour/tourpost/${slides[currentIndex - 1].tour_id}`
+            }
             className={`${styles['card-button']} cursor-pointer hover:bg-[#7A7A7A]`}
           >
             READ NOW

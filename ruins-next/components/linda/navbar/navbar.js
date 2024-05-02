@@ -168,17 +168,23 @@ export default function Navbar({ className, navColor = 'white' }) {
             href=""
             className={styles['profile-icon']}
           >
-            <Image
-              width={20}
-              className="rounded-full h-[20px] object-cover"
-              height={20}
-              src={
-                auth.googlePhoto
-                  ? auth.profileUrl
-                  : `${IMG_SERVER}/${auth.profileUrl}`
-              }
-              alt=""
-            />
+            {auth.profileUrl ? (
+              <Image
+                width={20}
+                className="rounded-full h-[20px] object-cover"
+                height={20}
+                src={
+                  auth.googlePhoto
+                    ? auth.profileUrl
+                    : `${IMG_SERVER}/${auth.profileUrl}`
+                }
+                alt=""
+              />
+            ) : navColor === 'white' ? (
+              <Image alt="" src={ProfileIcon} />
+            ) : (
+              <Image alt="" src={ProfileIconBlack} />
+            )}
           </button>
         </div>
         {auth.id ? (
