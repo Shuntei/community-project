@@ -114,7 +114,7 @@ export default function Stream() {
       return
     } else {
       socket.emit('joinRoom', roomCode)
-      socket.emit('userEnter', { name: auth.username, viewerId: viewerId, socketId: vSocketId, image: auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}` }, roomCode)
+      socket.emit('userEnter', { name: auth.id ? auth.username : "探險家", viewerId: viewerId, socketId: vSocketId, image: !auth.id ? "/images/adventure.png" : auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}` }, roomCode)
       setJoinRoom(true)
     }
 

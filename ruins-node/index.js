@@ -89,10 +89,16 @@ io.on('connection', socket => {
     socket.to(roomCode).emit("updateBonus", data)
   }
 
+  const handleSetTitle = (data) => {
+    io.to(data.roomCode).emit('setTitle', data)
+  }
+  
+
   socket.on('sendComment', handleSendComment)
   socket.on('pinnedComment', handlePinnedComment)
   socket.on('unpinComment', handleUnpinComment)
   socket.on('totalBonus', handleUpdateBonus)
+  socket.on('setTitle', handleSetTitle)
 
   // 視訊
   const handleCheckRole = (id, role) => {
@@ -154,7 +160,6 @@ io.on('connection', socket => {
   socket.on('showGift', handleShowGift)
   socket.on('disconnecting', handleDisconnect)
 })
-
 
 const port = process.env.WEB_PORT || 3002;
 

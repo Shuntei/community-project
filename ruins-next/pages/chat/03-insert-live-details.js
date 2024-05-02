@@ -6,9 +6,12 @@ import { RiCloseLine } from "@remixicon/react";
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Process1 from '@/components/tyler/checkPoint/tyler_process0';
+import { socket } from '@/src/socket';
+import useToggle from '@/contexts/use-toggle-show';
 
 export default function CheckWebcamSource() {
   const { streamTitle, setStreamTitle, streamDesciption, setStreamDesciption } = useStreamInfo()
+  const { roomCode } = useToggle()
   const [onPhone, setOnPhone] = useState(false);
   const [titleCurrentNum, setTitleCurrentNum] = useState(0)
   const [descriptionCurrentNum, setDescriptionCurrentNum] = useState(0)
@@ -22,6 +25,19 @@ export default function CheckWebcamSource() {
     sizeChange()
     window.addEventListener('resize', sizeChange)
   })
+
+  useEffect(() => {
+    if (streamTitle && streamDesciption && roomCode) {
+      socket.emit('setTitle', { streamTitle, streamDesciption, roomCode })
+    }
+  }, [streamTitle, streamDesciption, roomCode])
+
+  useEffect(() => {
+    socket.on('setTitle', data => {
+      setStreamTitle(data.streamTitle)
+      setStreamDesciption(data.streamDesciption)
+    })
+  }, [])
 
   return (
 

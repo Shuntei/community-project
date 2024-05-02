@@ -13,7 +13,6 @@ router.get('/try-connect', async (req, res) => {
 // 計算所有點數
 router.get('/05-streaming/u-point/:pid', async (req, res) => {
   let pid = req.params.pid
-  // console.log({pid});
 
   // 共擁有多少點數
   const t_sql = `SELECT * FROM tyler_get_point WHERE user_id=?`
@@ -62,6 +61,7 @@ router.post('/stream-logon', async (req, res) => {
   res.json(rows)
 })
 
+// 觀看最新主播
 router.get('/watch-stream', async (req, res) => {
 
   const sql = `SELECT * FROM tyler_stream ORDER BY time DESC LIMIT 1`
@@ -69,6 +69,7 @@ router.get('/watch-stream', async (req, res) => {
   res.json(rows)
 })
 
+// 紀錄主播打賞
 router.post('/give-streamer-point', async (req, res) => {
 
   const { name, gift, point } = req.body
@@ -78,6 +79,7 @@ router.post('/give-streamer-point', async (req, res) => {
   res.json(rows)
 })
 
+// 紀錄打賞總量
 router.get('/totalBonus/:name', async (req, res) => {
   const name = req.params.name
 
@@ -87,6 +89,7 @@ router.get('/totalBonus/:name', async (req, res) => {
   res.json(totalPoints)
 })
 
+// 取得打賞對象
 router.get('/getStreamerName', async (req, res) => {
   const sql = `SELECT * FROM tyler_stream ORDER BY time DESC LIMIT 1`
   let [rows] = await db.query(sql)

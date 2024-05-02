@@ -32,9 +32,9 @@ export default function Sidebar() {
         <div className='mb-4'>直播設定</div>
         <hr className={styles['line']} />
 
-        <a href="/02-check-webcam-source"><div className={onPage1 ? `${styles['selected-section']} pl-2.5` : `pl-2.5`}>確認影音來源</div></a>
+        <a href="/chat/02-check-webcam-source"><div className={onPage1 ? `${styles['selected-section']} pl-2.5` : `pl-2.5`}>確認影音來源</div></a>
 
-        <a href="/03-insert-live-details"><div className={onPage2 ? `${styles['selected-section']} pl-2.5` : `pl-2.5`}>輸入直播資訊</div></a>
+        <a href="/chat/03-insert-live-details"><div className={onPage2 ? `${styles['selected-section']} pl-2.5` : `pl-2.5`}>輸入直播資訊</div></a>
 
       </div>
     </>
