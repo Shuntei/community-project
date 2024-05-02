@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+} from 'react'
 import {
   MB_SIGNUP,
   MB_LOGIN,
@@ -7,8 +13,6 @@ import {
 } from '@/components/config/api-path'
 import { firebaseAuth } from '@/components/config/firebase'
 import { signInWithPopup, GoogleAuthProvider, signOut } from 'firebase/auth'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import Router, { useRouter } from 'next/router'
 
 const AuthContext = createContext()
 
@@ -36,7 +40,7 @@ export function AuthContextProvider({ children }) {
   const [auth, setAuth] = useState(defaultAuth)
   const [update, setUpdate] = useState(false)
   const [dateInSec, setDateInSec] = useState(null)
-  const router = useRouter()
+  const [modals, setModals] = useState({})
 
   const signup = async (formData) => {
     try {
@@ -126,6 +130,52 @@ export function AuthContextProvider({ children }) {
     }
   }
 
+  const showModal = (modalName) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: true,
+    }))
+  }
+
+  const hideModal = (modalName) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: false,
+    }))
+  }
+
+  const toggleModal = (modalName) => {
+    setModals((prevModals) => ({
+      ...prevModals,
+      [modalName]: !prevModals[modalName],
+    }))
+  }
+
+  const modalRefs = useRef({})
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      Object.keys(modals).forEach((modalName) => {
+        if (
+          modalRefs.current[modalName] &&
+          !modalRefs.current[modalName].contains(event.target)
+        ) {
+          hideModal(modalName)
+        }
+      })
+    }
+
+    if (Object.values(modals).some((modal) => modal)) {
+      document.addEventListener('mousedown', handleClickOutside)
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [modals])
+
   useEffect(() => {
     const dateInSec = Math.floor(Date.now() / 1000)
     setDateInSec(dateInSec)
@@ -141,6 +191,19 @@ export function AuthContextProvider({ children }) {
     } catch (ex) {}
   }, [update])
 
+  const getModalProps = (modalName) => ({
+    isVisible: modals[modalName] || false,
+    showModal: () => showModal(modalName),
+    hideModal: () => hideModal(modalName),
+    toggleModal: () => toggleModal(modalName),
+    ref: (el) => {
+      modalRefs.current = {
+        ...modalRefs.current,
+        [modalName]: el,
+      }
+    },
+  })
+
   return (
     <AuthContext.Provider
       value={{
@@ -152,6 +215,7 @@ export function AuthContextProvider({ children }) {
         update,
         setUpdate,
         dateInSec,
+        getModalProps,
       }}
     >
       {children}

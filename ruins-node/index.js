@@ -146,7 +146,7 @@ io.on('connection', socket => {
     }
     // updateLiveStatus(roomName)
     // console.log(`退出房${roomName}`);
-    console.log(`${socket.id}用戶退出`);
+    // console.log(`${socket.id}用戶退出`);
   }
 
   socket.on('check-role', handleCheckRole)

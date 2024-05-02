@@ -21,12 +21,16 @@ import { useAuth } from '@/contexts/auth-context'
 import { IMG_SERVER } from '@/components/config/api-path'
 
 export default function Navbar({ className, navColor = 'white' }) {
-  const { auth, logout } = useAuth()
-  const [showModal, setShowModal] = useState(false)
+  const { auth, logout, getModalProps } = useAuth()
   const [showLogoutModal, setShowLogoutModal] = useState(false)
   const [showLoginModal, setShowLoginModal] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
+  const {
+    toggleModal,
+    isVisible,
+    ref: modalRef,
+  } = getModalProps('profileModal')
   const toggleNav = () => {
     setIsOpen(!isOpen)
   }
@@ -35,7 +39,11 @@ export default function Navbar({ className, navColor = 'white' }) {
     <>
       <nav
         className={`${styles.navbar} ${isOpen ? '' : className} ${
-          isOpen ? navColor = 'white' : (navColor === 'white' ? 'text-white' : 'text-black') 
+          isOpen
+            ? (navColor = 'white')
+            : navColor === 'white'
+              ? 'text-white'
+              : 'text-black'
         } relative select-none`}
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
@@ -49,7 +57,9 @@ export default function Navbar({ className, navColor = 'white' }) {
                   className={`w-full h-[2px] ${
                     navColor === 'white' ? 'bg-white' : 'bg-black'
                   } transform transition duration-500 ease-in-out ${
-                    isOpen ? 'rotate-45 md:translate-y-1.5 translate-y-1.5 bg-white' : ''
+                    isOpen
+                      ? 'rotate-45 md:translate-y-1.5 translate-y-1.5 bg-white'
+                      : ''
                   } `}
                 ></div>
                 <div
@@ -63,7 +73,11 @@ export default function Navbar({ className, navColor = 'white' }) {
                 ></div>
               </div>
             </div>
-            <span className={`${isOpen ? 'text-white' : ''} md:block hidden text-[15px] pl-[40px]`}>MAIN</span>
+            <span
+              className={`${isOpen ? 'text-white' : ''} md:block hidden text-[15px] pl-[40px]`}
+            >
+              MAIN
+            </span>
           </div>
         </div>
         <Link
@@ -72,14 +86,17 @@ export default function Navbar({ className, navColor = 'white' }) {
         >
           Ruins
         </Link>
-        <div className={`${isOpen ? 'text-white' : ''} ${styles['navlink-container']} relative w-1/3`}>
+        <div
+          className={`${isOpen ? 'text-white' : ''} ${styles['navlink-container']} relative w-1/3`}
+        >
           {auth.id ? (
             <div>
               <div className="relative cursor-pointer">
                 <div
                   className="cursor-pointer select-none"
-                  onClick={() => {
-                    setShowModal(!showModal)
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    toggleModal()
                   }}
                 >
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
@@ -100,11 +117,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                     {auth.username}
                   </div>
                 </div>
-                <ProfileModal
-                  setShowModal={setShowModal}
-                  logout={logout}
-                  isVisible={showModal}
-                />
+                <ProfileModal isVisible={isVisible} modalRef={modalRef} />
               </div>
             </div>
           ) : (

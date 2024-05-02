@@ -303,7 +303,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
   // console.log("Uploaded file:", req.file.path);
 
   const output = {
-    success: false,
+    // success: false,
     bodyData: { body: req.body },
     errors: {},
   };
@@ -313,7 +313,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
   // const sql = "INSERT INTO `sn_posts` SET ? ";
   try {
     if (!req.body.userId) {
-      output.success = false;
+      // output.success = false;
       output.errors = "no user id";
       return;
     }
@@ -329,6 +329,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
         req.body.userId,
         req.body.emotion,
       ]);
+      output.success = !!result.affectedRows;
     }
     if (req.file) {
       // console.log("來到圖片區但是沒有圖片");
