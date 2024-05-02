@@ -63,6 +63,10 @@ let description = ""
 // 確認連線
 io.on('connection', socket => {
 
+  if (streamStatus) {
+    io.emit('haveStream', streamStatus)
+  }
+
   const handleSendComment = (newComment, room) => {
     io.to(room).emit('receiveComment', newComment)
   }
@@ -100,7 +104,6 @@ io.on('connection', socket => {
 
   const handleHaveStream = (data) => {
     streamStatus = data.stream
-    socket.to(data.room).emit('haveStream', streamStatus)
     console.log(streamStatus);
   }
 
