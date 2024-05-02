@@ -38,9 +38,6 @@ export default function PersonalContent() {
   // console.log(location.search) undefined
 
   const allPsPostsShow = async () => {
-    // currentPage是?page=哪一頁
-    // const currentPage = location.search
-    // router.push({ pathname: '/community/main-personal', query: queryString })
     try {
       const r = await fetch(`${SN_PSPOSTS}?${queryString}`)
       const data = await r.json()
@@ -92,8 +89,6 @@ export default function PersonalContent() {
   }
   useEffect(() => {
     if (router.isReady) {
-      // const currentPage = router.query.page
-      // handlePsPage(currentPage)
       allPsPostsShow()
       setRender(false)
     }

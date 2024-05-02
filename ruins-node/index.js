@@ -9,6 +9,7 @@ import productRouter from "./routes/kevin/product.js";
 import memberRouter from "./routes/linda/member.js";
 import tourRouter from "./routes/tony/tour.js";
 import chatRouter from "./routes/tyler/server.js";
+import db from "./utils/mysql2-connect.js";
 
 const app = express();
 
@@ -56,7 +57,6 @@ app.use((req, res) => {
 
 // Socket.io content
 let viewerIdList = [];
-// let roomName = ""
 
 // 確認連線
 io.on('connection', socket => {
@@ -73,8 +73,6 @@ io.on('connection', socket => {
     io.to(roomCode).emit("unpinAll")
   }
 
-
-  // FIXME:人數在離開時對不上
   const updateLiveStatus = (room) => {
     const users = io.sockets.adapter.rooms.get(room);
     if (users) {
@@ -104,8 +102,6 @@ io.on('connection', socket => {
       socket.join(id)
       console.log(`主播 ${id} 登入`);
       updateLiveStatus(id);
-      // roomName = id;
-      // console.log({roomName});
     } else {
       socket.emit('viewerGo', id, socket.id)
       console.log(`觀眾 ${id} 登入`);
@@ -137,16 +133,19 @@ io.on('connection', socket => {
     io.to(roomCode).emit('showGift', giftRain)
   }
 
-  const handleDisconnect = () => {
+  const handleDisconnect = async () => {
     const i = viewerIdList.findIndex(viewer => viewer.socketId === socket.id);
     console.log({ i });
     if (i !== -1) {
       viewerIdList.splice(i, 1)
       io.emit('userGo', viewerIdList)
     }
-    // updateLiveStatus(roomName)
-    // console.log(`退出房${roomName}`);
-    // console.log(`${socket.id}用戶退出`);
+
+    const sql = `SELECT * FROM tyler_stream ORDER BY time DESC LIMIT 1`
+    let [rows] = await db.query(sql)
+
+    updateLiveStatus(rows[0].stream_code)
+    console.log(`${socket.id}用戶退出`);
   }
 
   socket.on('check-role', handleCheckRole)
@@ -158,9 +157,6 @@ io.on('connection', socket => {
 
 
 const port = process.env.WEB_PORT || 3002;
-// app.listen(port, () => {
-//   console.log(`server started at ${port}`);
-// });
 
 server.listen(port, () => {
   console.log(`server started at ${port}`);

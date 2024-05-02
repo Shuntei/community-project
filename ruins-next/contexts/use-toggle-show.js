@@ -15,6 +15,7 @@ export function ViewToggleContextProvider({ children }) {
   const [isStreaming, setIsStreaming] = useState(false)
   const [vSocketId, setVSocketId] = useState('')
   const [joinRoom, setJoinRoom] = useState(false)
+  const [streamerName, setStreamerName] = useState('')
 
   // 手機上顯示
   useEffect(() => {
@@ -48,8 +49,7 @@ export function ViewToggleContextProvider({ children }) {
 
   return (
     <ViewToggleContext.Provider value={{
-      onPhone, showChatroom, showSidebar, showGift, showMember, handleChatroom, handleSidebarHide, handleShowGift, handleShowMemberlist, role, setRole, streamId, setStreamId,
-      viewerId, setViewerId, roomCode, setRoomCode, isStreaming, setIsStreaming, vSocketId, setVSocketId, joinRoom, setJoinRoom
+      onPhone, showChatroom, showSidebar, showGift, showMember, handleChatroom, handleSidebarHide, handleShowGift, handleShowMemberlist, role, setRole, streamId, setStreamId, viewerId, setViewerId, roomCode, setRoomCode, isStreaming, setIsStreaming, vSocketId, setVSocketId, joinRoom, setJoinRoom, streamerName, setStreamerName
     }}>
       {children}
     </ViewToggleContext.Provider>

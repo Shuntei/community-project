@@ -1,20 +1,22 @@
+import { API_SERVER, IMG_SERVER } from '@/components/config/api-path';
+import { useAuth } from '@/contexts/auth-context';
 import useToggle from '@/contexts/use-toggle-show';
 import { socket } from '@/src/socket';
+import { RiArrowRightSFill } from '@remixicon/react';
 import { useRouter } from "next/router";
 import { Peer } from "peerjs";
 import { useEffect, useRef, useState } from 'react';
-import { API_SERVER } from '@/components/config/api-path';
-import { RiArrowRightSFill } from '@remixicon/react';
-import { useAuth } from '@/contexts/auth-context';
 
 export default function Stream() {
   const { auth } = useAuth()
   const router = useRouter()
   const [streamRoom, setStreamRoom] = useState('')
-  const { streamId, setStreamId, role, setRole, viewerId, setViewerId, roomCode, setRoomCode, vSocketId, setVSocketId, joinRoom, setJoinRoom } = useToggle()
+  const { streamId, setStreamId, role, setRole, viewerId, setViewerId, roomCode, setRoomCode, vSocketId, setVSocketId, joinRoom, setJoinRoom, streamerName, setStreamerName } = useToggle()
   const localVidsRef = useRef(null)
   const remoteVidsRef = useRef(null)
   const peer = useRef()
+
+  console.log({ streamerName });
 
   useEffect(() => {
     if (router.isReady) {
@@ -39,13 +41,18 @@ export default function Stream() {
         setStreamId(id)
         setRoomCode(id)
 
+        setStreamerName(auth.username)
+        if (auth.username) {
+          socket.emit('streamerName', auth.username, id)
+        }
+
         await fetch(`${API_SERVER}/chat/stream-logon`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            streamId: auth.id,
+            streamId: id,
             streamerName: auth.username,
           })
         })
@@ -73,14 +80,13 @@ export default function Stream() {
               call.answer(stream)
             })
           })
-
       }
     }
   }
 
   const calling = async () => {
     try {
-      const r = await fetch(`${API_SERVER}/chat/watch-stream/${auth.username}`, {
+      const r = await fetch(`${API_SERVER}/chat/watch-stream`, {
         method: "GET",
         headers: {
           'Content-Type': 'application/json'
@@ -90,6 +96,7 @@ export default function Stream() {
       const data = await r.json()
       setRoomCode(data[0].stream_code)
       setStreamId(roomCode)
+
     }
     catch (err) {
       console.log("沒有抓到資料");
@@ -107,7 +114,7 @@ export default function Stream() {
       return
     } else {
       socket.emit('joinRoom', roomCode)
-      socket.emit('userEnter', { name: "tyler", viewerId: viewerId, socketId: vSocketId }, roomCode)
+      socket.emit('userEnter', { name: auth.username, viewerId: viewerId, socketId: vSocketId, image: auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}` }, roomCode)
       setJoinRoom(true)
     }
 

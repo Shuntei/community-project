@@ -1,4 +1,3 @@
-
 .homeSectionTwo {
   background-repeat: no-repeat;
   position: relative;
@@ -344,6 +343,13 @@ p.item-name {
 .containerP {
   display: flex;
   overflow-x: auto;
+  width: 350px;
+}
+
+@media (min-width: 768px) {
+  .containerP {
+    width: 100%;
+  }
 }
 @keyframes slideLeft {
   from {

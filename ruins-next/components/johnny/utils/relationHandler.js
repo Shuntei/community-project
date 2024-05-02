@@ -20,12 +20,6 @@ const relationHandler = (status = 'unfollow') => {
           </span>
         </>
       )
-    // case 'unhappy':
-    //   return (
-    //     <>
-    //       <span className="hidden pc:inline-block">覺得不開心</span>
-    //     </>
-    //   )
     default:
       return null
   }
