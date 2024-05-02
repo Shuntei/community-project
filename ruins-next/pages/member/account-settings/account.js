@@ -307,7 +307,7 @@ export default function Account() {
             >
               <Image
                 priority
-                className={`${avatarPreview ? 'max-h-[110px] min-h-[110px]' : ''} object-cover min-w-[110px] rounded-full hover:border`}
+                className={`${avatarPreview ? 'max-h-[110px] min-h-[110px]' : ''} max-h-[110px] object-cover min-w-[110px] rounded-full hover:border`}
                 alt=""
                 width={110}
                 height={110}
