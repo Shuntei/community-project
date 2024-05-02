@@ -23,6 +23,7 @@ import {
 import { SN_POSTS } from '@/components/config/johnny-api-path'
 import dayjs from 'dayjs'
 import emotionHandler from '@/components/johnny/utils/emotionHandler'
+import tagsHandler from '@/components/johnny/utils/tagsHandler'
 import { IMG_SERVER } from '@/components/config/api-path'
 
 export default function MainPost() {
@@ -148,10 +149,10 @@ export default function MainPost() {
                 <span className="hidden pc:inline-block">待老坑山</span>
               </div> */}
               <div className="flex">
-                <RiPriceTag3Fill className="mr-2" />
-                <span className="hidden pc:inline-block">
-                  @小名@陳威宇@Tina
-                </span>
+                {/* <RiPriceTag3Fill className="mr-2" />
+                <span className="hidden pc:inline-block"> */}
+                {tagsHandler(getPost[0].tags)}
+                {/* </span> */}
               </div>
               <div className="flex">
                 {/* <RiEmotionLaughFill className="mr-2" />

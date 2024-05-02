@@ -85,7 +85,7 @@ export default function Emotion({ postForm, setPostForm, setIsFormChanged }) {
                 覺得無聊
               </a>
             </li>
-            <li
+            {/* <li
               onClick={() => {
                 setPostForm({ ...postForm, emotion: '' })
                 setIsFormChanged(true)
@@ -95,7 +95,7 @@ export default function Emotion({ postForm, setPostForm, setIsFormChanged }) {
                 <RiCloseLine />
                 取消
               </a>
-            </li>
+            </li> */}
           </ul>
         )}
       </div>
