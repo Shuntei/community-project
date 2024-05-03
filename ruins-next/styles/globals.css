@@ -19,7 +19,8 @@
 
 body {
   background-color: var(--main-bg);
-  font-family: 'IBM Plex Mono', monospace;
+  /* font-family: 'IBM Plex Mono', monospace; */
+  font-family: "IBM Plex Mono", "Noto Sans TC";
   width: 100%;
   /* overflow-x: hidden; */
   line-height: normal;

@@ -2,8 +2,28 @@ import React, { useState } from 'react'
 import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
 import { useRouter } from 'next/router';
-export default function Notepad({ onClose }) {
- const router=useRouter()
+export default function EditNotes({ onClose }) {
+  const router = useRouter()
+
+  const [note, setNote] = useState('')
+
+  const getNote = async () => {
+    const url = `http://localhost:3001/game/gm_note`
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
+
+      setNote(data)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    getNote()
+  }, [router])
+
+  // +++++++++++++++++++
   const [form, setForm] = useState({
     title:'', 
     memo:'',
@@ -14,34 +34,6 @@ export default function Notepad({ onClose }) {
   };
   const submitHandler = async (e) => {
     e.preventDefault();
-
-  //   //檢查資料欄位
-  //   let initErrors = 
-  //   { hasErrors: false, //狀態判斷有沒有錯誤
-  //   title:'', 
-  //   content:'',
-  // };
-  //   const r1 = schemaTitle.safeParse(form.title);
-  //   if (!r1.success) {
-  //     initErrors= {
-  //       ...initErrors,
-  //       hasErrors: true,
-  //       title: r1.error.issues[0].massage,
-  //     };
-  //   }
-  //   const r2 = schemaContent.safeParse(form.content);
-  //   if (!r2.success) {
-  //     initErrors= {
-  //       ...initErrors,
-  //       hasErrors: true,
-  //       content: r2.error.issues[0].massage,
-  //     };
-  //   }
-
-  //   if(initErrors.hasErrors) {
-  //     setErrors(initErrors);
-  //     return; //欄位檢查時,有錯誤的話,就不發ajax
-  //   }
 
 
     const newForm  = new FormData(e.currentTarget)

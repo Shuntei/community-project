@@ -7,11 +7,6 @@ function actionByKey(key) {
 		KeyA: 'moveLeft',
 		KeyD: 'moveRight',
 		Space: 'jump',
-		// Digit1: 'dirt',
-		// Digit2: 'grass',
-		// Digit3: 'glass',
-		// Digit4: 'wood',
-		// Digit5: 'log',
 	}
 	return keyActionMap[key]
 }
@@ -23,11 +18,6 @@ export const useKeyboard = () => {
 		moveLeft: false,
 		moveRight: false,
 		jump: false,
-		// dirt: false,
-		// grass: false,
-		// glass: false,
-		// wood: false,
-		// log: false,
 	})
 
 	const handleKeyDown = useCallback((e) => {
