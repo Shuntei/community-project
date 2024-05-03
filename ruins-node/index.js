@@ -59,13 +59,23 @@ let viewerIdList = [];
 let streamStatus = false
 let title = ""
 let description = ""
+let streamerSocketId = ""
+
+app.post('/check-avail', async (req, res) => {
+
+  let avail = "empty"
+
+  let sql = 'INSERT INTO tyler_check_available (room_available, time) VALUES (?, CURRENT_TIMESTAMP())'
+  let [rows] = await db.query(sql, [avail])
+  res.json(rows)
+})
 
 // 確認連線
 io.on('connection', socket => {
 
-  if (streamStatus) {
-    io.emit('haveStream', streamStatus)
-  }
+  // if (streamStatus) {
+  //   io.emit('haveStream', streamStatus)
+  // }
 
   const handleSendComment = (newComment, room) => {
     io.to(room).emit('receiveComment', newComment)
@@ -112,7 +122,7 @@ io.on('connection', socket => {
   socket.on('unpinComment', handleUnpinComment)
   socket.on('totalBonus', handleUpdateBonus)
   socket.on('setTitle', handleSetTitle)
-  socket.on('haveStream', handleHaveStream)
+  // socket.on('haveStream', handleHaveStream)
 
   // 視訊
   const handleCheckRole = (id, role) => {
@@ -121,6 +131,7 @@ io.on('connection', socket => {
       socket.emit('streamerStart', id)
       socket.join(id)
       console.log(`主播 ${id} 登入`);
+      streamerSocketId = socket.id
       updateLiveStatus(id);
     } else {
       socket.emit('viewerGo', id, socket.id)
@@ -131,7 +142,7 @@ io.on('connection', socket => {
   const handleJoinStreamerRoom = (roomCode) => {
     socket.join(roomCode)
     updateLiveStatus(roomCode);
-    console.log({ roomCode });
+    // console.log({ roomCode });
     console.log(`一人登入 ${roomCode}`)
   }
 
@@ -167,6 +178,21 @@ io.on('connection', socket => {
 
     updateLiveStatus(rows[0].stream_code)
     console.log(`${socket.id}用戶退出`);
+
+    if (streamerSocketId == socket.id) {
+      try {
+        await fetch(`http://localhost:3001/chat/check-avail`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ avail: "empty" })
+        });
+      } catch (error) {
+        console.error('Error recording empty status:', error);
+      }
+    }
+
   }
 
   socket.on('check-role', handleCheckRole)

@@ -7,6 +7,7 @@ import Link from 'next/link';
 import Router from 'next/router';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
+import { API_SERVER } from '@/components/config/api-path';
 
 export default function CheckRole() {
   const [viewerHover, setViewerHover] = useState(false);
@@ -42,19 +43,30 @@ export default function CheckRole() {
     window.addEventListener('resize', sizeChange)
   })
 
-  useEffect(() => {
 
-    socket.on('haveStream', haveStream => {
-      setHaveStream(haveStream)
-      console.log(`是否有人在直播3：${haveStream}`);
+  const findAvailable = async () => {
+    await fetch(`${API_SERVER}/chat/get-avail`, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json'
+      }
     })
+      .then(r => r.json())
+      .then(data => {
+        setHaveStream(data[0].room_available)
+        console.log({ room: data[0].room_available });
+      })
+  }
 
-  }, [])
-  console.log(`是否有人在直播2：${haveStream}`);
+  useEffect(()=>{
+    findAvailable()
+  },[])
 
-  const handleSignInCheck = () => {
 
-    if (haveStream) {
+  const handleSignInCheck = async () => {
+
+
+    if (haveStream == "full") {
       Swal.fire({
         toast: true,
         width: 280,
@@ -65,10 +77,8 @@ export default function CheckRole() {
         showConfirmButton: false,
         timer: 2000,
       })
-    }
-
-
-    if (auth.id) {
+      return
+    } else if (auth.id) {
       Router.push('./chat/02-check-webcam-source')
     } else {
       Swal.fire({
