@@ -41,6 +41,7 @@ app.use("/member", memberRouter);
 app.use("/product", productRouter);
 //購物車路由
 app.use("/cart", cartRouter);
+// 遊戲路由
 app.use("/game", gameRouter);
 app.use("/tour", tourRouter);
 // 聊天室路由

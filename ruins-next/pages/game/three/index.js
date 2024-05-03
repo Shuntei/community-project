@@ -23,7 +23,7 @@ export default function ThreeIndex() {
   // console.log(GameLevel({thStages}))
   return (
     <>
-      <TestF/>
+      <TestA/>
     </>
   )
 }

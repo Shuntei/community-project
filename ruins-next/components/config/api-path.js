@@ -104,3 +104,9 @@ export const TOUR_GET_FAVTOURBOOK = `${API_SERVER}/tour/api/favtourbook`
 
 // 收藏行程細項
 export const TOUR_GET_FAVTOURS = `${API_SERVER}/tour/api/favtours`
+
+// // // Memo列表
+// export const NOTE_LIST = `${API_SERVER}/game/api-get`
+
+// // Note add
+// export const GAME_PERSONAL = `${API_SERVER}/game/api`
