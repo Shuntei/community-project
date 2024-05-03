@@ -157,36 +157,6 @@ export default function Stream() {
       })
   }
 
-
-  // useEffect(() => {
-
-  //   const handleStreamerLeave = async (e) => {
-  //     if (role === "isStreamer") {
-  //       try {
-  //         e.preventDefault()
-  //         await fetch(`${API_SERVER}/chat/check-avail`, {
-  //           method: "POST",
-  //           headers: {
-  //             'Content-Type': 'application/json'
-  //           },
-  //           body: JSON.stringify({
-  //             avail: "empty"
-  //           })
-  //         })
-  //         window.removeEventListener('beforeunload', handleStreamerLeave);
-  //       } catch (e) {
-  //         console.log({ e });
-  //       }
-  //     }
-  //   }
-
-  //   window.addEventListener('beforeunload', handleStreamerLeave)
-
-  //   return () => {
-  //     window.removeEventListener('beforeunload', handleStreamerLeave);
-  //   };
-  // }, [role])
-
   return (
     <>
       {role === "isViewer" &&

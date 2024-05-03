@@ -73,7 +73,7 @@ export default function CheckRole() {
         position: onPhone ? "top" : "top-end",
         icon: 'error',
         iconColor: 'black',
-        title: '已有人直播，請稍候',
+        title: '直播人數已達上限，請稍候',
         showConfirmButton: false,
         timer: 2000,
       })
