@@ -95,8 +95,9 @@
   .chatbar {
     /* outline: 1px solid white; */
     width: 100%;
-    height: 100%;
+    height: 60%;
     background-color: #292929;
+    flex: shrink 0;
   }
 
   .chat {

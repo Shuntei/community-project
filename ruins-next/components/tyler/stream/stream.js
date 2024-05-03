@@ -30,7 +30,7 @@ export default function Stream() {
     }
   }, [router.isReady, router.query.streamerPath]);
 
-  const createPeer = (role) => {
+  const createPeer = async (role) => {
     if (!peer.current) {
       peer.current = new Peer();
       peer.current.on('open', (id) => {
@@ -66,7 +66,17 @@ export default function Stream() {
       })
 
       if (role === 'isStreamer') {
-        setHaveStream(true)
+
+        await fetch(`${API_SERVER}/chat/check-avail`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            avail: "full"
+          })
+        })
+
         socket.emit('setTitle', streamTitle, streamDesciption)
         socket.emit('joinRoom', roomCode)
         navigator.mediaDevices.getUserMedia({
@@ -87,11 +97,6 @@ export default function Stream() {
       }
     }
   }
-
-  useEffect(() => {
-    socket.emit('haveStream', { room: roomCode, stream: haveStream })
-  }, [haveStream])
-  console.log(`是否有人在直播1：${haveStream} 房間：${roomCode}`);
 
 
   const calling = async () => {

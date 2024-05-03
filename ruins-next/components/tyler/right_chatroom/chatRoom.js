@@ -4,7 +4,6 @@ import usePoint from "@/contexts/use-points";
 import useToggle from "@/contexts/use-toggle-show";
 import { socket } from "@/src/socket";
 import { RiCloseFill, RiGift2Line, RiMoneyDollarCircleFill, RiPushpinFill, RiReplyFill, RiUser3Fill, RiUserFill } from "@remixicon/react";
-import Image from 'next/image';
 import { useEffect, useRef, useState } from "react";
 import styles from './chatRoom.module.css';
 
@@ -71,6 +70,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
             profile: !auth.id ? "/images/adventure.png" : auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
             comment: inputComment,
             reply: replyTarget,
+            target: replyTargetName,
           }
 
           if (isConnected) {
@@ -95,6 +95,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
           profile: !auth.id ? "/images/adventure.png" : auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
           comment: inputComment,
           reply: replyTarget,
+          target: replyTargetName,
         }
 
         if (isConnected) {
@@ -228,7 +229,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
                 {c.reply && (
                   <div className={`flex text-xs ml-6 `}>
                     <RiReplyFill className="h-4" />
-                    <div className='w-[200px] break-words'>{c.name}: {c.reply}</div>
+                    <div className='w-[200px] break-words'>{c.target}: {c.reply}</div>
                   </div>)}
 
                 <div className='flex justify-between w-full text-center'>
@@ -256,10 +257,10 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
         </div>
 
         {/* 釘選文字 */}
-        <div className={`flex flex-col items-start mb-2 ${pin ? "" : "hidden"}`}>
+        <div className={`flex flex-col items-start rounded bg-neutral-700 p-2 mb-2 ${pin ? "" : "hidden"}`}>
           <div className='flex justify-between w-full text-center'>
             <div className='flex w-6/12 gap-2 items-center justify-start'>
-              <Image width={30} height={30} alt='大頭貼' src={pinnedData.profile} className='bg-white rounded-full p-1' />
+              <img alt='大頭貼' src={pinnedData.profile} className='bg-white rounded-full p-0.5 h-[34px] w-[34px]' />
               <div className='shrink-0'>{pinnedData.name}</div>
             </div>
             {role === "isStreamer" && <div className='w-6/12 flex justify-end items-center'>
