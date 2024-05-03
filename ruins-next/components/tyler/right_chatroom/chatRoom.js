@@ -221,7 +221,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
         </>}
 
         {/* 聊天內容 */}
-        <div className={styles.chat} ref={containerHeight}>
+        <div className={`${styles.chat}`} ref={containerHeight}>
           {comment.map((c) => {
             return (
               <div key={c.id} className='flex flex-col items-start mb-4'>
@@ -250,24 +250,24 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
                     />}
                 </div>
 
-                <div className='w-[200px] ml-9 break-words'>{c.comment}</div>
+                <div className='w-[200px] ml-[42px] break-words'>{c.comment}</div>
 
               </div>)
           })}
         </div>
 
         {/* 釘選文字 */}
-        <div className={`flex flex-col items-start rounded bg-neutral-700 p-2 mb-2 ${pin ? "" : "hidden"}`}>
+        <div className={`flex flex-col items-start rounded bg-neutral-700 p-1.5 mb-2 ${pin ? "" : "hidden"}`}>
           <div className='flex justify-between w-full text-center'>
             <div className='flex w-6/12 gap-2 items-center justify-start'>
-              <img alt='大頭貼' src={pinnedData.profile} className='bg-white rounded-full p-0.5 h-[34px] w-[34px]' />
+              <img alt='大頭貼' src={pinnedData.profile} className='bg-white rounded-full p-0.5 h-[34px] w-[34px] object-cover' />
               <div className='shrink-0'>{pinnedData.name}</div>
             </div>
             {role === "isStreamer" && <div className='w-6/12 flex justify-end items-center'>
               <RiCloseFill className=' cursor-pointer h-5' onClick={handleUnpin}></RiCloseFill>
             </div>}
           </div>
-          <div className='w-[210px] ml-9 break-words'>{pinnedData.comment}</div>
+          <div className='w-[210px] ml-[42px] break-words'>{pinnedData.comment}</div>
         </div>
 
         <hr className="border-dotted mb-1" />
