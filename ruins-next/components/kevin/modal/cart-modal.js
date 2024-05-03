@@ -86,7 +86,7 @@ function CartModal() {
                                 }}
                               />
                               {/* The default size is 24 */}{' '}
-                              <div className="text-[13px] font-light font-['IBM Plex Mono']">
+                              <div className="text-[13px] text-black font-light font-['IBM Plex Mono']">
                                 {v.qty}
                               </div>
                               {/* This sets the icon size to the current font size */}

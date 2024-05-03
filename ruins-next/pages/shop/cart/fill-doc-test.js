@@ -200,19 +200,6 @@ export default function FillDoc() {
     setStoreid('')
     setStorename('')
   }, [items])
-  useEffect(() => {
-    if (!memberId) {
-      Swal.fire({
-        icon: 'warning',
-        iconColor: '#ff804a',
-        title: '請先登入會員',
-        confirmButtonText: 'OK',
-        confirmButtonColor: 'black',
-        timer: 3000,
-      })
-      router.push(`http://localhost:3000/member/account/login`)
-    }
-  }, [memberId])
 
   useEffect(() => {
     validateForm()
@@ -250,7 +237,7 @@ export default function FillDoc() {
   }, [totalPrice, coupon, shippingMethod, shippingFee])
   return (
     <>
-
+      {console.log(recipientName, recipientMobile)}
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28 text-black">
         {/* header開始 */}
         <Navbar navColor={''} />
