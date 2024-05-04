@@ -1,37 +1,31 @@
 import React, { useEffect, useState } from 'react'
-import { API_SERVER, SN_COMMUNITY } from '../config/johnny-api-path'
+import { SN_COMMUNITY } from '../config/johnny-api-path'
 import {
   RiChat4Fill,
   RiEyeFill,
-  RiDeleteBinLine,
   RiMoreFill,
   RiArrowRightDoubleLine,
   RiArrowLeftDoubleLine,
   RiHeartFill,
+  RiDeleteBinLine,
 } from '@remixicon/react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useBoards } from '@/contexts/use-boards'
-import { useToggles } from '@/contexts/use-toggles'
 import { SN_DELETE_POST } from '../config/johnny-api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/router'
 import dayjs from 'dayjs'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function MainContent() {
-  const { postsList, postsShow, handlePostId, setRender } = useBoards()
+  const { postsList, postsShow, setRender, render } = useBoards()
 
   const router = useRouter()
-
-  const { removeBox, setRemoveBox } = useToggles()
-  const [toggleMenu, setToggleMenu] = useState(false)
-
-  // const handlePush = (postId) => {
-  //   // router.push(`/community/main-post?postId=${postId}`);
-  //   handlePostId(postId)
-  // }
+  // const [toggleMenu, setToggleMenu] = useState(false)
+  const { auth } = useAuth()
 
   const removePost = async (postId) => {
     const MySwal = withReactContent(Swal)
@@ -72,14 +66,17 @@ export default function MainContent() {
 
   useEffect(() => {
     postsShow()
-  }, [router.query, router.query.page])
+  }, [router.query, router.query.page, render])
+
+  const startPage = Math.max(1, postsList.page - 3) // 計算開始的頁碼，不能小於 1
+  const endPage = Math.min(startPage + 6, postsList.totalPages) // 計算結束的頁碼，不能大於總頁數
 
   return (
     <>
       {postsList.totalPostsRows.length === 0 ? (
         <ul className=" flex justify-center mt-[90px] text-xl"></ul>
       ) : (
-        <ul className="flex justify-center mt-[90px] text-xl">
+        <ul className="flex justify-center mt-[90px] text-xl ">
           <Link
             className="border-s-2 px-3 py-3 flex items-center hover:hover1"
             // onClick={() => handlePage(1)}
@@ -91,12 +88,13 @@ export default function MainContent() {
           >
             <RiArrowLeftDoubleLine />
           </Link>
-          {Array(20)
+          {Array(endPage - startPage + 1)
             .fill(1)
             .map((v, i) => {
-              const p = postsList.page - 5 + i
-              // const p = i;
+              // const p = postsList.page - 3 + i
+              const p = startPage + i
               if (p < 1 || p > postsList.totalPages) return null
+
               return (
                 <li key={p}>
                   <Link
@@ -114,12 +112,10 @@ export default function MainContent() {
             })}
           <Link
             className="border-x-2 px-3 py-3 flex items-center hover:hover1"
-            // href={`?page=${postsList.totalPages}`}
             href={{
               pathname: '/community/main-page',
               query: { ...router.query, page: `${postsList.totalPages}` },
             }}
-            // onClick={() => handlePage(postsList.totalPages)}
             onClick={postsShow}
           >
             <RiArrowRightDoubleLine />
@@ -131,7 +127,7 @@ export default function MainContent() {
           className="flex bg-neutral-300 leading border-b-slate-500 justify-center 
         text-[20px] font-semibold py-10"
         >
-          沒&nbsp;有&nbsp;任&nbsp;何&nbsp;貼&nbsp;文
+          沒有任何貼文
         </h1>
       ) : (
         ''
@@ -139,24 +135,13 @@ export default function MainContent() {
       {postsList?.totalPostsRows?.map((v, i) => {
         return (
           <main
-            className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative "
+            className="flex bg-neutral-300 border-b-2 border-b-slate-500"
             key={v.post_id}
           >
-            {/*relative用於toggle垃圾桶*/}
             <div
               // onClick={() => handlePush(v.post_id)} // href={`/community/main-post`}
               className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
             >
-              <div className="px-2 flex text-center absolute left-0">
-                {removeBox ? (
-                  <label className="flex-col">
-                    <input type="checkbox" />
-                    <RiDeleteBinLine />
-                  </label>
-                ) : (
-                  ''
-                )}
-              </div>
               <div className="w-[70%]">
                 <Link
                   name="postId"
@@ -169,8 +154,12 @@ export default function MainContent() {
                       {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
                     </span>
                   </div>
-                  <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
-                  <span>{v.content}</span>{' '}
+                  <div className="text-[14px] underline">{v.username}</div>
+                  <span>
+                    {v.content.length > 50
+                      ? `${v.content.substring(0, 50)}...`
+                      : v.content}
+                  </span>{' '}
                   <div className="text-[12px] pc:hidden">
                     {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
                   </div>
@@ -189,26 +178,29 @@ export default function MainContent() {
                       <RiHeartFill className="pr-1" />
                       {v.likes}
                     </span>
-                    <div className="dropdown dropdown-right dropdown-end">
-                      <div
-                        tabIndex={0}
-                        role="button"
-                        onClick={() => setToggleMenu(!toggleMenu)}
-                      >
-                        <RiMoreFill className="pr-1" />
-                      </div>
-
-                      {toggleMenu && (
-                        <ul
+                    {auth.id === v.user_id && (
+                      <div className="dropdown dropdown-right dropdown-end">
+                        <div
                           tabIndex={0}
-                          className="dropdown-content z-[1] menu shadow bg-base-100 rounded-lg w-24"
+                          role="button"
+                          // onClick={() => setToggleMenu(!toggleMenu)}
+                          onClick={() => removePost(v.post_id)}
                         >
-                          <li onClick={() => removePost(v.post_id)}>
-                            <a>remove</a>
-                          </li>
-                        </ul>
-                      )}
-                    </div>
+                          <RiDeleteBinLine className="pr-1 text-575757" />
+                        </div>
+
+                        {/* {toggleMenu && (
+                          <ul
+                            tabIndex={0}
+                            className="dropdown-content z-[1] menu shadow bg-base-100 rounded-lg w-24"
+                          >
+                            <li onClick={() => removePost(v.post_id)}>
+                              <a>remove</a>
+                            </li>
+                          </ul>
+                        )} */}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

@@ -11,7 +11,7 @@ import { SN_USER_INFO } from '../config/johnny-api-path'
 import { useRouter } from 'next/router'
 
 export default function InfoBar() {
-  const { auth } = useAuth()
+  // const { auth } = useAuth()
   const router = useRouter()
   const [userInfo, setUserinfo] = useState('')
 
@@ -36,42 +36,63 @@ export default function InfoBar() {
 
   return (
     <>
+      {/* bg-gray-50 bg-opacity-25 backdrop-blur-sm */}
       <section className="fixed mt-[40px] hidden bargone:block w-[300px] h-[600px] overflow-scroll pb-20 rounded-b-3xl z-[998] bg-292929">
         {/* <div className="text-white flex justify-end px-10">
           <button>X</button>
         </div> */}
         <div className="text-white pt-3 pl-10 pr-5 pb-1 text-[20px]  flex items-center">
           ABOUT ME
-          <RiAddLine />
+          {/* <RiAddLine /> */}
         </div>
         <div className="border-b-2 w-[200px] ml-10 mr-5"></div>
-        <div className=" pl-10 pr-5 text-white py-3 ">{userInfo?.about_me}</div>
+        {userInfo?.about_me ? (
+          <div className=" pl-10 pr-5 text-white py-3 ">
+            {userInfo?.about_me}
+          </div>
+        ) : (
+          <div className=" pl-10 pr-5 text-white py-3 ">NO INTRO TO SHOW</div>
+        )}
         <div className="text-white pl-10 pr-5 pt-3 pb-1 text-[20px]  flex items-center">
           CONTACT ME
-          <RiAddLine />
+          {/* <RiAddLine /> */}
         </div>
         <div className="border-b-2 w-[200px] ml-10 mr-5"></div>
-        <div className=" pl-10 pr-5 text-white py-3 flex gap-x-3">
-          <Link href={userInfo?.youtube_link ? userInfo.youtube_link : ''}>
-            <FaYoutube className="text-[24px] cursor-pointer hover:text-red-500" />
-          </Link>
-          <Link href={userInfo?.facebook_link ? userInfo.facebook_link : ''}>
-            <FaFacebook className="text-[24px] cursor-pointer hover:text-sky-600" />
-          </Link>
-          <Link href={userInfo?.instagram_link ? userInfo.instagram_link : ''}>
-            <AiFillInstagram className="text-[24px] cursor-pointer hover:text-pink-400" />
-          </Link>
-          <Link href={userInfo?.gmailLink ? userInfo.gmailLink : ''}>
-            <MdEmail className="text-[24px] cursor-pointer hover:text-amber-400" />
-          </Link>
-          {/* <div class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 transform rotate-45"></div> */}
-          {/* <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400">
+        {userInfo?.youtube_link ||
+        userInfo?.facebook_link ||
+        userInfo?.instagram_link ||
+        userInfo?.gmailLink ? (
+          <div className=" pl-10 pr-5 text-white py-3 flex gap-x-3">
+            {userInfo?.youtube_link && (
+              <a href={userInfo?.youtube_link ? userInfo.youtube_link : ''}>
+                <FaYoutube className="text-[24px] cursor-pointer hover:text-red-500" />
+              </a>
+            )}
+            {userInfo?.facebook_link && (
+              <a href={userInfo?.facebook_link ? userInfo.facebook_link : ''}>
+                <FaFacebook className="text-[24px] cursor-pointer hover:text-sky-600" />
+              </a>
+            )}
+            {userInfo?.instagram_link && (
+              <a href={userInfo?.instagram_link ? userInfo.instagram_link : ''}>
+                <AiFillInstagram className="text-[24px] cursor-pointer hover:text-pink-400" />
+              </a>
+            )}
+            {userInfo?.gmailLink && (
+              <a href={userInfo?.gmailLink ? userInfo.gmailLink : ''}>
+                <MdEmail className="text-[24px] cursor-pointer hover:text-amber-400" />
+              </a>
+            )}
+            {/* <div class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 transform rotate-45"></div> */}
+            {/* <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400">
             Nothing short <br /> of amazing.
           </span> */}
-          {/* 除了學習和探索，我還喜歡與人交流和建立連結。我相信每個人都有獨特的故事和觀點，我希望能夠與您分享我的故事，並聆聽您的故事。
-          我相信通過互相交流和分享，我們可以共同成長和學習。最後，我想再次感謝您與我進行對話。
-          無論您有任何問題或需求，我都會盡力幫助您，讓我們一起創造有意義的交流和連結！ */}
-        </div>
+          </div>
+        ) : (
+          <span className="pl-10 pr-5 text-white py-3 flex">
+            NO LINK TO SHOW
+          </span>
+        )}
       </section>
     </>
   )

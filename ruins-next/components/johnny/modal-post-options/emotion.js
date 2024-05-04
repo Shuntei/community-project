@@ -29,7 +29,7 @@ export default function Emotion({ postForm, setPostForm, setIsFormChanged }) {
           <span className="hidden pc:flex">EMOTION</span>
         </div>
         {showEmotion && (
-          <ul className="menu bg-amber-100 rounded-box w-40 text-black absolute bottom-[2rem] pc:left-[-1rem] left-[-4rem]">
+          <ul className="menu rounded-lg w-40 text-black absolute bottom-[2rem] pc:left-[-1rem] left-[-4rem] bg-base-200 ">
             <li>
               <a
                 onClick={() => {

@@ -106,7 +106,6 @@ export default function EditModal() {
                   pathname: '/community/main-personal',
                   query: { psUserId: auth.id },
                 })
-                // setEditModal(false)
               } else {
                 toast.error('編輯貼文失敗')
               }
@@ -207,7 +206,7 @@ export default function EditModal() {
           id="postModal"
           onSubmit={submitHandler}
         >
-          <div className="bg-black w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl">
+          <div className="bg-black w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl border-2 border-blue-100">
             <div className="flex justify-between pb-5 text-white">
               <div
                 className="text-[25px] flex items-center"
@@ -265,12 +264,12 @@ export default function EditModal() {
                 </div>
                 {/* 操作按鈕區 */}
                 <div className="text-white flex gap-10">
-                  <button type="button">
+                  {/* <button type="button">
                     <RiEqualizerLine />
                   </button>
                   <button type="button">
                     <RiDraftLine />
-                  </button>
+                  </button> */}
                   <button type="submit">
                     <RiSendPlane2Fill />
                   </button>
@@ -306,8 +305,6 @@ export default function EditModal() {
                       )}
                     </div>
                     <div className="text-[14px] pc:text-[16px] flex">
-                      {/* <RiEmotionLaughFill className="mr-2" />
-                      覺得興奮 */}
                       {emotionHandler(postForm.emotion)}
                       {postForm.emotion && (
                         <span
@@ -388,23 +385,11 @@ export default function EditModal() {
                 <RiImageFill className="mr-2 text-[24px]" />
                 <span className="hidden pc:flex">PHOTO</span>
               </label>
-              {/* <button className="flex items-center">
-                <RiMapPinFill className="mr-2 text-[24px]" />
-                <span className="hidden pc:flex">LOCATION</span>
-              </button> */}
-              {/* <button className="flex items-center">
-                <RiPriceTag3Fill className="mr-2 text-[24px]" />
-                <span className="hidden pc:flex">TAGS</span>
-              </button> */}
               <Tags
                 postForm={postForm}
                 setPostForm={setPostForm}
                 setIsFormChanged={setIsFormChanged}
               />
-              {/* <button className="flex items-center">
-                <RiEmotionLaughFill className="mr-2 text-[24px]" />
-                <span className="hidden pc:flex">FEELING</span>
-              </button> */}
               <Emotion
                 postForm={postForm}
                 setPostForm={setPostForm}

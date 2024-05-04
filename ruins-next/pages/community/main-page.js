@@ -8,7 +8,6 @@ import InfoBar from '@/components/johnny/bar-ps-intro'
 import CentralPersonal from './central-personal'
 import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/router'
-// import Loader from '@/components/linda/loader/loader'
 
 export default function MainPage() {
   const { auth } = useAuth()

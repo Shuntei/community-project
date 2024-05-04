@@ -6,7 +6,9 @@ import { useRouter } from 'next/router'
 
 export default function Topics() {
   const router = useRouter()
-  const { boards, setBoards, setSelectedPosts } = useBoards()
+  const { boards, setBoards, setSelectedPosts, isBoard, setIsBoard } =
+    useBoards()
+  // const [isBoard, setIsBoard] = useState('')
 
   useEffect(() => {
     fetch(`${SN_BOARDS}`)
@@ -27,7 +29,7 @@ export default function Topics() {
       })
       .catch((ex) => console.log({ ex }))
   }, [router.query.boardId])
-
+  // console.log(router.query.boardId)
   return (
     <>
       <section className="fixed mt-[40px] hidden bargone:block ml-10 h-[600px] pb-20 overflow-y-scroll z-[998] bg-292929 rounded-b-3xl hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
@@ -37,23 +39,25 @@ export default function Topics() {
         <div className="border-b-2 mx-10 w-[200px]"></div>
         <ul>
           <li
-            className=" text-white px-10 py-3 flex cursor-pointer duration-200 hover:text-2xl"
-            onClick={() =>
+            className={` text-white px-10 py-3 flex cursor-pointer duration-200 hover:text-2xl`}
+            onClick={() => {
+              setIsBoard()
               router.push({
                 pathname: '/community/main-page',
               })
-            }
+            }}
           >
-            全部
+            所有文章
             <RiArrowDropDownLine />
           </li>
           {boards &&
             boards.map((v, i) => {
               return (
                 <li
-                  className=" text-white px-10 py-3 flex cursor-pointer duration-200 hover:text-2xl"
+                  className={`text-white px-10 py-3 flex cursor-pointer duration-200 hover:text-2xl `}
                   key={v.board_id}
-                  onClick={() =>
+                  onClick={() => {
+                    setIsBoard(v.board_name)
                     router.push({
                       query: {
                         ...router.query,
@@ -62,7 +66,7 @@ export default function Topics() {
                         keyword: '',
                       },
                     })
-                  }
+                  }}
                 >
                   {v.board_name}
                   <RiArrowDropDownLine />

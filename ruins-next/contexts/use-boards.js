@@ -1,4 +1,3 @@
-import { SN_POST_VIEWS } from '@/components/config/johnny-api-path'
 import { SN_POSTS } from '@/components/config/johnny-api-path'
 import { createContext, useContext, useState } from 'react'
 import React from 'react'
@@ -7,6 +6,7 @@ const BoardsContext = createContext()
 
 export default function BoardsContextProvider({ children }) {
   const [viewsCounter, setViewsCounter] = useState([{ postId: '', count: 0 }])
+  const [isBoard, setIsBoard] = useState('')
   const [boards, setBoards] = useState([])
   const [selectedPosts, setSelectedPosts] = useState([])
   const [postsList, setPostsLists] = useState({
@@ -21,54 +21,18 @@ export default function BoardsContextProvider({ children }) {
     /*render, setRender用於解決新增及刪除post等變更時不刷新頁面useEffect依賴 */
   }
 
-  // 初始載入posts, 預設第一頁用於點全部按鈕
+  // 初始載入posts
   const postsShow = async () => {
     // currentPage是?page=哪一頁
     try {
       const r = await fetch(`${SN_POSTS}${location.search}`)
       const data = await r.json()
       setPostsLists(data)
+      console.log(data)
     } catch (err) {
       console.log(err)
     }
   }
-
-  // const handlePostId = async (postId) => {
-  //   try {
-  //     const r = await fetch(`${SN_POSTS}?postId=${postId}`)
-  //     //   const r = await fetch(`${SN_POSTS}/${postId}`);
-  //     const data = await r.json()
-  //     setGetPost(data)
-  //     // 純前端寫法(無紀錄儲存,僅狀態變更)
-  //     // const existingViewCounter = viewsCounter.find((v) => v.postId === postId)
-
-  //     // if (existingViewCounter) {
-  //     //   const updatedViewsCounter = viewsCounter.map((v) => {
-  //     //     if (v.postId === postId) {
-  //     //       return { ...v, count: v.count + 1 }
-  //     //     }
-  //     //     return v
-  //     //   })
-  //     //   setViewsCounter(updatedViewsCounter)
-  //     // } else {
-  //     //   // 如果 postId 不存在，則新增一個新的物件
-  //     //   const updatedViewsCounter = [
-  //     //     ...viewsCounter,
-  //     //     { postId: postId, count: 1 },
-  //     //   ]
-  //     //   setViewsCounter(updatedViewsCounter)
-  //     // }
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-
-  //   try {
-  //     const r = await fetch(`${SN_POST_VIEWS}/${postId}`)
-  //     await r.json()
-  //   } catch (err) {
-  //     console.log(err)
-  //   }
-  // }
 
   return (
     <BoardsContext.Provider
@@ -82,11 +46,12 @@ export default function BoardsContextProvider({ children }) {
         postsShow,
         getPost,
         setGetPost,
-        // handlePostId,
         render,
         setRender,
         viewsCounter,
         setViewsCounter,
+        isBoard,
+        setIsBoard,
       }}
     >
       {children}

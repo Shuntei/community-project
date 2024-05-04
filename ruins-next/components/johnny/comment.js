@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CommentEditModal from './modal-edit-comment'
-import {
-  RiHeartLine,
-  RiArrowDropDownLine,
-  RiArrowDropUpLine,
-} from '@remixicon/react'
+import { RiArrowDropDownLine, RiArrowDropUpLine } from '@remixicon/react'
 import { SN_COMMENTS, SN_DELETE_COMMENT } from '../config/johnny-api-path'
 import Link from 'next/link'
 import Swal from 'sweetalert2'
@@ -12,6 +8,7 @@ import withReactContent from 'sweetalert2-react-content'
 import toast from 'react-hot-toast'
 import { useToggles } from '@/contexts/use-toggles'
 import { useAuth } from '@/contexts/auth-context'
+import dayjs from 'dayjs'
 
 export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
   const { auth } = useAuth()
@@ -27,6 +24,8 @@ export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
       .then((r) => r.json())
       .then((data) => {
         const { rows } = data
+        console.log(rows)
+        console.log(data)
         if (rows) {
           setIsComment(rows)
         }
@@ -96,7 +95,9 @@ export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
                   {/* <div>role.name?</div> */}
                 </div>
                 <div className="likeZone:flex gap-2 items-center flex">
-                  <span>Feb 13(3 hr ago)</span>
+                  <span>
+                    {dayjs(v.comment_timestamp).format('MMM DD, YYYY HH:mm')}
+                  </span>
                   {/* <span>
                     <RiHeartLine />
                   </span> */}
