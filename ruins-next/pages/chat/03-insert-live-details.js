@@ -1,4 +1,4 @@
-import Process1 from '@/components/tyler/checkPoint/tyler_process0';
+import Process1 from '@/components/tyler/checkPoint/tyler_process1';
 import Sidebar from '@/components/tyler/sidebar/sidebar';
 import StepMap from '@/components/tyler/step-map/step-map';
 import useStreamInfo from '@/contexts/use-streamInfo';

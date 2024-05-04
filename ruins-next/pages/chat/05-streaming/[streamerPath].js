@@ -37,7 +37,8 @@ export default function Streaming() {
         name: receiveComment.name,
         profile: receiveComment.profile,
         comment: receiveComment.comment,
-        reply: receiveComment.reply
+        reply: receiveComment.reply,
+        target: receiveComment.target,
       }])
     }
 

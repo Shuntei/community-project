@@ -325,7 +325,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
-        req.body.boardId,
+        req.body.boardId  || null,
         req.body.userId,
         req.body.emotion,
         req.body.tags,

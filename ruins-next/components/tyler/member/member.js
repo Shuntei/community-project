@@ -6,7 +6,7 @@ export default function Member({index, name,image}) {
       <img
       key={index}
         src={image}
-        className="bg-white rounded-full p-1 h-[34px]" />
+        className="bg-white rounded-full p-0.5 h-[34px] w-[34px] object-cover" />
       <div>{name}</div>
     </div>
   )

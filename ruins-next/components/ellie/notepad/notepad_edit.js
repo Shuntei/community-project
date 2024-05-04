@@ -1,12 +1,33 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
 import { useRouter } from 'next/router';
-export default function Notepad({ onClose }) {
- const router=useRouter()
+export default function EditNotes({ onClose ,note1 }) {
+  const router = useRouter()
+
+  const [note, setNote] = useState(note1)
+
+  const getNote = async () => {
+    const url = `http://localhost:3001/game/gm_note`
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
+
+      setNote(data)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    setNote(note1);
+  }, [note1]);
+
+  // +++++++++++++++++++
   const [form, setForm] = useState({
-    title:'', 
-    memo:'',
+    note_id:note1.note_id,
+    title:note1.title, 
+    memo:note1.memo,
   })
 
   const changeHandler = (e) => {
@@ -15,40 +36,12 @@ export default function Notepad({ onClose }) {
   const submitHandler = async (e) => {
     e.preventDefault();
 
-  //   //檢查資料欄位
-  //   let initErrors = 
-  //   { hasErrors: false, //狀態判斷有沒有錯誤
-  //   title:'', 
-  //   content:'',
-  // };
-  //   const r1 = schemaTitle.safeParse(form.title);
-  //   if (!r1.success) {
-  //     initErrors= {
-  //       ...initErrors,
-  //       hasErrors: true,
-  //       title: r1.error.issues[0].massage,
-  //     };
-  //   }
-  //   const r2 = schemaContent.safeParse(form.content);
-  //   if (!r2.success) {
-  //     initErrors= {
-  //       ...initErrors,
-  //       hasErrors: true,
-  //       content: r2.error.issues[0].massage,
-  //     };
-  //   }
-
-  //   if(initErrors.hasErrors) {
-  //     setErrors(initErrors);
-  //     return; //欄位檢查時,有錯誤的話,就不發ajax
-  //   }
-
 
     const newForm  = new FormData(e.currentTarget)
     const urlencoded = new URLSearchParams(newForm)
     // newForm.append('title',form.title)
 
-    const r = await fetch('http://localhost:3001/game/ruins_final/gm_note', {
+    const r = await fetch('http://localhost:3001/game/ruins_final/gm_note_edit', {
       method: "POST",
       body: urlencoded.toString(),
       // body: JSON.stringify(form),
@@ -61,14 +54,15 @@ export default function Notepad({ onClose }) {
     if(result.success){
       // 
       // router.push(`/game`);
-      alert("資料新增成功")
+      alert("資料修改成功")
     } else {
       // 
-      alert("資料新增發生錯誤")
+      alert("資料修改發生錯誤")
     }
   };
   return (
     <>
+    {console.log(note1)}
   <div className="container notepad absolute left-1/4 top-1/6">
     <div className="notepad">
       <div className="notepad-bar">
@@ -113,14 +107,16 @@ export default function Notepad({ onClose }) {
       </div> {/* notepad bar */}
       <div className="blackLine">
           <form className="barPadding" onSubmit={submitHandler}>
+            <input hidden name='note_id' value={note1.note_id}/>
             <input 
             
             className="title" 
             onChange={changeHandler} 
-            name='title' 
+            name={'title'} 
             value={form.title} 
+            // value={note1.title}
             // defaultValue="Title Here :)"
-            placeholder="Title Here"
+            // placeholder={note1.title} 
             />
 
             <div className="notepad-settings">
@@ -147,11 +143,13 @@ export default function Notepad({ onClose }) {
             />
           </label> */}
             <div className="notepad-content">
-              <textarea onChange={changeHandler} name='memo' value={form.memo} 
-              placeholder="Type something :)"
+              <textarea onChange={changeHandler} name='memo'
+               value={form.memo} 
+              // value={note1.memo}
+              // placeholder=
               rows={15}
               cols={65}
-              /> 
+              />
               
               <div className="mainEnd">
                 <div className="relative">
