@@ -3,13 +3,13 @@ import Link from 'next/link'
 import { IMG_SERVER } from '@/components/config/api-path'
 import { useAuth } from '@/contexts/auth-context'
 
-export default function ProfileModal({ isVisible, modalRef }) {
+export default function ProfileModal({ isVisible }) {
   const {auth, logout} = useAuth()
 
   if (!isVisible) return null
   return (
     <>
-      <div ref={modalRef} className="absolute top-[30px] right-0 w-[381px] h-[239px] pl-6 pr-[26px] py-[39px] bg-zinc-950 border border-white justify-start items-start gap-6 inline-flex">
+      <div className="profileModal absolute top-[30px] right-0 w-[381px] h-[239px] pl-6 pr-[26px] py-[39px] bg-zinc-950 border border-white justify-start items-start gap-6 inline-flex">
         <div className="w-[197px] self-stretch justify-start items-start gap-2.5 flex">
           <div className="w-[197px] self-stretch p-[30px] justify-start items-start gap-2.5 flex">
             <img
