@@ -1,9 +1,12 @@
 import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function Box3(props) {
   // This reference gives us direct access to the THREE.Mesh object
   const ref = useRef()
+  const { auth } = useAuth()
+
   // Hold state for hovered and clicked events
   const [hovered, hover] = useState(false)
   const [clicked, click] = useState(false)
@@ -19,7 +22,8 @@ export default function Box3(props) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          achievedId: 3, // 更新 achieved_id 為 1 的資料
+          user_id: auth.id,
+          missionId: 3, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
         }),
       });

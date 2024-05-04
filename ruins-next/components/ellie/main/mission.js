@@ -5,17 +5,21 @@ import {
   RiSubtractLine,
 } from '@remixicon/react'
 import Volume from '../vol/volume'
-import Indicator from '../Indicator/Indicator'
 import { useRouter } from 'next/router'
+import { useAuth } from '@/contexts/auth-context'
 
 
 export default function Mission() {
   const router = useRouter()
+  const { auth } = useAuth()
+  const mbID = auth.id
 
   const [mission, setMission] = useState('')
 
   const getMission = async () => {
-    const url = `http://localhost:3001/game/gm_mission`
+
+
+    const url = `http://localhost:3001/game/gm_achieved/${mbID}`
     try {
       const res = await fetch(url)
       const data = await res.json()
@@ -30,6 +34,15 @@ export default function Mission() {
     getMission()
   }, [router])
 
+
+  const calculateProgress = () => {
+    if (!mission.rows) return 0;
+
+    const activatedCount = mission.rows.filter(v => v.activate === 1).length;
+    const progressPercentage = (activatedCount / 6) * 100;
+    return progressPercentage;
+  };
+
   return (
     <>
       {/* {console.log(mission.rows)} */}
@@ -42,8 +55,16 @@ export default function Mission() {
         <div className="flex justify-center text-lg font-regular font-['IBM Plex Mono'] text-white mb-4">
           MISSION
         </div>
-        <Indicator />
-        
+        {/* 進度條 */}
+        <div className='px-6'>
+          <div className="w-full bg-white h-2 mt-4 rounded">
+            <div
+              className="bg-gray-400 h-full rounded"
+              style={{ width: `${calculateProgress()}%` }}
+            ></div>
+          </div>
+        </div>
+
         <div className="p-6">
         {mission.rows &&
           mission.rows.map((v, i) => {
@@ -53,9 +74,9 @@ export default function Mission() {
               {v.activate === 0 ? <RiCheckboxBlankLine className="text-white" /> : <RiCheckboxFill className="text-white" />}
             <div className="flex-grow"></div>
             {v.activate === 0 ? <div className="mt-2 text-s font-light font-['IBM Plex Mono'] text-white \">
-            {v.mission_name}
+            {v.title}
             </div> : <div className="mt-2 text-s font-light font-['IBM Plex Mono'] text-white line-through">
-            {v.mission_name}
+            {v.title}
             </div>}
             
           </div>

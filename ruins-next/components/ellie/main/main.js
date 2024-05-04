@@ -14,6 +14,16 @@ export default function Main() {
   const { auth } = useAuth()
   const mbID = auth.id
 
+  const getmbID = async () => {
+    try {
+      const r = await fetch(`http://localhost:3001/game/check/gm_achieved/${mbID}`)
+      const d = await r.json()
+      console.log(d)
+    } catch (ex) {
+      console.log(ex)
+    }
+  }
+
   const [showFirstSVG, setShowFirstSVG] = useState(true)
   const [loading, setLoading] = useState(true)
 
@@ -40,7 +50,10 @@ export default function Main() {
       fetch(``)
     }
   }, [auth])
-  
+
+  useEffect(()=>{
+    getmbID()
+  },[mbID])
   return (
     <>
       <div className="flex flex-row mt-24 relative">
