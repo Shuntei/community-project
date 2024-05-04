@@ -97,7 +97,7 @@ io.on('connection', socket => {
       console.log(` 目前 '${room}' 中有 ${liveNum} 人`);
       io.to(room).emit("updateLiveNum", liveNum)
     } else {
-      console.log(`房間 ${room} 没有用戶`);
+      // console.log(`房間 ${room} 没有用戶`);
       io.to(room).emit("updateLiveNum", 0)
     }
   }

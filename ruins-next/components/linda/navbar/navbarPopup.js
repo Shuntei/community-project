@@ -27,7 +27,7 @@ export default function NavbarPopup() {
 
   return (
     <nav
-      className={`fixed z-[999] top-0 left-0 bg-black w-full flex-col items-center py-9`}
+      className={` navbarPopup fixed z-[999] top-0 left-0 bg-black w-full flex-col items-center py-9`}
     >
       <div className={styles['nav']}>
         <div id="headerReplace" className={styles['headerReplace']}></div>

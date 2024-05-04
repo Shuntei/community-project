@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import styles from './navbar.module.css'
 import CartSvg from '@/public/icons/cart.svg'
 import CartLine from '@/public/icons/cart-line.svg'
@@ -21,25 +21,60 @@ import { useAuth } from '@/contexts/auth-context'
 import { IMG_SERVER } from '@/components/config/api-path'
 
 export default function Navbar({ className, navColor = 'white' }) {
-  const { auth, logout, getModalProps } = useAuth()
+  const { auth } = useAuth()
   const [showLogoutModal, setShowLogoutModal] = useState(false)
-  const [showLoginModal, setShowLoginModal] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
   const { totalItems } = useCart()
-  const {
-    toggleModal,
-    isVisible,
-    ref: modalRef,
-  } = getModalProps('profileModal')
-  const toggleNav = () => {
-    setIsOpen(!isOpen)
-  }
+  const [showProfileModal, setShowProfileModal] = useState(false)
+  const [showNavbarPopup, setShowNavbarPopup] = useState(false)
+
+  useEffect(() => {
+    const listener = (e) => {
+      const t = e.target
+      if (t.closest('.profileItem')) {
+        setShowProfileModal((prevState) => !prevState)
+      } else {
+        if (!t.closest('.profileModal')) {
+          setShowProfileModal(false)
+        }
+      }
+
+      if (t.closest('.navbarPopupItem')) {
+        setShowNavbarPopup((prevState) => !prevState)
+      } else {
+        if (!t.closest('.navbarPopup')) {
+          setShowNavbarPopup(false)
+        }
+      }
+
+      if (t.closest('.logoutModalItem')) {
+        setShowLogoutModal((prevState) => !prevState)
+        console.log("toggle");
+      } else {
+        if (!t.closest('.logoutModal')) {
+          setShowLogoutModal(false)
+        }
+        console.log("hide");
+
+
+        if (!t.closest('.loginModal')) {
+          setShowLogoutModal(false)
+        }
+        console.log("hide");
+
+      }
+
+    }
+    window.addEventListener('click', listener)
+    return () => {
+      window.removeEventListener('click', listener)
+    }
+  }, [])
 
   return (
     <>
       <nav
-        className={`${styles.navbar} ${isOpen ? '' : className} ${
-          isOpen
+        className={`${styles.navbar} ${showNavbarPopup ? '' : className} ${
+          showNavbarPopup
             ? (navColor = 'white')
             : navColor === 'white'
               ? 'text-white'
@@ -48,7 +83,7 @@ export default function Navbar({ className, navColor = 'white' }) {
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
           <div className="flex md:justify-start select-none gap-[15px]">
-            <div onClick={toggleNav} className="pt-[2px] cursor-pointer">
+            <div className="navbarPopupItem pt-[2px] cursor-pointer">
               <div
                 id="nav-icon4"
                 className="md:w-[30px] w-[23px] h-auto absolute"
@@ -57,7 +92,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                   className={`w-full h-[2px] ${
                     navColor === 'white' ? 'bg-white' : 'bg-black'
                   } transform transition duration-500 ease-in-out ${
-                    isOpen
+                    showNavbarPopup
                       ? 'rotate-45 md:translate-y-1.5 translate-y-1.5 bg-white'
                       : ''
                   } `}
@@ -66,7 +101,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                   className={`w-full h-[2px] ${
                     navColor === 'white' ? 'bg-white' : 'bg-black'
                   }  md:mt-[10px] mt-[6px] transform  transition duration-500 ease-in-out ${
-                    isOpen
+                    showNavbarPopup
                       ? '-rotate-45 md:-translate-y-1.5 -translate-y-[0.125rem] bg-white'
                       : ''
                   }`}
@@ -74,7 +109,7 @@ export default function Navbar({ className, navColor = 'white' }) {
               </div>
             </div>
             <span
-              className={`${isOpen ? 'text-white' : ''} md:block hidden text-[15px] pl-[40px]`}
+              className={`${showNavbarPopup ? 'text-white' : ''} md:block hidden text-[15px] pl-[40px]`}
             >
               MAIN
             </span>
@@ -82,23 +117,17 @@ export default function Navbar({ className, navColor = 'white' }) {
         </div>
         <Link
           href="/"
-          className={`${isOpen ? 'text-white' : ''} md:text-[40px] text-[20px] font-medium justify-center flex w-1/3`}
+          className={`${showNavbarPopup ? 'text-white' : ''} md:text-[40px] text-[20px] font-medium justify-center flex w-1/3`}
         >
           Ruins
         </Link>
         <div
-          className={`${isOpen ? 'text-white' : ''} ${styles['navlink-container']} relative w-1/3`}
+          className={`${showNavbarPopup ? 'text-white' : ''} ${styles['navlink-container']} relative w-1/3`}
         >
           {auth.id ? (
             <div>
               <div className="relative cursor-pointer">
-                <div
-                  className="cursor-pointer select-none"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    toggleModal()
-                  }}
-                >
+                <div className="profileItem cursor-pointer select-none">
                   <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
                   <div className="absolute top-[-6px] left-[-35px]">
                     <Image
@@ -117,7 +146,7 @@ export default function Navbar({ className, navColor = 'white' }) {
                     {auth.username}
                   </div>
                 </div>
-                <ProfileModal isVisible={isVisible} modalRef={modalRef} />
+                <ProfileModal isVisible={showProfileModal} />
               </div>
             </div>
           ) : (
@@ -147,7 +176,7 @@ export default function Navbar({ className, navColor = 'white' }) {
           </div>
         </div>
         <div
-          className={`${isOpen ? 'text-white' : ''} ${styles['navlink-container-mobile']} w-1/3 justify-end`}
+          className={`${showNavbarPopup ? 'text-white' : ''} ${styles['navlink-container-mobile']} w-1/3 justify-end`}
         >
           <div className={`${styles['nav-cart-mobile']}`}>
             <CartModal />
@@ -160,15 +189,9 @@ export default function Navbar({ className, navColor = 'white' }) {
             <div className={styles['cart-number']}>{totalItems}</div>
           </div>
           <button
-            onClick={() => {
-              setShowModal(!showModal)
-              setShowLogoutModal(!showLogoutModal)
-              setShowLoginModal(!showLoginModal)
-            }}
-            href=""
-            className={styles['profile-icon']}
+            className={`logoutModalItem ${styles['profile-icon']}`}
           >
-            {auth.profileUrl ? (
+            {auth.profileUrl ? (  
               <Image
                 width={20}
                 className="rounded-full h-[20px] object-cover"
@@ -188,12 +211,12 @@ export default function Navbar({ className, navColor = 'white' }) {
           </button>
         </div>
         {auth.id ? (
-          <LogoutModal isVisible={showLogoutModal} />
+          <LogoutModal navColor isVisible={showLogoutModal} />
         ) : (
-          <LoginModal isVisible={showLoginModal} />
+          <LoginModal isVisible={showLogoutModal} />
         )}
       </nav>
-      {isOpen ? <NavbarPopup /> : ''}
+      {showNavbarPopup ? <NavbarPopup /> : ''}
       {/* <NavbarMobile /> */}
     </>
   )
