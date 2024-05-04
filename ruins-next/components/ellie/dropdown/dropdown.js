@@ -132,6 +132,9 @@ export default function Dropdown() {
                           3
                         </div>
                       </div>
+                      {/* <div className="w-7 h-7 flex items-center justify-center bg-gray-800 text-white font-light">
+                        +6
+                      </div> */}
                     </div>
                     <div className="mt-2 text-xs font-light font-['IBM Plex Mono'] border-b border-black">
                       LOCKED ACHIEVEMENTS

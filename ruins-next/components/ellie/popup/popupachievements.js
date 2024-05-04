@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { RiCloseLargeLine } from "@remixicon/react";
 import { useRouter } from 'next/router'
+import { useAuth } from '@/contexts/auth-context'
 // const AchievementsData=[
 //   {
 //     "achieved_id": "1",
@@ -137,11 +138,13 @@ import { useRouter } from 'next/router'
 export default function AchievementsPopup({ onClose }) {
 
   const router = useRouter()
+  const { auth } = useAuth()
+  const mbID = auth.id
 
   const [achieved, setAchieved] = useState('')
 
   const getAchieved = async () => {
-    const url = `http://localhost:3001/game/gm_user_achieved`
+    const url = `http://localhost:3001/game/gm_achieved/${mbID}`
     try {
       const res = await fetch(url)
       const data = await res.json()
@@ -175,19 +178,19 @@ export default function AchievementsPopup({ onClose }) {
           return (
             <div className='flex flex-col gap-2'>
              {v.activate === 0 ?
-          <div className='gap-2 content-center flex flex-row'>
+          <div className='gap-3 content-center flex flex-row'>
             <div className='w-10 h-10 flex items-center justify-center bg-gray-600'>
-              <div className='w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center'>{v.achieved_id}</div>
+              <div className='w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center'>{v.mission_id}</div>
               </div>
             <div className='gap-2'>
-                <div className="text-base font-regular font-['IBM Plex Mono'] text-white ">{v.name}</div>
+                <div className="text-base font-regular font-['IBM Plex Mono'] text-white ">{v.mission_name}</div>
                 <div className="text-sm font-light font-['IBM Plex Mono'] text-white ">{v.description}</div>
             </div>
           </div> :
-        <div className='gap-2 content-center flex flex-row bg-zinc-700 p-1'>
-          <div className='w-10 h-10 flex items-center justify-center bg-zinc-600'>{v.achieved_id}</div>
+        <div className='gap-3 content-center flex flex-row bg-zinc-700 p-1'>
+          <div className='w-10 h-10 flex items-center justify-center bg-zinc-600'>{v.mission_id}</div>
           <div className='gap-2'>
-              <div className="text-base font-regular font-['IBM Plex Mono'] text-gray-500 ">{v.name}</div>
+              <div className="text-base font-regular font-['IBM Plex Mono'] text-gray-500 ">{v.mission_name}</div>
               <div className="text-sm font-light font-['IBM Plex Mono'] text-gray-500 ">{v.description}</div>
           </div>
         </div> }

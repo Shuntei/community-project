@@ -20,7 +20,7 @@ export default function Entrance() {
 
   return (
     <>
-    <div className="h-full w-full">
+    <div className="h-svh w-full">
       <NavigationControls>
       <Canvas className='bg-neutral-100' shadows camera={{ position: [34, 5, 1.4], fov:54 }}>
         <color attach="background" args={["#dbecfb"]}/>
