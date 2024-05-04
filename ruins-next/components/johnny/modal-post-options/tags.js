@@ -65,8 +65,8 @@ export default function Tags({ postForm, setPostForm, setIsFormChanged }) {
         </div>
         {showTags && (
           <ul
-            className="menu bg-amber-100 rounded-box w-40 text-black absolute bottom-[2rem] 
-                      pc:left-[-1rem] left-[-4rem] h-[216px] grid grid-cols-1 overflow-x-hidden overflow-y-auto"
+            className="menu rounded-lg w-40 text-black absolute bottom-[2rem] 
+                      pc:left-[-1rem] left-[-4rem] h-[216px] grid grid-cols-1 overflow-x-hidden overflow-y-auto bg-base-200 "
           >
             {userInfo &&
               userInfo

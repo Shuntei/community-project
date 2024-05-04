@@ -166,7 +166,7 @@ export default function PostModal() {
         id="postModal"
         onSubmit={submitHandler}
       >
-        <div className="bg-zinc-900 w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl">
+        <div className="bg-zinc-900 w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl border-2 border-blue-100">
           <div className="flex justify-between pb-5 text-white">
             <div
               className="text-[25px] flex items-center"
@@ -213,12 +213,12 @@ export default function PostModal() {
               </div>
               {/* 操作按鈕區 */}
               <div className="text-white flex gap-10">
-                <button type="button">
+                {/* <button type="button">
                   <RiEqualizerLine />
                 </button>
                 <button type="button">
                   <RiDraftLine />
-                </button>
+                </button> */}
                 <button type="submit">
                   <RiSendPlane2Fill />
                 </button>

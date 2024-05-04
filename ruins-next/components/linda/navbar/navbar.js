@@ -44,7 +44,7 @@ export default function Navbar({ className, navColor = 'white' }) {
             : navColor === 'white'
               ? 'text-white'
               : 'text-black'
-        } relative select-none`}
+        } select-none`}
       >
         <div className="flex justify-start md:items-start md:pt-0 pt-[5px] w-1/3">
           <div className="flex md:justify-start select-none gap-[15px]">

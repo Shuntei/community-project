@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import { useAuth } from '@/contexts/auth-context'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { useBoards } from '@/contexts/use-boards'
 
 const notify = () => {
   const MySwal = withReactContent(Swal)
@@ -24,7 +25,7 @@ export default function PageSelect({ bgColor = 'bg-black', optionsStyle }) {
   const { toggles, setToggles } = useToggles()
   optionsStyle =
     'text-white w-full text-center h-[40px] leading-[40px] cursor-pointer'
-
+  const { setIsBoard } = useBoards()
   const router = useRouter()
   const { auth } = useAuth()
 
@@ -44,6 +45,7 @@ export default function PageSelect({ bgColor = 'bg-black', optionsStyle }) {
               : `${optionsStyle} bg-gray-950`
           }
           onClick={() => {
+            setIsBoard()
             setToggles({ ...toggles, follows: false, notification: false })
             router.push('./main-page')
           }}

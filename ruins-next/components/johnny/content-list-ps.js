@@ -24,8 +24,8 @@ import { useAuth } from '@/contexts/auth-context'
 
 export default function PersonalContent() {
   const router = useRouter()
-  const { handlePostId, render, setRender, editOne, setEditOne } = useBoards()
-  const { removeBox, setRemoveBox, editModal, setEditModal } = useToggles()
+  const { render, setRender } = useBoards()
+  const { setEditModal } = useToggles()
   const [toggleMenu, setToggleMenu] = useState(false)
   const [psPosts, setPsPosts] = useState('')
   const { auth } = useAuth()
@@ -92,14 +92,10 @@ export default function PersonalContent() {
       allPsPostsShow()
       setRender(false)
     }
-  }, [router.query.page, router.isReady, psUserId, render])
+  }, [router.query.pspage, router.isReady, psUserId, render])
 
-  // useEffect(() => {
-  //   // 首次渲染及調用render都會執行
-  //   allPsPostsShow()
-  //   setRender(false)
-  // }, [render])
-  // // console.log(psPosts.totalPostsRows)
+  const startPage = Math.max(1, psPosts.page - 3) // 計算開始的頁碼，不能小於 1
+  const endPage = Math.min(startPage + 6, psPosts.totalPages) // 計算結束的頁碼，不能大於總頁數
 
   return (
     <>
@@ -113,7 +109,7 @@ export default function PersonalContent() {
               router.push(
                 {
                   pathname: '/community/main-personal',
-                  query: { ...router.query, page: `${1}` },
+                  query: { ...router.query, pspage: `${1}` },
                 },
                 undefined,
                 { shallow: true }
@@ -123,21 +119,20 @@ export default function PersonalContent() {
             <RiArrowLeftDoubleLine />
           </span>
           {psPosts &&
-            Array(10)
+            Array(endPage - startPage + 1)
               .fill(1)
               .map((v, i) => {
-                const p = psPosts.page - 5 + i
-                // const p = i;
+                // const p = psPosts.page - 5 + i
+                const p = startPage + i
                 if (p < 1 || p > psPosts.totalPages) return null
                 return (
                   <li key={p}>
                     <span
-                      // href={`?page=${p}`}
                       onClick={() => {
                         router.push(
                           {
                             pathname: '/community/main-personal',
-                            query: { ...router.query, page: `${p}` },
+                            query: { ...router.query, pspage: `${p}` },
                           },
                           undefined,
                           { shallow: true }
@@ -158,7 +153,7 @@ export default function PersonalContent() {
               router.push(
                 {
                   pathname: '/community/main-personal',
-                  query: { ...router.query, page: `${psPosts.totalPages}` },
+                  query: { ...router.query, pspage: `${psPosts.totalPages}` },
                 },
                 undefined,
                 { shallow: true }
@@ -174,7 +169,7 @@ export default function PersonalContent() {
           className="flex bg-neutral-300 leading border-b-slate-500 justify-center 
         text-[20px] font-semibold py-10 mb-10"
         >
-          沒&nbsp;有&nbsp;任&nbsp;何&nbsp;貼&nbsp;文
+          沒有任何貼文
         </h1>
       ) : (
         ''
@@ -183,24 +178,13 @@ export default function PersonalContent() {
         psPosts.totalPostsRows.map((v, i) => {
           return (
             <main
-              className="flex bg-neutral-300 border-b-2 border-b-slate-500 relative"
+              className="flex bg-neutral-300 border-b-2 border-b-slate-500"
               key={v.post_id}
             >
-              {/*relative用於toggle垃圾桶*/}
               <div
                 // onClick={() => handlePush(v.post_id)} // href={`/community/main-post`}
                 className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
               >
-                <div className="px-2 flex text-center absolute left-0">
-                  {removeBox ? (
-                    <label className="flex-col">
-                      <input type="checkbox" />
-                      <RiDeleteBinLine />
-                    </label>
-                  ) : (
-                    ''
-                  )}
-                </div>
                 <div className="w-[70%]">
                   {/* 改span或div用router push改 */}
                   <span
@@ -221,8 +205,12 @@ export default function PersonalContent() {
                         {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
                       </span>
                     </div>
-                    <div className="text-[14px]">RYUSENKEI@ccmail.com</div>
-                    <span>{v.content}</span>
+                    <div className="text-[14px] underline">{v.username}</div>
+                    <span>
+                      {v.content.length > 50
+                        ? `${v.content.substring(0, 50)}...`
+                        : v.content}
+                    </span>
                     <div className="text-[12px] pc:hidden">
                       {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
                     </div>

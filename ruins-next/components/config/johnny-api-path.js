@@ -47,3 +47,5 @@ export const SN_USER_INFO_POST = `${API_SERVER}/community/userinfoByPostId`
 export const SN_USER_INFO = `${API_SERVER}/community/userinfo`
 
 export const SN_SHOW_FOLLOWS = `${API_SERVER}/community/showfollows`
+
+export const SN_HANDLE_STATUS = `${API_SERVER}/community/followedstatus`

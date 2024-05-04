@@ -65,7 +65,7 @@ router.get("/boards/:board_id?", async (req, res) => {
 
   let page = +req.query.bdpage || 1;
   let totalPages = 0;
-  let perPage = 2;
+  let perPage = 5;
 
   // console.log("page有拿到嗎", page);
   // console.log(board_id);
@@ -88,12 +88,13 @@ router.get("/boards/:board_id?", async (req, res) => {
   //   (page - 1) * perPage
   // }, ${perPage} `;
   // 評論數量後SQL
-  const selectedBdPosts = `SELECT p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count
+  const selectedBdPosts = `SELECT p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count, u.username
     FROM sn_public_boards AS b 
     JOIN sn_posts AS p USING(board_id) 
     LEFT JOIN 
         ( SELECT post_id, COUNT(comment_id) AS comment_count FROM sn_comments GROUP BY post_id)
         AS comment_counts ON p.post_id = comment_counts.post_id
+    LEFT JOIN mb_user u ON p.user_id = u.id
     WHERE b.board_id = ? ${and}
     ${orderByClause} 
     LIMIT ${(page - 1) * perPage}, ${perPage}`;
@@ -185,11 +186,13 @@ router.get("/posts/:post_id?", async (req, res) => {
     // ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
 
     // 加入留言統計後sql & 搜尋
-    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
+    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count, u.username FROM  sn_posts p 
     LEFT JOIN ( SELECT post_id, 
     COUNT(comment_id) AS comment_count 
     FROM  sn_comments 
-    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id ${where}
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id
+    LEFT JOIN mb_user u ON p.user_id = u.id
+    ${where}
     ${orderByClause} LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
 
@@ -224,7 +227,7 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
 
   let where = " WHERE 1 ";
   if (!postId) {
-    let page = +req.query.page || 1;
+    let page = +req.query.pspage || 1;
 
     // 這裡是主頁所有文章
     // console.log(page);
@@ -262,12 +265,13 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
     // [totalPostsRows] = await db.query(totalPostsSql);
     console.log(where);
     // 加入留言統計後sql
-    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
+    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count, u.username FROM  sn_posts p 
     LEFT JOIN ( SELECT post_id, 
     COUNT(comment_id) AS comment_count 
     FROM  sn_comments 
-    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id ${where}
-    ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id
+    LEFT JOIN mb_user u ON p.user_id = u.id ${where}
+    ORDER BY p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
 
     const postsCount = `SELECT COUNT(1) FROM sn_posts ${where}`;

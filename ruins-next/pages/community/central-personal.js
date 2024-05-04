@@ -6,7 +6,7 @@ import PostModal from '@/components/johnny/modal-post'
 import PersonalBackground from '@/components/johnny/ps-background'
 import Profile from '@/components/johnny/ps-profile'
 import SeeMoreFollows from '@/components/johnny/seemore-follows'
-import SeeMoreNotification from '@/components/johnny/seemore-notification'
+import SeeMoreNotification from '@/components/johnny/seemore-followers'
 import { useToggles } from '@/contexts/use-toggles'
 import PersonalContent from '@/components/johnny/content-list-ps'
 import InfoMobile from '@/components/johnny/ps-mobile-intro'
@@ -43,13 +43,20 @@ export default function CentralContentP() {
               {auth.id === +psUserId ? (
                 <div className="border-y-2 text-white flex mt-3 ">
                   <button
-                    className="items-center flex justify-center leading-10 w-[100%] hover:bg-zinc-900 text-[20px]"
+                    // className="items-center flex justify-center leading-10 w-[100%] hover:bg-zinc-900 text-[20px]"
+                    className="items-center flex justify-center leading-10 w-[100%] text-[20px]  
+                    hover:bg-base-200
+                    hover:text-zinc-900
+                    font-bold
+                    transition
+                    duration-300
+                    shadow-md
+                    hover:shadow-lg"
                     onClick={() => {
                       setPostModal(!postModal)
                     }}
                   >
-                    <RiAddLine />
-                    Add a Post
+                    {/* <RiAddLine /> */}+ Add a Post
                   </button>
                 </div>
               ) : (
@@ -58,7 +65,7 @@ export default function CentralContentP() {
               {postModal && <PostModal />}
               {/* {editModal && <EditPostModal />} */}
               {/* <!-- 貼文列表 --> */}
-              <div className="  px-10 bg-neutral-500 flex-col my-5 rounded-t-lg text-white mb-0">
+              <div className="px-10 bg-neutral-500 flex-col my-5 rounded-t-lg text-white mb-0">
                 <div className="flex items-center justify-between py-2">
                   <div className="pc:pl-10 text-[20px]">POSTS</div>
                   {/* <div className="flex gap-5">
