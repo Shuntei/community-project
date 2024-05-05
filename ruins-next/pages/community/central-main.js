@@ -1,5 +1,5 @@
 import 'tailwindcss/tailwind.css'
-import { RiSearchLine, RiListCheck, RiLoopRightLine } from '@remixicon/react'
+import { RiSearchLine, RiListCheck, RiCloseLine } from '@remixicon/react'
 import MainContent from '@/components/johnny/content-list'
 import MainContentBd from '@/components/johnny/content-list-bd'
 import SeeMoreFollows from '@/components/johnny/seemore-follows'
@@ -60,6 +60,10 @@ export default function CentralContent() {
   }, [render])
 
   useEffect(() => {
+    queryHandler()
+  }, [searchTerm])
+
+  useEffect(() => {
     window.addEventListener('resize', () => {
       setShowBoards(false) // 這裡可以根據窗大小設置showBoards的值
     })
@@ -79,7 +83,7 @@ export default function CentralContent() {
               </div>
               <div className="flex justify-center items-center py-2">
                 <div
-                  class="dropdown"
+                  className="dropdown"
                   onClick={() => setShowBoards(!showBoards)}
                   ref={ref}
                 >
@@ -149,15 +153,21 @@ export default function CentralContent() {
                     className="flex p-[6px] items-center outline-none h-[32px] pc:w-[200px] w-full  pc:shadow1 rounded-l-lg pl-5"
                     name="searchTerm"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value)
+                    }}
                     placeholder="關鍵字"
                   />
-                  <button
+                  <span
                     className="px-2 bg-white flex items-center h-[32px] p-[6px] translate-x-[-5px] pc:translate-x-0  pc:shadow1 rounded-r-lg"
-                    onClick={queryHandler}
+                    // onClick={queryHandler}
                   >
-                    <RiSearchLine />
-                  </button>
+                    {searchTerm ? (
+                      <RiCloseLine onClick={() => setSearchTerm('')} />
+                    ) : (
+                      <RiSearchLine />
+                    )}
+                  </span>
                 </div>{' '}
               </div>
             </div>

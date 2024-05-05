@@ -21,7 +21,7 @@ export default function MainPersonal() {
         router.back()
       }
     }, 1000)
-  }, [])
+  }, [auth.id])
 
   return (
     <>

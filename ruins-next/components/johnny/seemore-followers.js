@@ -1,5 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { RiSearchLine, RiCloseLine, RiGroupLine } from '@remixicon/react'
+import {
+  RiSearchLine,
+  RiCloseLine,
+  RiGroupLine,
+  RiUserLine,
+} from '@remixicon/react'
 // import Image from 'next/image'
 // import profileImg from './img/16.jpg'
 import { useToggles } from '@/contexts/use-toggles'
@@ -130,11 +135,11 @@ export default function SeeMoreFollows({ marginTop = `` }) {
               onClick={() => setShowAllUsers(!showAllUsers)}
               className="cursor-pointer ml-2"
             >
-              <RiGroupLine />
+              {showAllUsers ? <RiUserLine /> : <RiGroupLine />}
             </span>
           </div>
           <div>
-            <ul className="rounded-full flex flex-wrap pc:ml-20 gap-x-20">
+            <ul className="rounded-full pc:grid pc:grid-cols-2 pc:ml-20 gap-x-20">
               {showAllUsers &&
                 userInfo &&
                 userInfo
@@ -146,11 +151,17 @@ export default function SeeMoreFollows({ marginTop = `` }) {
                         className="flex items-center py-2 cursor-pointer w-[200px]"
                         onClick={() => {
                           // console.log(v.id)
-                          router.push({
-                            // pathname: '/community/main-personal',
-                            pathname: '/community/main-page',
-                            query: { ...router.query, psUserId: v.id },
-                          })
+                          if (v.id === auth.id) {
+                            router.push({
+                              pathname: '/community/main-personal',
+                              query: { ...router.query, psUserId: v.id },
+                            })
+                          } else {
+                            router.push({
+                              pathname: '/community/main-page',
+                              query: { ...router.query, psUserId: v.id },
+                            })
+                          }
                           //先確定v.id傳出後再關閉follows,免得先關了卻沒傳出會無法變更
                           setTimeout(() => {
                             setToggles({
@@ -184,11 +195,17 @@ export default function SeeMoreFollows({ marginTop = `` }) {
                       className="flex items-center py-2 cursor-pointer w-[200px]"
                       onClick={() => {
                         // console.log(v.id)
-                        router.push({
-                          // pathname: '/community/main-personal',
-                          pathname: '/community/main-page',
-                          query: { ...router.query, psUserId: v.id },
-                        })
+                        if (v.id === auth.id) {
+                          router.push({
+                            pathname: '/community/main-personal',
+                            query: { ...router.query, psUserId: v.id },
+                          })
+                        } else {
+                          router.push({
+                            pathname: '/community/main-page',
+                            query: { ...router.query, psUserId: v.id },
+                          })
+                        }
                         //先確定v.id傳出後再關閉follows,免得先關了卻沒傳出會無法變更
                         setTimeout(() => {
                           setToggles({

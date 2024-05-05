@@ -82,8 +82,8 @@ export default function MainContentBd() {
     render,
   ])
 
-  const startPage = Math.max(1, selectedPosts.page - 3) // 計算開始的頁碼，不能小於 1
-  const endPage = Math.min(startPage + 6, selectedPosts.totalPages) // 計算結束的頁碼，不能大於總頁數
+  const startPage = Math.max(1, selectedPosts.page - 2) // 計算開始的頁碼，不能小於 1
+  const endPage = Math.min(startPage + 3, selectedPosts.totalPages) // 計算結束的頁碼，不能大於總頁數
 
   return (
     <>
@@ -150,7 +150,7 @@ export default function MainContentBd() {
       {selectedPosts.selectedBdPostsRows?.map((v, i) => {
         return (
           <main
-            className="flex bg-neutral-300 border-b-2 border-b-slate-500"
+            className="flex bg-neutral-300 border-b border-b-slate-500"
             key={v.post_id}
           >
             <div
@@ -158,8 +158,8 @@ export default function MainContentBd() {
                           duration-300
                           shadow-md
                           hover:shadow-lg
-                          hover:bg-gray-300
-                          hover:ring-opacity-50"
+                        hover:bg-neutral-200
+                          hover:ring-opacity-15"
             >
               <div className="w-[70%]">
                 <Link

@@ -164,6 +164,7 @@ router.get("/posts/:post_id?", async (req, res) => {
 
     const perPage = 10;
     const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts p ${where}`;
+
     // console.log(t_sql);
     const [[{ totalRows }]] = await db.query(t_sql);
     // console.log(totalRows);
@@ -186,12 +187,13 @@ router.get("/posts/:post_id?", async (req, res) => {
     // ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
 
     // 加入留言統計後sql & 搜尋
-    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count, u.username FROM  sn_posts p 
+    const totalPostsSql = `SELECT p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count, u.username FROM  sn_posts p 
     LEFT JOIN ( SELECT post_id, 
     COUNT(comment_id) AS comment_count 
     FROM  sn_comments 
     GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id
     LEFT JOIN mb_user u ON p.user_id = u.id
+    LEFT JOIN sn_public_boards b ON p.board_id = b.board_id
     ${where}
     ${orderByClause} LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
@@ -211,7 +213,8 @@ router.get("/posts/:post_id?", async (req, res) => {
   }
 
   // 這裡是選擇單篇文章
-  const chosenPostSql = " SELECT * FROM sn_posts WHERE post_id=? ";
+  const chosenPostSql =
+    " SELECT p.*, b.* FROM sn_posts p LEFT JOIN sn_public_boards b ON p.board_id = b.board_id WHERE post_id=? ";
   const [chosenPost] = await db.query(chosenPostSql, [postId]);
   // console.log(postId);
   // console.log("chosenPost", chosenPost);
@@ -329,7 +332,7 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
-        req.body.boardId  || null,
+        req.body.boardId || null,
         req.body.userId,
         req.body.emotion,
         req.body.tags,
