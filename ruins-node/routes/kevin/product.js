@@ -110,7 +110,7 @@ router.get("/api/getProduct/:pid", async (req, res) => {
 //取得商品評價
 const getComment = async (req) => {
   let pid = +req.params.pid;
-  let where = ` WHERE 1 AND pid = ?`;
+  let where = ` WHERE 1 AND pc.pid = ?`;
   let totalRows = 0;
   let rows = [];
 
@@ -122,12 +122,14 @@ const getComment = async (req) => {
     info: "",
   };
 
-  const t_sql = `SELECT COUNT(1) totalRows FROM ca_product_comment  ${where} `;
+  // const t_sql = `SELECT COUNT(1) totalRows FROM ca_product_comment  ${where} `;
+  const t_sql =`SELECT COUNT(1) totalRows FROM ca_product_comment pc JOIN ca_products p ON pc.pid = p.pid LEFT JOIN mb_user m ON m.id = pc.member_id ${where} ORDER BY pc.create_at DESC`;
 
   [[{ totalRows }]] = await db.query(t_sql, [pid]);
 
   if (totalRows > 0) {
-    const sql = `SELECT * FROM ca_product_comment ${where}`;
+    const sql = `SELECT * FROM ca_product_comment pc LEFT JOIN mb_user m ON m.id = pc.member_id ${where} ORDER BY pc.create_at DESC`;
+    // const sql = `SELECT p.pid, pc.pid, pc.score, pc.comment, pc.mid, pc.create_at, m.username FROM ca_product_comment pc LEFT JOIN ca_products p ON pc.pid = p.pid LEFT JOIN mb_user m ON m.id = pc.member_id ${where} ORDER BY pc.create_at DESC`
     [rows] = await db.query(sql, [pid]);
     output = { ...output, success: true, rows, totalRows };
   }

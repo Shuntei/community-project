@@ -12,7 +12,6 @@ import Footer from '@/components/linda/footer/footer'
 import { useRouter } from 'next/router'
 import { useCart } from '@/hooks/use-cart'
 
-
 export default function Pid() {
   const router = useRouter()
   const { onAddMutiItem, onAddItem, items } = useCart()
@@ -81,8 +80,9 @@ export default function Pid() {
       // 有pid後，向伺服器要求資料
       getProductById(pid)
       getProductComment(pid)
+      setVisibleComments(3)
     }
-  }, [router.isReady,router.query.pid])
+  }, [router.isReady, router.query.pid])
   useEffect(() => {
     if (product.pid) {
       getRelatedProduct()
@@ -90,7 +90,6 @@ export default function Pid() {
   }, [product.pid])
   return (
     <>
-     
       <div className=" bg-gray-100 flex flex-col justify-center items-center relative pt-28">
         {/* header開始 */}
         <Navbar navColor={''} />
@@ -254,11 +253,11 @@ export default function Pid() {
             {/* 評論右側 */}
             <div className="flex flex-col md:w-3/5 md:mx-6 mx-0 space-y-3">
               <div className="md:w-1/3 border-b text-[15px]  font-['IBM Plex Mono'] border-black text-black">
-                not bad!
+                2024-03-18
               </div>
 
               <div className="text-black text-[15px] font-normal font-['notosans tc']">
-                非常棒的商品！推推！包裝得很小心寄出貨超快與圖片相符，很喜歡，謝出貨速度非常的快，非常棒的賣家非常棒的商品！推推！包裝得很小心寄出貨超快與圖片相符，很喜歡，謝出貨速度非常的快，非常棒的賣家非常棒的商品！推推！包裝得很小心寄出貨超快與圖片相符，很喜歡，謝出貨速度非常的快，非常棒的賣家
+                CP值超高，真的是人人都要有一組！！！
               </div>
             </div>
           </div>
@@ -274,7 +273,7 @@ export default function Pid() {
                   <div className="flex flex-col md:mx-6 md:w-1/5 space-y-3">
                     <div className="flex md:border-b md:border-black md:text-black">
                       <div className="w-full text-[15px] font-['IBM Plex Mono']">
-                        {v.member_id}
+                        {v.name}
                       </div>
                       <div className="text-black text-[12px] font-['IBM Plex Mono']">
                         {/* 01/03/24 */}
@@ -341,7 +340,7 @@ export default function Pid() {
                     key={v.pid}
                     href={`/shop/product/${v.pid}`}
                     className="md:w-1/5  flex-col  gap-5 flex transition duration-200 hover:skew-y-2"
-                    style={{ minWidth: '20%' }} 
+                    style={{ minWidth: '20%' }}
                   >
                     <img
                       className="w-full aspect-square  rounded-xl"
