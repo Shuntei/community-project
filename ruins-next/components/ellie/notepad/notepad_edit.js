@@ -2,8 +2,12 @@ import React, { useState, useEffect } from 'react'
 import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
 import { useRouter } from 'next/router';
+import { useAuth } from '@/contexts/auth-context';
+
 export default function EditNotes({ onClose ,note1 }) {
   const router = useRouter()
+  // const { auth } = useAuth()
+  // const mbID = auth.id
 
   const [note, setNote] = useState(note1)
 
@@ -26,6 +30,7 @@ export default function EditNotes({ onClose ,note1 }) {
   // +++++++++++++++++++
   const [form, setForm] = useState({
     note_id:note1.note_id,
+    // mbID:mbID,
     title:note1.title, 
     memo:note1.memo,
   })
@@ -108,8 +113,12 @@ export default function EditNotes({ onClose ,note1 }) {
       <div className="blackLine">
           <form className="barPadding" onSubmit={submitHandler}>
             <input hidden name='note_id' value={note1.note_id}/>
+            {/* <input
+            type="hidden"
+            name="user_id"
+            value={mbID}
+            /> */}
             <input 
-            
             className="title" 
             onChange={changeHandler} 
             name={'title'} 

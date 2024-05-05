@@ -8,6 +8,7 @@ import {
 import AchievementsPopup from '../popup/popupachievements'
 import Notepad from '../notepad/notepad'
 import { useRouter } from 'next/router'
+import { useAuth } from '@/contexts/auth-context'
 import Link from 'next/link'
 // import { NOTE_LIST } from '@/components/config/api-path'
 import EditNotes from '../notepad/notepad_edit'
@@ -50,7 +51,7 @@ export default function Dropdown() {
   // const toggleEditNotes = () => {
   //   setShowEditNotes(!showEditNotes)
   // }
-  const [selectedNote, setSelectedNote] = useState(null);
+  const [selectedNote, setSelectedNote] = useState(null)
 
   const toggleEditNotes = (noteData) => {
     setSelectedNote(noteData)
@@ -60,11 +61,14 @@ export default function Dropdown() {
   // ++++++++++++++++++++
 
   const router = useRouter()
+  const { auth } = useAuth()
+  const mbID = auth.id
 
   const [note, setNote] = useState('')
 
   const getNote = async () => {
-    const url = `http://localhost:3001/game/gm_note`
+    // const url = `http://localhost:3001/game/gm_note`
+    const url = `http://localhost:3001/game/gm_note/${mbID}`
     try {
       const res = await fetch(url)
       const data = await res.json()
@@ -77,6 +81,24 @@ export default function Dropdown() {
   }
   useEffect(() => {
     getNote()
+  }, [router])
+
+  const [achieved, setAchieved] = useState('')
+
+  const getAchieved = async () => {
+    const url = `http://localhost:3001/game/gm_achieved/${mbID}`
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
+
+      setAchieved(data)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+  useEffect(() => {
+    getAchieved()
   }, [router])
 
   return (
@@ -93,7 +115,7 @@ export default function Dropdown() {
           {showDropdown && (
             <div className="flex flex-col ">
               <div className="flex flex-col mt-4">
-                <div className="inline-flex gap-30 border-b-2 border-black mb-3">
+                <div className="inline-flex gap-30 border-b-2 border-black mb-2">
                   <div className="flex-1 text-sm font-regular font-['IBM Plex Mono'] ">
                     ACHIEVEMENTS
                   </div>
@@ -121,7 +143,23 @@ export default function Dropdown() {
                         </div>
                       </div>
                     </div>
-                    <div className="flex justify-start pt-1 gap-1">
+                    {achieved.rows &&
+                      achieved.rows.slice(1).map((v, i) => {
+                        return (
+                          <div key={i}>
+                            {v.activate === 0 ? (
+                              <div type="hidden"></div>
+                            ) : (
+                              <div className="w-7 h-7 flex items-center justify-center bg-gray-800 mr-1">
+                                <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+                                  {v.mission_id}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                    {/* <div className="flex justify-start pt-1 gap-1">
                       <div className="w-7 h-7 flex items-center justify-center bg-gray-800">
                         <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
                           2
@@ -132,45 +170,38 @@ export default function Dropdown() {
                           3
                         </div>
                       </div>
-                      {/* <div className="w-7 h-7 flex items-center justify-center bg-gray-800 text-white font-light">
-                        +6
-                      </div> */}
-                    </div>
-                    <div className="mt-2 text-xs font-light font-['IBM Plex Mono'] border-b border-black">
-                      LOCKED ACHIEVEMENTS
-                    </div>
-                    <div className="flex justify-start pt-1 gap-1">
-                      <div className="w-7 h-7 flex items-center justify-center bg-gray-800">
-                        <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
-                          4
-                        </div>
-                      </div>
-                      <div className="w-7 h-7 flex items-center justify-center bg-gray-800">
-                        <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
-                          5
-                        </div>
-                      </div>
-                      <div className="w-7 h-7 flex items-center justify-center bg-gray-800">
-                        <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
-                          6
-                        </div>
-                      </div>
-                      <div className="w-7 h-7 flex items-center justify-center bg-gray-800">
-                        <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
-                          7
-                        </div>
-                      </div>
                       <div className="w-7 h-7 flex items-center justify-center bg-gray-800 text-white font-light">
                         +6
                       </div>
+                    </div> */}
+                    <div className="mt-2 text-xs font-light font-['IBM Plex Mono'] border-b border-black">
+                      LOCKED ACHIEVEMENTS
                     </div>
+                    <div className="flex justify-start pt-1">
+                    {achieved.rows &&
+                      achieved.rows.map((v, i) => {
+                        return (
+                          <div>
+                            {v.activate === 0 ? (
+                              <div className="w-7 h-7 flex items-center justify-center bg-gray-800 mr-1">
+                                <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
+                                  {v.mission_id}
+                                </div>
+                              </div>
+                            ) : (
+                              <div type="hidden"></div>
+                            )}
+                          </div>
+                        )
+                      })}
+                      </div>
                     <div className="mt-2 text-xs font-extralight font-['IBM Plex Mono'] flex flex-row-reverse">
                       <button onClick={togglePopup}>View All</button>
                     </div>
                   </div>
                 )}
 
-                <div className="inline-flex gap-32 border-b-2 border-black mb-3">
+                <div className="inline-flex gap-32 border-b-2 border-black mb-2">
                   <div className="flex-1 text-sm font-regular font-['IBM Plex Mono'] ">
                     NOTE
                   </div>
@@ -203,7 +234,7 @@ export default function Dropdown() {
                   </div>
                 )}
 
-                <div className="inline-flex gap-30 border-b-2 border-black">
+                <div className="inline-flex gap-30 border-b-2 border-black mb-3">
                   <div className="flex-1 text-sm font-regular font-['IBM Plex Mono'] ">
                     SCREENSHOTS
                   </div>
@@ -243,7 +274,9 @@ export default function Dropdown() {
       {showPopup && <AchievementsPopup onClose={togglePopup} />}
       {showNotepad && <Notepad onClose={toggleNotepad} />}
       {/* {showDropdown && <RiArrowDownWideFill onClose={toggleDropdown}/>} */}
-      {showEditNotes && <EditNotes onClose={toggleEditNotes} note1={selectedNote} />}
+      {showEditNotes && (
+        <EditNotes onClose={toggleEditNotes} note1={selectedNote} />
+      )}
     </>
   )
 }

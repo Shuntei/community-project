@@ -2,9 +2,15 @@ import React, { useState } from 'react'
 import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
 import { useRouter } from 'next/router';
+import { useAuth } from '@/contexts/auth-context';
+
 export default function Notepad({ onClose }) {
  const router=useRouter()
+ const { auth } = useAuth()
+  const mbID = auth.id
+
   const [form, setForm] = useState({
+    mbID:'',
     title:'', 
     memo:'',
   })
@@ -113,6 +119,11 @@ export default function Notepad({ onClose }) {
       </div> {/* notepad bar */}
       <div className="blackLine">
           <form className="barPadding" onSubmit={submitHandler}>
+            <input
+            type="hidden"
+            name="user_id"
+            value={mbID}
+            />
             <input 
             
             className="title" 
