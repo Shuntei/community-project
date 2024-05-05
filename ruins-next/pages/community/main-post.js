@@ -124,7 +124,7 @@ export default function MainPost() {
             </div>
             {/* <div className="flex my-2 gap-2 items-center size-[35px] overflow-hidden rounded-[100%]"> */}
             <div className="flex items-center gap-2 my-2 text-white">
-              <Image
+              <img
                 className="rounded-[100%] size-[35px]"
                 src={
                   proFilePic
@@ -165,10 +165,8 @@ export default function MainPost() {
             {/* <!-- 圖片 --> */}
             <div className="mb-2">
               {getPost[0].image_url && (
-                <Image
+                <img
                   src={`${SN_COMMUNITY}/${getPost[0].image_url}`}
-                  width={0}
-                  height={0}
                   // sizes="100vw"
                   style={{
                     width: '100%',

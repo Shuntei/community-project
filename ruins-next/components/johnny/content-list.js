@@ -68,8 +68,8 @@ export default function MainContent() {
     postsShow()
   }, [router.query, router.query.page, render])
 
-  const startPage = Math.max(1, postsList.page - 3) // 計算開始的頁碼，不能小於 1
-  const endPage = Math.min(startPage + 6, postsList.totalPages) // 計算結束的頁碼，不能大於總頁數
+  const startPage = Math.max(1, postsList.page - 2) // 計算開始的頁碼，不能小於 1
+  const endPage = Math.min(startPage + 3, postsList.totalPages) // 計算結束的頁碼，不能大於總頁數
 
   return (
     <>
@@ -135,7 +135,7 @@ export default function MainContent() {
       {postsList?.totalPostsRows?.map((v, i) => {
         return (
           <main
-            className="flex bg-neutral-300 border-b-2 border-b-slate-500"
+            className="flex bg-neutral-300 border-b border-b-slate-500"
             key={v.post_id}
           >
             <div
@@ -144,8 +144,8 @@ export default function MainContent() {
                           duration-300
                           shadow-md
                           hover:shadow-lg
-                          hover: hover:bg-gray-300
-                          hover:ring-opacity-50"
+                          hover:bg-neutral-200
+                          hover:ring-opacity-15"
                           `}
               // hover:ring-1 hover:ring-offset-2 hover:ring-offset-gray-300
             >

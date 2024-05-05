@@ -163,7 +163,7 @@ export default function Profile() {
               <ul className="flex gap-4 pc:gap-6">
                 <li className="text-[14px] pc:text-[16px]">
                   POSTS
-                  <div>
+                  <div className="text-center">
                     {postsTable?.postsAmount
                       ? postsTable?.postsAmount[0]['COUNT(1)']
                       : 0}
@@ -179,7 +179,10 @@ export default function Profile() {
                     })
                   }}
                 >
-                  FOLLOWING <div>{followsCount ? followsCount : 0}</div>
+                  FOLLOWING{' '}
+                  <div className="text-center">
+                    {followsCount ? followsCount : 0}
+                  </div>
                 </li>
                 <li
                   className="text-[14px] pc:text-[16px] cursor-pointer"
@@ -191,7 +194,10 @@ export default function Profile() {
                     })
                   }}
                 >
-                  FOLLOWERS <div>{followersCount ? followersCount : 0}</div>
+                  FOLLOWERS{' '}
+                  <div className="text-center">
+                    {followersCount ? followersCount : 0}
+                  </div>
                 </li>
               </ul>
               <ul className="hidden pc:flex w-[120px]">

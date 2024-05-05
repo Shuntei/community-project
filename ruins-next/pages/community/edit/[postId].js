@@ -177,8 +177,24 @@ export default function EditModal() {
       .then((rst) => {
         if (rst[0]) {
           console.log(rst[0])
-          const { title, content, image_url, board_id, emotion, tags } = rst[0]
-          setPostForm({ title, content, image_url, board_id, emotion, tags })
+          const {
+            title,
+            content,
+            image_url,
+            board_id,
+            emotion,
+            tags,
+            board_name,
+          } = rst[0]
+          setPostForm({
+            title,
+            content,
+            image_url,
+            board_id,
+            emotion,
+            tags,
+            board_name,
+          })
           // console.log({ title, content, image_url, board_id, emotion })
           // setPostForm(rst[0])
         } else {
@@ -218,7 +234,10 @@ export default function EditModal() {
                   name="boardId"
                 >
                   <option hidden>
-                    Change a Board <RiArrowDropDownLine />
+                    {postForm.board_name
+                      ? postForm.board_name
+                      : 'Choose a Board'}
+                    <RiArrowDropDownLine />
                   </option>
                   {bdChoose.map((v, i) => {
                     return (

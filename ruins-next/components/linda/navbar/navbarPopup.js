@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './navbarPopup.module.css'
 import { useAuth } from '@/contexts/auth-context'
 import Swal from 'sweetalert2'
@@ -53,10 +53,6 @@ export default function NavbarPopup() {
               </a> 用a會有順序問題導致跳回來*/}
               <p
                 className="cursor-pointer"
-                // href={{
-                //   pathname: '/community/main-personal',
-                //   query: { psUserId: auth.id },
-                // }}
                 onClick={() => {
                   if (!auth.id) {
                     notify()

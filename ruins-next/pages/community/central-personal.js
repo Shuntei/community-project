@@ -42,23 +42,12 @@ export default function CentralContentP() {
               </span>
               {/* <!-- 發文按鈕 --> */}
               {auth.id === +psUserId ? (
-                <div className="border-y-2 text-white flex mt-3 ">
+                <div className="border-y-2 hover:border-y-0 text-white flex mt-3">
                   <button
                     data-back="+&nbsp;ADD&nbsp;&nbsp;A&nbsp;&nbsp;POST"
                     data-front="+&nbsp;ADD&nbsp;&nbsp;A&nbsp;&nbsp;POST"
                     className={`items-center flex justify-center leading-10 w-[100%] text-[20px] ${styles.btnFlip}`}
                     // className={`items-center flex justify-center leading-10 w-[100%] text-[20px] ${styles.btn} ${styles.fromTop}`}
-                    // className="items-center flex justify-center leading-10 w-[100%] hover:bg-zinc-900 text-[20px]"
-                    // font-bold
-                    // transition
-                    // duration-300
-                    // shadow-md
-                    // hover:shadow-lg
-                    // text-white
-                    // hover: hover:bg-gray-500
-                    // hover:text-gray-100
-                    // hover:ring-2 hover:ring-offset-2 hover:ring-offset-gray-300
-                    // hover:ring-opacity-50"
                     onClick={() => {
                       setPostModal(!postModal)
                     }}
