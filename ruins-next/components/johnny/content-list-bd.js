@@ -153,7 +153,14 @@ export default function MainContentBd() {
             className="flex bg-neutral-300 border-b-2 border-b-slate-500"
             key={v.post_id}
           >
-            <div className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full">
+            <div
+              className=" pc:px-20 px-10 py-3 flex transition-transform w-full
+                          duration-300
+                          shadow-md
+                          hover:shadow-lg
+                          hover:bg-gray-300
+                          hover:ring-opacity-50"
+            >
               <div className="w-[70%]">
                 <Link
                   name="postId"

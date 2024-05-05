@@ -67,7 +67,7 @@ export default function FollowsBar() {
           <div className="border-b-2 mb-2 w-[200px]"></div>
           <div className="flex py-1">
             <input
-              className="flex p-[6px] items-center outline-none h-[32px] w-[160px] rounded-l-lg pl-5 my-3"
+              className="flex p-[6px] items-center outline-none h-[32px] w-[160px] rounded-l-lg pl-5 my-3 "
               onChange={(e) => {
                 setKeyword(e.target.value)
                 // submitHandler()
