@@ -12,6 +12,7 @@ import PersonalContent from '@/components/johnny/content-list-ps'
 import InfoMobile from '@/components/johnny/ps-mobile-intro'
 import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/router'
+import styles from './central-personal.module.css'
 
 export default function CentralContentP() {
   const { postModal, setPostModal, toggles, removeBox, setRemoveBox } =
@@ -43,20 +44,27 @@ export default function CentralContentP() {
               {auth.id === +psUserId ? (
                 <div className="border-y-2 text-white flex mt-3 ">
                   <button
+                    data-back="+&nbsp;ADD&nbsp;&nbsp;A&nbsp;&nbsp;POST"
+                    data-front="+&nbsp;ADD&nbsp;&nbsp;A&nbsp;&nbsp;POST"
+                    className={`items-center flex justify-center leading-10 w-[100%] text-[20px] ${styles.btnFlip}`}
+                    // className={`items-center flex justify-center leading-10 w-[100%] text-[20px] ${styles.btn} ${styles.fromTop}`}
                     // className="items-center flex justify-center leading-10 w-[100%] hover:bg-zinc-900 text-[20px]"
-                    className="items-center flex justify-center leading-10 w-[100%] text-[20px]  
-                    hover:bg-base-200
-                    hover:text-zinc-900
-                    font-bold
-                    transition
-                    duration-300
-                    shadow-md
-                    hover:shadow-lg"
+                    // font-bold
+                    // transition
+                    // duration-300
+                    // shadow-md
+                    // hover:shadow-lg
+                    // text-white
+                    // hover: hover:bg-gray-500
+                    // hover:text-gray-100
+                    // hover:ring-2 hover:ring-offset-2 hover:ring-offset-gray-300
+                    // hover:ring-opacity-50"
                     onClick={() => {
                       setPostModal(!postModal)
                     }}
                   >
-                    {/* <RiAddLine /> */}+ Add a Post
+                    {/* <RiAddLine /> */}
+                    {/* + Add a Post */}
                   </button>
                 </div>
               ) : (

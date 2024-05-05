@@ -183,7 +183,13 @@ export default function PersonalContent() {
             >
               <div
                 // onClick={() => handlePush(v.post_id)} // href={`/community/main-post`}
-                className=" pc:px-20 px-10 py-3 flex pc:hover:hover3 transition-transform w-full"
+                className=" pc:px-20 px-10 py-3 flex transition-transform w-full
+                          duration-300
+                          shadow-md
+                          hover:shadow-lg
+                          hover:bg-gray-300
+                          hover:ring-opacity-50"
+                // hover:ring-1 hover:ring-offset-2 hover:ring-offset-gray-300
               >
                 <div className="w-[70%]">
                   {/* 改span或div用router push改 */}
