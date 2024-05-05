@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, Component } from 'react'
 
 export default function Volume() {
+
   return (
     <>
       <div className='my-12'>
