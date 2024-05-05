@@ -146,7 +146,7 @@ export default function OrderSuccess() {
                       )}
                     </div>{' '}
                     <div className=" text-black text-[15px] font-normal font-['IBM Plex Mono']">
-                      物流方式:{purchaseOrder.row.shipping_method}
+                      物流方式:{purchaseOrder.row.shipping_method.split("(")[0]}
                     </div>
                     <div className=" text-black text-[15px] font-normal font-['IBM Plex Mono']">
                       收件人:{purchaseOrder.row.recipient}

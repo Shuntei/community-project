@@ -24,7 +24,7 @@ export default function FillDoc() {
   const [memberEmail, setMemberEmail] = useState('')
   const [payEmail, setPayEmail] = useState('')
   const [memberMobile, setMemberMobile] = useState(0)
-  const [payMobile, setPayMobile] = useState(0)
+  const [payMobile, setPayMobile] = useState('')
 
   // 付款方式狀態
   const paymentOptions = ['LinePay', '信用卡', '取貨付款']
@@ -41,13 +41,13 @@ export default function FillDoc() {
 
   // 收件人資料
   const [recipientName, setRecipient] = useState('')
-  const [recipientMobile, setRecipientMobile] = useState(0)
+  const [recipientMobile, setRecipientMobile] = useState('')
 
   // 合計的狀態
   const [totalAmount, setTotalAmount] = useState(0)
 
   // 用於欄位驗證
-  // const [terms, setTerms] = useState(false)
+  const [terms, setTerms] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
 
   const router = useRouter()
@@ -124,7 +124,7 @@ export default function FillDoc() {
       setRecipient('')
       setRecipientMobile(0)
     }
-    // console.log(recipientName)
+    console.log(recipientName)
   }
   // useShip711StoreOpener的第一個傳入參數是"伺服器7-11運送商店用Callback路由網址"
   // 指的是node(express)的對應api路由。
@@ -141,8 +141,8 @@ export default function FillDoc() {
       memberMobile !== 0 &&
       paymentMethod !== '' &&
       shippingMethod !== '' &&
-      store711.storeid !== ''
-    // terms !== false
+      store711.storeid !== '' &&
+      terms !== false
 
     setIsFormValid(isValid)
   }, 300) // 300 毫秒是 debounce 的延遲時間，可以根據需要進行調整
@@ -223,7 +223,7 @@ export default function FillDoc() {
     paymentMethod,
     shippingMethod,
     store711.storeid,
-    // terms,
+    terms,
   ])
   // 一進來先將 localstorage store711 刪除
   useEffect(() => {
@@ -241,16 +241,16 @@ export default function FillDoc() {
     } else if (!shippingMethod) {
       setShippingFee(0)
     }
-    if (coupon === '免運費') {
+    if (coupon === '免運費' || terms ) {
       setShippingFee(0)
     }
     const totalAmountFinal = Math.max(totalPrice + shippingFee)
 
     setTotalAmount(totalAmountFinal)
-  }, [totalPrice, coupon, shippingMethod, shippingFee])
+  }, [totalPrice, coupon, shippingMethod, shippingFee ,terms])
   return (
     <>
-
+      {console.log(recipientName)}
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28 text-black">
         {/* header開始 */}
         <Navbar navColor={''} />
@@ -407,6 +407,22 @@ export default function FillDoc() {
                               type="text"
                               value={store711.storeaddress}
                               disabled
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    {shippingMethod === '宅配(運費$100)' && (
+                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono'] ">
+                        <div className="flex flex-col  space-y-5 w-full">
+                          <div className="space-y-1">
+                            <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                              寄件地址:
+                            </div>
+                            <input
+                              className="w-full bg-zinc-100 rounded"
+                              name="address"
+                              type="text"
                             />
                           </div>
                         </div>
@@ -601,6 +617,22 @@ export default function FillDoc() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono'] mb-">
+              <input
+                type="checkbox"
+                name="terms"
+                id="terms"
+                value={terms}
+                onChange={(e) => {
+                  setTerms(e.target.checked)
+                }}
+              />
+              &nbsp;
+              <span>我同意網站服務條款及隱私權政策</span>
+              <div className=" text-neutral-500 text-[15px] flex justify-center font-normal font-['IBM Plex Mono'] mb-2">
+                並即刻享有全站免運費！
               </div>
             </div>
 
