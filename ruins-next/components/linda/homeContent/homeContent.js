@@ -189,7 +189,7 @@ export default function HomeContent() {
             backgroundImage:
               currentIndex > 0
                 ? `url('/images/borou/${slides[currentIndex - 1]?.image_url}.jpg')`
-                : `url('/images/borou/${slides[slides.length - 1]?.image_url}.jpg')`,
+                : `url('/images/borou/${slides[slides?.length - 1]?.image_url}.jpg')`,
             width: '100%',
           }}
           className={`z-[-1] relative w-full h-lvh bg-center bg-cover brightness-50 ${styles['bg-transition']}`}

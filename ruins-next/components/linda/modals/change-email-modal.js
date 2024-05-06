@@ -121,7 +121,6 @@ export default function ChangeEmailPopup({
         } else {
           result.emailCode ? setEmailErrorCode(result.emailCode) : ''
           result.passwordCode ? setPasswordErrorCode(result.passwordCode) : ''
-          console.log('Password or email is wrong')
         }
       } catch (ex) {
         console.log('Failed to fetch edit email', ex)

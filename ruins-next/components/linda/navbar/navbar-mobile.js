@@ -1,10 +1,9 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
 import 'remixicon/fonts/remixicon.css'
 import Link from 'next/link'
 import { useCart } from '@/hooks/use-cart'
 
 export default function NavbarMobile() {
-  const { totalItems } = useCart()
   const initialDropdownList = [
     {
       title: 'general',
@@ -57,6 +56,24 @@ export default function NavbarMobile() {
     setSelectedDropdown(title)
   }
 
+  useEffect(() => {
+    const listener = (e) => {
+      const t = e.target
+      if (t.closest('.navbarMobileItem')) {
+        handleArrowLR()
+      } else {
+        if (!t.closest('.navbarMobile')) {
+          setIsLeftIcon(false)
+          setSelectedDropdown(null)
+        }
+      }
+    }
+    window.addEventListener('click', listener)
+    return () => {
+      window.removeEventListener('click', listener)
+    }
+  }, [])
+
   return (
     <>
       <div className="md:hidden z-10 fixed top-[50px] left-0 w-full">
@@ -64,14 +81,14 @@ export default function NavbarMobile() {
           <div className="py-2">
             <button onClick={handleArrowLR}>
               {isLeftIcon ? (
-                <i className="ri-arrow-drop-left-line ri-xl text-zinc-300 absolute top-[18px] left-1 w-3"></i>
+                <i className="navbarMobileItem ri-arrow-drop-left-line ri-xl text-zinc-300 absolute top-[18px] left-1 w-3"></i>
               ) : (
                 <i className="ri-arrow-drop-right-line ri-xl text-zinc-300 absolute top-[18px] left-1 w-3"></i>
               )}
             </button>
           </div>
           {isLeftIcon ? (
-            <div className="flex bg-[var(--main-bg)] w-full overflow-x-auto text-zinc-300 text-[13px] font-['IBM Plex Mono']">
+            <div className="navbarMobile flex bg-[var(--main-bg)] w-full overflow-x-auto text-zinc-300 text-[13px] font-['IBM Plex Mono']">
               {dropdownList.map((dropdown, index) => (
                 <button
                   key={index}

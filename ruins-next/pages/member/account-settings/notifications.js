@@ -10,7 +10,7 @@ import { SN_COMMUNITY } from '@/components/config/johnny-api-path'
 
 
 export default function Notifications() {
-  const { auth, notification } = useAuth()
+  const { auth } = useAuth()
   const [today, setToday] = useState(null)
   const [week, setWeek] = useState(null)
   const [month, setMonth] = useState(null)
@@ -60,14 +60,10 @@ export default function Notifications() {
     getNotificationInfo()
   }, [])
 
-  useEffect(()=>{
-    console.log(notification);
-  }, [notification])
-
   return (
     <>
-      <div className="flex w-full h-auto flex-col items-center p-[15px] md:py-[30px]">
-        <div className="flex md:w-1/2 md:min-h-[50%] py-[12px] md:px-[16px] flex-col rounded-md md:shadow-[12px_12px_30px_0_rgba(255,255,255,0.3)] md:shadow-[-12px_-12px_30px_0_rgba(255,255,255,0.4)]">
+      <div className="flex w-full md:min-h-lvh flex-col items-center p-[15px] pt-[45px] md:py-[30px]">
+        <div className="flex md:w-1/2 md:min-h-[50%] py-[20px] md:px-[16px] flex-col rounded-md md:shadow-[12px_12px_30px_0_rgba(255,255,255,0.3)] md:shadow-[-12px_-12px_30px_0_rgba(255,255,255,0.4)]">
           <div className="flex flex-col gap-[22px]">
             <div className="font-semibold text-[20px]">NOTIFICATIONS</div>
             <div className="flex flex-col">
@@ -86,7 +82,7 @@ export default function Notifications() {
                               : `${IMG_SERVER}/${v.profile_pic_url}`
                           }
                           postSrc={v.post_image_url ? `${SN_COMMUNITY}/${v.post_image_url}` : null}
-                          text={`commented: ${v.message}`}
+                          text={`commented: ${v.message.length > 85 ? v.message.slice(0, 85) + '...' : v.message}`}
                           hour={calculateTime(v.created_at)}
                           notificationLink={`/community/main-post?postId=${v.resource_id}`}
                           userLink={`/community/main-page?psUserId=${v.sender_id}`}
@@ -106,8 +102,11 @@ export default function Notifications() {
                               ? v.profile_pic_url
                               : `${IMG_SERVER}/${v.profile_pic_url}`
                           }
-                          text={'Left a comment on your post!'}
+                          postSrc={v.post_image_url ? `${SN_COMMUNITY}/${v.post_image_url}` : null}
+                          text={`commented: ${v.message}`}
                           hour={calculateTime(v.created_at)}
+                          notificationLink={`/community/main-post?postId=${v.resource_id}`}
+                          userLink={`/community/main-page?psUserId=${v.sender_id}`}
                         />
                       ))}
                     </>
@@ -124,8 +123,11 @@ export default function Notifications() {
                               ? v.profile_pic_url
                               : `${IMG_SERVER}/${v.profile_pic_url}`
                           }
-                          text={'Left a comment on your post!'}
+                          postSrc={v.post_image_url ? `${SN_COMMUNITY}/${v.post_image_url}` : null}
+                          text={`commented: ${v.message}`}
                           hour={calculateTime(v.created_at)}
+                          notificationLink={`/community/main-post?postId=${v.resource_id}`}
+                          userLink={`/community/main-page?psUserId=${v.sender_id}`}
                         />
                       ))}
                     </>

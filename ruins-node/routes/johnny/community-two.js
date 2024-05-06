@@ -228,7 +228,7 @@ router.get("/selectedcm/:commentId", async (req, res) => {
 });
 
 // add notification
-const addNotification = async (id, message, resourceId) => {
+const addNotification = async (id, message, resourceId, insertId) => {
   console.log(id);
   try {
     const sql = `SELECT mb_user.* 
@@ -244,18 +244,19 @@ const addNotification = async (id, message, resourceId) => {
       created_at, 
       isRead, 
       sender_id, 
-      resource_id) 
-      VALUES (?, ?, ?, NOW(), ?, ?, ?)`;
+      resource_id,
+      comment_id) 
+      VALUES (?, ?, ?, NOW(), ?, ?, ?, ?)`;
     const [result] = await db.query(addSql, [
       rows[0].id,
       "comment",
       message,
-      false,
+      false, 
       id,
       resourceId,
+      insertId
     ]);
-    // const subscription = await getPushSubscription(rows[0].id);
-    // await sendPushNotification(rows[0].id, subscription);
+    console.log(result);
     return true;
   } catch (error) {
     console.log("Failed to insert comment notification:", error);
@@ -276,11 +277,7 @@ router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
   let result = {};
   try {
     // console.log("this is photo:", req.file);
-    output.notification = await addNotification(
-      req.body.userId,
-      req.body.content,
-      req.body.postId
-    );
+    
     if (!req.body.userId) {
       output.success = false;
       output.errors = "no user id";
@@ -295,6 +292,12 @@ router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
         req.body.postId,
         req.body.userId,
       ]);
+      output.notification = await addNotification(
+        req.body.userId,
+        req.body.content,
+        req.body.postId,
+        result.insertId
+      );
       output.success = true;
     }
 
@@ -313,6 +316,12 @@ router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
         req.body.postId,
         req.body.user_id,
       ]);
+      output.notification = await addNotification(
+        req.body.userId,
+        req.body.content,
+        req.body.postId,
+        result.insertId
+      );
 
       output.success = true;
     }
