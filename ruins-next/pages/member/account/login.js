@@ -95,11 +95,7 @@ export default function Login() {
     if (passedVal) {
       login(myForm.account, myForm.password).then((result) => {
         if (result) {
-          if(from === 'reset-password'){
-            router.push('/')
-          } else {
-            router.back()
-          } 
+          console.log("Login successful");
         } else {
           console.log('failed')
           setLoginFailed(true)
