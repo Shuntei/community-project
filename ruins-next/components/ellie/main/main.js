@@ -7,6 +7,7 @@ import Entrance from '../three/Entrance'
 import Image from 'next/image'
 import { useAuth } from '@/contexts/auth-context'
 import { useRouter } from 'next/router'
+import Alert from '../popup/alert';
 
 export default function Main() {
   const router = useRouter()
@@ -83,9 +84,9 @@ export default function Main() {
             )}
           </div>
         </div>
-
         <Mission />
         <Dropdown />
+        {/* <Alert /> */}
       </div>
       <style jsx>{`
         .flash-animation {

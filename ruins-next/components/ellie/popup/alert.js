@@ -1,0 +1,42 @@
+import React,{useState} from 'react'
+import {
+  RiCloseLine,
+} from '@remixicon/react'
+
+
+export default function Alert({onClose,toggleAlert}) {
+  const [isChanged, setIsChanged ] = useState(false)
+
+  // const [showAlert, setShowAlert] = useState(false)
+
+  // const toggleAlert = () => {
+  //   setShowAlert(!showAlert)
+  // }
+  return (
+    <>
+        <div
+            className="w-[700px]  px-8 py-3 flex-col right-1/4 top-1/4 absolute"
+            style={{ backgroundColor: "#D9D9D9" }}
+          >
+            <div className="flex justify-between items-baseline">
+              <div className="text-[20px]">ALERT ALERT ALERT</div>
+              <div className="flex items-center">
+                <RiCloseLine size={"50px"} onClick={toggleAlert}/>
+              </div>
+            </div>
+            <div className="text-[14px] flex justify-center  w-[640px] my-12">
+              確定刪除這則MEMO?
+            </div>
+            <div className="flex justify-center w-[640px]">
+              <button 
+              className="text-[15px] border border-white w-[216px] h-[47px] bg-black text-white mb-4"
+              onClick={onClose}
+              >
+                Confirm
+              </button>
+          </div>
+        </div>
+       
+    </>
+  )
+}

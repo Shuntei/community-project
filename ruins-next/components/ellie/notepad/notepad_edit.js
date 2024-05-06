@@ -3,8 +3,18 @@ import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/auth-context';
+import Alert from '../popup/alert';
 
-export default function EditNotes({ onClose ,note1 }) {
+export default function EditNotes({ onClose ,note1, isChanged ,setIsChanged, toggleEditNotes }) {
+
+  const [showAlert, setShowAlert] = useState(false)
+
+  const toggleAlert = () => {
+    setShowAlert(!showAlert)
+  }
+
+  
+
   const router = useRouter()
   // const { auth } = useAuth()
   // const mbID = auth.id
@@ -55,19 +65,46 @@ export default function EditNotes({ onClose ,note1 }) {
       },
     });
     const result = await r.json();
-    console.log({ r });
+    console.log({ result });
     if(result.success){
       // 
       // router.push(`/game`);
+      setIsChanged(!isChanged)
       alert("資料修改成功")
+      onClose()
     } else {
       // 
       alert("資料修改發生錯誤")
     }
   };
+
+  // ++++++++++++++++++++
+  const deleteForm = async () => {
+    try {
+        const res = await fetch('http://localhost:3001/game/ruins_final/delete_form', {
+            method: "DELETE",
+            body: JSON.stringify({ note_id: form.note_id }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+        const result = await res.json();
+        if (result.success) {
+            // alert("删除成功");
+            setIsChanged(!isChanged)
+            setShowAlert(true);
+            // onClose()
+        } else {
+            alert("删除失败");
+        }
+    } catch (error) {
+        console.error("Error deleting form", error);
+        alert("删除發生錯誤");
+    }
+};
   return (
     <>
-    {console.log(note1)}
+    {/* {console.log(note1)} */}
   <div className="container notepad absolute left-1/4 top-1/6">
     <div className="notepad">
       <div className="notepad-bar">
@@ -113,19 +150,11 @@ export default function EditNotes({ onClose ,note1 }) {
       <div className="blackLine">
           <form className="barPadding" onSubmit={submitHandler}>
             <input hidden name='note_id' value={note1.note_id}/>
-            {/* <input
-            type="hidden"
-            name="user_id"
-            value={mbID}
-            /> */}
             <input 
             className="title" 
             onChange={changeHandler} 
             name={'title'} 
-            value={form.title} 
-            // value={note1.title}
-            // defaultValue="Title Here :)"
-            // placeholder={note1.title} 
+            value={form.title}  
             />
 
             <div className="notepad-settings">
@@ -154,14 +183,12 @@ export default function EditNotes({ onClose ,note1 }) {
             <div className="notepad-content">
               <textarea onChange={changeHandler} name='memo'
                value={form.memo} 
-              // value={note1.memo}
-              // placeholder=
               rows={15}
               cols={65}
               />
               
               <div className="mainEnd">
-                <div className="relative">
+                <div className="relative" onClick={deleteForm}>
                     <div className="trashbin">
                       <RiDeleteBin6Fill/>
                     </div>
@@ -178,7 +205,9 @@ export default function EditNotes({ onClose ,note1 }) {
     </div>
     </div> {/*<!-- notepad -->*/}
   </div> {/* container -->*/}
-
+  {/* 彈出的 Alert 視窗 */}
+  {showAlert && <Alert toggleAlert={toggleAlert}/>}
+  {/* toggleAlert showAlert, setShowAlert */}
       <style global jsx>{`
 * {
 	box-sizing: border-box;

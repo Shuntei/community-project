@@ -3,8 +3,17 @@ import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/auth-context';
+import Alert from '../popup/alert';
 
-export default function Notepad({ onClose }) {
+export default function Notepad({ onClose, isChanged, setIsChanged }) {
+
+
+  const [showAlert, setShowAlert] = useState(false)
+
+  const toggleAlert = () => {
+    setShowAlert(!showAlert)
+  }
+
  const router=useRouter()
  const { auth } = useAuth()
   const mbID = auth.id
@@ -65,14 +74,18 @@ export default function Notepad({ onClose }) {
     const result = await r.json();
     console.log({ r });
     if(result.success){
-      // 
-      // router.push(`/game`);
-      alert("資料新增成功")
+
+      // <Alert onClose={toggleAlert}/>
+      setIsChanged(!isChanged)
+      onClose()
     } else {
       // 
       alert("資料新增發生錯誤")
     }
   };
+
+  
+
   return (
     <>
   <div className="container notepad absolute left-1/4 top-1/6">
@@ -165,11 +178,11 @@ export default function Notepad({ onClose }) {
               /> 
               
               <div className="mainEnd">
-                <div className="relative">
+                {/* <div className="relative">
                     <div className="trashbin">
                       <RiDeleteBin6Fill/>
                     </div>
-                </div>
+                </div> */}
                 <div className="relative">
                     <div className="saveOut">
                       <button className="saveInside" type='submit'>SAVE</button>

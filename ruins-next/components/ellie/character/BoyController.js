@@ -6,6 +6,13 @@ import { useKeyboardControls } from '@react-three/drei'
 import * as THREE from 'three'
 import { useSpring, animated } from "@react-spring/web";
 import { useGame } from '../three/store/useGame';
+
+const JUMP_FORCE = 0.7;
+const MOVEMENT_SPEED = 0.1;
+const MAX_VEL = 5;
+
+
+
   
 
 export default function BoyController(props) {
@@ -22,38 +29,40 @@ export default function BoyController(props) {
 )
 
   const boyRef = useRef()
+  const isOnFloor = useRef(true);
   const [subscribeKeys, getKeys] = useKeyboardControls()
 
-  const jumpHandler = useCallback(() => {
-    const rapierWorld = world
+//   const jumpHandler = useCallback(() => {
+//     const rapierWorld = world
 
-    const boyPosition = boyRef.current.translation()
-    const groundDirection = { x: 0, y: -1, z: 0 }
-    const ray = new rapier.Ray(boyPosition, groundDirection)
-    const hit = rapierWorld.castRay(ray)
-    const isBoyOnGround = hit?.toi < 1
+//     const boyPosition = boyRef.current.translation()
+//     const groundDirection = { x: 0, y: -1, z: 0 }
+//     const ray = new rapier.Ray(boyPosition, groundDirection)
+//     const hit = rapierWorld.castRay(ray)
+//     const isBoyOnGround = hit?.toi < 1
 
-    if (isBoyOnGround) {
-        boyRef.current.applyImpulse({ x: 0, y: 15, z: 0 })
-    }
-}, [boyRef, rapier, world])
+//     if (isBoyOnGround) {
+//         boyRef.current.applyImpulse({ x: 0, y: 15, z: 0 })
+//     }
+// }, [boyRef, rapier, world])
+
 
 
   const resetHandler = useCallback(() => {
-    boyRef.current.setTranslation({ x: 0, y: 4, z: 0 })
+    boyRef.current.setTranslation({ x: 0, y: -4, z: 0 })
     boyRef.current.setLinvel({ x: 0, y: 0, z: 0 })
     boyRef.current.setAngvel({ x: 0, y: 0, z: 0 })
 }, [boyRef])
 
 
-useEffect(() => {
-  return subscribeKeys(
-      ({ jump }) => ({ jump }),
-      ({ jump }) => {
-          if (jump) jumpHandler()
-      }
-  )
-}, [subscribeKeys, jumpHandler])
+// useEffect(() => {
+//   return subscribeKeys(
+//       ({ jump }) => ({ jump }),
+//       ({ jump }) => {
+//           if (jump) jumpHandler()
+//       }
+//   )
+// }, [subscribeKeys, jumpHandler])
 
 useEffect(() => {
   return useGame.subscribe(
@@ -65,38 +74,56 @@ useEffect(() => {
 }, [resetHandler])
 
 
+
 useFrame((_, delta) => {
-    const { forward, backward, left, right } = getKeys()
+    const { jump, forward, backward, left, right } = getKeys()
 
     // if (gamePhase === 'ready' && (forward || backward || left || right)) startGame()
 
     const impulse = { x: 0, y: 0, z: 0 }
     const torque = { x: 0, y: 0, z: 0 }
 
-    const impulseStrength = 50 * delta
+    const impulseStrength = 20 * delta
     const torqueStrength = 1 * delta
 
-    if (forward) {
+    if (jump && isOnFloor.current){
+      impulse.y += JUMP_FORCE;
+      isOnFloor.current = false;
+    }
+
+    // const linvel = boyRef.current.linvel();
+    const linvel = boyRef.current ? boyRef.current.linvel() : { x: 0, y: 0, z: 0 };
+    let changeRotation = false;
+
+    if (forward && linvel.z > -MAX_VEL) {
         impulse.z -= impulseStrength
         torque.x -= torqueStrength
+        changeRotation = true;
     }
-    if (backward) {
+    if (backward && linvel.z < MAX_VEL) {
         impulse.z += impulseStrength
         torque.x += torqueStrength
+        changeRotation = true;
     }
-    if (left) {
+    if (left  && linvel.x > -MAX_VEL) {
         impulse.x -= impulseStrength
         torque.z -= torqueStrength
+        changeRotation = true;
     }
-    if (right) {
+    if (right && linvel.x < MAX_VEL) {
         impulse.x += impulseStrength
         torque.z += torqueStrength
+        changeRotation = true;
     }
 
     if (boyRef.current) {
         boyRef.current.applyImpulse(impulse)
         boyRef.current.applyTorqueImpulse(torque)
       }
+      if (changeRotation && boyRef.current) {
+        const angle = Math.atan2(linvel.x, linvel.z);
+        character.current.rotation.y = angle;
+    }
 })
 
 useFrame(({ camera }, delta) => {
@@ -122,6 +149,7 @@ useFrame(({ camera }, delta) => {
   }
 })
 
+const character = useRef();
   return (
     <group 
     position={[0, 3, -2]} 
@@ -140,9 +168,14 @@ useFrame(({ camera }, delta) => {
       colliders={false} 
       scale={[0.5,0.5,0.5]}
       enabledRotations={[false,false,false]}
+      onCollisionEnter={() => {
+        isOnFloor.current = true;
+      }}
       >
         <CapsuleCollider args={[0.8, 0.4]} position={[0, 1.2, 0]}/>
-        <Boy/>
+        <group ref={character}>
+          <Boy/>
+        </group>
       </RigidBody>
     </group>
   );
