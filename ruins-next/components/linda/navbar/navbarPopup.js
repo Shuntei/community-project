@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
 import styles from './navbarPopup.module.css'
 import { useAuth } from '@/contexts/auth-context'
 import Swal from 'sweetalert2'
@@ -27,7 +27,7 @@ export default function NavbarPopup() {
 
   return (
     <nav
-      className={`fixed z-[999] top-0 left-0 bg-black w-full flex-col items-center py-9`}
+      className={` navbarPopup fixed z-[999] top-0 left-0 bg-black w-full flex-col items-center py-9`}
     >
       <div className={styles['nav']}>
         <div id="headerReplace" className={styles['headerReplace']}></div>
@@ -53,10 +53,6 @@ export default function NavbarPopup() {
               </a> 用a會有順序問題導致跳回來*/}
               <p
                 className="cursor-pointer"
-                // href={{
-                //   pathname: '/community/main-personal',
-                //   query: { psUserId: auth.id },
-                // }}
                 onClick={() => {
                   if (!auth.id) {
                     notify()

@@ -1,25 +1,25 @@
-import { useKeyboardControls } from '@react-three/drei'
-import { useEffect } from 'react'
-// import { useAudio } from './stores/useAudio'
-import { useGame } from './stores/useGame'
+// import { useKeyboardControls } from '@react-three/drei'
+// import { useEffect } from 'react'
+// // import { useAudio } from './stores/useAudio'
+// import { useGame } from './stores/useGame'
 
-function Shortcut() {
-    const [subscribeKeys, getKeys] = useKeyboardControls()
+// function Shortcut() {
+//     const [subscribeKeys, getKeys] = useKeyboardControls()
 
-    const restartGame = useGame((state) => state.restart)
-    // const toggleAudio = useAudio((state) => state.toggleAudio)
+//     const restartGame = useGame((state) => state.restart)
+//     // const toggleAudio = useAudio((state) => state.toggleAudio)
 
-    useEffect(() => {
-        return subscribeKeys(
-            ({ reset }) => ({ reset}),
-            ({ reset}) => {
-                if (reset) restartGame()
-                // if (audio) toggleAudio()
-            }
-        )
-    }, [subscribeKeys, restartGame
-      // , toggleAudio
-    ])
-}
+//     useEffect(() => {
+//         return subscribeKeys(
+//             ({ reset }) => ({ reset}),
+//             ({ reset}) => {
+//                 if (reset) restartGame()
+//                 // if (audio) toggleAudio()
+//             }
+//         )
+//     }, [subscribeKeys, restartGame
+//       // , toggleAudio
+//     ])
+// }
 
-export { Shortcut }
+// export { Shortcut }

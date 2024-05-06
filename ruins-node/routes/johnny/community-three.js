@@ -25,7 +25,6 @@ router.get("/userinfoByPostId", async (req, res) => {
   WHERE sn_posts.post_id=?
 `;
   const [userInfo] = await db.query(userInfoSql, [postId]);
-  console.log("userInfo", userInfo);
 
   res.json(userInfo);
 });
@@ -34,7 +33,7 @@ router.get("/userinfo", async (req, res) => {
   // const sql = `SELECT * FROM mb_user WHERE 1`;
   const keyword = req.query.followsKeyword;
 
-  // console.log("keyword", keyword);
+  console.log("keyword", keyword);
 
   let where = ` WHERE 1 `;
   if (keyword) {
@@ -42,8 +41,9 @@ router.get("/userinfo", async (req, res) => {
     where += ` AND username LIKE ${keywordEsc} `;
   }
 
-  const userInfoSql = `
-  SELECT mb_user.*, sn_friends.* FROM mb_user LEFT JOIN sn_friends ON mb_user.id = sn_friends.friend_id ${where} ORDER BY id DESC `;
+  const userInfoSql =
+    // `SELECT mb_user.*, sn_friends.* FROM mb_user LEFT JOIN sn_friends ON mb_user.id = sn_friends.friend_id ${where} ORDER BY id DESC `;
+    `SELECT mb_user.* FROM mb_user ${where} ORDER BY id DESC `;
   const [userInfo] = await db.query(userInfoSql);
   // console.log(userInfo);
 
@@ -73,7 +73,7 @@ router.get("/showfollows", async (req, res) => {
   // 追蹤你的
   const relation2 = `SELECT mb_user.*, sn_friends.*
                     FROM mb_user
-                    LEFT JOIN sn_friends ON mb_user.id = sn_friends.friend_id
+                    LEFT JOIN sn_friends ON mb_user.id = sn_friends.user_id
                     WHERE sn_friends.friend_id = ${psUserId} ${AND} ;`;
   const [result2] = await db.query(relation2);
   // console.log(result);

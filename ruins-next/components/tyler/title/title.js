@@ -5,8 +5,7 @@ import { useEffect, useState } from 'react';
 import styles from './title.module.css';
 
 export default function Title() {
-
-  const { streamTitle, streamDesciption, setStreamTitle } = useStreamInfo()
+  const { streamTitle, streamDesciption, setStreamTitle, setStreamDesciption } = useStreamInfo()
   const [showDetail, setShowDetail] = useState(false);
 
   const handleShowDetail = () => {
@@ -14,12 +13,10 @@ export default function Title() {
   }
 
   useEffect(() => {
-    socket.on('syncTitle', (title) => {
+    socket.on('setTitle', (title, description) => {
       setStreamTitle(title)
-
-      console.log({ title, description });
+      setStreamDesciption(description)
     })
-
   }, [])
 
   return (

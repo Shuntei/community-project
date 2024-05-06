@@ -50,11 +50,20 @@ export default function Preference() {
     const r = await fetch(`${MB_GET_PREFERENCES}/${auth.id}`)
     const result = await r.json()
     const data = result.data
-    setLive(data.live)
-    setProduct(data.product)
-    setTrip(data.trip)
-    setGame(data.game)
-    setAll(data.all)
+    console.log(result);
+    if(data){
+      setLive(data.live)
+      setProduct(data.product)
+      setTrip(data.trip)
+      setGame(data.game)
+      setAll(data.all)
+    } else {
+      setLive(true)
+      setProduct(true)
+      setTrip(true)
+      setGame(true)
+      setAll(false)
+    }
   }
 
   useEffect(()=>{
@@ -73,7 +82,7 @@ export default function Preference() {
 
   return (
     <>
-      <div className="flex w-full flex-col pt-[80px] items-center justify-center">
+      <div className="flex w-full flex-col md:pt-[80px] pt-[40px] items-center justify-center">
         <div className="md:py-[33px] md:px-[60px] px-[16px] w-full md:w-auto rounded-xl p-0 flex flex-col items-center md:justify-center md:bg-[#57575747] md:border-2 md:border-white md:shadow-[12px_12px_30px_0_rgba(255,255,255,0.3)] md:shadow-[-12px_-12px_30px_0_rgba(255,255,255,0.4)]">
           <div className="flex pb-[17px] flex-col md:justify-center items-center gap-[20px]">
             <div className="text-[36px] font-semibold pb-[10px] w-full md:w-auto">

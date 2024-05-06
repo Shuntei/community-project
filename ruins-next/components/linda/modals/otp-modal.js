@@ -122,10 +122,12 @@ export default function OTPModal({setShowOTPModal, isVisible, onClose, newEmail,
         if(result.code === 1){
           setNotificationText('Email updated successfully')
           setShowGreenNotification(true)
+          setShowRedNotification(false)
           setProcessCompleted(true)
         } else if (result.code === 2){
           setNotificationText('Password updated successfully')
           setShowGreenNotification(true)
+          setShowRedNotification(false)
           setProcessCompleted(true)
         }
       }
@@ -140,7 +142,7 @@ export default function OTPModal({setShowOTPModal, isVisible, onClose, newEmail,
         await logout()
         setShowOTPModal(false)
         router.push('/member/account/login')
-      }, 5000);
+      }, 3000);
     }
   }, [processCompleted])
 

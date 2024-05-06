@@ -96,4 +96,22 @@ router.get('/getStreamerName', async (req, res) => {
   res.json(rows)
 })
 
+// 紀錄直播房狀況
+router.post('/check-avail', async (req, res) => {
+
+  const { avail } = req.body
+
+  let sql = 'INSERT INTO tyler_check_available (room_available, time) VALUES (?, CURRENT_TIMESTAMP())'
+  let [rows] = await db.query(sql, [avail])
+  res.json(rows)
+})
+
+// 取得直播房狀況
+
+router.get('/get-avail', async (req, res) => {
+  const sql = `SELECT * FROM tyler_check_available ORDER BY time DESC LIMIT 1`
+  let [rows] = await db.query(sql)
+  res.json(rows)
+})
+
 export default router

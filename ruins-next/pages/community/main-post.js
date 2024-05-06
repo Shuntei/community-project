@@ -23,17 +23,21 @@ import {
 import { SN_POSTS } from '@/components/config/johnny-api-path'
 import dayjs from 'dayjs'
 import emotionHandler from '@/components/johnny/utils/emotionHandler'
+import tagsHandler from '@/components/johnny/utils/tagsHandler'
 import { IMG_SERVER } from '@/components/config/api-path'
+import Link from 'next/link'
+import { useAuth } from '@/contexts/auth-context'
 
 export default function MainPost() {
   const [renderAfterCm, setRenderAfterCm] = useState(false)
   const router = useRouter()
   const { commentModal, setCommentModal } = useToggles()
-  const { getPost, setGetPost, handlePostId } = useBoards()
+  const { getPost, setGetPost } = useBoards()
   const [afterTimerReset, setAfterTimerReset] = useState(false)
   const [timerRun, setTimerRun] = useState(false)
   const [proFilePic, setProfilePic] = useState('')
   const [authUsername, setAuthUsername] = useState('')
+  const { auth } = useAuth()
 
   const handleBack = () => {
     setTimerRun(false) //未達秒數退出時解除更新
@@ -52,6 +56,7 @@ export default function MainPost() {
     const r = await fetch(`${SN_POSTS}?postId=${postId}`)
     const result = await r.json()
     setGetPost(result)
+    console.log(result)
   }
 
   const isPostAuth = async (postId) => {
@@ -122,25 +127,39 @@ export default function MainPost() {
               </div>
             </div>
             {/* <div className="flex my-2 gap-2 items-center size-[35px] overflow-hidden rounded-[100%]"> */}
-            <div className="flex items-center gap-2 my-2 text-white">
-              <Image
-                className="rounded-[100%] size-[35px]"
-                src={
-                  proFilePic
-                  // auth.profileUrl
-                  //   ? auth.googlePhoto
-                  //     ? auth.profileUrl
-                  //     : `${IMG_SERVER}/${auth.profileUrl}`
-                  //   : ''
-                }
-                width={35}
-                height={35}
-                layout="full"
-                objectFit="cover"
-                alt=""
-              />
-              {authUsername ? authUsername : '匿名者'}
-            </div>
+            <Link
+              href={
+                getPost[0].user_id === auth.id
+                  ? {
+                      pathname: '/community/main-personal',
+                      query: { psUserId: auth.id },
+                    }
+                  : {
+                      pathname: '/community/main-page',
+                      query: { psUserId: getPost[0].user_id },
+                    }
+              }
+            >
+              <div className="flex items-center gap-2 my-2 text-white">
+                <img
+                  className="rounded-[100%] size-[35px]"
+                  src={
+                    proFilePic
+                    // auth.profileUrl
+                    //   ? auth.googlePhoto
+                    //     ? auth.profileUrl
+                    //     : `${IMG_SERVER}/${auth.profileUrl}`
+                    //   : ''
+                  }
+                  width={35}
+                  height={35}
+                  layout="full"
+                  objectFit="cover"
+                  alt=""
+                />
+                {authUsername ? authUsername : '匿名者'}
+              </div>{' '}
+            </Link>
             {/* <!-- 文章 --> */}
             <div className="flex mb-2 pc:my-5 gap-5 text-gray-400">
               {/* <div className="flex">
@@ -148,10 +167,10 @@ export default function MainPost() {
                 <span className="hidden pc:inline-block">待老坑山</span>
               </div> */}
               <div className="flex">
-                <RiPriceTag3Fill className="mr-2" />
-                <span className="hidden pc:inline-block">
-                  @小名@陳威宇@Tina
-                </span>
+                {/* <RiPriceTag3Fill className="mr-2" />
+                <span className="hidden pc:inline-block"> */}
+                {tagsHandler(getPost[0].tags)}
+                {/* </span> */}
               </div>
               <div className="flex">
                 {/* <RiEmotionLaughFill className="mr-2" />
@@ -164,10 +183,8 @@ export default function MainPost() {
             {/* <!-- 圖片 --> */}
             <div className="mb-2">
               {getPost[0].image_url && (
-                <Image
+                <img
                   src={`${SN_COMMUNITY}/${getPost[0].image_url}`}
-                  width={0}
-                  height={0}
                   // sizes="100vw"
                   style={{
                     width: '100%',

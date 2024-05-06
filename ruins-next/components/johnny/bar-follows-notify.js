@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { RiSearchLine } from '@remixicon/react'
+import { RiSearchLine, RiCloseLine } from '@remixicon/react'
 import Image from 'next/image'
 import profileImg from './img/16.jpg'
 import { useToggles } from '@/contexts/use-toggles'
@@ -21,6 +21,7 @@ export default function FollowsBar() {
       .then((r) => r.json())
       .then((result) => {
         setUserinfo(result)
+        console.log(result)
       })
   }
 
@@ -34,7 +35,7 @@ export default function FollowsBar() {
   const queryString = new URLSearchParams(query).toString()
 
   const submitHandler = (e) => {
-    e.preventDefault()
+    // e.preventDefault()
     // router.push({ pathname: '/community/main-page', query: queryString })
     // 這行寫了在personal會有問題,因為跳回main-page
 
@@ -42,12 +43,20 @@ export default function FollowsBar() {
       .then((r) => r.json())
       .then((result) => {
         setUserinfo(result)
+        console.log(result)
+      })
+      .catch((err) => {
+        console.error('Error fetching user info:', err)
       })
   }
 
   useEffect(() => {
     fetchAllFollows()
   }, [])
+
+  useEffect(() => {
+    submitHandler()
+  }, [keyword])
 
   return (
     <span ref={ref}>
@@ -58,21 +67,31 @@ export default function FollowsBar() {
           <div className="border-b-2 mb-2 w-[200px]"></div>
           <div className="flex py-1">
             <input
-              className="flex p-[6px] items-center outline-none h-[32px] w-[160px] rounded-l-lg pl-5"
-              onChange={(e) => setKeyword(e.target.value)}
+              className="flex p-[6px] items-center outline-none h-[32px] w-[160px] rounded-l-lg pl-5 my-3 "
+              onChange={(e) => {
+                setKeyword(e.target.value)
+                // submitHandler()
+              }}
               value={keyword}
             />
-            <button
-              onClick={submitHandler}
-              className="iconBg px-2 bg-white flex items-center h-[32px] p-[6px] rounded-r-lg"
+            <span
+              // onClick={submitHandler}
+              className="iconBg px-2 bg-white flex items-center h-[32px] p-[6px] rounded-r-lg my-3"
             >
-              <RiSearchLine />
-            </button>
+              {keyword ? (
+                <RiCloseLine
+                  className="cursor-pointer"
+                  onClick={() => setKeyword('')}
+                />
+              ) : (
+                <RiSearchLine />
+              )}
+            </span>
           </div>
-          <ul className="h-[300px] overflow-auto hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
+          <ul className="h-[400px] overflow-auto hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
             {userInfo &&
               userInfo
-                .filter((v) => v.id !== auth.id)
+                ?.filter((v) => v.id !== auth.id)
                 .map((v, i) => {
                   return (
                     <li
@@ -106,12 +125,14 @@ export default function FollowsBar() {
                         }
                         alt=""
                       />
-                      {v.username}
+                      {v.username.length > 15
+                        ? `${v.username.substring(0, 15)}...`
+                        : v.username}
                     </li>
                   )
                 })}
           </ul>
-          <div
+          {/* <div
             className="text-white flex justify-end mr-5 text-[14px] font-semibold  hover:cursor-pointer "
             onClick={() => {
               setToggles({
@@ -122,69 +143,8 @@ export default function FollowsBar() {
             }}
           >
             MORE...
-          </div>
+          </div> */}
         </div>
-
-        {/* <div className="notification rounded-xl w-[240px]">
-          <div className="text-white px-6 py-1 text-[20px] ">NOTIFICATION</div>
-          <div className="border-b-2 mx-6 mb-2 w-[200px]"></div>
-          <ul className="overflow-auto h-[180px] hover:scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-700">
-            <li className="  text-white px-6 py-1 flex items-center">
-              <div className="mr-5">
-                <Image
-                  className="w-[35px] rounded-full"
-                  src={profileImg}
-                  alt=""
-                />
-              </div>
-              <div>
-                <div className="">Hello,how are you?</div>
-                <div className="">I'm fine.</div>
-                <div className="">3 days ago</div>
-              </div>
-            </li>
-            <li className="  text-white px-6 py-1 flex items-center">
-              <div className="mr-5">
-                <Image
-                  className="w-[35px] rounded-full"
-                  src={profileImg}
-                  alt=""
-                />
-              </div>
-              <div>
-                <div className="">Hello,how are you?</div>
-                <div className="">I'm fine.</div>
-                <div className="">3 days ago</div>
-              </div>
-            </li>
-            <li className="  text-white px-6 py-1 flex items-center">
-              <div className="mr-5">
-                <Image
-                  className="w-[35px] rounded-full"
-                  src={profileImg}
-                  alt=""
-                />
-              </div>
-              <div>
-                <div className="">Hello,how are you?</div>
-                <div className="">I'm fine.</div>
-                <div className="">3 days ago</div>
-              </div>
-            </li>
-          </ul>
-          <div
-            className="text-white flex justify-end mr-5 text-[14px] font-semibold  cursor-pointer"
-            onClick={() => {
-              setToggles({
-                ...toggles,
-                notification: true,
-                follows: false,
-              })
-            }}
-          >
-            MORE...
-          </div>
-        </div> */}
       </section>
     </span>
   )

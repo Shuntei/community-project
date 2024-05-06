@@ -2,18 +2,28 @@ import React, { useState } from 'react'
 import _JSXStyle from 'styled-jsx/style'
 import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiStrikethrough,RiDeleteBin6Fill } from "@remixicon/react";
 import { useRouter } from 'next/router';
-export default function Notepad({ onClose }) {
+import { useAuth } from '@/contexts/auth-context';
+import Alert from '../popup/alert';
+
+export default function Notepad({ onClose, isChanged, setIsChanged }) {
+
+
+  const [showAlert, setShowAlert] = useState(false)
+
+  const toggleAlert = () => {
+    setShowAlert(!showAlert)
+  }
+
  const router=useRouter()
+ const { auth } = useAuth()
+  const mbID = auth.id
+
   const [form, setForm] = useState({
+    mbID:'',
     title:'', 
     memo:'',
   })
-  //呈現錯誤狀態
-  // const [errors, setErrors] = useState({
-  //   hasErrors: false, //狀態判斷有沒有錯誤
-  //   title:'', 
-  //   memo:'',
-  // })
+
   const changeHandler = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -64,14 +74,18 @@ export default function Notepad({ onClose }) {
     const result = await r.json();
     console.log({ r });
     if(result.success){
-      // 
-      // router.push(`/game`);
-      alert("資料新增成功")
+
+      // <Alert onClose={toggleAlert}/>
+      setIsChanged(!isChanged)
+      onClose()
     } else {
       // 
       alert("資料新增發生錯誤")
     }
   };
+
+  
+
   return (
     <>
   <div className="container notepad absolute left-1/4 top-1/6">
@@ -118,6 +132,11 @@ export default function Notepad({ onClose }) {
       </div> {/* notepad bar */}
       <div className="blackLine">
           <form className="barPadding" onSubmit={submitHandler}>
+            <input
+            type="hidden"
+            name="user_id"
+            value={mbID}
+            />
             <input 
             
             className="title" 
@@ -159,11 +178,11 @@ export default function Notepad({ onClose }) {
               /> 
               
               <div className="mainEnd">
-                <div className="relative">
+                {/* <div className="relative">
                     <div className="trashbin">
                       <RiDeleteBin6Fill/>
                     </div>
-                </div>
+                </div> */}
                 <div className="relative">
                     <div className="saveOut">
                       <button className="saveInside" type='submit'>SAVE</button>

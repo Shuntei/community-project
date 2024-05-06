@@ -19,9 +19,12 @@ export default function FillDoc() {
   const [isSameAsBuyer, setIsSameAsBuyer] = useState(false)
 
   // 訂購人資料
+  const [payName, setPayName] = useState('')
   const [memberName, setMemberName] = useState('')
   const [memberEmail, setMemberEmail] = useState('')
+  const [payEmail, setPayEmail] = useState('')
   const [memberMobile, setMemberMobile] = useState(0)
+  const [payMobile, setPayMobile] = useState('')
 
   // 付款方式狀態
   const paymentOptions = ['LinePay', '信用卡', '取貨付款']
@@ -38,18 +41,18 @@ export default function FillDoc() {
 
   // 收件人資料
   const [recipientName, setRecipient] = useState('')
-  const [recipientMobile, setRecipientMobile] = useState(0)
+  const [recipientMobile, setRecipientMobile] = useState('')
 
   // 合計的狀態
   const [totalAmount, setTotalAmount] = useState(0)
 
   // 用於欄位驗證
-  // const [terms, setTerms] = useState(false)
+  const [terms, setTerms] = useState(false)
   const [isFormValid, setIsFormValid] = useState(false)
 
   const router = useRouter()
   const { auth } = useContext(AuthContext)
-  const memberId = auth.id  //獲得會員資料
+  const memberId = auth.id //獲得會員資料
 
   const getMemberInfo = async () => {
     const mid = memberId
@@ -111,13 +114,17 @@ export default function FillDoc() {
     }
     setIsSameAsBuyer((prev) => !prev)
     if (!isSameAsBuyer) {
-      setRecipient(memberFromAuth.member_name)
-      setRecipientMobile(memberFromAuth.member_mobile)
+      if (!isSameAsMember) {
+        setRecipient(payName)
+        setRecipientMobile(payMobile)
+      }
+      setRecipient(memberName)
+      setRecipientMobile(memberMobile)
     } else {
       setRecipient('')
       setRecipientMobile(0)
     }
-    // console.log(recipientName)
+    console.log(recipientName)
   }
   // useShip711StoreOpener的第一個傳入參數是"伺服器7-11運送商店用Callback路由網址"
   // 指的是node(express)的對應api路由。
@@ -134,8 +141,8 @@ export default function FillDoc() {
       memberMobile !== 0 &&
       paymentMethod !== '' &&
       shippingMethod !== '' &&
-      store711.storeid !== ''
-    // terms !== false
+      storeid !== '' &&
+      terms !== false
 
     setIsFormValid(isValid)
   }, 300) // 300 毫秒是 debounce 的延遲時間，可以根據需要進行調整
@@ -143,16 +150,16 @@ export default function FillDoc() {
   // 送出訂單給後端
   const creactPo = async (e) => {
     e.preventDefault()
-    const storeidValue = store711.storeid || ''
-    const storeName = store711.storename || ''
+    // const storeidValue = store711.storeid || ''
+    // const storeName = store711.storename || ''
 
     // 總訂單資訊
     const orderData = {
       member_id: memberId,
       recipient: recipientName,
       recipient_mobile: recipientMobile,
-      store_id: storeidValue,
-      store_name:storeName,
+      store_id: storeid,
+      store_name: storename,
       shipping_method: shippingMethod,
       shipping_fee: shippingFee,
       total_amount: totalAmount,
@@ -188,11 +195,29 @@ export default function FillDoc() {
       console.log(ex)
     }
   }
+  useEffect(()=>{
+    if(shippingMethod === '宅配(運費$100)'){
+      setStoreid('000001')
+    }
+    if(shippingMethod === '7-11店到店(運費$60)'){
+      setStoreid(store711.storeid)
+      setStorename(store711.storename)
+    }
+  },[shippingMethod,storeid,storename,store711.storename,store711.storeid])
 
   useEffect(() => {
-    setStoreid('')
-    setStorename('')
-  }, [items])
+    if (!memberId) {
+      Swal.fire({
+        icon: 'warning',
+        iconColor: '#ff804a',
+        title: '請先登入會員',
+        confirmButtonText: 'OK',
+        confirmButtonColor: 'black',
+        timer: 3000,
+      })
+      router.push(`http://localhost:3000/member/account/login`)
+    }
+  }, [memberId])
 
   useEffect(() => {
     validateForm()
@@ -202,8 +227,8 @@ export default function FillDoc() {
     memberMobile,
     paymentMethod,
     shippingMethod,
-    store711.storeid,
-    // terms,
+    storeid,
+    terms,
   ])
   // 一進來先將 localstorage store711 刪除
   useEffect(() => {
@@ -221,15 +246,18 @@ export default function FillDoc() {
     } else if (!shippingMethod) {
       setShippingFee(0)
     }
-    if (coupon === '免運費') {
+    if (coupon === '免運費' || terms) {
       setShippingFee(0)
     }
     const totalAmountFinal = Math.max(totalPrice + shippingFee)
 
     setTotalAmount(totalAmountFinal)
-  }, [totalPrice, coupon, shippingMethod, shippingFee])
+  }, [totalPrice, coupon, shippingMethod, shippingFee, terms])
   return (
     <>
+      {/* {console.log(storeid)}
+      {console.log(storename)} */}
+
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28 text-black">
         {/* header開始 */}
         <Navbar navColor={''} />
@@ -279,9 +307,11 @@ export default function FillDoc() {
                       <input
                         type="text"
                         name="member_name"
-                        value={isSameAsMember ? memberFromAuth.member_name : ''}
+                        value={isSameAsMember ? memberName : payName}
                         onChange={(e) => {
-                          setMemberName(e.target.value)
+                          isSameAsMember
+                            ? setMemberName(e.target.value)
+                            : setPayName(e.target.value)
                         }}
                         className="w-full bg-zinc-100 rounded"
                       />
@@ -294,11 +324,11 @@ export default function FillDoc() {
                         type="email"
                         name="member_email"
                         id=""
-                        value={
-                          isSameAsMember ? memberFromAuth.member_email : ''
-                        }
+                        value={isSameAsMember ? memberEmail : payEmail}
                         onChange={(e) => {
-                          setMemberEmail(e.target.value)
+                          isSameAsMember
+                            ? setMemberEmail(e.target.value)
+                            : setPayEmail(e.target.value)
                         }}
                         className="w-full bg-zinc-100 rounded"
                       />
@@ -310,11 +340,11 @@ export default function FillDoc() {
                       <input
                         type="number"
                         name="member_mobile"
-                        value={
-                          isSameAsMember ? memberFromAuth.member_mobile : ''
-                        }
+                        value={isSameAsMember ? memberMobile : payMobile}
                         onChange={(e) => {
-                          setMemberMobile(e.target.value)
+                          isSameAsMember
+                            ? setMemberMobile(e.target.value)
+                            : setPayMobile(e.target.value)
                         }}
                         className="w-full bg-zinc-100 rounded"
                       />
@@ -389,6 +419,24 @@ export default function FillDoc() {
                         </div>
                       </div>
                     )}
+                    {shippingMethod === '宅配(運費$100)' && (
+                      <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono'] ">
+                        <div className="flex flex-col  space-y-5 w-full">
+                          <div className="space-y-1">
+                            <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono']">
+                              寄件地址:
+                            </div>
+                            <input
+                              className="w-full bg-zinc-100 rounded"
+                              name="address"
+                              type="text"
+                              value={storename}
+                              onChange={(e) => setStorename(e.target.value)}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     {/* 選擇711門市結束 */}
 
                     <div className="flex">
@@ -410,8 +458,16 @@ export default function FillDoc() {
                       </div>
                       <input
                         type="text"
-                        name=""
-                        value={isSameAsBuyer ? memberFromAuth.member_name : ''}
+                        name="recipientName"
+                        value={
+                          isSameAsMember
+                            ? isSameAsBuyer
+                              ? memberName
+                              : recipientName
+                            : isSameAsBuyer
+                              ? payName
+                              : recipientName
+                        }
                         onChange={(e) => {
                           setRecipient(e.target.value)
                         }}
@@ -424,9 +480,15 @@ export default function FillDoc() {
                       </div>
                       <input
                         type="number"
-                        name=""
+                        name="recipientMobile"
                         value={
-                          isSameAsBuyer ? memberFromAuth.member_mobile : ''
+                          isSameAsMember
+                            ? isSameAsBuyer
+                              ? memberMobile
+                              : recipientMobile
+                            : isSameAsBuyer
+                              ? payMobile
+                              : recipientMobile
                         }
                         onChange={(e) => {
                           setRecipientMobile(e.target.value)
@@ -564,6 +626,22 @@ export default function FillDoc() {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+            <div className=" text-neutral-500 text-[15px] font-normal font-['IBM Plex Mono'] mb-">
+              <input
+                type="checkbox"
+                name="terms"
+                id="terms"
+                value={terms}
+                onChange={(e) => {
+                  setTerms(e.target.checked)
+                }}
+              />
+              &nbsp;
+              <span>我同意網站服務條款及隱私權政策</span>
+              <div className=" text-neutral-500 text-[15px] flex justify-center font-normal font-['IBM Plex Mono'] mb-2">
+                並即刻享有全站免運費！
               </div>
             </div>
 

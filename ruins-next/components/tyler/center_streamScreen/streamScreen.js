@@ -1,4 +1,3 @@
-import { useAuth } from '@/contexts/auth-context';
 import useGift from '@/contexts/use-gift';
 import useToggle from '@/contexts/use-toggle-show';
 import { RiArrowLeftSLine, RiArrowRightSLine, RiCloseLine, RiCoinFill } from "@remixicon/react";
@@ -14,7 +13,6 @@ const StreamContent = dynamic(() => import('../stream/stream'), {
 })
 
 export default function StreamScreen({ isConnected }) {
-  const { auth } = useAuth()
   const { gList, giftRain, handleGiveGift } = useGift()
   const { onPhone, showChatroom, showSidebar, showGift, handleChatroom, handleSidebarHide } = useToggle()
 

@@ -1,26 +1,29 @@
 import {useState, useEffect} from "react";
 import styles from "./loader.module.css"
 import { useAuth } from "@/contexts/auth-context";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 
-export default function Loader({color = "white", children}) {
+export default function Loader({color = "white", children, duration}) {
   const {auth} = useAuth()
   const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter()
 
   useEffect(() => {
-    if (auth.id) {
-      setIsLoading(false);
-    } else {
+    // if (auth.id) {
+    //   setIsLoading(false);
+    // } else {
       const timer = setTimeout(() => {
         setIsLoading(false);
-        if (!auth.id) {
-          Router.push('/member/account/login');
-        }
-      }, 2000);
+        // if (!auth.id) {
+        //   if(router.pathname.includes('reset-password')){
+        //     Router.push(router.asPath);
+        //   }
+        // }
+      }, duration ? duration : 2000);
 
       return () => clearTimeout(timer);
-    }
-  }, [auth]);
+    // }
+  }, [router]);
 
   if(isLoading) {
     return (
@@ -37,8 +40,8 @@ export default function Loader({color = "white", children}) {
     );
   }
 
-  if(auth.id){
+  // if(auth.id || router.pathname.includes('reset-password')){
     return children ? children : null;
-  }
+  // }
 
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 
@@ -6,9 +6,10 @@ export default function HomeSidebar() {
   const [activeLink, setActiveLink] = useState(null)
   const router = useRouter()
 
-  const handleLinkClick = (link) => {
-    setActiveLink(link)
-  }
+  useEffect(()=>{
+    let path = (router.pathname.split('/').pop());
+    setActiveLink(path)
+  }, [router])
 
   return (
     <>
@@ -22,22 +23,16 @@ export default function HomeSidebar() {
             <div className="text-xs font-bold">GENERAL</div>
             <Link
               href="/member/account-settings/account"
-              onClick={(e) => {
-                handleLinkClick('profile')
-              }}
               className={`self-stretch pl-5 text-sm font-medium ${
-                activeLink === 'profile' ? 'bg-white text-black' : ''
+                activeLink === 'account' ? 'bg-white text-black' : ''
               }`}
             >
               Profile
             </Link>
             <Link
               href="/member/account-settings/email-and-password"
-              onClick={(e) => {
-                handleLinkClick('emailAndPassword')
-              }}
               className={`self-stretch pl-5 text-sm font-medium ${
-                activeLink === 'emailAndPassword' ? 'bg-white text-black' : ''
+                activeLink === 'email-and-password' ? 'bg-white text-black' : ''
               }`}
             >
               Email & Password
@@ -47,9 +42,6 @@ export default function HomeSidebar() {
             <div className="text-xs font-bold">SYSTEM</div>
             <Link
               href="/member/account-settings/notifications"
-              onClick={(e) => {
-                handleLinkClick('notifications')
-              }}
               className={`self-stretch pl-5 text-sm font-medium ${
                 activeLink === 'notifications' ? 'bg-white text-black' : ''
               }`}
@@ -58,9 +50,6 @@ export default function HomeSidebar() {
             </Link>
             <Link
               href="/member/account-settings/preference"
-              onClick={(e) => {
-                handleLinkClick('preference')
-              }}
               className={`self-stretch pl-5 text-sm font-medium ${
                 activeLink === 'preference' ? 'bg-white text-black' : ''
               }`}
@@ -77,11 +66,8 @@ export default function HomeSidebar() {
             <div className="text-xs font-bold">SHOP</div>
             <Link
               href="/shop/product/my-order"
-              onClick={(e) => {
-                handleLinkClick('Order History')
-              }}
               className={`self-stretch pl-5 text-sm font-medium ${
-                activeLink === 'Order History' ? 'bg-white text-black' : ''
+                activeLink === 'my-order' ? 'bg-white text-black' : ''
               }`}
             >
               Order History
@@ -94,46 +80,28 @@ export default function HomeSidebar() {
             <div className="text-xs font-bold">TOUR</div>
             <Link
               href="/member/account-settings/my-trips"
-              onClick={(e) => {
-                handleLinkClick('My Trips')
-              }}
               className={`self-stretch pl-5 text-sm font-medium ${
-                activeLink === 'My Trips' ? 'bg-white text-black' : ''
+                activeLink === 'my-trips' ? 'bg-white text-black' : ''
               }`}
             >
               My Trips
             </Link>
             <Link
               href="/member/account-settings/fav-tour-lists"
-              onClick={(e) => {
-                handleLinkClick('Favorite Tours')
-              }}
               className={`self-stretch pl-5 text-sm font-medium ${
-                activeLink === 'Favorite Tours' ? 'bg-white text-black' : ''
+                activeLink === 'fav-tour-lists' ? 'bg-white text-black' : ''
               }`}
             >
               Favorite Tours
             </Link>
             <Link
               href="/member/account-settings/my-posts"
-              onClick={(e) => {
-                handleLinkClick('My Posts')
-              }}
               className={`self-stretch pl-5 text-sm font-medium ${
-                activeLink === 'My Posts' ? 'bg-white text-black' : ''
+                activeLink === 'my-posts' ? 'bg-white text-black' : ''
               }`}
             >
               My Posts
             </Link>
-          </div>
-          <div className="self-stretch h-auto py-[11px] flex-col justify-start items-start gap-[11px] flex">
-            <div className="text-xs font-bold">SOCIAL</div>
-            <div className="self-stretch pl-5 text-sm font-medium">
-              Saved posts
-            </div>
-            <div className="self-stretch pl-5 text-sm font-medium">
-              Saved draft
-            </div>
           </div>
         </div>
       </div>

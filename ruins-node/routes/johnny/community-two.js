@@ -4,7 +4,6 @@ import db from "../../utils/mysql2-connect.js";
 import uploadImgs from "../../utils/johnny/upload-imgs.js";
 import bodyParser from "body-parser";
 
-// 這個檔案用於做comment,編輯貼文,編輯留言,按讚
 
 const router = express.Router();
 
@@ -31,12 +30,13 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
     // console.log("this is photo:", req.file);
 
     if (!req.file) {
-      const sql = `UPDATE sn_posts SET title=? , content=?, board_id=?, emotion=? WHERE post_id=${postId}`;
+      const sql = `UPDATE sn_posts SET title=? , content=?, board_id=?, emotion=?, tags=? WHERE post_id=${postId}`;
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.boardId,
         req.body.emotion,
+        req.body.tags,
       ]);
     }
     if (req.file) {
@@ -46,13 +46,14 @@ router.put("/edit/:postId?", uploadImgs.single("photo"), async (req, res) => {
       console.log("newFilePath", newFilePath);
       // http://localhost:3005/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
-      const sql = `UPDATE sn_posts SET title=?, content=?, image_url=?, board_id=?, emotion=? WHERE post_id=${postId}`;
+      const sql = `UPDATE sn_posts SET title=?, content=?, image_url=?, board_id=?, emotion=?, tags=? WHERE post_id=${postId}`;
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.image_url,
         req.body.boardId,
         req.body.emotion,
+        req.body.tags,
       ]);
     }
 
@@ -193,8 +194,11 @@ router.get("/comment/:postId?", async (req, res) => {
   let postId = +req.params.postId;
 
   if (postId) {
-    const sql = `SELECT sn_comments.* FROM sn_comments LEFT JOIN sn_posts USING(post_id) WHERE post_id=${postId} ORDER BY sn_comments.comment_id DESC`;
+    const sql = `SELECT sn_comments.*, mb_user.username FROM sn_comments LEFT JOIN sn_posts USING(post_id) 
+                LEFT JOIN mb_user ON sn_comments.user_id = mb_user.id
+                WHERE post_id=${postId} ORDER BY sn_comments.comment_id DESC`;
     const [result] = await db.query(sql);
+    console.log("comment content: ", result);
     if (result.length > 0) {
       output.rows = result;
       output.success = true;
@@ -225,19 +229,58 @@ router.get("/selectedcm/:commentId", async (req, res) => {
     res.json("沒有 commentId");
   }
 });
+
+// add notification
+const addNotification = async (id, message, resourceId, insertId) => {
+  console.log(id);
+  try {
+    const sql = `SELECT mb_user.* 
+    FROM sn_posts
+    JOIN mb_user ON sn_posts.user_id = mb_user.id
+    WHERE sn_posts.post_id=?`;
+    const [rows] = await db.query(sql, resourceId);
+
+    const addSql = `INSERT INTO mb_notifications 
+    (user_id, 
+      category, 
+      message, 
+      created_at, 
+      isRead, 
+      sender_id, 
+      resource_id,
+      comment_id) 
+      VALUES (?, ?, ?, NOW(), ?, ?, ?, ?)`;
+    const [result] = await db.query(addSql, [
+      rows[0].id,
+      "comment",
+      message,
+      false, 
+      id,
+      resourceId,
+      insertId
+    ]);
+    console.log(result);
+    return true;
+  } catch (error) {
+    console.log("Failed to insert comment notification:", error);
+    return false;
+  }
+};
+
 // 新增留言
 router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
   const output = {
     success: false,
     bodyData: { body: req.body },
     errors: {},
+    notification: false,
   };
   // console.log("the bodyData: ", output.bodyData);
 
   let result = {};
   try {
     // console.log("this is photo:", req.file);
-
+    
     if (!req.body.userId) {
       output.success = false;
       output.errors = "no user id";
@@ -252,6 +295,12 @@ router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
         req.body.postId,
         req.body.userId,
       ]);
+      output.notification = await addNotification(
+        req.body.userId,
+        req.body.content,
+        req.body.postId,
+        result.insertId
+      );
       output.success = true;
     }
 
@@ -270,6 +319,12 @@ router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
         req.body.postId,
         req.body.user_id,
       ]);
+      output.notification = await addNotification(
+        req.body.userId,
+        req.body.content,
+        req.body.postId,
+        result.insertId
+      );
 
       output.success = true;
     }

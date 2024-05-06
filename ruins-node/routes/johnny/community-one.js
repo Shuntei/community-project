@@ -65,7 +65,7 @@ router.get("/boards/:board_id?", async (req, res) => {
 
   let page = +req.query.bdpage || 1;
   let totalPages = 0;
-  let perPage = 2;
+  let perPage = 5;
 
   // console.log("page有拿到嗎", page);
   // console.log(board_id);
@@ -88,12 +88,13 @@ router.get("/boards/:board_id?", async (req, res) => {
   //   (page - 1) * perPage
   // }, ${perPage} `;
   // 評論數量後SQL
-  const selectedBdPosts = `SELECT p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count
+  const selectedBdPosts = `SELECT p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count, u.username
     FROM sn_public_boards AS b 
     JOIN sn_posts AS p USING(board_id) 
     LEFT JOIN 
         ( SELECT post_id, COUNT(comment_id) AS comment_count FROM sn_comments GROUP BY post_id)
         AS comment_counts ON p.post_id = comment_counts.post_id
+    LEFT JOIN mb_user u ON p.user_id = u.id
     WHERE b.board_id = ? ${and}
     ${orderByClause} 
     LIMIT ${(page - 1) * perPage}, ${perPage}`;
@@ -125,7 +126,7 @@ router.get("/posts/:post_id?", async (req, res) => {
     // console.log(page);
 
     let where = " WHERE 1 ";
-
+    
     if (keyword) {
       const keywordEsc = db.escape("%" + keyword + "%");
       console.log(keywordEsc);
@@ -163,6 +164,7 @@ router.get("/posts/:post_id?", async (req, res) => {
 
     const perPage = 10;
     const t_sql = `SELECT COUNT(1) totalRows FROM sn_posts p ${where}`;
+
     // console.log(t_sql);
     const [[{ totalRows }]] = await db.query(t_sql);
     // console.log(totalRows);
@@ -185,11 +187,14 @@ router.get("/posts/:post_id?", async (req, res) => {
     // ORDER BY post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
 
     // 加入留言統計後sql & 搜尋
-    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
+    const totalPostsSql = `SELECT p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count, u.username FROM  sn_posts p 
     LEFT JOIN ( SELECT post_id, 
     COUNT(comment_id) AS comment_count 
     FROM  sn_comments 
-    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id ${where}
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id
+    LEFT JOIN mb_user u ON p.user_id = u.id
+    LEFT JOIN sn_public_boards b ON p.board_id = b.board_id
+    ${where}
     ${orderByClause} LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
 
@@ -208,7 +213,8 @@ router.get("/posts/:post_id?", async (req, res) => {
   }
 
   // 這裡是選擇單篇文章
-  const chosenPostSql = " SELECT * FROM sn_posts WHERE post_id=? ";
+  const chosenPostSql =
+    " SELECT p.*, b.* FROM sn_posts p LEFT JOIN sn_public_boards b ON p.board_id = b.board_id WHERE post_id=? ";
   const [chosenPost] = await db.query(chosenPostSql, [postId]);
   // console.log(postId);
   // console.log("chosenPost", chosenPost);
@@ -224,7 +230,7 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
 
   let where = " WHERE 1 ";
   if (!postId) {
-    let page = +req.query.page || 1;
+    let page = +req.query.pspage || 1;
 
     // 這裡是主頁所有文章
     // console.log(page);
@@ -262,12 +268,13 @@ router.get("/personal/posts/:post_id?", async (req, res) => {
     // [totalPostsRows] = await db.query(totalPostsSql);
     console.log(where);
     // 加入留言統計後sql
-    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count FROM  sn_posts p 
+    const totalPostsSql = `SELECT  p.*, IFNULL(comment_counts.comment_count, 0) AS comment_count, u.username FROM  sn_posts p 
     LEFT JOIN ( SELECT post_id, 
     COUNT(comment_id) AS comment_count 
     FROM  sn_comments 
-    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id ${where}
-    ORDER BY  p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
+    GROUP BY post_id) AS comment_counts ON p.post_id = comment_counts.post_id
+    LEFT JOIN mb_user u ON p.user_id = u.id ${where}
+    ORDER BY p.post_id DESC LIMIT ${(page - 1) * perPage}, ${perPage}`;
     [totalPostsRows] = await db.query(totalPostsSql);
 
     const postsCount = `SELECT COUNT(1) FROM sn_posts ${where}`;
@@ -321,13 +328,14 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
     // console.log("this is photo:", req.file);
     if (!req.file) {
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `board_id`, `user_id`, `emotion`, `tags`) VALUES ( ?, ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
-        req.body.boardId,
+        req.body.boardId || null,
         req.body.userId,
         req.body.emotion,
+        req.body.tags,
       ]);
       output.success = !!result.affectedRows;
     }
@@ -339,14 +347,15 @@ router.post("/psadd", uploadImgs.single("photo"), async (req, res) => {
       // http://localhost:3001/johnny/3a5a7ce6-ca08-4484-9de8-6c22d7448540.jpg 圖片顯示位置
       req.body.image_url = newFilePath; // 圖片的路徑保存在 newFilePath 中
       const sql =
-        "INSERT INTO `sn_posts` (`title`, `content`, `image_url`, `board_id`, `user_id`, `emotion`) VALUES ( ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO `sn_posts` (`title`, `content`, `image_url`, `board_id`, `user_id`, `emotion`, `tags`) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
       [result] = await db.query(sql, [
         req.body.title,
         req.body.content,
         req.body.image_url,
-        req.body.boardId,
+        req.body.boardId || null,
         req.body.userId,
         req.body.emotion,
+        req.body.tags,
       ]);
     }
 

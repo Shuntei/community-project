@@ -13,7 +13,7 @@ export default function Views() {
     .then((r) => r.json())
     .then((data) => {
       // console.log(data[0].view_count)
-      setViewCount(data[0].view_count)
+      setViewCount(data[0]?.view_count)
     })
 
   return (

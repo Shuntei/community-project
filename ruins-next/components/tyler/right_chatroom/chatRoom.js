@@ -4,7 +4,6 @@ import usePoint from "@/contexts/use-points";
 import useToggle from "@/contexts/use-toggle-show";
 import { socket } from "@/src/socket";
 import { RiCloseFill, RiGift2Line, RiMoneyDollarCircleFill, RiPushpinFill, RiReplyFill, RiUser3Fill, RiUserFill } from "@remixicon/react";
-import Image from 'next/image';
 import { useEffect, useRef, useState } from "react";
 import styles from './chatRoom.module.css';
 
@@ -25,6 +24,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
   const handleCommentFocus = useRef()
   const SendButton = useRef()
   const [clickedIds, setClickedIds] = useState([])
+  const containerHeight = useRef(null)
 
   useEffect(() => {
 
@@ -39,6 +39,12 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
     }
   }, [])
 
+  useEffect(() => {
+    if (containerHeight.current) {
+      containerHeight.current.scrollTop = containerHeight.current.scrollHeight
+    }
+  }, [comment])
+
   let isComposing = false;
 
   const handleComposition = (e) => {
@@ -48,22 +54,6 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
       isComposing = true;
     }
   }
-
-  // const [userProfile, setUserProfile] = useState("/images/face-id.png")
-
-  // const getUserProfile = async () => {
-  //   const r = await fetch(`${API_SERVER}/user-pic/${auth.id}`, {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   })
-  //   const data = await r.json()
-  //   setUserProfile(data[0].profile_pic_url)
-  // }
-  // useEffect(() => {
-  //   getUserProfile()
-  // }, [comment])
 
   const handleCommentSubmit = (e) => {
 
@@ -76,10 +66,11 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
         if (inputComment !== "") {
           const newComment = {
             id: newId,
-            name: auth.username,
-            profile: auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
+            name: auth.id ? auth.username : "探險家",
+            profile: !auth.id ? "/images/adventure.png" : auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
             comment: inputComment,
             reply: replyTarget,
+            target: replyTargetName,
           }
 
           if (isConnected) {
@@ -100,10 +91,11 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
       if (inputComment !== "") {
         const newComment = {
           id: newId,
-          name: auth.username,
-          profile: auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
+          name: auth.id ? auth.username : "探險家",
+          profile: !auth.id ? "/images/adventure.png" : auth.googlePhoto ? auth.profileUrl : `${IMG_SERVER}/${auth.profileUrl}`,
           comment: inputComment,
           reply: replyTarget,
+          target: replyTargetName,
         }
 
         if (isConnected) {
@@ -229,7 +221,7 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
         </>}
 
         {/* 聊天內容 */}
-        <div className={styles.chat}>
+        <div className={`${styles.chat}`} ref={containerHeight}>
           {comment.map((c) => {
             return (
               <div key={c.id} className='flex flex-col items-start mb-4'>
@@ -237,14 +229,14 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
                 {c.reply && (
                   <div className={`flex text-xs ml-6 `}>
                     <RiReplyFill className="h-4" />
-                    <div className='w-[200px] break-words'>{c.name}: {c.reply}</div>
+                    <div className='w-[200px] break-words'>{c.target}: {c.reply}</div>
                   </div>)}
 
                 <div className='flex justify-between w-full text-center'>
                   <div className='flex w-6/12 gap-2 items-center justify-start'>
-                    <Image width={27} height={27} alt='大頭貼' src={c.profile}
+                    <img alt='大頭貼' src={c.profile}
                       onClick={() => handleGetPoints(c.profile, c.id)}
-                      className='bg-white rounded-full p-1' />
+                      className='bg-white rounded-full p-0.5 h-[34px] w-[34px] object-cover' />
                     <div className='shrink-0'>{c.name}</div>
                   </div>
                   {role === "isStreamer" && c.name !== "系統" &&
@@ -258,24 +250,24 @@ export default function ChatRoom({ isConnected, comment, setComment }) {
                     />}
                 </div>
 
-                <div className='w-[200px] ml-9 break-words'>{c.comment}</div>
+                <div className='w-[200px] ml-[42px] break-words'>{c.comment}</div>
 
               </div>)
           })}
         </div>
 
         {/* 釘選文字 */}
-        <div className={`flex flex-col items-start mb-2 ${pin ? "" : "hidden"}`}>
+        <div className={`flex flex-col items-start rounded bg-neutral-700 p-1.5 mb-2 ${pin ? "" : "hidden"}`}>
           <div className='flex justify-between w-full text-center'>
             <div className='flex w-6/12 gap-2 items-center justify-start'>
-              <Image width={30} height={30} alt='大頭貼' src={pinnedData.profile} className='bg-white rounded-full p-1' />
+              <img alt='大頭貼' src={pinnedData.profile} className='bg-white rounded-full p-0.5 h-[34px] w-[34px] object-cover' />
               <div className='shrink-0'>{pinnedData.name}</div>
             </div>
             {role === "isStreamer" && <div className='w-6/12 flex justify-end items-center'>
               <RiCloseFill className=' cursor-pointer h-5' onClick={handleUnpin}></RiCloseFill>
             </div>}
           </div>
-          <div className='w-[210px] ml-9 break-words'>{pinnedData.comment}</div>
+          <div className='w-[210px] ml-[42px] break-words'>{pinnedData.comment}</div>
         </div>
 
         <hr className="border-dotted mb-1" />

@@ -4,25 +4,28 @@ import { useAuth } from '@/contexts/auth-context'
 import Image from 'next/image'
 import { IMG_SERVER } from '@/components/config/api-path'
 
-export default function LogoutModal({ isVisible }) {
+export default function LogoutModal({ isVisible, navColor }) {
   const { logout, auth } = useAuth()
   if (!isVisible) return null
   return (
     <>
       {/* mobile pop up logout */}
-      <div className="md:hidden w-full absolute top-[47px] left-0 bg-black flex-col items-center">
+      <div className="logoutModal md:hidden w-full absolute top-[47px] left-0 bg-black flex-col items-center">
         <div className="flex flex-col py-[20px] gap-[10px] items-center justify-center">
           {auth.profileUrl ? (
             <Image
               width={50}
               className="rounded-full min-h-[50px] max-h-[50px] object-cover"
               height={50}
-              src={`${IMG_SERVER}/${auth.profileUrl}`}
+              src={
+                auth.googlePhoto
+                  ? auth.profileUrl
+                  : `${IMG_SERVER}/${auth.profileUrl}`
+              }
               alt=""
             />
-          ) : (
-            ''
-          )}
+          ) : ''}
+
           <div>{auth.username}</div>
         </div>
         <div className="flex-col text-xs items-center flex">
@@ -41,11 +44,12 @@ export default function LogoutModal({ isVisible }) {
             SETTINGS
           </Link>
           <button
-           onClick={()=>{
-            console.log("Clicked")
-            logout()
-           }}
-          className="text-rose-400 text-base">
+            onClick={() => {
+              console.log('Clicked')
+              logout()
+            }}
+            className="text-rose-400 text-base"
+          >
             LOGOUT
           </button>
         </div>

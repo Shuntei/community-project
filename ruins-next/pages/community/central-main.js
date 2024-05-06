@@ -1,9 +1,9 @@
 import 'tailwindcss/tailwind.css'
-import { RiSearchLine, RiListCheck, RiLoopRightLine } from '@remixicon/react'
+import { RiSearchLine, RiListCheck, RiCloseLine } from '@remixicon/react'
 import MainContent from '@/components/johnny/content-list'
 import MainContentBd from '@/components/johnny/content-list-bd'
 import SeeMoreFollows from '@/components/johnny/seemore-follows'
-import SeeMoreNotification from '@/components/johnny/seemore-notification'
+import SeeMoreNotification from '@/components/johnny/seemore-followers'
 import { useToggles } from '@/contexts/use-toggles'
 import { useEffect, useRef, useState } from 'react'
 import { SN_POSTS } from '@/components/config/johnny-api-path'
@@ -13,8 +13,16 @@ import useOutsideClick from '@/components/johnny/utils/out-side-click'
 
 export default function CentralContent() {
   const { toggles } = useToggles()
-  const { render, setRender, postsShow, setPostsLists, selectedPosts, boards } =
-    useBoards()
+  const {
+    render,
+    setRender,
+    postsShow,
+    setPostsLists,
+    selectedPosts,
+    boards,
+    isBoard,
+    setIsBoard,
+  } = useBoards()
   const [sortBy, setSortBy] = useState('time')
   const [searchTerm, setSearchTerm] = useState('')
   const [showBoards, setShowBoards] = useState(false)
@@ -52,6 +60,10 @@ export default function CentralContent() {
   }, [render])
 
   useEffect(() => {
+    queryHandler()
+  }, [searchTerm])
+
+  useEffect(() => {
     window.addEventListener('resize', () => {
       setShowBoards(false) // 這裡可以根據窗大小設置showBoards的值
     })
@@ -67,11 +79,11 @@ export default function CentralContent() {
           ) : (
             <div className="w-full  pc:flex justify-between items-center h-[100px] mt-[50px] fixed pc:w-[800px] pc:px-20 px-10 bg-neutral-300 z-[997]">
               <div className=" text-[32px] flex justify-center items-center">
-                [COMMUNITY]
+                {isBoard ? `[${isBoard}]` : '[COMMUNITY]'}
               </div>
               <div className="flex justify-center items-center py-2">
                 <div
-                  class="dropdown"
+                  className="dropdown"
                   onClick={() => setShowBoards(!showBoards)}
                   ref={ref}
                 >
@@ -85,13 +97,14 @@ export default function CentralContent() {
                     >
                       <li
                         className="py-1 cursor-pointer hover:bg-gray-200 text-center px-2"
-                        onClick={() =>
+                        onClick={() => {
+                          setIsBoard()
                           router.push({
                             pathname: '/community/main-page',
                           })
-                        }
+                        }}
                       >
-                        全部
+                        所有文章
                       </li>
                       {boards &&
                         boards.map((v, i) => {
@@ -99,7 +112,8 @@ export default function CentralContent() {
                             <li
                               className="py-1 cursor-pointer hover:bg-gray-200 text-center px-2"
                               key={i}
-                              onClick={() =>
+                              onClick={() => {
+                                setIsBoard(v.board_name)
                                 router.push({
                                   query: {
                                     ...router.query,
@@ -108,7 +122,7 @@ export default function CentralContent() {
                                     keyword: '',
                                   },
                                 })
-                              }
+                              }}
                             >
                               {v.board_name}
                             </li>
@@ -139,15 +153,21 @@ export default function CentralContent() {
                     className="flex p-[6px] items-center outline-none h-[32px] pc:w-[200px] w-full  pc:shadow1 rounded-l-lg pl-5"
                     name="searchTerm"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                      setSearchTerm(e.target.value)
+                    }}
                     placeholder="關鍵字"
                   />
-                  <button
+                  <span
                     className="px-2 bg-white flex items-center h-[32px] p-[6px] translate-x-[-5px] pc:translate-x-0  pc:shadow1 rounded-r-lg"
-                    onClick={queryHandler}
+                    // onClick={queryHandler}
                   >
-                    <RiSearchLine />
-                  </button>
+                    {searchTerm ? (
+                      <RiCloseLine onClick={() => setSearchTerm('')} />
+                    ) : (
+                      <RiSearchLine />
+                    )}
+                  </span>
                 </div>{' '}
               </div>
             </div>

@@ -6,6 +6,7 @@ import { useToggles } from '@/contexts/use-toggles'
 import { useAuth } from '@/contexts/auth-context'
 import { IMG_SERVER } from '../config/api-path'
 import {
+  SN_HANDLE_STATUS,
   SN_PSPOSTS,
   SN_SHOW_FOLLOWS,
   SN_USER_INFO,
@@ -14,15 +15,15 @@ import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'
 import relationHandler from './utils/relationHandler'
 import useOutsideClick from './utils/out-side-click'
-import SeeMoreFollows from '@/components/johnny/seemore-follows'
+// import SeeMoreFollows from '@/components/johnny/seemore-follows'
 
 export default function Profile() {
   const { toggles, setToggles } = useToggles()
-  const { render } = useBoards()
+  const { render, setRender } = useBoards()
   const { auth } = useAuth()
   const router = useRouter()
   // console.log(router)
-  console.log(auth.id)
+  // console.log(auth.id)
   const [postsTable, setPostsTable] = useState('')
   const [userInfo, setUserinfo] = useState('')
   const [showRelation, setShowRelation] = useState(false)
@@ -54,19 +55,18 @@ export default function Profile() {
         let selectedUser = result.find((v, i) => v.id == psUserId)
         // console.log(selectedUser)
         setUserinfo(selectedUser)
-        if (!selectedUser?.user_id || selectedUser?.user_id !== auth.id) {
-          // 判斷是否為user的朋友,沒有user_id或id不等於使用者就不是當登入者朋友
-          // setFollowStatus('unfollow')
-          setFollowStatus({ ...followStatus, status: 'unfollow' })
-        } else if (selectedUser?.user_id && selectedUser?.user_id === auth.id) {
-          // setFollowStatus('follow')
-          setFollowStatus({ ...followStatus, status: 'follow' })
-        }
+        // if (!selectedUser?.user_id || selectedUser?.user_id !== auth.id) {
+        //   // 判斷是否為user的朋友,沒有user_id或id不等於使用者就不是當登入者朋友
+        //   // setFollowStatus('unfollow')
+        //   setFollowStatus({ ...followStatus, status: 'unfollow' })
+        // } else if (selectedUser?.user_id && selectedUser?.user_id === auth.id) {
+        //   // setFollowStatus('follow')
+        //   setFollowStatus({ ...followStatus, status: 'follow' })
+        // }
       })
   }
 
   const fetchSnPostsTable = async () => {
-    // router.push({ pathname: '/community/main-personal', query: queryString })
     try {
       const r = await fetch(`${SN_PSPOSTS}?${queryString}`)
       const data = await r.json()
@@ -83,6 +83,18 @@ export default function Profile() {
       .then((r) => r.json())
       .then((result) => {
         console.log(result)
+
+        if (auth.id !== psUserId) {
+          const following = result.followers.find((v) => v.user_id === auth.id)
+          // console.log(result.followers)
+          // console.log(following)
+          if (following) {
+            setFollowStatus({ ...followStatus, status: 'follow' })
+          } else {
+            setFollowStatus({ ...followStatus, status: 'unfollow' })
+          }
+        }
+
         // console.log(result.follows?.length)
         // console.log(result.followers?.length)
         setFollowsCount(result.follows?.length)
@@ -93,7 +105,7 @@ export default function Profile() {
   const statusQuery = new URLSearchParams(followStatus).toString()
   console.log(statusQuery)
   const relationChange = () => {
-    fetch(`http://localhost:3001/community/followedstatus?${statusQuery}`)
+    fetch(`${SN_HANDLE_STATUS}?${statusQuery}`)
       .then((r) => r.json())
       .then((result) => console.log(result))
     // console.log(`http://localhost:3001/community/followedstatus?${statusQuery}`)
@@ -105,7 +117,7 @@ export default function Profile() {
     if (psUserId) {
       fetchAllFollows()
     }
-  }, [render, psUserId, queryString])
+  }, [render, psUserId, queryString, statusQuery])
 
   useEffect(() => {
     if (!router.isReady) return
@@ -127,14 +139,10 @@ export default function Profile() {
                     : `${IMG_SERVER}/${auth.profileUrl}`
                   : ''
               }
-              // src={img}
-              fill={true}
-              objectFit="cover"
-              alt=""
-              className="rounded-full bg-zinc-300"
+              參考用來源
             /> */}
             {/* <img src="./img/0da44d263f64186851d88be18f8d36f78a4f7d5f.jpg" alt="" /> */}
-            <Image
+            <img
               src={
                 userInfo?.profile_pic_url
                   ? userInfo?.google_photo
@@ -142,11 +150,10 @@ export default function Profile() {
                     : `${IMG_SERVER}/${userInfo?.profile_pic_url}`
                   : ''
               }
-              // src={img}
-              fill={true}
-              objectFit="cover"
+              // fill={true}
+              // objectFit="cover"
               alt=""
-              className="rounded-full bg-zinc-300"
+              className="rounded-full bg-zinc-300 object-cover size-full"
             />
           </div>
 
@@ -156,7 +163,7 @@ export default function Profile() {
               <ul className="flex gap-4 pc:gap-6">
                 <li className="text-[14px] pc:text-[16px]">
                   POSTS
-                  <div>
+                  <div className="text-center">
                     {postsTable?.postsAmount
                       ? postsTable?.postsAmount[0]['COUNT(1)']
                       : 0}
@@ -172,14 +179,30 @@ export default function Profile() {
                     })
                   }}
                 >
-                  FOLLOWS <div>{followsCount ? followsCount : 0}</div>
+                  FOLLOWING{' '}
+                  <div className="text-center">
+                    {followsCount ? followsCount : 0}
+                  </div>
                 </li>
-                <li className="text-[14px] pc:text-[16px]">
-                  FOLLOWERS <div>{followersCount ? followersCount : 0}</div>
+                <li
+                  className="text-[14px] pc:text-[16px] cursor-pointer"
+                  onClick={() => {
+                    setToggles({
+                      ...toggles,
+                      notification: true,
+                      follows: false,
+                    })
+                  }}
+                >
+                  FOLLOWERS{' '}
+                  <div className="text-center">
+                    {followersCount ? followersCount : 0}
+                  </div>
                 </li>
               </ul>
               <ul className="hidden pc:flex w-[120px]">
-                {router.pathname.includes('/main-personal') && (
+                {/* 電腦螢幕收藏功能取消 */}
+                {/* {router.pathname.includes('/main-personal') && (
                   <ul className="hidden pc:flex">
                     <li>
                       <RiDraftLine className="text-[24px]" />
@@ -188,7 +211,7 @@ export default function Profile() {
                       <RiBookmarkFill className="text-[24px]" />
                     </li>
                   </ul>
-                )}
+                )} */}
                 {router.pathname.includes('/main-page') && (
                   <li className="relative">
                     <div className="cursor-pointer relative">
@@ -242,12 +265,13 @@ export default function Profile() {
               </ul>
             </div>
             <div className="flex justify-end pc:hidden pr-5 gap-3 mt-1">
-              {router.pathname.includes('/main-personal') && (
+              {/* 手機尺寸收藏功能取消 */}
+              {/* {router.pathname.includes('/main-personal') && (
                 <>
                   <RiDraftLine className="text=[24px]" />
                   <RiBookmarkFill className="text-[24px]" />
                 </>
-              )}
+              )} */}
               <ul>
                 {router.pathname.includes('/main-page') && (
                   <li className="relative">

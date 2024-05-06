@@ -113,3 +113,9 @@ export const TOUR_DELETE_POST = `${API_SERVER}/tour/api/delete-post`
 
 // 編輯揪團
 export const TOUR_EDIT_POST = `${API_SERVER}/tour/api/edit-post`
+
+// // // Memo列表
+// export const NOTE_LIST = `${API_SERVER}/game/api-get`
+
+// // Note add
+// export const GAME_PERSONAL = `${API_SERVER}/game/api`
