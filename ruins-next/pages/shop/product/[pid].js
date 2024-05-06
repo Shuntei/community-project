@@ -231,36 +231,7 @@ export default function Pid() {
           </div>
           {/* 第一則評論 */}
           {/* 評論範本開始 */}
-          <div className="flex flex-col md:flex-row w-11/12 md:w-full px-[40px] md:px-0 border-black border-b py-[20px] md:py-[40px] gap-3">
-            {/* 評論左側 */}
-            <div className="flex flex-col md:mx-6 md:w-1/5 space-y-3">
-              <div className="flex md:border-b md:border-black md:text-black">
-                <div className="w-full  text-[15px]  font-['IBM Plex Mono'] ">
-                  Kevin lai
-                </div>
-                <div className="text-black text-[12px] font-['IBM Plex Mono']">
-                  {/* 01/03/24 */}
-                </div>
-              </div>
-              <div className="flex space-x-1 justify-between">
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-                <RiStarFill color="black" size="32px" />
-              </div>
-            </div>
-            {/* 評論右側 */}
-            <div className="flex flex-col md:w-3/5 md:mx-6 mx-0 space-y-3">
-              <div className="md:w-1/3 border-b text-[15px]  font-['IBM Plex Mono'] border-black text-black">
-                2024-03-18
-              </div>
-
-              <div className="text-black text-[15px] font-normal font-['notosans tc']">
-                CP值超高，真的是人人都要有一組！！！
-              </div>
-            </div>
-          </div>
+         
           {/* 評論範本結束 */}
           {comment &&
             comment.slice(0, visibleComments).map((v, i) => {
