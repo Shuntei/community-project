@@ -105,6 +105,15 @@ export const TOUR_GET_FAVTOURBOOK = `${API_SERVER}/tour/api/favtourbook`
 // 收藏行程細項
 export const TOUR_GET_FAVTOURS = `${API_SERVER}/tour/api/favtours`
 
+// 新增揪團
+export const TOUR_ADD_POST = `${API_SERVER}/tour/api/add-post`
+
+// 刪除揪團
+export const TOUR_DELETE_POST = `${API_SERVER}/tour/api/delete-post`
+
+// 編輯揪團
+export const TOUR_EDIT_POST = `${API_SERVER}/tour/api/edit-post`
+
 // // // Memo列表
 // export const NOTE_LIST = `${API_SERVER}/game/api-get`
 

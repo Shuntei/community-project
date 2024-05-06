@@ -320,8 +320,8 @@ export default function AllSearch() {
                       className="space-y-5"
                     >
                       <img
-                        className="h-[250px] max-w-full object-cover"
-                        src={`/images/borou/${v.image_url}.jpg`}
+                        className="h-[250px] w-full object-cover"
+                        src={v.image_url && v.image_url.startsWith('/img') ? `${API_SERVER}${v.image_url}` : `/images/borou/${v.image_url}.jpg`}
                         alt=""
                       />
                       <div className="flex justify-between px-5">

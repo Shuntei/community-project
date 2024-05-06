@@ -1,15 +1,25 @@
-import Footer from '@/components/linda/footer/footer'
+import React, { useState, useEffect } from 'react'
 import Navbar from '@/components/linda/navbar/navbar'
+import Footer from '@/components/linda/footer/footer'
+import {
+  API_SERVER,
+  TOUR_POST,
+  TOUR_EDIT_POST,
+} from '@/components/config/api-path'
+import { useRouter } from 'next/router'
+import dayjs from 'dayjs'
 import { useAuth } from '@/contexts/auth-context'
-import { images } from '@/next.config'
-import React, { useEffect, useState } from 'react'
-import { TOUR_ADD_POST } from '@/components/config/api-path'
 
-export default function AddPost() {
+const EditPost = () => {
+  const router = useRouter()
   const { auth } = useAuth()
-  console.log(auth.id)
-  // 定義表單資料
-  const initialFormData = {
+  const postId = router.query.postID
+  // console.log(router.query)
+  // console.log(postId)
+
+  const [images, setImages] = useState([])
+  const [formData, setFormData] = useState({
+    tour_id: postId,
     user_id: auth.id,
     ruin_id: 0,
     event_date: '',
@@ -19,87 +29,132 @@ export default function AddPost() {
     title: '',
     description: '',
     content: '',
-    images: [], // 存放圖片和說明
-  }
+  })
 
-  const [formData, setFormData] = useState(initialFormData)
+  useEffect(() => {
+    // Fetch post details from the server based on postId
+    if (!router.isReady) return
+    async function fetchPostDetails() {
+      try {
+        const response = await fetch(`${TOUR_POST}/${postId}`)
+        const postData = await response.json()
+        console.log(postData.row)
+
+        if (response.ok) {
+          const dataForShow = postData.row[0]
+
+          // 從 postData.row 解購出照片的3欄資料
+          const imagesData = postData.row.map((item) => ({
+            tour_img_id: item.tour_img_id,
+            image_url: item.image_url,
+            image_descrip: item.image_descrip,
+          }))
+
+          //因為抓到的資料結構有row
+          const {
+            tour_id,
+            ruin_id,
+            event_date,
+            max_groupsize,
+            event_period,
+            level_id,
+            title,
+            description,
+            content,
+          } = dataForShow
+
+          // Set formData with the selected keys
+          setFormData({...formData,
+            tour_id,
+            ruin_id,
+            event_date,
+            max_groupsize,
+            event_period,
+            level_id,
+            title,
+            description,
+            content,
+          })
+
+          setImages(imagesData)
+          console.log(images)
+        } else {
+          console.error('Failed to fetch post details')
+        }
+      } catch (error) {
+        console.error('Error fetching post details:', error)
+      }
+    }
+
+    fetchPostDetails()
+  }, [postId])
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+    // console.log("formData with e.dtargey:", formData);
+  }
 
   // 紀錄選取的圖片
   const handleImageChange = (e) => {
-    const files = e.target.files
-    const imageFiles = Array.from(files).map((file) => ({
+    const { files } = e.target
+    const newImages = Array.from(files).map((file) => ({
       file,
-      caption: '', // 初始化圖片說明
+      image_descrip: '', // 初始化圖片說明
+      image_url: URL.createObjectURL(file), // 新增 image_url
     }))
-    setFormData({
-      ...formData,
-      images: imageFiles,
-    })
+    setImages(newImages)
+  }
+  console.log('images chosen:', images)
+
+  const handleImageDescrip = (index, value) => {
+    const updatedImages = [...images]
+    updatedImages[index] = {
+      ...updatedImages[index],
+      image_descrip: value,
+    }
+    setImages(updatedImages)
+    console.log(images)
   }
 
-  // 更新圖片說明文字
-  const handleCaptionChange = (e, index) => {
-    const newImages = [...formData.images]
-    newImages[index].caption = e.target.value
-    setFormData({
-      ...formData,
-      images: newImages,
-    })
-  }
-
-  // 等 auth.id 變化後更新 user_id
-  useEffect(() => {
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      user_id: auth.id,
-    }))
-  }, [auth.id])
-
-  // 取得輸入的表單資料
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    })
-  }
-
-  // 處理表單送出
   const handleSubmit = async (e) => {
     e.preventDefault()
 
     try {
       const formDataToSend = new FormData(e.currentTarget)
-    //   const formDataToSend = new FormData();
-    // formDataToSend.append('tour_id', formData.tour_id);
-    // formDataToSend.append('user_id', formData.user_id);
-    // formDataToSend.append('ruin_id', formData.ruin_id);
-    // formDataToSend.append('event_date', formData.event_date);
-    // formDataToSend.append('max_groupsize', formData.max_groupsize);
-    // formDataToSend.append('event_period', formData.event_period);
-    // formDataToSend.append('level_id', formData.level_id);
-    // formDataToSend.append('title', formData.title);
-    // formDataToSend.append('description', formData.description);
-    // formDataToSend.append('content', formData.content);
-
-    // // Append images with their descriptions
-    // images.forEach((image, index) => {
-    //   formDataToSend.append(`image${index + 1}`, image.file);
-    //   formDataToSend.append(`image_descrip${index + 1}`, image.image_descrip);
-    // });
-
+      console.log(formDataToSend)
       // 向後端發出 POST
-      const response = await fetch(`${TOUR_ADD_POST}${postId}`, {
-        method: 'POST',
+      const response = await fetch(`${TOUR_EDIT_POST}/${postId}`, {
+        method: 'PUT',
         body: formDataToSend,
       })
+      console.log(formDataToSend)
       if (!response.ok) {
-        throw new Error('Failed to create post')  
+        throw new Error('Failed to update post')
       }
-      console.log('Post created successfully')
+
+      console.log('Post updated successfully')
       // 在這裡提示成功訊息
     } catch (error) {
-      console.error('Error creating post:', error)
+      console.error('Error updating post:', error)
     }
+
+    // try {
+    //   const response = await fetch(`/api/posts/${postId}`, {
+    //     method: 'PUT',
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //     body: JSON.stringify(formData),
+    //   })
+    //   if (response.ok) {
+    //     // Update local state with edited post details
+    //     // Close the edit modal or navigate back to post page
+    //   } else {
+    //     console.error('Failed to update post')
+    //   }
+    // } catch (error) {
+    //   console.error('Error updating post:', error)
+    // }
   }
 
   return (
@@ -110,10 +165,11 @@ export default function AddPost() {
           className="py-16 bg-gradient-to-t from-gray-400 to-gray-100 md:px-[150px] px-5"
           onSubmit={handleSubmit}
         >
+          {/* {formData.row && ( */}
           <div className=" bg-white md:grid place-items-center md:px-0 px-5 py-10 space-y-5">
             <div className="w-fit m-auto mb-10">
               <h1 className="text-xl font-semibold border-b border-b-black">
-                發起探險行程
+                編輯探險行程
               </h1>
             </div>
             <div className="md:w-3/5 space-y-5">
@@ -124,7 +180,7 @@ export default function AddPost() {
                   <input
                     id="max_groupsize"
                     name="max_groupsize"
-                    value={formData.max_groupsize}
+                    value={formData?.max_groupsize}
                     onChange={handleChange}
                     type="text"
                     className="text-black bg-zinc-100 rounded p-1 md:w-1/3 w-full"
@@ -135,7 +191,9 @@ export default function AddPost() {
                   <input
                     id="event_date"
                     name="event_date"
-                    value={formData.event_date}
+                    value={dayjs(formData?.event_date).format(
+                      'YYYY-MM-DDTHH:mm'
+                    )}
                     onChange={handleChange}
                     type="datetime-local"
                     className="text-black bg-zinc-100 rounded py-1 md:w-1/3 w-full"
@@ -146,7 +204,7 @@ export default function AddPost() {
                   <select
                     id="event_period"
                     name="event_period"
-                    value={formData.event_period}
+                    value={formData?.event_period}
                     onChange={handleChange}
                     className="text-black bg-zinc-100 rounded py-1 md:w-1/3 w-full"
                   >
@@ -169,7 +227,7 @@ export default function AddPost() {
                   <select
                     id="level_id"
                     name="level_id"
-                    value={formData.level_id}
+                    value={formData?.level_id}
                     onChange={handleChange}
                     className="text-black bg-zinc-100 rounded py-1 md:w-1/3 w-full"
                   >
@@ -183,7 +241,7 @@ export default function AddPost() {
                   <select
                     id="ruin_id"
                     name="ruin_id"
-                    value={formData.ruin_id}
+                    value={formData?.ruin_id}
                     onChange={handleChange}
                     className="text-black bg-zinc-100 rounded py-1 md:w-1/3 w-full"
                   >
@@ -205,7 +263,7 @@ export default function AddPost() {
                   type="text"
                   id="title"
                   name="title"
-                  value={formData.title}
+                  value={formData?.title}
                   className="w-full bg-zinc-100 text-black rounded p-1"
                   onChange={handleChange}
                 />
@@ -217,7 +275,7 @@ export default function AddPost() {
                   name="content"
                   cols="30"
                   rows="10"
-                  value={formData.content}
+                  value={formData?.content}
                   className="w-full bg-zinc-100 text-black rounded p-1"
                   onChange={handleChange}
                 ></textarea>
@@ -241,55 +299,79 @@ export default function AddPost() {
                 multiple
                 className="hidden"
               />
-              <div className="flex flex-wrap justify-between">
-                {formData.images.map((image, index) => (
-                  <div key={index} className="flex flex-col mb-4 md:w-[30%]">
-                    <img
-                      src={URL.createObjectURL(image.file)}
-                      alt={`Preview ${index + 1}`}
-                      className="md:w-auto md:h-40 object-cover"
-                    />
-                    <input
-                      type="text"
-                      id={`caption${index + 1}`}
-                      name={`image_descrip`}
-                      className="text-black bg-zinc-100 rounded p-1 mt-2"
-                      value={image.caption}
-                      placeholder="請輸入圖片說明"
-                      onChange={(e) => handleCaptionChange(e, index)}
-                    />
-                  </div>
-                ))}
-              </div>
+              {images.length > 0 && (
+                <div className="flex flex-wrap justify-between">
+                  {images.map(
+                    (image, index) =>
+                      // 確保有照片資料才呈現
+                      image.image_url && (
+                        <div
+                          key={index}
+                          className="flex flex-col mb-4 md:w-[30%]"
+                        >
+                          <img
+                            src={
+                              image.image_url &&
+                              image.image_url.startsWith('/img')
+                                ? `${API_SERVER}${image.image_url}`
+                                : image.file
+                                  ? URL.createObjectURL(image.file)
+                                  : `/images/borou/${image.image_url}.jpg`
+                            }
+                            alt=""
+                            className="md:w-auto md:h-40 object-cover"
+                          />
+                          <input
+                            type="text"
+                            id={`image_descrip${index + 1}`}
+                            name={`image_descrip`}
+                            className="text-black bg-zinc-100 rounded p-1 mt-2"
+                            value={image.image_descrip}
+                            placeholder="請輸入圖片說明"
+                            onChange={(e) =>
+                              handleImageDescrip(index, e.target.value)
+                            }
+                          />
+                        </div>
+                      )
+                  )}
+                </div>
+              )}
               <hr />
             </div>
             <div className="md:w-3/5 flex flex-col space-y-3 pb-5">
               <h2 className="text-xl font-semibold">介紹自己</h2>
-              {/* <label htmlFor="">選擇身分：</label>
-            <select className="text-black">
-              <option value="someOption">探險新手</option>
-              <option value="otherOption">探險達人</option>
-            </select> */}
               <textarea
                 name="description"
                 id="description"
-                value={formData.description}
+                value={formData?.description}
                 onChange={handleChange}
                 cols="30"
                 rows="10"
                 className="text-black bg-zinc-100 rounded"
               ></textarea>
             </div>
-            <button
-              type="submit"
-              className="md:w-[280px] w-full h-[75px] bg-black text-white mt-5 p-2 text-2xl font-semibold"
-            >
-              建立行程
-            </button>
+            <div className="md:space-x-8">
+              <button
+                type="submit"
+                className="md:w-[200px] w-full h-[75px] bg-black text-white mt-5 p-2 text-2xl font-semibold"
+              >
+                確認修改
+              </button>
+              <button
+                type="button"
+                className="md:w-[200px] w-full h-[75px] bg-black text-white mt-5 p-2 text-2xl font-semibold"
+              >
+                取消
+              </button>
+            </div>
           </div>
+          {/* )} */}
         </form>
       </div>
       <Footer />
     </>
   )
 }
+
+export default EditPost
