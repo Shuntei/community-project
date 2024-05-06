@@ -11,7 +11,7 @@ import { SN_USER_INFO } from '../config/johnny-api-path'
 import { useRouter } from 'next/router'
 
 export default function InfoBar() {
-  // const { auth } = useAuth()
+  const { auth } = useAuth()
   const router = useRouter()
   const [userInfo, setUserinfo] = useState('')
 
@@ -25,7 +25,7 @@ export default function InfoBar() {
         // console.log(result)
         if (!psUserId) return
         let selectedUser = result.find((v, i) => v.id == psUserId)
-        // console.log(selectedUser)
+        console.log('selectedUser', selectedUser)
         setUserinfo(selectedUser)
       })
   }
@@ -58,41 +58,46 @@ export default function InfoBar() {
           {/* <RiAddLine /> */}
         </div>
         <div className="border-b-2 w-[200px] ml-10 mr-5"></div>
-        {userInfo?.youtube_link ||
-        userInfo?.facebook_link ||
-        userInfo?.instagram_link ||
-        userInfo?.gmailLink ? (
-          <div className=" pl-10 pr-5 text-white py-3 flex gap-x-3">
+        {/* {auth.showContactInfo ? (
+          <> */}
+        {userInfo?.allow_contact_info_visibility &&
+        (userInfo?.youtube_link ||
+          userInfo?.facebook_link ||
+          userInfo?.instagram_link ||
+          userInfo?.gmail_link) ? (
+          <div className="pl-10 pr-5 text-white py-3 flex gap-x-3">
             {userInfo?.youtube_link && (
-              <a href={userInfo?.youtube_link ? userInfo.youtube_link : ''}>
+              <a href={userInfo.youtube_link}>
                 <FaYoutube className="text-[24px] cursor-pointer hover:text-red-500" />
               </a>
             )}
             {userInfo?.facebook_link && (
-              <a href={userInfo?.facebook_link ? userInfo.facebook_link : ''}>
+              <a href={userInfo.facebook_link}>
                 <FaFacebook className="text-[24px] cursor-pointer hover:text-sky-600" />
               </a>
             )}
             {userInfo?.instagram_link && (
-              <a href={userInfo?.instagram_link ? userInfo.instagram_link : ''}>
+              <a href={userInfo.instagram_link}>
                 <AiFillInstagram className="text-[24px] cursor-pointer hover:text-pink-400" />
               </a>
             )}
-            {userInfo?.gmailLink && (
-              <a href={userInfo?.gmailLink ? userInfo.gmailLink : ''}>
+            {userInfo?.gmail_link && (
+              <a href={userInfo.gmailLink}>
                 <MdEmail className="text-[24px] cursor-pointer hover:text-amber-400" />
               </a>
             )}
-            {/* <div class="w-32 h-32 bg-gradient-to-br from-purple-500 to-pink-500 transform rotate-45"></div> */}
-            {/* <span class="bg-clip-text text-transparent bg-gradient-to-r from-red-300  via-pink-400 via-purple-400 to-blue-400">
-            Nothing short <br /> of amazing.
-          </span> */}
           </div>
         ) : (
           <span className="pl-10 pr-5 text-white py-3 flex">
             NO LINK TO SHOW
           </span>
         )}
+        {/* </>
+        ) : (
+          <span className="pl-10 pr-5 text-white py-3 flex">
+            NO LINK TO SHOW
+          </span>
+        )} */}
       </section>
     </>
   )

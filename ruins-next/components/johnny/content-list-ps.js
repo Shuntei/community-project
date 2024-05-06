@@ -108,7 +108,7 @@ export default function PersonalContent() {
             onClick={() => {
               router.push(
                 {
-                  pathname: '/community/main-personal',
+                  // pathname: '/community/main-personal',
                   query: { ...router.query, pspage: `${1}` },
                 },
                 undefined,
@@ -131,7 +131,7 @@ export default function PersonalContent() {
                       onClick={() => {
                         router.push(
                           {
-                            pathname: '/community/main-personal',
+                            // pathname: '/community/main-personal',
                             query: { ...router.query, pspage: `${p}` },
                           },
                           undefined,
@@ -152,7 +152,7 @@ export default function PersonalContent() {
             onClick={() => {
               router.push(
                 {
-                  pathname: '/community/main-personal',
+                  // pathname: '/community/main-personal',
                   query: { ...router.query, pspage: `${psPosts.totalPages}` },
                 },
                 undefined,

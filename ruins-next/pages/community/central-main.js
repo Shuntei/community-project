@@ -163,7 +163,10 @@ export default function CentralContent() {
                     // onClick={queryHandler}
                   >
                     {searchTerm ? (
-                      <RiCloseLine onClick={() => setSearchTerm('')} />
+                      <RiCloseLine
+                        onClick={() => setSearchTerm('')}
+                        className="cursor-pointer"
+                      />
                     ) : (
                       <RiSearchLine />
                     )}

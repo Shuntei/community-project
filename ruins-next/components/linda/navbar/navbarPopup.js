@@ -68,9 +68,9 @@ export default function NavbarPopup() {
                 PERSONAL
               </p>
             </p>
-            <p className="font-['IBM Plex Mono']">
+            {/* <p className="font-['IBM Plex Mono']">
               <a href="/community/main-messenger">MESSENGER</a>
-            </p>
+            </p> */}
           </div>
           <div className={`${styles['title']} space-y-1`}>
             <p className="border-b mb-5 font-['IBM Plex Mono']">

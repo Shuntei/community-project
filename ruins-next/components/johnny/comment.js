@@ -109,10 +109,14 @@ export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
                     onClick={() => setToggleMenu(!toggleMenu)}
                   >
                     <div tabIndex={0} role="button">
-                      {toggleMenu ? (
-                        <RiArrowDropUpLine className=" bg-white text-gray-600" />
-                      ) : (
-                        <RiArrowDropDownLine className=" bg-white text-gray-600" />
+                      {v.user_id === auth.id && (
+                        <>
+                          {toggleMenu ? (
+                            <RiArrowDropUpLine className=" bg-white text-gray-600" />
+                          ) : (
+                            <RiArrowDropDownLine className=" bg-white text-gray-600" />
+                          )}
+                        </>
                       )}
                     </div>
                     {toggleMenu && (
