@@ -91,7 +91,10 @@ export default function Comment({ postId, renderAfterCm, setRenderAfterCm }) {
             >
               <div className="likeZone:flex justify-between mb-5">
                 <div>
-                  <div className="text-[20px]">{auth.username}</div>
+                  <div className="text-[20px]">
+                    {/* {auth.username} */}
+                    {v.username}
+                  </div>
                   {/* <div>role.name?</div> */}
                 </div>
                 <div className="likeZone:flex gap-2 items-center flex">

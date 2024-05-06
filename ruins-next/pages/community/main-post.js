@@ -30,7 +30,7 @@ export default function MainPost() {
   const [renderAfterCm, setRenderAfterCm] = useState(false)
   const router = useRouter()
   const { commentModal, setCommentModal } = useToggles()
-  const { getPost, setGetPost, handlePostId } = useBoards()
+  const { getPost, setGetPost } = useBoards()
   const [afterTimerReset, setAfterTimerReset] = useState(false)
   const [timerRun, setTimerRun] = useState(false)
   const [proFilePic, setProfilePic] = useState('')
@@ -53,6 +53,7 @@ export default function MainPost() {
     const r = await fetch(`${SN_POSTS}?postId=${postId}`)
     const result = await r.json()
     setGetPost(result)
+    console.log(result)
   }
 
   const isPostAuth = async (postId) => {
