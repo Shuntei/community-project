@@ -9,20 +9,15 @@ export default function Loader({color = "white", children, duration}) {
   const router = useRouter()
 
   useEffect(() => {
-    // if (auth.id) {
-    //   setIsLoading(false);
-    // } else {
+    const path = router.pathname
       const timer = setTimeout(() => {
         setIsLoading(false);
-        // if (!auth.id) {
-        //   if(router.pathname.includes('reset-password')){
-        //     Router.push(router.asPath);
-        //   }
-        // }
+        if(path.includes('account-settings')){
+          router.push('/')
+        }
       }, duration ? duration : 2000);
 
       return () => clearTimeout(timer);
-    // }
   }, [router]);
 
   if(isLoading) {
