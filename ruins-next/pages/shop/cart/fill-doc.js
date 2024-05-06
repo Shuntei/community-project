@@ -255,8 +255,8 @@ export default function FillDoc() {
   }, [totalPrice, coupon, shippingMethod, shippingFee, terms])
   return (
     <>
-      {/* {console.log(storeid)}
-      {console.log(storename)} */}
+      {console.log(recipientName)}
+      {console.log(storename)}
 
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28 text-black">
         {/* header開始 */}
