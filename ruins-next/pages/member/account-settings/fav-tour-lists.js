@@ -87,8 +87,7 @@ export default function FavTourLists() {
                   </Link>
                 </div>
               ))}
-
-              <div id="favCard" className="w-fit py-2.5">
+              {/* <div id="favCard" className="w-fit py-2.5">
                 <Link
                   href="/member/account-settings/fav-tours"
                   className="space-y-2.5"
@@ -103,7 +102,7 @@ export default function FavTourLists() {
                     9項收藏
                   </div>
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* end */}

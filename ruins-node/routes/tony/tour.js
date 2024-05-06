@@ -28,7 +28,6 @@ const storage = multer.diskStorage({
 });
 // Configure multer
 const upload = multer({ limits: { fileSize: 1000000 }, storage: storage });
-// const upload = multer({ fileFilter, storage: storage });
 
 // 取得揪團文章列表
 const getTourList = async (req, res) => {
@@ -200,7 +199,7 @@ const getFavTours = async (bid) => {
   }
 };
 
-// 發文表單資料
+// 新增發文表單資料
 const handleAddPost = async (req, res) => {
   const output = {
     success: false,
@@ -246,14 +245,17 @@ const handleAddPost = async (req, res) => {
       VALUES
         (?, ?, ?)
     `;
-    // 多圖上傳, you would loop through them and execute the query for each image
-    for (const image of images) {
-      const imagesValues = [
+
+    console.log(req.body);
+    for (let i in images) {
+      const image = images[i];
+      const imagePath = `/img/${image.filename}`; // Path to the uploaded image
+      const imageValues = [
         lastInsertId, // Using the last inserted tour_id
-        image.image_url,
-        image.image_descrip,
+        imagePath, // Use the file path of the uploaded image
+        req.body.image_descrip[i],
       ];
-      await db.query(imagesSql, imagesValues);
+      await db.query(imagesSql, imageValues);
     }
 
     output.success = true;
@@ -263,10 +265,110 @@ const handleAddPost = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
-// 處理發文加入資料庫, 加上 middleware
+// 新增揪團文章加入資料庫, 加上 middleware
 router.post("/api/add-post", upload.array('images', 10), async(req, res)=>{
-  const data = await handleAddPost(req);
+  const data = await handleAddPost(req, res);
   res.json(data);
+});
+
+// 修改揪團的表單資料
+const handleEditPost = async(req, res)=>{
+  const output = {
+    success: false,
+    formData: req.body,
+  };
+
+  try {
+    const formData = req.body;
+    // const images = req.body.images;
+    const images = req.files; // New images uploaded by the user
+    
+    console.log(formData);
+
+    const postEditSql = `UPDATE tony_tour_post
+      SET 
+        ruin_id = ?,
+        event_date = ?,
+        max_groupsize = ?,
+        event_period = ?,
+        level_id = ?,
+        title = ?,
+        description = ?,
+        content = ?
+      WHERE tour_id = ?;`;
+
+    const postEditParams = [
+      formData.ruin_id,
+      formData.event_date,
+      formData.max_groupsize,
+      formData.event_period,
+      formData.level_id,
+      formData.title,
+      formData.description,
+      formData.content,
+      formData.tour_id,
+    ];
+    await db.query(postEditSql, postEditParams);
+    console.log(postEditSql);
+    
+    // Update tour images
+    // 1. Delete existing images for this tour
+    const deleteImagesSql = `
+      DELETE FROM tony_tour_images WHERE tour_id = ?;
+    `;
+    await db.query(deleteImagesSql, [formData.tour_id]);
+
+    // 2. Insert new images for this tour
+    const insertImagesSql = `
+      INSERT INTO tony_tour_images (tour_id, image_url, image_descrip)
+      VALUES (?, ?, ?);
+    `;
+    // Execute insert query for each new image
+    for (const image of images) {
+      await db.query(insertImagesSql, [formData.tour_id, image.image_url, image.image_descrip]);
+    }
+
+    output.success = true;
+    res.json(output);
+
+  } catch (error) {
+    console.error('Error updating tour post:', error);
+    output.error = 'Error updating tour post';
+    res.status(500).json(output);
+  }
+}
+
+// 修改揪團文章
+// router.put("/api/edit-post/:postId", handleEditPost);
+router.put("/api/edit-post/:postId", upload.array('images', 10), async(req, res)=>{
+  const data = await handleEditPost(req, res);
+  res.json(data);
+});
+
+
+// 刪除揪團文章
+router.delete("/api/delete-post/:postId", async (req, res) => {
+  const postId = req.params.postId;
+
+  try {
+    // Delete associated images from tony_tour_images table
+    const deleteImagesSql = "DELETE FROM tony_tour_images WHERE tour_id = ?";
+    await db.query(deleteImagesSql, postId);
+
+    // Perform deletion operation on tony_tour_post table
+    const deletePostSql = "DELETE FROM tony_tour_post WHERE tour_id = ?";
+    const [postDeletionResult] = await db.query(deletePostSql, postId);
+
+    // Check if the post deletion was successful
+    if (postDeletionResult.affectedRows > 0) {
+      res.json({ success: true, message: "Post and associated images deleted successfully" });
+    } else {
+      res.json({ success: false, message: "Post not found or already deleted" });
+    }
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
 });
 
 // 從資料庫取得表單資料

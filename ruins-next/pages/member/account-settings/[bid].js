@@ -73,7 +73,7 @@ export default function FavTours() {
                   </div>
                 )
               })}
-              <div id="favCard" className="w-1/4 py-2.a5">
+              {/* <div id="favCard" className="w-1/4 py-2.a5">
                 <Link href="#" className="space-y-2.5">
                   <img
                     src="/images/tempuse.jpg"
@@ -89,7 +89,7 @@ export default function FavTours() {
                     </div>
                   </div>
                 </Link>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* end */}

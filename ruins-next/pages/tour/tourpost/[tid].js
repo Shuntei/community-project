@@ -181,7 +181,7 @@ export default function TourPost() {
           {imgs.length > 0 && (
             <img
               className="md:w-[60%] grow shrink"
-              src={`/images/borou/${imgs[0].image_url}.jpg`}
+              src={imgs[0].image_url.startsWith('/img') ? `${API_SERVER}${imgs[0].image_url}` : `/images/borou/${imgs[0].image_url}.jpg`}
             />
           )}
           <div className="w-1/3 flex-col justify-start items-start gap-2.5 inline-flex relative md:block hidden">
@@ -189,7 +189,7 @@ export default function TourPost() {
               <img
                 key={index}
                 className=""
-                src={`/images/borou/${img.image_url}.jpg`}
+                src={img.image_url.startsWith('/img') ? `${API_SERVER}${img.image_url}` : `/images/borou/${img.image_url}.jpg`}
               />
             ))}
             <button
@@ -214,7 +214,7 @@ export default function TourPost() {
                   {imgs.map((img, index) => (
                     <SwiperSlide key={index}>
                       <img
-                        src={`/images/borou/${img.image_url}.jpg`}
+                        src={img.image_url.startsWith('/img') ? `${API_SERVER}${img.image_url}` : `/images/borou/${img.image_url}.jpg`}
                         alt={`Photo ${index}`}
                         className="object-cover w-full"
                       />
@@ -248,7 +248,7 @@ export default function TourPost() {
               <div key={index}>
                 <img
                   className="w-full"
-                  src={`/images/borou/${img.image_url}.jpg`}
+                  src={img.image_url.startsWith('/img') ? `${API_SERVER}${img.image_url}` : `/images/borou/${img.image_url}.jpg`}
                   alt={img.image_descrip}
                 />
                 <span>{img.image_descrip}</span>
@@ -355,7 +355,7 @@ export default function TourPost() {
           <a href="#">
             <i className="ri-star-fill ri-lg pr-1"></i>4.90
           </a>
-          <span>871則評價</span>
+          <span>71則評價</span>
         </div>
         <div
           id="commentBox"

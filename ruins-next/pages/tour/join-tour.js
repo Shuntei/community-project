@@ -14,7 +14,7 @@ export default function JoinTour() {
       <div className=" bg-zinc-800 flex flex-col justify-center items-center pt-28">
         <Navbar />
 
-        <div className="md:w-10/12  w-full flex  flex-col justify-center items-center bg-gradient-to-t from-gray-400 to-gray-100 md:px-24 px-4 py-5 mb-5">
+        <div className="md:w-10/12 w-full flex  flex-col justify-center items-center bg-gradient-to-t from-gray-400 to-gray-100 md:px-24 px-4 py-5 mb-5">
           {/* 進度條開始 */}
           <Process1 name1={'選擇活動'} name2={'填寫資料'} name3={'報名成功'} />
           {/* 進度條結束 */}
@@ -68,7 +68,6 @@ export default function JoinTour() {
                   <div>出發時間：2024/06/09, 上午 11 點</div>
                   <div>時長：6小時</div>
                   <div>探索難易度：中等</div>
-                  <div>交通方式：開車</div>
                   <div>集合地點：松山捷運站</div>
                 </div>
                 <hr />
@@ -186,7 +185,7 @@ export default function JoinTour() {
 
             <Link
               href="/tour/join-confirm"
-              className="w-[280px] h-[75px] bg-black border justify-center items-center gap-2.5 flex "
+              className="w-[280px] h-[75px] bg-black justify-center items-center gap-2.5 flex "
             >
               <div className="text-white  text-2xl font-semibold font-['IBM Plex Mono']">
                 NEXT
