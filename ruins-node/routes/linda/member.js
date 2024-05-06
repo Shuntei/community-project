@@ -810,6 +810,7 @@ router.get("/get-preferences/:id", async (req, res) => {
   try {
     const sql = `SELECT * FROM mb_user_preference WHERE user_id = ?`;
     const [rows] = await db.query(sql, id);
+    console.log(rows);
     return res.json({ success: true, data: rows[0] });
   } catch (error) {
     console.log("Error getting data", error);
