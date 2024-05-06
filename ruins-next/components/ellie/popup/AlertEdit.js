@@ -4,7 +4,7 @@ import {
 } from '@remixicon/react'
 
 
-export default function Alert({onClose,toggleAlert, deleteForm, isOpen, setIsOpen}) {
+export default function AlertEdit({onClose,toggleAlert, deleteForm, isOpen, setIsOpen}) {
   const [isChanged, setIsChanged ] = useState(false)
 
   // const [showAlert, setShowAlert] = useState(false)
