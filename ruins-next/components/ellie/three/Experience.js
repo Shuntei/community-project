@@ -28,13 +28,13 @@ export default function Experience() {
       <directionalLight position={[5,5,5]} intensity={0.8} castShadow color={"#9e69da"}/>
       <group>
       {/* STAGE */}
-      <RigidBody colliders={false} type="fixed" position-y={1}>
+      <RigidBody colliders={false} type="fixed" position-y={1} friction={2}>
         <CylinderCollider args={[0.5, 30]}/>
         <Cylinder scale={[30,0.5,30]} receiveShadow>
           <meshStandardMaterial color="white"/>
         </Cylinder>
       </RigidBody>
-      <RigidBody position={[6,5,0]} ref={cube}>
+      {/* <RigidBody position={[6,5,0]} ref={cube}>
         <Box 
           onPointerEnter={() => setHover(true)}
           onPointerLeave={() => setHover(false)}
@@ -42,7 +42,7 @@ export default function Experience() {
           >
           <meshStandardMaterial color={hover ? 'hotpink' : 'royalblue'} />
           </Box>
-      </RigidBody>
+      </RigidBody> */}
       {/*   */}
       </group> 
       <Ball/>

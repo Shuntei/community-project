@@ -17,6 +17,8 @@ import EditNotes from '../notepad/notepad_edit'
 export default function Dropdown() {
   const [showPopup, setShowPopup] = useState(false)
 
+  const [isChanged, setIsChanged ] = useState(false)
+
   const togglePopup = () => {
     setShowPopup(!showPopup)
   }
@@ -81,7 +83,7 @@ export default function Dropdown() {
   }
   useEffect(() => {
     getNote()
-  }, [router])
+  }, [router, isChanged])
 
   const [achieved, setAchieved] = useState('')
 
@@ -272,10 +274,10 @@ export default function Dropdown() {
         </div>
       </div>
       {showPopup && <AchievementsPopup onClose={togglePopup} />}
-      {showNotepad && <Notepad onClose={toggleNotepad} />}
+      {showNotepad && <Notepad onClose={toggleNotepad} isChanged={isChanged} setIsChanged={setIsChanged}/>}
       {/* {showDropdown && <RiArrowDownWideFill onClose={toggleDropdown}/>} */}
       {showEditNotes && (
-        <EditNotes onClose={toggleEditNotes} note1={selectedNote} />
+        <EditNotes onClose={toggleEditNotes} note1={selectedNote} isChanged={isChanged} setIsChanged={setIsChanged}/>
       )}
     </>
   )

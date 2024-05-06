@@ -10,6 +10,9 @@ import { useAuth } from '@/contexts/auth-context'
 
 
 export default function Mission() {
+
+  // const [isChanged, setIsChanged ] = useState(false)
+
   const router = useRouter()
   const { auth } = useAuth()
   const mbID = auth.id
@@ -87,7 +90,7 @@ export default function Mission() {
           <div className="w-full flex flex-col border-b border-dotted mb-1"></div>
           <div className="w-full flex flex-col border-t border-dotted"></div>
         </div>
-        <Volume />
+        {/* <Volume /> */}
       </div>
     </>
   )

@@ -86,7 +86,7 @@ router.post("/ruins_final/gm_note_edit", async (req, res) => {
       WHERE note_id = ? `;
 
     const [result] = await db.query(addNote, [title, memo, note_id]);
-    console.log(result);
+    // console.log(result);
     if (!!result.affextedRows) {
       return res.json({ success: false });
     }
@@ -96,6 +96,28 @@ router.post("/ruins_final/gm_note_edit", async (req, res) => {
     res.status(500).json({ error: "Failed to update note." });
   }
 });
+
+//刪除note
+router.delete("/ruins_final/delete_form", async (req, res) => {
+  
+  try {
+      const { note_id } = req.body;
+      console.log(note_id);
+      const deleteQuery = `DELETE FROM gm_note WHERE note_id = ?`;
+
+      const [result] = await db.query(deleteQuery, [note_id]);
+
+      if (result.affectedRows > 0) {
+          res.json({ success: true });
+      } else {
+          res.json({ success: false });
+      }
+  } catch (error) {
+      console.error("Error deleting form", error);
+      res.status(500).json({ error: "Failed to delete form." });
+  }
+});
+
 // //取得memo
 // router.get("/gm_note", async (req, res)=>{
 //   let output = {
