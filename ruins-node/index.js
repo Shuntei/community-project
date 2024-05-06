@@ -178,7 +178,7 @@ io.on('connection', socket => {
     let [rows] = await db.query(sql)
 
     updateLiveStatus(rows[0].stream_code)
-    console.log(`${socket.id}用戶退出`);
+    // console.log(`${socket.id}用戶退出`);
 
     if (streamerSocketId == socket.id) {
       try {
