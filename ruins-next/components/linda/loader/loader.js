@@ -23,7 +23,7 @@ export default function Loader({color = "white", children, duration}) {
 
       return () => clearTimeout(timer);
     // }
-  }, []);
+  }, [router]);
 
   if(isLoading) {
     return (
