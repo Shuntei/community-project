@@ -62,7 +62,7 @@ export default function EmailAndPassword() {
                 <MdOutlineKeyboardArrowRight />
               </div>
             </div>
-            <div className="flex flex-col w-full justify-start md:flex-row gap-[12px] items-start">
+            {/* <div className="flex flex-col w-full justify-start md:flex-row gap-[12px] items-start">
               <div className="flex gap-[12px] w-auto justify-start items-center">
                 <PiWarningFill className="text-[#959595]" />
                 <div className="md:text-[12px] text-[10px]">
@@ -72,7 +72,7 @@ export default function EmailAndPassword() {
               <a href="#" className="text-[12px] justify-start text-[#0D74AF]">
                 Resend confirmation email
               </a>
-            </div>
+            </div> */}
           </div>
           <div
             onClick={() => {
