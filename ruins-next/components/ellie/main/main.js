@@ -86,7 +86,6 @@ export default function Main() {
         </div>
         <Mission />
         <Dropdown />
-        {/* <Alert /> */}
       </div>
       <style jsx>{`
         .flash-animation {
