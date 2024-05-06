@@ -48,7 +48,7 @@ export default function Topics() {
             }}
           >
             所有文章
-            <RiArrowDropDownLine />
+            {/* <RiArrowDropDownLine /> */}
           </li>
           {boards &&
             boards.map((v, i) => {
@@ -69,7 +69,7 @@ export default function Topics() {
                   }}
                 >
                   {v.board_name}
-                  <RiArrowDropDownLine />
+                  {/* <RiArrowDropDownLine /> */}
                 </li>
               )
             })}

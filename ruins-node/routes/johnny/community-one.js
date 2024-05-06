@@ -126,7 +126,7 @@ router.get("/posts/:post_id?", async (req, res) => {
     // console.log(page);
 
     let where = " WHERE 1 ";
-
+    
     if (keyword) {
       const keywordEsc = db.escape("%" + keyword + "%");
       console.log(keywordEsc);

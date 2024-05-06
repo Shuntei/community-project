@@ -194,8 +194,11 @@ router.get("/comment/:postId?", async (req, res) => {
   let postId = +req.params.postId;
 
   if (postId) {
-    const sql = `SELECT sn_comments.* FROM sn_comments LEFT JOIN sn_posts USING(post_id) WHERE post_id=${postId} ORDER BY sn_comments.comment_id DESC`;
+    const sql = `SELECT sn_comments.*, mb_user.username FROM sn_comments LEFT JOIN sn_posts USING(post_id) 
+                LEFT JOIN mb_user ON sn_comments.user_id = mb_user.id
+                WHERE post_id=${postId} ORDER BY sn_comments.comment_id DESC`;
     const [result] = await db.query(sql);
+    console.log("comment content: ", result);
     if (result.length > 0) {
       output.rows = result;
       output.success = true;
