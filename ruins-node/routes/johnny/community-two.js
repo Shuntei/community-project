@@ -4,7 +4,6 @@ import db from "../../utils/mysql2-connect.js";
 import uploadImgs from "../../utils/johnny/upload-imgs.js";
 import bodyParser from "body-parser";
 
-// 這個檔案用於做comment,編輯貼文,編輯留言,按讚
 
 const router = express.Router();
 
@@ -227,19 +226,61 @@ router.get("/selectedcm/:commentId", async (req, res) => {
     res.json("沒有 commentId");
   }
 });
+
+// add notification
+const addNotification = async (id, message, resourceId) => {
+  console.log(id);
+  try {
+    const sql = `SELECT mb_user.* 
+    FROM sn_posts
+    JOIN mb_user ON sn_posts.user_id = mb_user.id
+    WHERE sn_posts.post_id=?`;
+    const [rows] = await db.query(sql, resourceId);
+
+    const addSql = `INSERT INTO mb_notifications 
+    (user_id, 
+      category, 
+      message, 
+      created_at, 
+      isRead, 
+      sender_id, 
+      resource_id) 
+      VALUES (?, ?, ?, NOW(), ?, ?, ?)`;
+    const [result] = await db.query(addSql, [
+      rows[0].id,
+      "comment",
+      message,
+      false,
+      id,
+      resourceId,
+    ]);
+    // const subscription = await getPushSubscription(rows[0].id);
+    // await sendPushNotification(rows[0].id, subscription);
+    return true;
+  } catch (error) {
+    console.log("Failed to insert comment notification:", error);
+    return false;
+  }
+};
+
 // 新增留言
 router.post("/cmadd", uploadImgs.single("photo"), async (req, res) => {
   const output = {
     success: false,
     bodyData: { body: req.body },
     errors: {},
+    notification: false,
   };
   // console.log("the bodyData: ", output.bodyData);
 
   let result = {};
   try {
     // console.log("this is photo:", req.file);
-
+    output.notification = await addNotification(
+      req.body.userId,
+      req.body.content,
+      req.body.postId
+    );
     if (!req.body.userId) {
       output.success = false;
       output.errors = "no user id";

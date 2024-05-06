@@ -837,29 +837,38 @@ router.get("/get-notifications/:id", async (req, res) => {
     const todaySql = `SELECT n.*,
                       mb_user.username,
                       mb_user.profile_pic_url,
-                      mb_user.google_photo
+                      mb_user.google_photo,
+                      sp.image_url AS post_image_url
                       FROM mb_notifications n
                       JOIN mb_user ON n.sender_id = mb_user.id
-                      WHERE user_id = ?
+                      LEFT JOIN 
+                      sn_posts sp ON n.resource_id = sp.post_id
+                      WHERE n.user_id = ?
                       AND DATE(n.created_at) = CURDATE()
                       ORDER BY created_at DESC`;
     const lastWeekSql = `SELECT n.*,
                         mb_user.username,
                         mb_user.profile_pic_url,
-                        mb_user.google_photo
+                        mb_user.google_photo,
+                        sp.image_url AS post_image_url
                         FROM mb_notifications n
                         JOIN mb_user ON n.sender_id = mb_user.id
-                        WHERE user_id = ? 
+                        LEFT JOIN 
+                        sn_posts sp ON n.resource_id = sp.post_id
+                        WHERE n.user_id = ? 
                         AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
                         AND DATE(n.created_at) < CURDATE()
                         ORDER BY created_at DESC`;
     const lastMonth = `SELECT n.*,
                       mb_user.username,
                       mb_user.profile_pic_url,
-                      mb_user.google_photo
+                      mb_user.google_photo,
+                      sp.image_url AS post_image_url
                       FROM mb_notifications n
                       JOIN mb_user ON n.sender_id = mb_user.id
-                      WHERE user_id = ? 
+                      LEFT JOIN 
+                      sn_posts sp ON n.resource_id = sp.post_id
+                      WHERE n.user_id = ? 
                       AND DATE(n.created_at) >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
                       AND DATE(n.created_at) < DATE_SUB(CURDATE(), INTERVAL 7 DAY)
                       ORDER BY created_at DESC`;
@@ -879,6 +888,38 @@ router.get("/get-notifications/:id", async (req, res) => {
     console.log("Error getting notification information:", ex);
     return res.json({ success: false });
   }
+});
+
+
+router.post("/subscribe", (req, res) => {
+  const subscription = req.body;
+  subscriptions.push(subscription);
+
+  res.status(201).json({status: "success"});
+});
+
+let subscriptions = [];
+
+router.post("/send-notification", (req, res) => {
+  const notificationPayload = {
+      title: "New Notification",
+      body: "This is a new notification",
+      icon: "https://some-image-url.jpg",
+      data: {
+        url: "https://example.com",
+      },
+  };
+
+  Promise.all(
+    subscriptions.map((subscription) =>
+      webpush.sendNotification(subscription, JSON.stringify(notificationPayload))
+    )
+  )
+    .then(() => res.status(200).json({ message: "Notification sent successfully." }))
+    .catch((err) => {
+      console.error("Error sending notification");
+      res.sendStatus(500);
+    });
 });
 
 router.post("/mark-read/:id", async (req, res) => {});
