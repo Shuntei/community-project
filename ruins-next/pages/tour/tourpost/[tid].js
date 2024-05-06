@@ -177,23 +177,24 @@ export default function TourPost() {
           <hr className="md:hidden" />
         </div>
         {/* Photo section */}
-        <div className="w-full h-auto md:px-[150px] py-5 md:pt-5 pt-12 flex items-center gap-2.5">
+        <div className="relative w-full h-[700px] overflow-clip md:px-[150px] py-5 md:pt-5 pt-12 flex items-center gap-2.5">
           {imgs.length > 0 && (
             <img
               className="md:w-[60%] grow shrink"
               src={imgs[0].image_url.startsWith('/img') ? `${API_SERVER}${imgs[0].image_url}` : `/images/borou/${imgs[0].image_url}.jpg`}
             />
           )}
-          <div className="w-1/3 flex-col justify-start items-start gap-2.5 inline-flex relative md:block hidden">
+          <div className="w-1/3 flex-col justify-start items-start gap-2.5 md:inline-flex hidden">
             {imgs.slice(1, 3).map((img, index) => (
               <img
                 key={index}
-                className=""
+                className="w-auto object-cover"
                 src={img.image_url.startsWith('/img') ? `${API_SERVER}${img.image_url}` : `/images/borou/${img.image_url}.jpg`}
               />
             ))}
-            <button
-              className="absolute right-4 bottom-4 px-5 py-2.5 text-white bg-zinc-800 bg-opacity-80 rounded text-[13px] hover:bg-zinc-700"
+          </div>
+          <button
+              className="absolute right-48 bottom-10 px-5 py-2.5 text-white bg-zinc-800 bg-opacity-80 rounded text-[13px] hover:bg-zinc-700"
               onClick={openFullscreen}
             >
               查看照片
@@ -210,6 +211,7 @@ export default function TourPost() {
                   onSlideChange={(swiper) =>
                     setCurrentPhotoIndex(swiper.realIndex)
                   }
+                  className='my-auto'
                 >
                   {imgs.map((img, index) => (
                     <SwiperSlide key={index}>
@@ -224,7 +226,6 @@ export default function TourPost() {
               </div>
             )}
             {/* Full-screen photo end */}
-          </div>
         </div>
         {/* Photo section end */}
       </div>
