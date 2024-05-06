@@ -91,7 +91,7 @@ const EditPost = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
-    // console.log("formData with e.dtargey:", formData);
+    console.log("formData with e.targey:", formData);
   }
 
   // 紀錄選取的圖片
@@ -121,6 +121,8 @@ const EditPost = () => {
 
     try {
       const formDataToSend = new FormData(e.currentTarget)
+      formDataToSend.append('tour_id', postId);
+
       console.log(formDataToSend)
       // 向後端發出 POST
       const response = await fetch(`${TOUR_EDIT_POST}/${postId}`, {
@@ -137,24 +139,6 @@ const EditPost = () => {
     } catch (error) {
       console.error('Error updating post:', error)
     }
-
-    // try {
-    //   const response = await fetch(`/api/posts/${postId}`, {
-    //     method: 'PUT',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(formData),
-    //   })
-    //   if (response.ok) {
-    //     // Update local state with edited post details
-    //     // Close the edit modal or navigate back to post page
-    //   } else {
-    //     console.error('Failed to update post')
-    //   }
-    // } catch (error) {
-    //   console.error('Error updating post:', error)
-    // }
   }
 
   return (
