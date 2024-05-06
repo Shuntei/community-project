@@ -126,7 +126,7 @@ router.get("/posts/:post_id?", async (req, res) => {
     // console.log(page);
 
     let where = " WHERE 1 ";
-    
+
     if (keyword) {
       const keywordEsc = db.escape("%" + keyword + "%");
       console.log(keywordEsc);
@@ -381,7 +381,13 @@ router.delete("/:post_id", async (req, res) => {
   let result = {};
   try {
     if (post_id >= 1) {
-      const sql = "DELETE FROM `sn_posts` WHERE post_id=?";
+      // const sql = "DELETE FROM `sn_posts` WHERE post_id=?";
+      const sql = `
+        DELETE sn_posts, sn_comments
+        FROM sn_posts
+        LEFT JOIN sn_comments ON sn_posts.post_id = sn_comments.post_id
+        WHERE sn_posts.post_id = ?
+      `;
       [result] = await db.query(sql, [post_id]);
       output.success = !!result.affectedRows;
     }

@@ -139,7 +139,7 @@ export default function CommentEditModal({
         id="postModal"
         onSubmit={submitHandler}
       >
-        <div className="bg-292929 w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl border-2 border-blue-100">
+        <div className="bg-292929 w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl border-[1px] border-blue-100">
           <div className="flex justify-between pb-5 text-white">
             <div className="text-[25px] flex items-center">
               Edit your Comment

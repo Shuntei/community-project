@@ -166,7 +166,7 @@ export default function PostModal() {
         id="postModal"
         onSubmit={submitHandler}
       >
-        <div className="bg-zinc-900 w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl border-2 border-blue-100">
+        <div className="bg-zinc-900 w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl border-[1px] border-blue-100">
           <div className="flex justify-between pb-5 text-white">
             <div
               className="text-[25px] flex items-center"
@@ -182,8 +182,12 @@ export default function PostModal() {
                 </option>
                 {bdChoose.map((v, i) => {
                   return (
-                    <option key={v.board_id} value={v.board_id}>
-                      {v.board_name}{' '}
+                    <option
+                      key={v.board_id}
+                      value={v.board_id}
+                      className="text-[18px]"
+                    >
+                      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{v.board_name}{' '}
                     </option>
                   )
                 })}

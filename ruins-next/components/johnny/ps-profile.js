@@ -219,8 +219,9 @@ export default function Profile() {
                         className="flex items-center  "
                         onClick={() => setShowRelation(!showRelation)}
                       >
-                        {followStatus.status &&
-                          relationHandler(followStatus.status)}
+                        {followStatus.status && auth.id
+                          ? relationHandler(followStatus.status)
+                          : ''}
                       </div>
                       {showRelation && (
                         <ul className="menu bg-base-100 rounded-lg w-32 text-black absolute mt-2">
@@ -250,7 +251,6 @@ export default function Profile() {
                                   status: 'unfollow',
                                 })
                                 setSendStatus(true)
-
                                 // setIsFormChanged(true)
                               }}
                             >

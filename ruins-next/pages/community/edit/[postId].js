@@ -222,7 +222,7 @@ export default function EditModal() {
           id="postModal"
           onSubmit={submitHandler}
         >
-          <div className="bg-black w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl border-2 border-blue-100">
+          <div className="bg-black w-full pc:w-[700px] px-5 pc:px-10 pt-5 pb-10 rounded-3xl border-[1px] border-blue-100">
             <div className="flex justify-between pb-5 text-white">
               <div
                 className="text-[25px] flex items-center"
@@ -241,7 +241,11 @@ export default function EditModal() {
                   </option>
                   {bdChoose.map((v, i) => {
                     return (
-                      <option key={v.board_id} value={v.board_id}>
+                      <option
+                        key={v.board_id}
+                        value={v.board_id}
+                        className="text-[24px]"
+                      >
                         {v.board_name}
                       </option>
                     )
