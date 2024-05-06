@@ -48,19 +48,13 @@ export default function Navbar({ className, navColor = 'white' }) {
 
       if (t.closest('.logoutModalItem')) {
         setShowLogoutModal((prevState) => !prevState)
-        console.log("toggle");
       } else {
         if (!t.closest('.logoutModal')) {
           setShowLogoutModal(false)
         }
-        console.log("hide");
-
-
         if (!t.closest('.loginModal')) {
           setShowLogoutModal(false)
         }
-        console.log("hide");
-
       }
 
     }
@@ -117,7 +111,7 @@ export default function Navbar({ className, navColor = 'white' }) {
         </div>
         <Link
           href="/"
-          className={`${showNavbarPopup ? 'text-white' : ''} md:text-[40px] text-[20px] font-medium justify-center flex w-1/3`}
+          className={`${showNavbarPopup ? 'text-white' : ''} cursor md:text-[40px] text-[20px] font-medium justify-center flex w-1/3`}
         >
           Ruins
         </Link>
@@ -128,8 +122,7 @@ export default function Navbar({ className, navColor = 'white' }) {
             <div>
               <div className="relative cursor-pointer">
                 <div className="profileItem cursor-pointer select-none">
-                  <div className="absolute top-[-10px] left-0 right-0 bottom-[-10px]"></div>
-                  <div className="absolute top-[-6px] left-[-35px]">
+                  <div className="absolute top-[-6px] left-[-40px]">
                     <Image
                       width={30}
                       className="rounded-full min-h-[30px] max-h-[30px] object-cover"

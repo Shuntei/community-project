@@ -28,7 +28,7 @@ export default function CommentModal({
   setRenderAfterCm,
 }) {
   console.log('postIdInCommentModal', postId)
-  const { auth } = useAuth()
+  const { auth, notification, setNotification } = useAuth()
   const { commentModal, setCommentModal } = useToggles()
 
   const [postForm, setPostForm] = useState({
@@ -83,6 +83,9 @@ export default function CommentModal({
             .then((rst) => rst.json())
             .then((result) => {
               if (result.success) {
+                if(result.notification){
+                  setNotification(prevNotification => prevNotification + 1)
+                }
                 setRenderAfterCm(!renderAfterCm)
                 setCommentModal(!commentModal)
               } else {

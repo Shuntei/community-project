@@ -307,7 +307,7 @@ export default function Account() {
             >
               <Image
                 priority
-                className={`${avatarPreview ? 'max-h-[110px] min-h-[110px]' : ''} max-h-[110px] object-cover min-w-[110px] rounded-full hover:border`}
+                className="max-h-[110px] min-h-[110px] object-cover min-w-[110px] rounded-full hover:border"
                 alt=""
                 width={110}
                 height={110}
@@ -528,6 +528,11 @@ export default function Account() {
           </div>
           <div className="flex gap-[15px]">
             <button
+            onClick={()=>{
+              setCoverPreview('')
+              setAvatarPreview('')
+              updateFormInfo()
+            }}
               type="button"
               className="hover:bg-[#7A7A7A] py-[18px] md:px-[98px] px-[47px] flex justify-center items-center border border-white font-medium italic"
             >

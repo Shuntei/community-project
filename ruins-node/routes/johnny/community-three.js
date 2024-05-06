@@ -25,7 +25,6 @@ router.get("/userinfoByPostId", async (req, res) => {
   WHERE sn_posts.post_id=?
 `;
   const [userInfo] = await db.query(userInfoSql, [postId]);
-  console.log("userInfo", userInfo);
 
   res.json(userInfo);
 });
