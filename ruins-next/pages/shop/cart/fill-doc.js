@@ -141,7 +141,7 @@ export default function FillDoc() {
       memberMobile !== 0 &&
       paymentMethod !== '' &&
       shippingMethod !== '' &&
-      store711.storeid !== '' &&
+      storeid !== '' &&
       terms !== false
 
     setIsFormValid(isValid)
@@ -150,16 +150,16 @@ export default function FillDoc() {
   // 送出訂單給後端
   const creactPo = async (e) => {
     e.preventDefault()
-    const storeidValue = store711.storeid || ''
-    const storeName = store711.storename || ''
+    // const storeidValue = store711.storeid || ''
+    // const storeName = store711.storename || ''
 
     // 總訂單資訊
     const orderData = {
       member_id: memberId,
       recipient: recipientName,
       recipient_mobile: recipientMobile,
-      store_id: storeidValue,
-      store_name: storeName,
+      store_id: storeid,
+      store_name: storename,
       shipping_method: shippingMethod,
       shipping_fee: shippingFee,
       total_amount: totalAmount,
@@ -195,11 +195,16 @@ export default function FillDoc() {
       console.log(ex)
     }
   }
+  useEffect(()=>{
+    if(shippingMethod === '宅配(運費$100)'){
+      setStoreid('000001')
+    }
+    if(shippingMethod === '7-11店到店(運費$60)'){
+      setStoreid(store711.storeid)
+      setStorename(store711.storename)
+    }
+  },[shippingMethod,storeid,storename,store711.storename,store711.storeid])
 
-  useEffect(() => {
-    setStoreid('')
-    setStorename('')
-  }, [items])
   useEffect(() => {
     if (!memberId) {
       Swal.fire({
@@ -222,7 +227,7 @@ export default function FillDoc() {
     memberMobile,
     paymentMethod,
     shippingMethod,
-    store711.storeid,
+    storeid,
     terms,
   ])
   // 一進來先將 localstorage store711 刪除
@@ -241,16 +246,18 @@ export default function FillDoc() {
     } else if (!shippingMethod) {
       setShippingFee(0)
     }
-    if (coupon === '免運費' || terms ) {
+    if (coupon === '免運費' || terms) {
       setShippingFee(0)
     }
     const totalAmountFinal = Math.max(totalPrice + shippingFee)
 
     setTotalAmount(totalAmountFinal)
-  }, [totalPrice, coupon, shippingMethod, shippingFee ,terms])
+  }, [totalPrice, coupon, shippingMethod, shippingFee, terms])
   return (
     <>
-      {console.log(recipientName)}
+      {/* {console.log(storeid)}
+      {console.log(storename)} */}
+
       <div className=" bg-gray-100 flex flex-col justify-center items-center pt-8 md:pt-28 text-black">
         {/* header開始 */}
         <Navbar navColor={''} />
@@ -423,6 +430,8 @@ export default function FillDoc() {
                               className="w-full bg-zinc-100 rounded"
                               name="address"
                               type="text"
+                              value={storename}
+                              onChange={(e) => setStorename(e.target.value)}
                             />
                           </div>
                         </div>
