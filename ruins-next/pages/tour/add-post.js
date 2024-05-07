@@ -4,6 +4,8 @@ import { useAuth } from '@/contexts/auth-context'
 import { images } from '@/next.config'
 import React, { useEffect, useState } from 'react'
 import { TOUR_ADD_POST } from '@/components/config/api-path'
+import Swal from 'sweetalert2'
+import withReactContent from 'sweetalert2-react-content'
 
 export default function AddPost() {
   const { auth } = useAuth()
@@ -23,6 +25,52 @@ export default function AddPost() {
   }
 
   const [formData, setFormData] = useState(initialFormData)
+  const [formErrors, setFormErrors] = useState({})
+
+  // 資料驗證
+  // 出團人數要數字
+  const validateMaxGroupsize = (value) => {
+    const regex = /^[0-9]+$/
+    return regex.test(value) && parseInt(value) > 0
+  }
+
+  // Validate all form fields
+  const validateForm = () => {
+    const errors = {}
+
+    // 驗證人數為數字
+    if (!validateMaxGroupsize(formData.max_groupsize)) {
+      errors.max_groupsize = '請輸入數字'
+    }
+    // 檢查其他欄位是否空白
+    if (!formData.event_date) {
+      errors.event_date = '請選擇時間'
+    }
+    if (!formData.event_period) {
+      errors.event_period = '請選擇時長'
+    }
+    if (!formData.level_id) {
+      errors.level_id = '請選擇難度'
+    }
+    if (!formData.ruin_id) {
+      errors.ruin_id = '請選擇地點'
+    }
+    if (!formData.title) {
+      errors.title = '請填寫標題'
+    }
+    if (!formData.content) {
+      errors.content = '請填寫文章內容'
+    }
+    if (!formData.description) {
+      errors.description = '請填寫自我介紹'
+    }
+
+    // Set form errors
+    setFormErrors(errors)
+
+    // Return true if no errors
+    return Object.keys(errors).length === 0
+  }
 
   // 紀錄選取的圖片
   const handleImageChange = (e) => {
@@ -57,49 +105,117 @@ export default function AddPost() {
 
   // 取得輸入的表單資料
   const handleChange = (e) => {
+    // setFormData({
+    //   ...formData,
+    //   [e.target.name]: e.target.value,
+    // })
+
+    const { name, value } = e.target
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     })
+    // 在變動時驗證資料輸入
+    if (name === 'max_groupsize') {
+      const isValid = validateMaxGroupsize(value)
+      setFormErrors({
+        ...formErrors,
+        max_groupsize: isValid ? '' : value < 0 ? '人數必須大於0' : '人數必須為數字',
+      })
+    } else {
+      // Check for other fields and set appropriate error message
+      let errorMessage = ''
+      switch (name) {
+        case 'event_date':
+          errorMessage = value ? '' : '請選擇時間'
+          break
+        case 'event_period':
+          errorMessage = value ? '' : '請選擇時長'
+          break
+        case 'level_id':
+          errorMessage = value ? '' : '請選擇難度'
+          break
+        case 'ruin_id':
+          errorMessage = value ? '' : '請選擇地點'
+          break
+        case 'title':
+          errorMessage = value ? '' : '請填寫標題'
+          break
+        case 'content':
+          errorMessage = value ? '' : '請填寫文章內容'
+          break
+        case 'description':
+          errorMessage = value ? '' : '請填寫自我介紹'
+          break
+        default:
+          errorMessage = ''
+          break
+      }
+      // Set formErrors
+      setFormErrors({
+        ...formErrors,
+        [name]: errorMessage,
+      })
+    }
   }
 
   // 處理表單送出
   const handleSubmit = async (e) => {
     e.preventDefault()
 
+    // 資料有誤不送出
+    if (!validateForm()) {
+      return
+    }
+
+    const MySwal = withReactContent(Swal)
+    const confirmNotify = () => {
+      MySwal.fire({
+        title: '發文成功',
+        icon: 'success',
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        try {
+          fetch(SN_ADD_POST, {
+            method: 'POST',
+            body: formData,
+          })
+            .then((rst) => rst.json())
+            .then((result) => {
+              if (result.success) {
+                setRender(true)
+                setPostModal(!postModal)
+              } else {
+                toast.error('發文失敗')
+              }
+            })
+        } catch (err) {
+          console.error('Error submitting form:', err)
+        }
+      })
+    }
+
     try {
       const formDataToSend = new FormData(e.currentTarget)
-    //   const formDataToSend = new FormData();
-    // formDataToSend.append('tour_id', formData.tour_id);
-    // formDataToSend.append('user_id', formData.user_id);
-    // formDataToSend.append('ruin_id', formData.ruin_id);
-    // formDataToSend.append('event_date', formData.event_date);
-    // formDataToSend.append('max_groupsize', formData.max_groupsize);
-    // formDataToSend.append('event_period', formData.event_period);
-    // formDataToSend.append('level_id', formData.level_id);
-    // formDataToSend.append('title', formData.title);
-    // formDataToSend.append('description', formData.description);
-    // formDataToSend.append('content', formData.content);
+      formDataToSend.append('user_id', auth.id)
 
-    // // Append images with their descriptions
-    // images.forEach((image, index) => {
-    //   formDataToSend.append(`image${index + 1}`, image.file);
-    //   formDataToSend.append(`image_descrip${index + 1}`, image.image_descrip);
-    // });
-
+      // console.log(formDataToSend)
+      // console.log(postId)
       // 向後端發出 POST
-      const response = await fetch(`${TOUR_ADD_POST}${postId}`, {
+      const response = await fetch(`${TOUR_ADD_POST}`, {
         method: 'POST',
         body: formDataToSend,
       })
       if (!response.ok) {
-        throw new Error('Failed to create post')  
+        throw new Error('Failed to create post')
       }
       console.log('Post created successfully')
       // 在這裡提示成功訊息
     } catch (error) {
       console.error('Error creating post:', error)
     }
+    confirmNotify()
   }
 
   return (
@@ -127,8 +243,16 @@ export default function AddPost() {
                     value={formData.max_groupsize}
                     onChange={handleChange}
                     type="text"
-                    className="text-black bg-zinc-100 rounded p-1 md:w-1/3 w-full"
+                    className={`text-black bg-zinc-100 rounded p-1 md:w-1/3 w-full ${
+                      formErrors.max_groupsize ? 'border border-red-500' : ''
+                    }`}
                   />
+                  {/* Display error message */}
+                  {formErrors.max_groupsize && (
+                    <span className="text-red-500">
+                      {formErrors.max_groupsize}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="event_date">出發時間：</label>
@@ -138,8 +262,15 @@ export default function AddPost() {
                     value={formData.event_date}
                     onChange={handleChange}
                     type="datetime-local"
-                    className="text-black bg-zinc-100 rounded py-1 md:w-1/3 w-full"
+                    className={`text-black bg-zinc-100 rounded p-1 md:w-1/3 w-full ${
+                      formErrors.event_date ? 'border border-red-500' : ''
+                    }`}
                   />
+                  {formErrors.event_date && (
+                    <span className="text-red-500">
+                      {formErrors.event_date}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="event_period">探險時長：</label>
@@ -148,7 +279,9 @@ export default function AddPost() {
                     name="event_period"
                     value={formData.event_period}
                     onChange={handleChange}
-                    className="text-black bg-zinc-100 rounded py-1 md:w-1/3 w-full"
+                    className={`text-black bg-zinc-100 rounded p-1 md:w-1/3 w-full ${
+                      formErrors.event_period ? 'border border-red-500' : ''
+                    }`}
                   >
                     <option value="1">1小時</option>
                     <option value="2">2小時</option>
@@ -163,6 +296,11 @@ export default function AddPost() {
                     <option value="11">11小時</option>
                     <option value="12">12小時</option>
                   </select>
+                  {formErrors.event_period && (
+                    <span className="text-red-500">
+                      {formErrors.event_period}
+                    </span>
+                  )}
                 </div>
                 <div>
                   <label htmlFor="level_id">探險難度：</label>
@@ -171,21 +309,28 @@ export default function AddPost() {
                     name="level_id"
                     value={formData.level_id}
                     onChange={handleChange}
-                    className="text-black bg-zinc-100 rounded py-1 md:w-1/3 w-full"
+                    className={`text-black bg-zinc-100 rounded p-1 md:w-1/3 w-full ${
+                      formErrors.level_id ? 'border border-red-500' : ''
+                    }`}
                   >
                     <option value="1">簡單</option>
                     <option value="2">中等</option>
                     <option value="3">困難</option>
                   </select>
+                  {formErrors.level_id && (
+                    <span className="text-red-500">{formErrors.level_id}</span>
+                  )}
                 </div>
                 <div>
-                  <label htmlFor="ruin_id">廢墟名稱：</label>
+                  <label htmlFor="ruin_id">廢墟地點：</label>
                   <select
                     id="ruin_id"
                     name="ruin_id"
                     value={formData.ruin_id}
                     onChange={handleChange}
-                    className="text-black bg-zinc-100 rounded py-1 md:w-1/3 w-full"
+                    className={`text-black bg-zinc-100 rounded p-1 md:w-1/3 w-full ${
+                      formErrors.ruin_id ? 'border border-red-500' : ''
+                    }`}
                   >
                     <option value="1">安和路飛碟屋</option>
                     <option value="2">頭汴坑警察官吏派出所</option>
@@ -193,6 +338,9 @@ export default function AddPost() {
                     <option value="4">社子大戲院</option>
                     <option value="5">麗庭莊園</option>
                   </select>
+                  {formErrors.ruin_id && (
+                    <span className="text-red-500">{formErrors.ruin_id}</span>
+                  )}
                 </div>
               </div>
               <hr />
@@ -200,27 +348,43 @@ export default function AddPost() {
             <div className="md:w-3/5 flex flex-col space-y-5">
               <h2 className="text-xl font-semibold">活動介紹</h2>
               <div className="md:flex">
-                <label htmlFor="title">探險標題：</label>
-                <input
-                  type="text"
-                  id="title"
-                  name="title"
-                  value={formData.title}
-                  className="w-full bg-zinc-100 text-black rounded p-1"
-                  onChange={handleChange}
-                />
+                <label htmlFor="title" className="text-nowrap">
+                  探險標題：
+                </label>
+                <div className="w-full">
+                  <input
+                    type="text"
+                    id="title"
+                    name="title"
+                    value={formData.title}
+                    className={`text-black bg-zinc-100 rounded p-1 w-full ${
+                      formErrors.title ? 'border border-red-500' : ''
+                    }`}
+                    onChange={handleChange}
+                  />
+                  {formErrors.title && (
+                    <span className="text-red-500">{formErrors.title}</span>
+                  )}
+                </div>
               </div>
               <div className="md:flex align-top">
-                <label htmlFor="content">文章內容：</label>
-                <textarea
-                  id="content"
-                  name="content"
-                  cols="30"
-                  rows="10"
-                  value={formData.content}
-                  className="w-full bg-zinc-100 text-black rounded p-1"
-                  onChange={handleChange}
-                ></textarea>
+                <label htmlFor="content" className="text-nowrap">
+                  文章內容：
+                </label>
+                <div className="w-full">
+                  <textarea
+                    id="content"
+                    name="content"
+                    cols="30"
+                    rows="10"
+                    value={formData.content}
+                    className="text-black bg-zinc-100 rounded p-1 w-full"
+                    onChange={handleChange}
+                  ></textarea>
+                  {formErrors.content && (
+                    <span className="text-red-500">{formErrors.content}</span>
+                  )}
+                </div>
               </div>
               <hr />
             </div>
@@ -264,12 +428,12 @@ export default function AddPost() {
               <hr />
             </div>
             <div className="md:w-3/5 flex flex-col space-y-3 pb-5">
-              <h2 className="text-xl font-semibold">介紹自己</h2>
-              {/* <label htmlFor="">選擇身分：</label>
-            <select className="text-black">
-              <option value="someOption">探險新手</option>
-              <option value="otherOption">探險達人</option>
-            </select> */}
+              <div>
+                <h2 className="text-xl font-semibold">介紹自己</h2>
+                {formErrors.description && (
+                  <span className="text-red-500">{formErrors.description}</span>
+                )}
+              </div>
               <textarea
                 name="description"
                 id="description"
@@ -277,7 +441,7 @@ export default function AddPost() {
                 onChange={handleChange}
                 cols="30"
                 rows="10"
-                className="text-black bg-zinc-100 rounded"
+                className="text-black bg-zinc-100 rounded px-1"
               ></textarea>
             </div>
             <button

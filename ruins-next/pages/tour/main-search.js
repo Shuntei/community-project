@@ -1,13 +1,35 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router';
 import 'remixicon/fonts/remixicon.css'
 import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import Link from 'next/link'
+import { TOUR_LIST } from '@/components/config/api-path';
 
 export default function MainSearch() {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
+  const [tourList, setTourList] = useState([])
+
+  const fetchAllTourData = async () => {
+    const response = await fetch(`${TOUR_LIST}`)
+    const result = await response.json()
+    // 若 result 或 result.rows undefined, 直接結束
+    if (!result || !result.rows) {
+      return
+    }
+
+    const newData = result.rows.map((item) => ({
+      ...item,
+      key: item.tour_id,
+    }))
+    console.log(newData);
+    setTourList((prevList) => [...prevList, ...newData])
+  }
+
+  useEffect(()=>{
+    fetchAllTourData()
+  },[])
 
   const handleSearch = (e) => {
     e.preventDefault();
