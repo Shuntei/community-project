@@ -190,7 +190,7 @@ export default function EditModal() {
             title,
             content,
             image_url,
-            board_id,
+            boardId: board_id,
             emotion,
             tags,
             board_name,
