@@ -211,7 +211,8 @@ const handleAddPost = async (req, res) => {
     const formData = req.body;
     // Access uploaded images
     const images = req.files;
-
+    console.log(formData);
+    console.log(images);
     // Insert data into the 'tony_tour_post' table
     const postSql = `
       INSERT INTO tony_tour_post 
@@ -281,8 +282,14 @@ const handleEditPost = async(req, res)=>{
   try {
     const formData = req.body;
     // const images = req.body.images;
-    const images = req.files; // New images uploaded by the user
+    // const images = req.body.images; // New images uploaded by the user
+    const files = req.files; // New images uploaded by the user
     
+    // console.log('images:',images);
+    // console.log('files:',files.map(v => v.filename));
+    // console.log(files);
+    // const images = files.map(v => v.filename)
+    // console.log(images);
     console.log(formData);
 
     const postEditSql = `UPDATE tony_tour_post
@@ -324,10 +331,17 @@ const handleEditPost = async(req, res)=>{
       VALUES (?, ?, ?);
     `;
     // Execute insert query for each new image
-    for (const image of images) {
-      await db.query(insertImagesSql, [formData.tour_id, image.image_url, image.image_descrip]);
-    }
+    
 
+    // for (const image of images) {
+    //   await db.query(insertImagesSql, [formData.tour_id, image, image]);
+    // }
+  //  for (const image of files) {
+  //     await db.query(insertImagesSql, [formData.tour_id, image.filename, image.filename]);
+  //   }
+
+    await files.map( (v, i) => db.query(insertImagesSql, [formData.tour_id, `/img/${v.filename}`, formData.image_descrip[i]]))
+ 
     output.success = true;
     res.json(output);
 

@@ -64,7 +64,8 @@ const EditPost = () => {
           } = dataForShow
 
           // Set formData with the selected keys
-          setFormData({...formData,
+          setFormData({
+            ...formData,
             tour_id,
             ruin_id,
             event_date,
@@ -91,7 +92,7 @@ const EditPost = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
-    console.log("formData with e.targey:", formData);
+    console.log('formData with e.targey:', formData)
   }
 
   // 紀錄選取的圖片
@@ -121,7 +122,8 @@ const EditPost = () => {
 
     try {
       const formDataToSend = new FormData(e.currentTarget)
-      formDataToSend.append('tour_id', postId);
+      formDataToSend.append('tour_id', postId)
+      formDataToSend.append('images', images)
 
       console.log(formDataToSend)
       // 向後端發出 POST
@@ -242,7 +244,9 @@ const EditPost = () => {
             <div className="md:w-3/5 flex flex-col space-y-5">
               <h2 className="text-xl font-semibold">活動介紹</h2>
               <div className="md:flex">
-                <label htmlFor="title">探險標題：</label>
+                <label htmlFor="title" className="text-nowrap">
+                  探險標題：
+                </label>
                 <input
                   type="text"
                   id="title"
@@ -253,7 +257,9 @@ const EditPost = () => {
                 />
               </div>
               <div className="md:flex align-top">
-                <label htmlFor="content">文章內容：</label>
+                <label htmlFor="content" className="text-nowrap">
+                  文章內容：
+                </label>
                 <textarea
                   id="content"
                   name="content"
@@ -295,9 +301,9 @@ const EditPost = () => {
                         >
                           <img
                             src={
-                              image.image_url &&
-                              image.image_url.startsWith('/img')
-                                ? `${API_SERVER}${image.image_url}`
+                              image?.image_url &&
+                              image?.image_url.startsWith('/img')
+                                ? `${API_SERVER}/${image.image_url}`
                                 : image.file
                                   ? URL.createObjectURL(image.file)
                                   : `/images/borou/${image.image_url}.jpg`
