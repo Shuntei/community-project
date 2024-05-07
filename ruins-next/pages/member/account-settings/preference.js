@@ -3,7 +3,10 @@ import Navbar from '@/components/linda/navbar/navbar'
 import { MdCheckBoxOutlineBlank } from 'react-icons/md'
 import { MdCheckBox } from 'react-icons/md'
 import AccountLayout from '@/components/linda/accountLayout'
-import { MB_SAVE_PREFERENCES, MB_GET_PREFERENCES } from '@/components/config/api-path'
+import {
+  MB_SAVE_PREFERENCES,
+  MB_GET_PREFERENCES,
+} from '@/components/config/api-path'
 import NotifyRed from '@/components/linda/notify/notify-red'
 import NotifyGreen from '@/components/linda/notify/notify-green'
 import { useAuth } from '@/contexts/auth-context'
@@ -17,41 +20,42 @@ export default function Preference() {
   const [notificationText, setNotificationText] = useState('')
   const [showRedNotification, setShowRedNotification] = useState(false)
   const [showGreenNotification, setShowGreenNotification] = useState(false)
-  const {auth} = useAuth()
+  const { auth } = useAuth()
 
   const handleSaveButton = async () => {
     const preferences = {
-      live, 
+      live,
       product,
       trip,
       game,
-      all
+      all,
     }
 
     const r = await fetch(`${MB_SAVE_PREFERENCES}/${auth.id}`, {
       method: 'post',
       headers: {
-        "Content-Type": "application/json"
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify(preferences)
+      body: JSON.stringify(preferences),
     })
 
     const result = await r.json()
-    if(result.success){
+    if (result.success) {
       setNotificationText('Saved successfully')
       setShowGreenNotification(true)
+      setShowRedNotification(false)
     } else {
       setNotificationText('Failed to save')
       setShowRedNotification(true)
     }
   }
 
-  const fetchInfo = async ()=>{
+  const fetchInfo = async () => {
     const r = await fetch(`${MB_GET_PREFERENCES}/${auth.id}`)
     const result = await r.json()
     const data = result.data
-    console.log(result);
-    if(data){
+    console.log(result)
+    if (data) {
       setLive(data.live)
       setProduct(data.product)
       setTrip(data.trip)
@@ -66,17 +70,16 @@ export default function Preference() {
     }
   }
 
-  useEffect(()=>{
-    if(all){
+  useEffect(() => {
+    if (all) {
       setLive(false)
       setProduct(false)
       setTrip(false)
       setGame(false)
     }
-
   }, [all])
 
-  useEffect(()=>{
+  useEffect(() => {
     fetchInfo()
   }, [])
 
@@ -114,7 +117,7 @@ export default function Preference() {
                 </div>
                 <div className="flex gap-[6px] items-center">
                   <button
-                  onClick={() => {
+                    onClick={() => {
                       setProduct(!product)
                       setAll(false)
                     }}
@@ -129,7 +132,7 @@ export default function Preference() {
                 </div>
                 <div className="flex gap-[6px] items-center">
                   <button
-                  onClick={() => {
+                    onClick={() => {
                       setTrip(!trip)
                       setAll(false)
                     }}
@@ -144,7 +147,7 @@ export default function Preference() {
                 </div>
                 <div className="flex gap-[6px] items-center">
                   <button
-                  onClick={() => {
+                    onClick={() => {
                       setGame(!game)
                       setAll(false)
                     }}
@@ -159,7 +162,7 @@ export default function Preference() {
                 </div>
                 <div className="flex gap-[6px] items-center">
                   <button
-                  onClick={() => {
+                    onClick={() => {
                       setAll(!all)
                     }}
                   >
@@ -174,28 +177,31 @@ export default function Preference() {
               </div>
             </div>
           </div>
-          <button 
-          onClick={handleSaveButton}
-          className="bg-white text-black hover:bg-black hover:text-white flex text-[15px] max-w-[300px] mt-[10px] italic py-[18px] md:px-[98px] w-full border border-black hover:border-white justify-center items-center">
+          <button
+            onClick={handleSaveButton}
+            className="bg-white text-black hover:bg-black hover:text-white flex text-[15px] max-w-[300px] mt-[10px] italic py-[18px] md:px-[98px] w-full border border-black hover:border-white justify-center items-center"
+          >
             SAVE CHANGE
           </button>
         </div>
       </div>
-      <div className='fixed bottom-0 w-full bg-black bg-opacity-50 z-[1001]'>
-      <NotifyGreen
-        onClose={() => {
-          setShowGreenNotification(false)
-        }}
-        text={notificationText}
-        show={showGreenNotification}
-      />
-      <NotifyRed
-        onClose={() => {
-          setShowRedNotification(false)
-        }}
-        text={notificationText}
-        show={showRedNotification}
-      />
+      <div className="fixed bottom-0 w-full bg-black bg-opacity-50 z-[1001]">
+        <div className="w-full">
+          <NotifyGreen
+            onClose={() => {
+              setShowGreenNotification(false)
+            }}
+            text={notificationText}
+            show={showGreenNotification}
+          />
+          <NotifyRed
+            onClose={() => {
+              setShowRedNotification(false)
+            }}
+            text={notificationText}
+            show={showRedNotification}
+          />
+        </div>
       </div>
     </>
   )
