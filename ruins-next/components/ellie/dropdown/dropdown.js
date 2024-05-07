@@ -14,7 +14,7 @@ import Link from 'next/link'
 import EditNotes from '../notepad/notepad_edit'
 // import toggleEditNotes from '../notepad/notepad_edit'
 
-export default function Dropdown() {
+export default function Dropdown({data}) {
   const [showPopup, setShowPopup] = useState(false)
 
   const [isChanged, setIsChanged ] = useState(false)
@@ -85,24 +85,6 @@ export default function Dropdown() {
     getNote()
   }, [router, isChanged])
 
-  const [achieved, setAchieved] = useState('')
-
-  const getAchieved = async () => {
-    const url = `http://localhost:3001/game/gm_achieved/${mbID}`
-    try {
-      const res = await fetch(url)
-      const data = await res.json()
-      //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
-
-      setAchieved(data)
-    } catch (e) {
-      console.log(e)
-    }
-  }
-  useEffect(() => {
-    getAchieved()
-  }, [router])
-
   return (
     <>
       {/* {console.log(note.rows)} */}
@@ -145,8 +127,9 @@ export default function Dropdown() {
                         </div>
                       </div>
                     </div>
-                    {achieved.rows &&
-                      achieved.rows.slice(1).map((v, i) => {
+                    <div className="flex justify-start pt-1">
+                    {data &&
+                      data.slice(1).map((v, i) => {
                         return (
                           <div key={i}>
                             {v.activate === 0 ? (
@@ -161,27 +144,14 @@ export default function Dropdown() {
                           </div>
                         )
                       })}
-                    {/* <div className="flex justify-start pt-1 gap-1">
-                      <div className="w-7 h-7 flex items-center justify-center bg-gray-800">
-                        <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                          2
-                        </div>
                       </div>
-                      <div className="w-7 h-7 flex items-center justify-center bg-gray-800">
-                        <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                          3
-                        </div>
-                      </div>
-                      <div className="w-7 h-7 flex items-center justify-center bg-gray-800 text-white font-light">
-                        +6
-                      </div>
-                    </div> */}
+                   
                     <div className="mt-2 text-xs font-light font-['IBM Plex Mono'] border-b border-black">
                       LOCKED ACHIEVEMENTS
                     </div>
                     <div className="flex justify-start pt-1">
-                    {achieved.rows &&
-                      achieved.rows.map((v, i) => {
+                    {data &&
+                      data.map((v, i) => {
                         return (
                           <div>
                             {v.activate === 0 ? (
@@ -193,6 +163,7 @@ export default function Dropdown() {
                             ) : (
                               <div type="hidden"></div>
                             )}
+                            {(i + 1) % 7 === 0 && <br key={`br-${i}`} />}
                           </div>
                         )
                       })}

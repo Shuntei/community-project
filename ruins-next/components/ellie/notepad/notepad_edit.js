@@ -4,16 +4,22 @@ import { RiArrowGoBackLine,RiArrowGoForwardLine,RiBold,RiItalic,RiUnderline,RiSt
 import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/auth-context';
 import Alert from '../popup/alert';
+import AlertEdit from '../popup/AlertEdit';
 
 export default function EditNotes({ onClose ,note1, isChanged ,setIsChanged, toggleEditNotes }) {
 
   const [showAlert, setShowAlert] = useState(false)
+  const [showAlertEdit, setShowAlertEdit] = useState(false)
 
   const [isOpen, setIsOpen ] = useState(true)
   
 
   const toggleAlert = () => {
     setShowAlert(!showAlert)
+  }
+
+  const toggleAlertEdit = () => {
+    setShowAlertEdit(!showAlertEdit)
   }
 
   
@@ -73,7 +79,9 @@ export default function EditNotes({ onClose ,note1, isChanged ,setIsChanged, tog
       // 
       // router.push(`/game`);
       setIsChanged(!isChanged)
-      alert("資料修改成功")
+      setShowAlertEdit(true);
+      setIsOpen(false);
+      // alert("資料修改成功")
       // onClose()
     } else {
       // 
@@ -199,7 +207,11 @@ export default function EditNotes({ onClose ,note1, isChanged ,setIsChanged, tog
                 </div>
                 <div className="relative">
                     <div className="saveOut">
-                      <button className="saveInside" type='submit'>SAVE</button>
+                      <button 
+                      className="saveInside" 
+                      onClick={toggleAlertEdit}
+                      // type='submit'
+                      >SAVE</button>
                     </div>
                 </div>
               </div>
@@ -211,6 +223,7 @@ export default function EditNotes({ onClose ,note1, isChanged ,setIsChanged, tog
   </div>} {/* container -->*/}
   {/* 彈出的 Alert 視窗 */}
   {showAlert && <Alert toggleAlert={toggleAlert} deleteForm={deleteForm} isOpen={isOpen} setIsOpen={setIsOpen}/>}
+  {showAlertEdit && <AlertEdit toggleAlertEdit={toggleAlertEdit} changeHandler={changeHandler} isOpen={isOpen} setIsOpen={setIsOpen}/> }
   {/* toggleAlert showAlert, setShowAlert */}
   
       <style global jsx>{`

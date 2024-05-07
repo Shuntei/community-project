@@ -15,11 +15,30 @@ export default function Main() {
   const { auth } = useAuth()
   const mbID = auth.id
 
+  const [mission, setMission] = useState('')
+
+  const getMission = async () => {
+
+
+    const url = `http://localhost:3001/game/gm_achieved/${mbID}`
+    try {
+      const res = await fetch(url)
+      const data = await res.json()
+      //確保就算資料傳輸產生錯誤 畫面不會整個崩潰
+      console.log(data);
+      setMission(data.rows)
+      // return data;
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const getmbID = async () => {
     try {
       const r = await fetch(`http://localhost:3001/game/check/gm_achieved/${mbID}`)
       const d = await r.json()
       console.log(d)
+      return d.success
     } catch (ex) {
       console.log(ex)
     }
@@ -52,11 +71,24 @@ export default function Main() {
     }
   }, [auth])
 
-  useEffect(()=>{
-    getmbID()
-  },[mbID])
+  useEffect(() => {
+    const fetchMbID = async () => {
+      try {
+        const result = await getmbID();
+        if (result) {
+          await getMission();
+        }
+      } catch (error) {
+        console.error("Error fetching member ID:", error);
+      }
+    };
+  
+    fetchMbID();
+  }, []);
+  
   return (
-    <>
+   
+    <> {console.log(mission)}
       <div className="flex flex-row mt-24 relative">
         <div className="w-5/6 h-auto bg-gray-300 overflow-hidden">
           {/* <Entrance/> */}
@@ -65,13 +97,9 @@ export default function Main() {
           <div className="bg-black bg-opacity-50 backdrop-blur-sm absolute w-full h-full"></div>
           <div className="container absolute bottom-24">
             {loading ? (
-              // <div className="loader absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-              //   <div className="animate-spin rounded-full border-t-4 border-gray-400 border-opacity-25 h-12 w-12"></div>
-              // </div>
               <img src="/svg/banner.svg" className="h-auto mx-auto" />
             ) : showFirstSVG ? (
               <button>
-                {/* <img src="/svg/banner.svg" className="absolute w3/5 h-auto mt-96 ml-40" /> */}
               </button>
             ) : (
               <Link href="/game/three">
@@ -84,8 +112,8 @@ export default function Main() {
             )}
           </div>
         </div>
-        <Mission />
-        <Dropdown />
+        <Mission data={mission}/>
+        <Dropdown data={mission}/>
       </div>
       <style jsx>{`
         .flash-animation {

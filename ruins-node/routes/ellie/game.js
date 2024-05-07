@@ -75,7 +75,7 @@ router.post("/ruins_final/gm_note_edit", async (req, res) => {
   // res.send('helllo')
   // res.json({title:1, content:2})
   try {
-    const { user_id,title, memo, note_id } = req.body;
+    const { user_id, title, memo, note_id } = req.body;
 
     console.log(req.body);
 
@@ -300,12 +300,11 @@ router.get("/check/gm_achieved/:user_id", async (req, res) => {
     (${user_id}, 3, 'Mission 003', 'Teleport yourself.','Link to some where else',0),
     (${user_id}, 4, 'Mission 004', 'Rubbish?','Yes it smells like rotten garbage.',0),
     (${user_id}, 5, 'Mission 005', 'Its construction.','Do not stand too close.',0),
-    (${user_id}, 6, 'Mission 006', 'Sooo Annoying.','Clap to welcome mosquito.',0);`;
-    // (${user_id}, 7, 'Mission 007', 'Love window shopping'),
-    // (${user_id}, 8, 'Mission 008', 'tour tour tour'),
-    // (${user_id}, 9, 'Mission 009', 'LIVE WAREHOUSE.'),
-    // (${user_id}, 10, 'Mission 010', 'shut up and pay attention'),
-    // (${user_id}, 11, 'Mission 011', 'tic-tac-toe 01'),
+    (${user_id}, 6, 'Mission 006', 'Sooo Annoying.','Clap to welcome mosquito.',0),
+    (${user_id}, 7, 'Mission 007', 'Love window shopping','123223323424',0),
+    (${user_id}, 8, 'Mission 008', 'tour tour tour','123',0),
+    (${user_id}, 9, 'Mission 009', 'LIVE WAREHOUSE.','123',0),
+    (${user_id}, 10, 'Mission 010', 'shut up and pay attention','123',0);`;
     // (${user_id}, 12, 'Mission 012', 'tic-tac-toe harder'),
     // (${user_id}, 13, 'Mission 013', 'Done all.');`;
     console.log(sql);

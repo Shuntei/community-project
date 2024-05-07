@@ -126,28 +126,28 @@ useFrame((_, delta) => {
     }
 })
 
-useFrame(({ camera }, delta) => {
-  if (boyRef.current) {
-  const boyPosition = boyRef.current.translation()
+// useFrame(({ camera }, delta) => {
+//   if (boyRef.current) {
+//   const boyPosition = boyRef.current.translation()
 
-  const cameraPosition = new THREE.Vector3()
-  cameraPosition.copy(boyPosition)
-  cameraPosition.z += 8
-  cameraPosition.y += 3
+//   const cameraPosition = new THREE.Vector3()
+//   cameraPosition.copy(boyPosition)
+//   cameraPosition.z += 8
+//   cameraPosition.y += 3
 
-  const cameraTarget = new THREE.Vector3()
-  cameraTarget.copy(boyPosition)
-  cameraTarget.y += 0.5
+//   const cameraTarget = new THREE.Vector3()
+//   cameraTarget.copy(boyPosition)
+//   cameraTarget.y += 0.5
 
-  cameraProperties.position.lerp(cameraPosition, 5 * delta)
-  cameraProperties.target.lerp(cameraTarget, 5 * delta)
+//   cameraProperties.position.lerp(cameraPosition, 5 * delta)
+//   cameraProperties.target.lerp(cameraTarget, 5 * delta)
 
-  camera.position.copy(cameraProperties.position)
-  camera.lookAt(cameraProperties.target)
-      // update camera
-      // camera.position.copy(ref.current.translation())
-  }
-})
+//   camera.position.copy(cameraProperties.position)
+//   camera.lookAt(cameraProperties.target)
+//       // update camera
+//       // camera.position.copy(ref.current.translation())
+//   }
+// })
 
 const character = useRef();
   return (
