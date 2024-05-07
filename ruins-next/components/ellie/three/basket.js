@@ -19,7 +19,7 @@ export function Basket(props) {
         },
         body: JSON.stringify({
           user_id: auth.id,
-          missionId: 5, // 更新 achieved_id 為 1 的資料ss
+          missionId: 2, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
         }),
       });
@@ -34,7 +34,7 @@ export function Basket(props) {
     }
   };
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} onClick={handleClick}>
       <mesh
         castShadow
         receiveShadow

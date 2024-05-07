@@ -84,6 +84,9 @@ export default function Notepad({ onClose, isChanged, setIsChanged }) {
     }
   };
 
+
+  
+
   
 
   return (

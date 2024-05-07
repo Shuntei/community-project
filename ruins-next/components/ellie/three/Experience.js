@@ -28,14 +28,78 @@ import { Spray } from './spray'
 
 export default function Experience() {
   const [hover, setHover] = useState(false)
-  const cube = useRef()
+  const cube = useRef();
+  
+  const jump = ()=> {
+    cube.current.applyImpule({x:0,y:4,z:0});
+  }
   //  console.log(GameLevel({thStages:3}));
   const startGame = useGameStore((state) => state.startGame)
 
-  const random = useRef(Math.floor(Math.random() * (3 - 1) + 1))
+  const random = useRef(Math.floor(Math.random() * (9 - 1) + 1))
   const posData = [
     [
+      [1, 1.5, 4],
+      [-1.2, 2, 9],
+      [-18, 1.5, -9],
+      [9.5, 1.2, -8],
       [-8, 2, -4],
+      [-3, 2, 0],
+      [-8, 2, 7.5],
+      [3, 2, -11],
+      [9, 2, -3],
+    ],
+    [
+      [-18, 1.5, -9],
+      [1, 1.5, 4],
+      [-3, 2, 0],
+      [3, 2, -11],
+      [-8, 2, -4],
+      [9, 2, -3],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [-1.2, 2, 9],
+    ],
+    [
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [1, 1.5, 4],
+      [9.5, 1.2, -8],
+      [-8, 2, 7.5],
+      [-1.2, 2, 9],
+      [-8, 2, -4],
+      [-3, 2, 0],
+      [9, 2, -3],
+    ],
+    [
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [1, 1.5, 4],
+      [-8, 2, 7.5],
+      [9, 2, -3],
+      [-8, 2, -4],
+      [-3, 2, 0],
+      [-1.2, 2, 9],
+    ],
+    [
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [1, 1.5, 4],
+      [-3, 2, 0],
+      [9, 2, -3],
+      [-8, 2, -4],
+      [-1.2, 2, 9],
+    ],
+    [
+      [-8, 2, -4],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [1, 1.5, 4],
       [-1.2, 2, 9],
       [9, 2, -3],
       [-3, 2, 0],
@@ -43,6 +107,11 @@ export default function Experience() {
     [
       [-1.2, 2, 9],
       [-8, 2, -4],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [1, 1.5, 4],
       [-3, 2, 0],
       [9, 2, -3],
     ],
@@ -50,6 +119,11 @@ export default function Experience() {
       [-1.2, 2, 9],
       [-3, 2, 0],
       [9, 2, -3],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [1, 1.5, 4],
       [-8, 2, -4],
     ],
     [
@@ -57,15 +131,21 @@ export default function Experience() {
       [9, 2, -3],
       [-1.2, 2, 9],
       [-8, 2, -4],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [1, 1.5, 4],
     ],
   ]
 
-  console.log(random.current)
+  // console.log(random.current)
 
   const posDisplay = posData[random.current - 1]
 
   return (
     <>
+    {console.log(random.current)}
       <group>
         {/* LIGHT */}
         <OrbitControls />
@@ -93,42 +173,69 @@ export default function Experience() {
               <meshStandardMaterial color={hover ? 'hotpink' : 'royalblue'} />
             </Box>
           </RigidBody>
-          <RigidBody position={posDisplay[0]} ref={cube}>
+          {/* <RigidBody position={posDisplay[0]} ref={cube}>
             <Box1 />
-          </RigidBody>
-          <RigidBody position={posDisplay[1]} ref={cube}>
+          </RigidBody> */}
+          <RigidBody position={posDisplay[0]} 
+          ref={cube}
+          >
             <Box2 />
           </RigidBody>
-          <RigidBody position={posDisplay[2]} ref={cube}>
+          {/* <RigidBody position={posDisplay[2]} ref={cube}>
             <Box3 />
-          </RigidBody>
+          </RigidBody> */}
           {/* <OrbitControls target={[0, 1, 0]}/> */}
-          <RigidBody position={posDisplay[3]} ref={cube}>
+          <RigidBody position={posDisplay[1]} 
+          // ref={cube}
+          >
             <Chair />
           </RigidBody>
-          <RigidBody position={[-16, 1.4, -1]} ref={cube}>
+          <RigidBody
+            // position={[-16, 1.4, -1]}
+            position={posDisplay[2]}
+          >
             <Pallet />
           </RigidBody>
-          <RigidBody position={[-16.8, 1.2, 5]} ref={cube}>
+          <RigidBody
+            // position={[-16.8, 1.2, 5]}
+            position={posDisplay[3]} 
+          >
             <Bricks />
           </RigidBody>
-          <RigidBody position={[-8, 2, 7.5]} ref={cube}>
+          <RigidBody
+            // position={[-8, 2, 7.5]}
+            position={posDisplay[4]}
+          >
             <Basket />
           </RigidBody>
-          <RigidBody position={[9.5, 1.2, -8]} ref={cube}>
+          <RigidBody
+            // position={[9.5, 1.2, -8]}
+            position={posDisplay[5]}
+            ref={cube}
+          >
             <Cans />
           </RigidBody>
-          <RigidBody position={[3, 2, -11]} ref={cube}>
+          <RigidBody
+            // position={[3, 2, -11]}
+            position={posDisplay[6]}
+            ref={cube}
+          >
             <Soda />
           </RigidBody>
-          <RigidBody position={[-18, 1.5, -9]} ref={cube}>
+          <RigidBody
+            // position={[-18, 1.5, -9]}
+            position={posDisplay[7]}
+            ref={cube}
+          >
             <Trash />
           </RigidBody>
-          <RigidBody position={[1, 1.5, 4]} ref={cube}>
+          <RigidBody 
+          // position={[-3, 2.3, 4]} 
+          position={posDisplay[8]}
+          ref={cube}
+          >
             <Spray />
           </RigidBody>
-          
-          
 
           {/*   */}
         </group>

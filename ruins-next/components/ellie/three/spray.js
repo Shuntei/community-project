@@ -8,6 +8,7 @@ export function Spray(props) {
   const { auth } = useAuth()
 
   const [clicked, click] = useState(false)
+  const [hovered, hover] = useState(false)
 
   const handleClick = async () => {
     try {
@@ -18,7 +19,7 @@ export function Spray(props) {
         },
         body: JSON.stringify({
           user_id: auth.id,
-          missionId: 9, // 更新 achieved_id 為 1 的資料ss
+          missionId: 6, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
         }),
       });
@@ -33,7 +34,7 @@ export function Spray(props) {
     }
   };
   return (
-    <group {...props} dispose={null} scale={0.02}>
+    <group {...props} dispose={null} scale={0.02} onClick={handleClick}>
       <mesh
         castShadow
         receiveShadow

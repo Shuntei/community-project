@@ -18,7 +18,7 @@ export function Bricks(props) {
         },
         body: JSON.stringify({
           user_id: auth.id,
-          missionId: 10, // 更新 achieved_id 為 1 的資料ss
+          missionId: 5, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
         }),
       });
@@ -38,6 +38,7 @@ export function Bricks(props) {
     dispose={null}
     scale={2}
     rotation={[0,90,0]}
+    onClick={handleClick}
     >
       <mesh
         castShadow

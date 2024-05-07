@@ -301,11 +301,11 @@ router.get("/check/gm_achieved/:user_id", async (req, res) => {
     (${user_id}, 4, 'Mission 004', 'Rubbish?','Yes it smells like rotten garbage.',0),
     (${user_id}, 5, 'Mission 005', 'Its construction.','Do not stand too close.',0),
     (${user_id}, 6, 'Mission 006', 'Sooo Annoying.','Clap to welcome mosquito.',0),
-    (${user_id}, 7, 'Mission 007', 'Love window shopping','123223323424',0),
+    (${user_id}, 7, 'Mission 007', 'Love shopping','123223323424',0),
     (${user_id}, 8, 'Mission 008', 'tour tour tour','123',0),
     (${user_id}, 9, 'Mission 009', 'LIVE WAREHOUSE.','123',0),
-    (${user_id}, 10, 'Mission 010', 'shut up and pay attention','123',0);`;
-    // (${user_id}, 12, 'Mission 012', 'tic-tac-toe harder'),
+    (${user_id}, 10, 'Mission 010', 'Come closer.','123',0);`;
+    // (${user_id}, 12, 'Mission 012', 'shut up and pay attention'),
     // (${user_id}, 13, 'Mission 013', 'Done all.');`;
     console.log(sql);
     [result] = await db.query(sql);

@@ -27,7 +27,7 @@ export default function Box2(props) {
         },
         body: JSON.stringify({
           user_id: auth.id,
-          missionId: 2, // 更新 achieved_id 為 1 的資料
+          missionId: 7, // 更新 achieved_id 為 1 的資料
           newValue: 1, // 新的 activate 值
         }),
       });
