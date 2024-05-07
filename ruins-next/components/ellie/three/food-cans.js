@@ -19,7 +19,7 @@ export function Cans(props) {
         },
         body: JSON.stringify({
           user_id: auth.id,
-          missionId: 6, // 更新 achieved_id 為 1 的資料ss
+          missionId: 9, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
         }),
       });
@@ -34,9 +34,9 @@ export function Cans(props) {
     }
   };
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} onClick={handleClick}>
       <group rotation={[0, 1.542, -Math.PI]} scale={0.002}>
-        <group rotation={[Math.PI / 2, 0, 0]}>
+        <group rotation={[Math.PI / 2, 0, 0]} >
           <group
             position={[460.754, -213.525, 77.461]}
             rotation={[-Math.PI, 0, Math.PI]}

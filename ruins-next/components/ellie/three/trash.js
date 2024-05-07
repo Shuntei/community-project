@@ -19,7 +19,7 @@ export function Trash(props) {
         },
         body: JSON.stringify({
           user_id: auth.id,
-          missionId: 8, // 更新 achieved_id 為 1 的資料ss
+          missionId: 4, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
         }),
       });
@@ -34,7 +34,7 @@ export function Trash(props) {
     }
   };
   return (
-    <group {...props} dispose={null}>
+    <group {...props} dispose={null} onClick={handleClick}>
       <group position={[-0.012, 0.042, 0.002]} rotation={[-Math.PI / 2, 0, 0]}>
         <group rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
           <group position={[244.939, 62.854, -165.567]} rotation={[-Math.PI / 2, 0, -2.461]}>

@@ -14,7 +14,7 @@ import Link from 'next/link'
 import EditNotes from '../notepad/notepad_edit'
 // import toggleEditNotes from '../notepad/notepad_edit'
 
-export default function Dropdown({data}) {
+export default function Dropdown({data, isNoteChanged, setIsNoteChanged}) {
   const [showPopup, setShowPopup] = useState(false)
 
   const [isChanged, setIsChanged ] = useState(false)

@@ -15,6 +15,8 @@ export default function Alert({onClose,toggleAlert, deleteForm, isOpen, setIsOpe
 
   
 
+  
+
   return (
     <>
         {isOpen && <div

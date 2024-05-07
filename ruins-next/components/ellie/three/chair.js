@@ -18,7 +18,7 @@ export function Chair(props) {
         },
         body: JSON.stringify({
           user_id: auth.id,
-          missionId: 4, // 更新 achieved_id 為 1 的資料ss
+          missionId: 3, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
         }),
       });
@@ -33,8 +33,8 @@ export function Chair(props) {
     }
   };
   return (
-    <group {...props} dispose={null}>
-      <group scale={0.015} onClick={handleClick} >
+    <group {...props} dispose={null} onClick={handleClick}>
+      <group scale={0.015} >
         <mesh
           castShadow
           receiveShadow
