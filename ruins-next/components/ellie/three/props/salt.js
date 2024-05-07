@@ -1,10 +1,14 @@
 import React, { useRef, useState } from 'react'
-import { useGLTF } from '@react-three/drei'
 import { useAuth } from '@/contexts/auth-context'
+import { useGLTF, 
 
-export function Bricks(props) {
-  const { nodes, materials } = useGLTF('/3Ddemo/props/bricks.glb')
-  const ref = useRef()
+ } from '@react-three/drei'
+
+
+export default function Salt(props) {
+  const group = useRef()
+  const { nodes, materials } = useGLTF('/3Ddemo/props/Salt.gltf')
+
   const { auth } = useAuth()
 
   const [clicked, click] = useState(false)
@@ -18,7 +22,7 @@ export function Bricks(props) {
         },
         body: JSON.stringify({
           user_id: auth.id,
-          missionId: 5, // 更新 achieved_id 為 1 的資料ss
+          missionId: 9, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
         }),
       });
@@ -33,33 +37,13 @@ export function Bricks(props) {
     }
   };
   return (
-    <group 
-    {...props} 
-    dispose={null}
-    scale={2}
-    rotation={[0,90,0]}
-    onClick={handleClick}
-    >
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Object_5.geometry}
-        material={materials.material_0}
-      />
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Object_6.geometry}
-        material={materials.material_0}
-      />
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Object_7.geometry}
-        material={materials.material_0}
-      />
+    <group ref={group} {...props} dispose={null} scale={2.4} onClick={handleClick}>
+<mesh geometry={nodes.Mesh_shakerSalt.geometry} material={materials.greyDark} />
+<mesh geometry={nodes.Mesh_shakerSalt_1.geometry} material={materials.brownDark} />
+<mesh geometry={nodes.Mesh_shakerSalt_2.geometry} material={materials._defaultMat} />
+
     </group>
   )
 }
 
-useGLTF.preload('/3Ddemo/props/bricks.glb')
+useGLTF.preload('/3Ddemo/props/Salt.gltf')

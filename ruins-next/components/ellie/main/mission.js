@@ -19,7 +19,7 @@ export default function Mission({data}) {
     if (!data) return 0;
 
     const activatedCount = data.filter(v => v.activate === 1).length;
-    const progressPercentage = (activatedCount / 9) * 100;
+    const progressPercentage = (activatedCount / 10) * 100;
     return progressPercentage;
   };
 
