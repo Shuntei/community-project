@@ -119,9 +119,9 @@ export default function TestA() {
           <Model position={[0, 6, 0]} rotation={[0,230,0]}/>
           {/* <Environment files="/3Ddemo/hdr/150_hdrmaps_com_free_10K.exr" background blur={0.5} /> */}
             <directionalLight position={[3.3, 1.0, 4.4]} intensity={4} />
-            <Box position={posDisplay[0]}/>
+            {/* <Box position={posDisplay[0]}/>
             <Box2 position={posDisplay[1]}/>
-            <Box3 position={posDisplay[2]} />
+            <Box3 position={posDisplay[2]} /> */}
           {/* <OrbitControls target={[0, 1, 0]}/> */}
           <ambientLight intensity={1} />
           <Background/>

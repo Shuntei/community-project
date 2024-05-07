@@ -4,7 +4,7 @@ import {
 } from '@remixicon/react'
 
 
-export default function AlertEdit({onClose,toggleAlert, deleteForm, isOpen, setIsOpen}) {
+export default function AlertEdit({onClose,toggleAlertEdit, changeHandler, isOpen, setIsOpen}) {
   const [isChanged, setIsChanged ] = useState(false)
 
   // const [showAlert, setShowAlert] = useState(false)
@@ -28,12 +28,12 @@ export default function AlertEdit({onClose,toggleAlert, deleteForm, isOpen, setI
               </div>
             </div>
             <div className="text-[14px] flex justify-center  w-[640px] my-12">
-              確定刪除這則MEMO?
+              確定修改這則MEMO?
             </div>
             <div className="flex justify-center w-[640px]">
               <button 
               className="text-[15px] border border-white w-[216px] h-[47px] bg-black text-white mb-4"
-              onClick={deleteForm}
+              type='submit' onClick={changeHandler}
               >
                 Confirm
               </button>
