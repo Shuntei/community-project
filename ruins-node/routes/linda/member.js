@@ -445,7 +445,7 @@ router.put(
     let id = req.params.id;
 
     try {
-      const usernameSql = `SELECT * FROM mb_user WHERE username LIKE ? and id != ? `;
+      const usernameSql = `SELECT * FROM mb_user WHERE username = ? and id != ? `;
       const [usernameRows] = await db.query(usernameSql, [`%${username}%`, id]);
 
       if (usernameRows.length) {
@@ -802,7 +802,7 @@ router.post("/update-password", async (req, res) => {
   }
 
   return res.json({ success: true, message: "Updated the password" });
-});
+}); 
 
 router.get("/get-preferences/:id", async (req, res) => {
   const id = req.params.id;

@@ -7,18 +7,28 @@ export default function Loader({color = "white", children, duration}) {
   const {auth} = useAuth()
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter()
+  const path = router.pathname
 
   useEffect(() => {
-    const path = router.pathname
       const timer = setTimeout(() => {
         setIsLoading(false);
-        if(path.includes('account-settings')){
-          router.push('/')
+        if(!auth.id){
+          if(path.includes('account-settings')){
+            router.push('/')
+          }
         }
       }, duration ? duration : 2000);
 
       return () => clearTimeout(timer);
   }, [router]);
+
+  useEffect(()=>{
+    if(!auth.id){
+      if(path.includes('account-settings')){
+        router.push('/')
+      }
+    }
+  }, [auth])
 
   if(isLoading) {
     return (

@@ -113,7 +113,7 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <Loader>
+      <Loader duration={1000}>
         {!showSendLink && !showCheckEmail ? (
           <>
             <div className="flex md:h-[500px] md:pt-0 pt-[100px] justify-center">
