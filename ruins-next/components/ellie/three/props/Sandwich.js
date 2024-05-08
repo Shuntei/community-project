@@ -9,6 +9,7 @@ import { useGLTF,
 export default function Sandwich(props) {
   const group = useRef()
   const { nodes, materials } = useGLTF('/3Ddemo/props/Sandwich.gltf')
+  const { auth } = useAuth()
 
   const [clicked, click] = useState(false)
 
