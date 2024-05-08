@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useAuth } from '@/contexts/auth-context'
+import Swal from 'sweetalert2'
 import { useGLTF, 
 
  } from '@react-three/drei'
@@ -29,6 +30,16 @@ export default function BeachBall(props) {
       if (response.ok) {
         console.log("Achievement updated successfully.");
         click(!clicked); // 切換 clicked 狀態以更新 <mesh> 的狀態
+        Swal.fire({
+          toast: true,
+          width: 280,
+          position: 'top',
+          icon: 'success',
+          iconColor: 'black',
+          title: 'You found something!',
+          showConfirmButton: false,
+          timer: 1500,
+        })
       } else {
         console.error("Failed to update achievement.");
       }
@@ -38,8 +49,8 @@ export default function BeachBall(props) {
   };
 
   return (
-    <group>
-    <group ref={group} {...props} dispose={null} scale={0.3} onClick={handleClick}>
+    <group onClick={handleClick}>
+    <group ref={group} {...props} dispose={null} scale={0.3} >
 <mesh geometry={nodes.Sphere000.geometry} material={materials['White.008']} />
 <mesh geometry={nodes.Sphere000_1.geometry} material={materials['Blue.004']} />
 <mesh geometry={nodes.Sphere000_2.geometry} material={materials['Red.003']} />

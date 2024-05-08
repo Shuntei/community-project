@@ -192,34 +192,27 @@ export default function Experience() {
           {/* <OrbitControls target={[0, 1, 0]}/> */}
           <RigidBody position={posDisplay[1] } 
           >
-            {/* <Chair /> */}
             <Headphones scale={0.19}/>
           </RigidBody>
           
 
           <RigidBody
-            // position={[-16, 1.4, -1]}
             position={posDisplay[2]}
           >
-            {/* <Pallet /> */}
             <Soda/>
           </RigidBody>
           <RigidBody
-            // position={[-16.8, 1.2, 5]}
             position={posDisplay[3]} 
           >
-            {/* <Bricks /> */}
+
             <Nes/>
           </RigidBody>
-          {/* ++++++++++++++++++++++++++++++++++++++ */}
+
           <RigidBody
-            // position={[-8, 2, 7.5]}
             position={posDisplay[4]}
           >
-            {/* <Basket /> */}
             <Pear/>
           </RigidBody>
-{/* +++++++++++++++++++++++++++++++ */}
 
           <RigidBody
            mass={2}
@@ -246,26 +239,22 @@ export default function Experience() {
 
 
           <RigidBody
-            // position={[3, 2, -11]}
             position={posDisplay[6]}
           >
-            {/* <Soda /> */}
             <Noodles />
           </RigidBody>
+
           <RigidBody
-            // position={[-18, 1.5, -9]}
             position={posDisplay[7]}
             ref={cube}
           >
-            {/* <Trash /> */}
             <Sandwich />
           </RigidBody>
+
           <RigidBody 
-          // position={[-3, 2.3, 4]} 
           position={posDisplay[8]}
           ref={cube}
           >
-            {/* <Spray /> */}
             <Pepper/>
           </RigidBody>
 
