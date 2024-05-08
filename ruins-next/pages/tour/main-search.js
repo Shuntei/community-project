@@ -1,35 +1,13 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/router';
 import 'remixicon/fonts/remixicon.css'
 import Navbar from '@/components/linda/navbar/navbar'
 import Footer from '@/components/linda/footer/footer'
 import Link from 'next/link'
-import { TOUR_LIST } from '@/components/config/api-path';
 
 export default function MainSearch() {
   const router = useRouter();
   const [keyword, setKeyword] = useState('');
-  const [tourList, setTourList] = useState([])
-
-  const fetchAllTourData = async () => {
-    const response = await fetch(`${TOUR_LIST}`)
-    const result = await response.json()
-    // 若 result 或 result.rows undefined, 直接結束
-    if (!result || !result.rows) {
-      return
-    }
-
-    const newData = result.rows.map((item) => ({
-      ...item,
-      key: item.tour_id,
-    }))
-    console.log(newData);
-    setTourList((prevList) => [...prevList, ...newData])
-  }
-
-  useEffect(()=>{
-    fetchAllTourData()
-  },[])
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -65,52 +43,26 @@ export default function MainSearch() {
         </div>
       </div>
       <div className="md:px-[150px] px-5 py-5 space-y-5 relative">
-        {/* <div className="flex justify-between">
-          <div className="md:flex md:space-x-3 font-['Noto Sans TC'] text-[13px] font-semibold">
-            <button className="rounded bg-white px-2.5 py-[5px] md:inline-block hidden ">
-              更多主題<i className="ri-arrow-down-s-line"></i>
-            </button>
-            <div className="md:space-x-3 space-x-2 flex flex-nowrap">
-              <button className="rounded bg-white px-2.5 py-[5px]">戲院</button>
-              <button className="rounded bg-white px-2.5 py-[5px]">
-                工廠遺址
-              </button>
-              <button className="rounded bg-white px-2.5 py-[5px]">
-                百貨公司
-              </button>
-              <button className="rounded bg-white px-2.5 py-[5px]">
-                尚有名額
-              </button>
-            </div>
-          </div>
-          <div className="md:relative absolute -top-[60px] right-4 md:top-0 md:right-0">
-            <button className="font-['Noto Sans TC'] md:text-[13px] text-xl me:font-semibold md:rounded rounded-full bg-white md:opacity-100 opacity-90 px-2.5 py-[5px]">
-              <i className="ri-equalizer-line"></i>
-              <span className="md:inline hidden">篩選</span>
-            </button>
-          </div>
-        </div>
-        <p className="text-white text-[13px]">215個探險</p> */}
       </div>
       <div className="md:px-[150px] px-5 space-y-10 pb-[50px]">
         <div className="space-y-4 font-['Noto Sans TC']">
           <div className="text-white text-2xl font-semibold">
-            ▌即將在12小時內開始的探險
+            ▌即將在24小時內開始的探險
           </div>
           <div
             id="cardbox"
             className="md:flex md:space-x-7 md:space-y-0 space-y-5"
           >
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="/tour/tour-post" className="space-y-5">
+              <Link href="/tour/tourpost/1" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/gracehill0.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/ufo01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.3
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -118,21 +70,21 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">安和路飛碟屋的神秘冒險</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/11</div>
                 </div>
               </Link>
             </div>
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
+              <Link href="/tour/tourpost/2" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/pink01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.6
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -140,21 +92,43 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">粉色異世界</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/11</div>
+                </div>
+              </Link>
+            </div>
+            <div className="bg-white md:w-1/4 hrounded overflow-hidden pb-4">
+              <Link href="/tour/tourpost/3" className="space-y-5">
+                <img
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/elephantmt.jpg"
+                  alt=""
+                />
+                <div className="flex justify-between px-5">
+                  <span className="text-[15px] content-center">
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.0
+                  </span>
+                  <span className="space-x-1">
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
+                  </span>
+                </div>
+                <div className="px-5 space-y-1">
+                  <div className="text-xl font-semibold">封閉的飛宏象山聯誼中心建築群</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/10</div>
                 </div>
               </Link>
             </div>
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
+              <Link href="/tour/tourpost/4" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/steel01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.9
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -162,30 +136,8 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
-                </div>
-              </Link>
-            </div>
-            <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
-                <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
-                  alt=""
-                />
-                <div className="flex justify-between px-5">
-                  <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
-                  </span>
-                  <span className="space-x-1">
-                    <i className="ri-heart-3-line ri-lg"></i>
-                    <i className="ri-share-forward-fill ri-lg"></i>
-                  </span>
-                </div>
-                <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">台北機械加工廠</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/11</div>
                 </div>
               </Link>
             </div>
@@ -200,13 +152,13 @@ export default function MainSearch() {
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
               <Link href="#" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/steel01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.9
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -214,21 +166,43 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">台北機械加工廠</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/11</div>
+                </div>
+              </Link>
+            </div>
+            <div className="bg-white md:w-1/4 hrounded overflow-hidden pb-4">
+              <Link href="/tour/tourpost/3" className="space-y-5">
+                <img
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/elephantmt.jpg"
+                  alt=""
+                />
+                <div className="flex justify-between px-5">
+                  <span className="text-[15px] content-center">
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.0
+                  </span>
+                  <span className="space-x-1">
+                    <i className="ri-heart-3-line ri-lg"></i>
+                    <i className="ri-share-forward-fill ri-lg"></i>
+                  </span>
+                </div>
+                <div className="px-5 space-y-1">
+                  <div className="text-xl font-semibold">封閉的飛宏象山聯誼中心建築群</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/10</div>
                 </div>
               </Link>
             </div>
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
+              <Link href="/tour/tourpost/2" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/jpclinic01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.7
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -236,21 +210,21 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">保存完整的日治診所</div>
+                  <div className="text-[15px]">出團時間 : 2024-05-17</div>
                 </div>
               </Link>
             </div>
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
+              <Link href="/tour/tourpost/2" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/pink01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.6
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -258,30 +232,8 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
-                </div>
-              </Link>
-            </div>
-            <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
-                <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
-                  alt=""
-                />
-                <div className="flex justify-between px-5">
-                  <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
-                  </span>
-                  <span className="space-x-1">
-                    <i className="ri-heart-3-line ri-lg"></i>
-                    <i className="ri-share-forward-fill ri-lg"></i>
-                  </span>
-                </div>
-                <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">粉色異世界</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/11</div>
                 </div>
               </Link>
             </div>
@@ -296,15 +248,15 @@ export default function MainSearch() {
             className="md:flex md:space-x-7 md:space-y-0 space-y-5"
           >
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
+              <Link href="/tour/tourpost/2" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/horse01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>5.0
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -312,21 +264,21 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">白河雷諾瓦山莊</div>
+                  <div className="text-[15px]">出團時間 : 2024/06/27</div>
                 </div>
               </Link>
             </div>
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
+              <Link href="/tour/tourpost/2" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/grass01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.6
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -334,21 +286,21 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">東平菸樓</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/31</div>
                 </div>
               </Link>
             </div>
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
+              <Link href="/tour/tourpost/2" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/pink01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.6
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -356,21 +308,21 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">粉色異世界</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/11</div>
                 </div>
               </Link>
             </div>
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
-              <Link href="#" className="space-y-5">
+              <Link href="/tour/tourpost/4" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/steel01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.9
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -378,8 +330,8 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">台北機械加工廠</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/11</div>
                 </div>
               </Link>
             </div>
@@ -394,13 +346,13 @@ export default function MainSearch() {
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
               <Link href="#" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/frame01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.9
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -408,21 +360,22 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">台北麗庭莊園的建築優雅</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/22</div>
                 </div>
               </Link>
             </div>
+            
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
               <Link href="#" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/seaside04.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.8
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -430,21 +383,23 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">奢華的海濱別墅</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/22</div>
                 </div>
               </Link>
             </div>
+
+
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
               <Link href="#" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/western01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>4.8
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -452,21 +407,23 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">劉氏洋樓</div>
+                  <div className="text-[15px]">出團時間 : 2024/11/25</div>
                 </div>
               </Link>
             </div>
+
+
             <div className="bg-white md:w-1/4 rounded overflow-hidden pb-4">
               <Link href="#" className="space-y-5">
                 <img
-                  className="h-auto max-w-full"
-                  src="/images/tempuse.jpg"
+                  className="h-[250px] w-full object-cover"
+                  src="/images/borou/quake01.jpg"
                   alt=""
                 />
                 <div className="flex justify-between px-5">
                   <span className="text-[15px] content-center">
-                    <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                    <i className="ri-star-fill ri-lg pr-1"></i>5.0
                   </span>
                   <span className="space-x-1">
                     <i className="ri-heart-3-line ri-lg"></i>
@@ -474,11 +431,12 @@ export default function MainSearch() {
                   </span>
                 </div>
                 <div className="px-5 space-y-1">
-                  <div className="text-xl font-semibold">台北監獄圍牆</div>
-                  <div className="text-[15px]">出團時間 : 3月29日</div>
+                  <div className="text-xl font-semibold">深山中的殘破古民宅</div>
+                  <div className="text-[15px]">出團時間 : 2024/05/07</div>
                 </div>
               </Link>
             </div>
+            
           </div>
         </div>
         <div className="flex justify-center">

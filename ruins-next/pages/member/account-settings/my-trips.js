@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AccountLayout from '@/components/linda/accountLayout'
 import Link from 'next/link'
 import { useAuth } from '@/contexts/auth-context'
@@ -6,7 +6,7 @@ import dayjs from 'dayjs'
 
 export default function MyTrips() {
   const { auth } = useAuth()
-  // const [myTour, setMyTour] = useState([])
+  const [myTour, setMyTour] = useState([])
 
   return (
     <>
@@ -17,6 +17,7 @@ export default function MyTrips() {
               你的探險行程
             </div>
             {/* go to search */}
+            {myTour.length === 0 && (
             <div
               id="gotoSearch"
               className=" flex rounded-lg md:bg-black bg-none md:border-none border border-white overflow-hidden justify-between"
@@ -42,7 +43,9 @@ export default function MyTrips() {
                 className="w-3/5 h-[200px] md:block hidden object-cover"
               />
             </div>
+            )}
             {/* ready to go */}
+            {myTour.length > 0 && (
             <div id="tourBox" className="flex flex-col gap-[14px]">
               <div className="font-medium text-xl md:text-[26px]">已報名</div>
               <div className="md:flex flex-wrap gap-[53px]">
@@ -111,6 +114,7 @@ export default function MyTrips() {
                 </div> */}
               </div>
             </div>
+            )}
             {/* finished tour */}
             <div id="tourBox" className="flex flex-col gap-[14px]">
               <div className="font-medium text-xl md:text-[26px]">
