@@ -8,6 +8,7 @@ import { useGLTF,
 export default function Soda(props) {
   const group = useRef()
   const { nodes, materials } = useGLTF('/3Ddemo/props/Soda.gltf')
+  const { auth } = useAuth()
 
   const [hovered, hover] = useState(false)
   // useFrame((state, delta) => (ref.current.rotation.y += delta))
