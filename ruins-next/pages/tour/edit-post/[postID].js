@@ -306,9 +306,9 @@ const EditPost = () => {
                         >
                           <img
                             src={
-                              image?.image_url &&
-                              image?.image_url.startsWith('/img')
-                                ? `${API_SERVER}/${image.image_url}`
+                              image?.image_url ?
+                              // image?.image_url.startsWith('/img')
+                                `${API_SERVER}/img/${image.image_url}` 
                                 : image.file
                                   ? URL.createObjectURL(image.file)
                                   : `/images/borou/${image.image_url}.jpg`

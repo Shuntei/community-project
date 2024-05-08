@@ -12,23 +12,28 @@ export default function Loader({color = "white", children, duration}) {
   useEffect(() => {
       const timer = setTimeout(() => {
         setIsLoading(false);
+        console.log(auth.id);
         if(!auth.id){
-          if(path.includes('account-settings')){
+          if(path.includes('account-settings') && !path.includes('my-trips') && !path.includes('my-posts') && !path.includes('fav-tour-lists')){
+            console.log("redirecting");
             router.push('/')
           }
+        } else {
+          
+          console.log(auth.id);
         }
       }, duration ? duration : 2000);
 
       return () => clearTimeout(timer);
-  }, [router]);
+  }, [router, auth]);
 
-  useEffect(()=>{
-    if(!auth.id){
-      if(path.includes('account-settings')){
-        router.push('/')
-      }
-    }
-  }, [auth])
+  // useEffect(()=>{
+  //   if(!auth.id){
+  //     if(path.includes('account-settings')){
+  //       router.push('/')
+  //     }
+  //   }
+  // }, [auth])
 
   if(isLoading) {
     return (

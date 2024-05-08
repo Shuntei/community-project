@@ -47,7 +47,7 @@ export default function NavbarPopup() {
             <p className="border-b mb-5 font-['IBM Plex Mono']">
               <a href="/community/main-page">COMMUNITY</a>
             </p>
-            <p className="font-['IBM Plex Mono']">
+            <div className="font-['IBM Plex Mono']">
               {/* <a href={`/community/main-personal?psUserId=${auth.id}`}>
                 PERSONAL
               </a> 用a會有順序問題導致跳回來*/}
@@ -67,7 +67,7 @@ export default function NavbarPopup() {
               >
                 PERSONAL
               </p>
-            </p>
+            </div>
             {/* <p className="font-['IBM Plex Mono']">
               <a href="/community/main-messenger">MESSENGER</a>
             </p> */}

@@ -11,6 +11,8 @@ export default function Home() {
           name="viewport"
           content="width=device-width, initial-scale=1.0, viewport-fit=cover"
         />
+        <title>RUINS</title>
+        <link rel="icon" href="/icons/favicon.png" />
       </Head>
       <Navbar />
       <HomeContent />

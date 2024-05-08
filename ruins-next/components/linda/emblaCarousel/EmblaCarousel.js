@@ -29,6 +29,14 @@ const EmblaCarousel = (props) => {
     onNextButtonClick,
   } = usePrevNextButtons(emblaApi)
 
+  const limitContent = (content) => {
+    const maxLength = 50
+    if (content?.length > maxLength) {
+      return content.slice(0, maxLength) + '...'
+    }
+    return content
+  }
+
   const setTweenFactor = useCallback((emblaApi) => {
     tweenFactor.current = TWEEN_FACTOR_BASE * emblaApi.scrollSnapList().length
   }, [])
@@ -126,7 +134,7 @@ const EmblaCarousel = (props) => {
               {slide.title}
             </span>
             <span className="font-medium md:text-[24px]">
-              {slide.description}
+              {limitContent(slide.description)}
             </span>
           </div>
           <Link
