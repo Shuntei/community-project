@@ -50,7 +50,7 @@ export default function FavTours() {
             >
               {favTours.map((v, i) => {
                 return (
-                  <div key={v.tour_id} id="favCard" className="w-1/4 py-2.a5">
+                  <div key={v.tour_id} id="favCard" className="md:w-[250px] w-full py-2.5">
                     <Link
                       href={{
                         pathname: '/member/account-settings',
@@ -59,14 +59,14 @@ export default function FavTours() {
                       className="space-y-2.5"
                     >
                       <img
-                        src="/images/tempuse.jpg"
-                        className="md:w-[250px] w-36 aspect-square rounded object-cover"
+                        src={v.image_url && v.image_url.startsWith('/img') ? `${API_SERVER}${v.image_url}` : `/images/borou/${v.image_url}.jpg`}
+                        className="w-full aspect-square rounded object-cover"
                         alt=""
                       />
                       <div>
                         <div className="md:text-xl text-[13px]">{v.title}</div>
                         <div className="md:text-base text-[13px] text-zinc-400">
-                          內文內文內文內文內文內文
+                          {v.content}
                         </div>
                       </div>
                     </Link>

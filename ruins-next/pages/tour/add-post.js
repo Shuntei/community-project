@@ -6,9 +6,11 @@ import React, { useEffect, useState } from 'react'
 import { TOUR_ADD_POST } from '@/components/config/api-path'
 import Swal from 'sweetalert2'
 import withReactContent from 'sweetalert2-react-content'
+import { useRouter } from 'next/router'
 
 export default function AddPost() {
   const { auth } = useAuth()
+  const router = useRouter();
   console.log(auth.id)
   // 定義表單資料
   const initialFormData = {
@@ -40,7 +42,7 @@ export default function AddPost() {
 
     // 驗證人數為數字
     if (!validateMaxGroupsize(formData.max_groupsize)) {
-      errors.max_groupsize = '請輸入數字'
+      errors.max_groupsize = '請填入數字'
     }
     // 檢查其他欄位是否空白
     if (!formData.event_date) {
@@ -120,7 +122,11 @@ export default function AddPost() {
       const isValid = validateMaxGroupsize(value)
       setFormErrors({
         ...formErrors,
-        max_groupsize: isValid ? '' : value < 0 ? '人數必須大於0' : '人數必須為數字',
+        max_groupsize: isValid
+          ? ''
+          : value < 0
+            ? '人數必須大於0'
+            : '人數必須為數字',
       })
     } else {
       // Check for other fields and set appropriate error message
@@ -186,6 +192,9 @@ export default function AddPost() {
               if (result.success) {
                 setRender(true)
                 setPostModal(!postModal)
+                const redirect = ()=>{
+                  router.push('/member/account-settings/my-posts');
+                }
               } else {
                 toast.error('發文失敗')
               }
@@ -212,10 +221,17 @@ export default function AddPost() {
       }
       console.log('Post created successfully')
       // 在這裡提示成功訊息
+      confirmNotify()
+      // 跳轉回到 MyPosts
+      // router.push('/member/account-settings/my-posts')
+      
     } catch (error) {
       console.error('Error creating post:', error)
     }
-    confirmNotify()
+  }
+
+  const redirect = ()=>{
+    router.push('/member/account-settings/my-posts');
   }
 
   return (
@@ -337,6 +353,51 @@ export default function AddPost() {
                     <option value="3">飛宏象山國際聯誼中心</option>
                     <option value="4">社子大戲院</option>
                     <option value="5">麗庭莊園</option>
+                    <option value="6">中外百貨</option>
+                    <option value="7">蘭州國宅</option>
+                    <option value="8">陸軍保養廠</option>
+                    <option value="9">基隆路招待所</option>
+                    <option value="10">嘉禾新村</option>
+                    <option value="11">松山台鐵宿舍</option>
+                    <option value="12">義芳居古厝</option>
+                    <option value="13">撫臺街洋樓</option>
+                    <option value="14">第二台北市議會大廈</option>
+                    <option value="15">北投亞太溫泉生活館</option>
+                    <option value="16">北溝故宮文物典藏山洞</option>
+                    <option value="17">東平菸樓</option>
+                    <option value="18">全安堂</option>
+                    <option value="19">大勇街屋</option>
+                    <option value="20">東宮戲院</option>
+                    <option value="21">中森戲院</option>
+                    <option value="22">烏日車站舊站長宿舍</option>
+                    <option value="23">烏日派出所</option>
+                    <option value="24">大肚台地反空降堡</option>
+                    <option value="25">臺中飛行場機槍堡</option>
+                    <option value="26">積善中學</option>
+                    <option value="27">台中鯊魚墳場</option>
+                    <option value="28">磺溪書院</option>
+                    <option value="29">繩繼堂</option>
+                    <option value="30">水湳菸樓</option>
+                    <option value="31">台汽客運彰化總站</option>
+                    <option value="32">聚奎居</option>
+                    <option value="33">霧峰民生診所</option>
+                    <option value="34">千越大樓</option>
+                    <option value="35">中華會館臺東分社</option>
+                    <option value="36">富有大樓</option>
+                    <option value="37">加母子灣民宿</option>
+                    <option value="38">池上五洲戲院</option>
+                    <option value="39">中華大戲院</option>
+                    <option value="40">知本崎仔頭廢棄診所</option>
+                    <option value="41">金星大戲院</option>
+                    <option value="42">台南西市場</option>
+                    <option value="43">新營成功戲院</option>
+                    <option value="44">關廟中央戲院</option>
+                    <option value="45">白河雷諾瓦山莊</option>
+                    <option value="46">杏林綜合醫院</option>
+                    <option value="47">潮州小學校</option>
+                    <option value="48">培源殖產工廠</option>
+                    <option value="49">潮州九塊厝天主堂</option>
+                    <option value="50">雙溪口磚窯</option>
                   </select>
                   {formErrors.ruin_id && (
                     <span className="text-red-500">{formErrors.ruin_id}</span>
@@ -447,6 +508,7 @@ export default function AddPost() {
             <button
               type="submit"
               className="md:w-[280px] w-full h-[75px] bg-black text-white mt-5 p-2 text-2xl font-semibold"
+              onClick={redirect}
             >
               建立行程
             </button>

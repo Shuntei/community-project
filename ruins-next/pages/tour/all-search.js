@@ -326,7 +326,7 @@ export default function AllSearch() {
                       />
                       <div className="flex justify-between px-5">
                         <span className="text-[15px] content-center">
-                          <i className="ri-star-fill ri-lg pr-1"></i>4.51
+                          <i className="ri-star-fill ri-lg pr-1"></i>4.5
                         </span>
                         <span className="space-x-1">
                           <i
