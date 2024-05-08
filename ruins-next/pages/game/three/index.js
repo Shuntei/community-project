@@ -3,6 +3,7 @@ import TestA from '@/components/ellie/three/test-a'
 import TestB from '@/components/ellie/three/test-b'
 import TestD from '@/components/ellie/three/test-d'
 import TestF from '@/components/ellie/three/test-f'
+import TestC from '@/components/ellie/three/test-c'
 import { useAuth } from '@/contexts/auth-context';
 import Router from 'next/router'
 import { GameLevel } from '@/components/ellie/three/newStore'
@@ -22,6 +23,7 @@ export default function ThreeIndex() {
   return (
     <>
       <TestA/>
+      {/* <TestC/> */}
     </>
   )
 }

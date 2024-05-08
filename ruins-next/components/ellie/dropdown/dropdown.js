@@ -127,7 +127,7 @@ export default function Dropdown({data, isNoteChanged, setIsNoteChanged}) {
                         </div>
                       </div>
                     </div>
-                    <div className="flex justify-start pt-1">
+                    <div className="flex flex-wrap justify-start pt-1">
                     {data &&
                       data.slice(1).map((v, i) => {
                         return (
@@ -135,7 +135,7 @@ export default function Dropdown({data, isNoteChanged, setIsNoteChanged}) {
                             {v.activate === 0 ? (
                               <div type="hidden"></div>
                             ) : (
-                              <div className="w-7 h-7 flex items-center justify-center bg-gray-800 mr-1">
+                              <div className="w-7 h-7 flex items-center justify-center bg-gray-800 mr-1 mb-1">
                                 <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
                                   {v.mission_id}
                                 </div>
@@ -149,21 +149,25 @@ export default function Dropdown({data, isNoteChanged, setIsNoteChanged}) {
                     <div className="mt-2 text-xs font-light font-['IBM Plex Mono'] border-b border-black">
                       LOCKED ACHIEVEMENTS
                     </div>
-                    <div className="flex justify-start pt-1">
+                    <div className="flex justify-start flex-wrap pt-1">
                     {data &&
                       data.map((v, i) => {
                         return (
-                          <div>
+                          <div 
+                          // key={i} 
+                          >
                             {v.activate === 0 ? (
-                              <div className="w-7 h-7 flex items-center justify-center bg-gray-800 mr-1">
-                                <div className="w-6 h-6 bg-gray-400 rounded-full flex items-center justify-center">
+                              <div className="w-7 h-7  flex items-center justify-center bg-gray-800 mr-1 mb-1">
+                                <div className="w-6 h-6  bg-gray-400 rounded-full flex items-center justify-center">
                                   {v.mission_id}
                                 </div>
                               </div>
                             ) : (
-                              <div type="hidden"></div>
+                              <div 
+                              // key={i} 
+                              type="hidden"></div>
                             )}
-                            {(i + 1) % 7 === 0 && <br key={`br-${i}`} />}
+                            {/* {(i + 1) % 7 === 0 && <br key={`br-${i}`} />} */}
                           </div>
                         )
                       })}

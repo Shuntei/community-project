@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useAuth } from '@/contexts/auth-context'
+import Swal from 'sweetalert2'
 import { useGLTF, 
 
  } from '@react-three/drei'
@@ -24,11 +25,22 @@ export default function Noodles(props) {
           user_id: auth.id,
           missionId: 9, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
+          
         }),
       });
       if (response.ok) {
         console.log("Achievement updated successfully.");
         click(!clicked); // 切換 clicked 狀態以更新 <mesh> 的狀態
+        Swal.fire({
+          toast: true,
+          width: 280,
+          position: 'top',
+          icon: 'success',
+          iconColor: 'black',
+          title: 'You found something!',
+          showConfirmButton: false,
+          timer: 1500,
+        })
       } else {
         console.error("Failed to update achievement.");
       }
