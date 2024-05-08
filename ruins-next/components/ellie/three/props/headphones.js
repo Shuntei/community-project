@@ -1,5 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { useAuth } from '@/contexts/auth-context'
+import Swal from 'sweetalert2'
 import { useGLTF,} from '@react-three/drei'
 
 
@@ -27,6 +28,16 @@ export default function Headphones(props) {
       if (response.ok) {
         console.log("Achievement updated successfully.");
         click(!clicked); // 切換 clicked 狀態以更新 <mesh> 的狀態
+        Swal.fire({
+          toast: true,
+          width: 280,
+          position: 'top',
+          icon: 'success',
+          iconColor: 'black',
+          title: 'You found something!',
+          showConfirmButton: false,
+          timer: 1500,
+        })
       } else {
         console.error("Failed to update achievement.");
       }

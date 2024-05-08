@@ -46,7 +46,13 @@ export default function AchievementsPopup({ onClose }) {
           return (
             <div className='flex flex-col gap-2'>
              {v.activate === 0 ?
-          <div className='gap-3 content-center flex flex-row'>
+          <div className='gap-3 content-center flex flex-row bg-zinc-700 p-1'>
+          <div className='w-10 h-10 flex items-center justify-center bg-zinc-600'>{v.mission_id}</div>
+          <div className='gap-2'>
+              <div className="text-base font-regular font-['IBM Plex Mono'] text-gray-500 ">{v.mission_name}</div>
+              <div className="text-sm font-light font-['IBM Plex Mono'] text-gray-500 ">{v.description}</div>
+          </div>
+        </div>:<div className='gap-3 content-center flex flex-row'>
             <div className='w-10 h-10 flex items-center justify-center bg-gray-600'>
               <div className='w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center'>{v.mission_id}</div>
               </div>
@@ -54,14 +60,8 @@ export default function AchievementsPopup({ onClose }) {
                 <div className="text-base font-regular font-['IBM Plex Mono'] text-white ">{v.mission_name}</div>
                 <div className="text-sm font-light font-['IBM Plex Mono'] text-white ">{v.description}</div>
             </div>
-          </div> :
-        <div className='gap-3 content-center flex flex-row bg-zinc-700 p-1'>
-          <div className='w-10 h-10 flex items-center justify-center bg-zinc-600'>{v.mission_id}</div>
-          <div className='gap-2'>
-              <div className="text-base font-regular font-['IBM Plex Mono'] text-gray-500 ">{v.mission_name}</div>
-              <div className="text-sm font-light font-['IBM Plex Mono'] text-gray-500 ">{v.description}</div>
           </div>
-        </div> }
+         }
         </div>
           )
         })}

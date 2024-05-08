@@ -117,7 +117,7 @@ export default function EditNotes({ onClose ,note1, isChanged ,setIsChanged, tog
   return (
     <>
     {/* {console.log(note1)} */}
-  {isOpen && <div className="container notepad absolute left-1/4 top-1/6">
+  {isOpen && <div className="popup container notepad absolute left-1/4 top-1/6">
     <div className="notepad">
       <div className="notepad-bar">
         <div className="bar">

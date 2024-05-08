@@ -97,7 +97,7 @@ export default function Main() {
         </div>
         <div className="absolute w-5/6 h-full flex-row">
           <div className="bg-black bg-opacity-50 backdrop-blur-sm absolute w-full h-full"></div>
-          <div className="container absolute bottom-24">
+          <div className="w-full absolute bottom-24">
             {loading ? (
               <img src="/svg/banner.svg" className="h-auto mx-auto" />
             ) : showFirstSVG ? (
