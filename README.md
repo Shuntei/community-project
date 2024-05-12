@@ -1,2 +1,1 @@
-"# ccccc" 
-"# ruins-exploring" 
+"# ruins-exploring"
