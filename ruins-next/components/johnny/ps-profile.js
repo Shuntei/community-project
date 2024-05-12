@@ -160,8 +160,8 @@ export default function Profile() {
           <div className="text-white pc:ml-56 ml-[140px] mt-2 pc:my-3">
             <div className="text-[24px]">{userInfo?.username}&nbsp;</div>
             <div className="flex pc:gap-16 items-end">
-              <ul className="flex gap-4 pc:gap-6">
-                <li className="text-[14px] pc:text-[16px]">
+              <ul className="flex gap-4 pc:gap-6 mt-2">
+                <li className="text-[12px] pc:text-[16px]">
                   POSTS
                   <div className="text-center">
                     {postsTable?.postsAmount
@@ -170,7 +170,7 @@ export default function Profile() {
                   </div>
                 </li>
                 <li
-                  className="text-[14px] pc:text-[16px] cursor-pointer"
+                  className="text-[12px] pc:text-[16px] cursor-pointer"
                   onClick={() => {
                     setToggles({
                       ...toggles,
@@ -185,7 +185,7 @@ export default function Profile() {
                   </div>
                 </li>
                 <li
-                  className="text-[14px] pc:text-[16px] cursor-pointer"
+                  className="text-[12px] pc:text-[16px] cursor-pointer"
                   onClick={() => {
                     setToggles({
                       ...toggles,

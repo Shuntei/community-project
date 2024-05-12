@@ -166,22 +166,22 @@ export default function MainContent() {
                     {v.content.length > 50
                       ? `${v.content.substring(0, 50)}...`
                       : v.content}
-                  </span>{' '}
+                  </span>
                   <div className="text-[12px] pc:hidden">
                     {dayjs(v.posts_timestamp).format('MMM DD, YYYY')}
                   </div>
                 </Link>
                 <div className="text-[14px] text-292929">
                   <div className="flex gap-2 ">
-                    <span className="text-575757 flex w-[55px]">
+                    <span className="text-575757 flex pc:w-[55px]">
                       <RiEyeFill className="pr-1" />
                       {v.view_count}
                     </span>
-                    <span className="text-575757 flex w-[55px]">
+                    <span className="text-575757 flex pc:w-[55px]">
                       <RiChat4Fill className="pr-1" />
                       {v.comment_count}
                     </span>
-                    <span className="text-575757 flex w-[55px]">
+                    <span className="text-575757 flex pc:w-[55px]">
                       <RiHeartFill className="pr-1" />
                       {v.likes}
                     </span>
