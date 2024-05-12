@@ -84,11 +84,14 @@ export default function Notepad({ onClose, isChanged, setIsChanged }) {
     }
   };
 
+
+  
+
   
 
   return (
     <>
-  <div className="container notepad absolute left-1/4 top-1/6">
+  <div className="absolute container notepad left-1/4 top-1/6">
     <div className="notepad">
       <div className="notepad-bar">
         <div className="bar">

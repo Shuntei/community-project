@@ -15,6 +15,7 @@ export default function Main() {
   const { auth } = useAuth()
   const mbID = auth.id
 
+
   const [mission, setMission] = useState('')
 
   const getMission = async () => {
@@ -88,14 +89,15 @@ export default function Main() {
   
   return (
    
-    <> {console.log(mission)}
+    <> 
+    {/* {console.log(mission)} */}
       <div className="flex flex-row mt-24 relative">
         <div className="w-5/6 h-auto bg-gray-300 overflow-hidden">
-          {/* <Entrance/> */}
+          <Entrance/>
         </div>
         <div className="absolute w-5/6 h-full flex-row">
           <div className="bg-black bg-opacity-50 backdrop-blur-sm absolute w-full h-full"></div>
-          <div className="container absolute bottom-24">
+          <div className="w-full absolute bottom-24">
             {loading ? (
               <img src="/svg/banner.svg" className="h-auto mx-auto" />
             ) : showFirstSVG ? (
@@ -113,7 +115,7 @@ export default function Main() {
           </div>
         </div>
         <Mission data={mission}/>
-        <Dropdown data={mission}/>
+        <Dropdown data={mission} />
       </div>
       <style jsx>{`
         .flash-animation {

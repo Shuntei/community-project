@@ -116,7 +116,7 @@ p.item-name {
   position: absolute;
   /* left: 193px;
   bottom: 250px; */
-  bottom: 35%;
+  top: -30px;
   left: -600px;
   max-width: 350px;
   padding: 30px 24px 60px 24px;

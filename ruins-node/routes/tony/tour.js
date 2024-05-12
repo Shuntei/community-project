@@ -23,7 +23,8 @@ const storage = multer.diskStorage({
     cb(null, "public/img");
   },
   filename: (req, file, cb) => {
-    cb(null, file.originalname); // You can customize the filename if needed
+    const filenojpg = file.originalname.split('.')[0];
+    cb(null, filenojpg); // You can customize the filename if needed
   },
 });
 // Configure multer
@@ -250,7 +251,7 @@ const handleAddPost = async (req, res) => {
     console.log(req.body);
     for (let i in images) {
       const image = images[i];
-      const imagePath = `/img/${image.filename}`; // Path to the uploaded image
+      const imagePath = `${image.filename}`; // Path to the uploaded image
       const imageValues = [
         lastInsertId, // Using the last inserted tour_id
         imagePath, // Use the file path of the uploaded image
@@ -340,7 +341,7 @@ const handleEditPost = async(req, res)=>{
   //     await db.query(insertImagesSql, [formData.tour_id, image.filename, image.filename]);
   //   }
 
-    await files.map( (v, i) => db.query(insertImagesSql, [formData.tour_id, `/img/${v.filename}`, formData.image_descrip[i]]))
+    await files.map( (v, i) => db.query(insertImagesSql, [formData.tour_id, v.filename, formData.image_descrip[i]]))
  
     output.success = true;
     res.json(output);

@@ -8,6 +8,7 @@ import { API_SERVER, TOUR_POST } from '@/components/config/api-path'
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { useAuth } from '@/contexts/auth-context'
 import dayjs from 'dayjs'
 
 // Import Swiper styles
@@ -18,6 +19,8 @@ import { Navigation } from 'swiper/modules'
 
 export default function TourPost() {
   const router = useRouter()
+  const { auth } = useAuth()
+  console.log(auth.id);
   const [tourPost, setTourPost] = useState({
     tour_id: 0,
     title: '',
@@ -177,32 +180,33 @@ export default function TourPost() {
           <hr className="md:hidden" />
         </div>
         {/* Photo section */}
-        <div className="relative w-full h-[700px] overflow-clip md:px-[150px] py-5 md:pt-5 pt-12 flex items-center gap-2.5">
+        <div className="w-full md:h-[600px] overflow-clip md:px-[150px] py-5 md:pt-5 pt-12 flex items-center gap-2.5">
           {imgs.length > 0 && (
             <img
-              className="md:w-[60%] grow shrink"
+              className="md:w-[60%] h-fit grow shrink"
               src={imgs[0].image_url.startsWith('/img') ? `${API_SERVER}${imgs[0].image_url}` : `/images/borou/${imgs[0].image_url}.jpg`}
             />
           )}
-          <div className="w-1/3 flex-col justify-start items-start gap-2.5 md:inline-flex hidden">
+          <div className="relative w-[33%] flex-col justify-start items-start gap-2.5 md:inline-flex hidden">
             {imgs.slice(1, 3).map((img, index) => (
               <img
                 key={index}
-                className="w-auto object-cover"
+                className="w-auto h-1/2 object-cover"
                 src={img.image_url.startsWith('/img') ? `${API_SERVER}${img.image_url}` : `/images/borou/${img.image_url}.jpg`}
               />
             ))}
-          </div>
-          <button
-              className="absolute right-48 bottom-10 px-5 py-2.5 text-white bg-zinc-800 bg-opacity-80 rounded text-[13px] hover:bg-zinc-700"
+            <button
+              className="absolute right-5 bottom-5 px-5 py-2.5 text-white bg-zinc-800 bg-opacity-80 rounded text-[13px] hover:bg-zinc-700"
               onClick={openFullscreen}
             >
               查看照片
             </button>
+          </div>
+          
             {/* Full-screen photo display */}
             {fullscreenVisible && (
               <div
-                className="fixed inset-0 z-50 flex items-center bg-black bg-opacity-80 p-[150px]"
+                className="fixed inset-0 z-50 flex bg-black bg-opacity-80 px-[150px]"
                 onClick={closeFullscreen}
               >
                 <Swiper
@@ -211,14 +215,14 @@ export default function TourPost() {
                   onSlideChange={(swiper) =>
                     setCurrentPhotoIndex(swiper.realIndex)
                   }
-                  className='my-auto'
+                  className='mt-[100px] w-4/5'
                 >
                   {imgs.map((img, index) => (
                     <SwiperSlide key={index}>
                       <img
                         src={img.image_url.startsWith('/img') ? `${API_SERVER}${img.image_url}` : `/images/borou/${img.image_url}.jpg`}
                         alt={`Photo ${index}`}
-                        className="object-cover w-full"
+                        className="object-cover w-auto h-[600px]"
                       />
                     </SwiperSlide>
                   ))}
@@ -235,14 +239,6 @@ export default function TourPost() {
           <h2 className="md:text-[26px] text-[15px] font-semibold">活動介紹</h2>
           <div className="md:text-xl text-[13px] space-y-5">
             <p>{tourPost?.content}</p>
-            <p>
-              文章內容#### 麗庭莊園位於台北內湖的工業園區，前身為婚禮場地。
-              該酒店於 2005
-              年開業，由長興婚禮事業有限公司管理，該公司熱衷於為婚禮和其他活動提供更大、更奢華的空間，顛覆當地市場。
-              這項業務起初舉步維艱，但在電視連續劇、音樂錄影帶和新聞中出現後變得更加廣為人知。
-              2007年，該空間被租給迪詩，這是一家希望進入台灣豪華婚禮市場的日本婚禮公司。
-              原所有者退了一步，將日常營運的控制權交給了日本管理層，業務在接下來的幾年中持續成長。
-            </p>
           </div>
           <div className="space-y-5 md:block hidden">
             {imgs.slice(0, 3).map((img, index) => (
@@ -274,7 +270,7 @@ export default function TourPost() {
                 />
               </Link>
               <h3 className="md:text-xl text-[15px]">
-                認識你的探險達人 Constantine
+                認識你的探險達人 {auth.username}
               </h3>
             </div>
             <div className="flex space-x-5 md:text-[15px] text-[13px]">
@@ -288,11 +284,6 @@ export default function TourPost() {
             </div>
             <div className="md:text-xl text-[13px] font-['Noto Sans TC'] font-['IBM Plex Mono'] space-y-5">
               <p>{tourPost.description}</p>
-              <p>
-                他的探險生涯始於年幼時期，對於未知的渴望推動著他穿越危險的地形，發現隱藏在世界各個角落的神秘寶藏。Constantine
-                總是保持開放的心態，對於未知的事物充滿好奇心，這讓他成為一位傑出的冒險者。在廢墟探險方面，Constantine
-                經常挑戰各種古老、遺忘的建築物和城市废墟。他善於解讀歷史的脈絡，透過攝影捕捉下每一個荒廢建築中散發著的神秘氛圍，讓觀眾能夠透過他的鏡頭感受到時光的流轉。而在跑酷領域他也展現了出色的體能和敏捷度。他喜歡在城市中奔跑、跳躍，挑戰各種極限動作，使跑酷成為他冒險生活中不可或缺的一環。
-              </p>
             </div>
             {/* <div>
               <Link href="">
@@ -329,13 +320,13 @@ export default function TourPost() {
                     {dayjs(tourPost.event_date).format('HH:mm')}
                   </p>
                   <p>時長：{tourPost.event_period}小時</p>
-                  <p>探索難易度：中等</p>
+                  <p>探索難易度：{tagConfigs.find(config => config.condition && config.value)?.value}</p>
                   <p>集合地點：{tourPost.ruin_address}</p>
                 </div>
               </div>
               <div className="w-full justify-center flex">
                 <Link href="/tour/join-tour">
-                  <button className="px-5 py-2.5 border rounded-md md:text-base text-[13px] md:block  hover:bg-white hover:text-black">
+                  <button className="px-5 py-2.5 border rounded-md md:text-base text-[13px] md:block hidden hover:bg-white hover:text-black">
                     立即報名
                   </button>
                 </Link>
@@ -374,13 +365,13 @@ export default function TourPost() {
                     />
                   </Link>
                   <div className="flex flex-col">
-                    <span>Peter</span>
+                    <span>Tony</span>
                     <span>2024年3月</span>
                   </div>
                 </div>
                 <p>
-                  Constane 非常友善和友好，我們學到了許多有趣的事情。
-                  無論如何，這次體驗讓我和我的妻子度過了一個美好而愉快的夜晚。
+                  Johnny 非常友善和友好，我們學到了許多有趣的事情。
+                  無論如何，這次體驗讓我和我的妻子度過了一個美好而愉快的時光。
                 </p>
               </div>
             </SwiperSlide>
@@ -395,7 +386,7 @@ export default function TourPost() {
                     />
                   </Link>
                   <div className="flex flex-col">
-                    <span>Peter</span>
+                    <span>Henry</span>
                     <span>2024年3月</span>
                   </div>
                 </div>
@@ -415,7 +406,7 @@ export default function TourPost() {
                     />
                   </Link>
                   <div className="flex flex-col">
-                    <span>Peter</span>
+                    <span>Charon</span>
                     <span>2024年3月</span>
                   </div>
                 </div>
@@ -425,7 +416,7 @@ export default function TourPost() {
                   強烈推薦這個，如果你是第一次參加也完全沒有問題。
                 </p>
                 <button>
-                  顯示更多內容<i className="ri-arrow-right-s-line"></i>
+                  {/* 顯示更多內容<i className="ri-arrow-right-s-line"></i> */}
                 </button>
               </div>
             </SwiperSlide>
@@ -440,7 +431,7 @@ export default function TourPost() {
                     />
                   </Link>
                   <div className="flex flex-col">
-                    <span>Peter</span>
+                    <span>Koji</span>
                     <span>2024年3月</span>
                   </div>
                 </div>
@@ -460,7 +451,7 @@ export default function TourPost() {
                     />
                   </Link>
                   <div className="flex flex-col">
-                    <span>Peter</span>
+                    <span>Winston</span>
                     <span>2024年3月</span>
                   </div>
                 </div>
@@ -480,7 +471,7 @@ export default function TourPost() {
                     />
                   </Link>
                   <div className="flex flex-col">
-                    <span>Peter</span>
+                    <span>Akira</span>
                     <span>2024年3月</span>
                   </div>
                 </div>

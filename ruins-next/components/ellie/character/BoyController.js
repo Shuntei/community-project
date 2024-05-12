@@ -2,12 +2,13 @@ import React, { useCallback, useRef, useState, useEffect, useMemo, } from 'react
 import { CapsuleCollider, RigidBody, useRapier } from '@react-three/rapier'
 import { useFrame } from '@react-three/fiber';
 import Boy from './character_boy'
+import Girl from './character_girl'
 import { useKeyboardControls } from '@react-three/drei'
 import * as THREE from 'three'
 import { useSpring, animated } from "@react-spring/web";
 import { useGame } from '../three/store/useGame';
 
-const JUMP_FORCE = 0.7;
+const JUMP_FORCE = 1.2;
 const MOVEMENT_SPEED = 0.1;
 const MAX_VEL = 5;
 
@@ -126,28 +127,28 @@ useFrame((_, delta) => {
     }
 })
 
-// useFrame(({ camera }, delta) => {
-//   if (boyRef.current) {
-//   const boyPosition = boyRef.current.translation()
+useFrame(({ camera }, delta) => {
+  if (boyRef.current) {
+  const boyPosition = boyRef.current.translation()
 
-//   const cameraPosition = new THREE.Vector3()
-//   cameraPosition.copy(boyPosition)
-//   cameraPosition.z += 8
-//   cameraPosition.y += 3
+  const cameraPosition = new THREE.Vector3()
+  cameraPosition.copy(boyPosition)
+  cameraPosition.z += 8
+  cameraPosition.y += 3
 
-//   const cameraTarget = new THREE.Vector3()
-//   cameraTarget.copy(boyPosition)
-//   cameraTarget.y += 0.5
+  const cameraTarget = new THREE.Vector3()
+  cameraTarget.copy(boyPosition)
+  cameraTarget.y += 0.5
 
-//   cameraProperties.position.lerp(cameraPosition, 5 * delta)
-//   cameraProperties.target.lerp(cameraTarget, 5 * delta)
+  cameraProperties.position.lerp(cameraPosition, 5 * delta)
+  cameraProperties.target.lerp(cameraTarget, 5 * delta)
 
-//   camera.position.copy(cameraProperties.position)
-//   camera.lookAt(cameraProperties.target)
-//       // update camera
-//       // camera.position.copy(ref.current.translation())
-//   }
-// })
+  camera.position.copy(cameraProperties.position)
+  camera.lookAt(cameraProperties.target)
+      // update camera
+      // camera.position.copy(ref.current.translation())
+  }
+})
 
 const character = useRef();
   return (
@@ -174,7 +175,8 @@ const character = useRef();
       >
         <CapsuleCollider args={[0.8, 0.4]} position={[0, 1.2, 0]}/>
         <group ref={character}>
-          <Boy/>
+          {/* <Boy/> */}
+          <Girl/>
         </group>
       </RigidBody>
     </group>

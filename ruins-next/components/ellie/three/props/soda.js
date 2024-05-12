@@ -1,11 +1,17 @@
 import React, { useRef, useState } from 'react'
-import { useGLTF } from '@react-three/drei'
 import { useAuth } from '@/contexts/auth-context'
+import Swal from 'sweetalert2'
+import { useGLTF, 
+ } from '@react-three/drei'
 
-export function Bricks(props) {
-  const { nodes, materials } = useGLTF('/3Ddemo/props/bricks.glb')
-  const ref = useRef()
+
+export default function Soda(props) {
+  const group = useRef()
+  const { nodes, materials } = useGLTF('/3Ddemo/props/Soda.gltf')
   const { auth } = useAuth()
+
+  const [hovered, hover] = useState(false)
+  // useFrame((state, delta) => (ref.current.rotation.y += delta))
 
   const [clicked, click] = useState(false)
 
@@ -20,11 +26,22 @@ export function Bricks(props) {
           user_id: auth.id,
           missionId: 10, // 更新 achieved_id 為 1 的資料ss
           newValue: 1, // 新的 activate 值
+
         }),
       });
       if (response.ok) {
         console.log("Achievement updated successfully.");
         click(!clicked); // 切換 clicked 狀態以更新 <mesh> 的狀態
+        Swal.fire({
+          toast: true,
+          width: 280,
+          position: 'top',
+          icon: 'success',
+          iconColor: 'black',
+          title: 'You found something!',
+          showConfirmButton: false,
+          timer: 1500,
+        })
       } else {
         console.error("Failed to update achievement.");
       }
@@ -32,33 +49,14 @@ export function Bricks(props) {
       console.error("Error updating achievement:", error);
     }
   };
+
   return (
-    <group 
-    {...props} 
-    dispose={null}
-    scale={2}
-    rotation={[0,90,0]}
-    >
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Object_5.geometry}
-        material={materials.material_0}
-      />
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Object_6.geometry}
-        material={materials.material_0}
-      />
-      <mesh
-        castShadow
-        receiveShadow
-        geometry={nodes.Object_7.geometry}
-        material={materials.material_0}
-      />
+    <group ref={group} {...props} dispose={null} onClick={handleClick}>
+<mesh geometry={nodes.Mesh_soda.geometry} material={materials.purple} />
+<mesh geometry={nodes.Mesh_soda_1.geometry} material={materials._defaultMat} />
+
     </group>
   )
 }
 
-useGLTF.preload('/3Ddemo/props/bricks.glb')
+useGLTF.preload('/3Ddemo/props/Soda.gltf')

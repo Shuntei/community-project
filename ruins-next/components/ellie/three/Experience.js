@@ -17,25 +17,94 @@ import { ObjSpots } from './objSpots'
 import Box1 from './box'
 import Box2 from './box2'
 import Box3 from './box3'
-import { Chair } from './chair'
-import { Pallet } from './pallet'
-import { Bricks } from './bricks'
-import { Basket } from './basket'
-import { Cans } from './food-cans'
-import { Soda } from './soda'
-import { Trash } from './trash'
-import { Spray } from './spray'
+
+import Headphones from './props/headphones.js'
+import Nes from './props/nes'
+import NesCon from './props/nesCon'
+import Pear from './props/pear'
+import Noodles from './props/noodles'
+import Sandwich from './props/Sandwich'
+import Pepper from './props/pepper'
+import Salt from './props/salt'
+import Soda from './props/soda'
+import BeachBall from './props/ball'
 
 export default function Experience() {
   const [hover, setHover] = useState(false)
-  const cube = useRef()
+  const cube = useRef();
+
+  const ballRef = useRef()
+  
+  const jump = ()=> {
+    cube.current.applyImpule({x:0,y:4,z:0});
+  }
   //  console.log(GameLevel({thStages:3}));
   const startGame = useGameStore((state) => state.startGame)
 
-  const random = useRef(Math.floor(Math.random() * (3 - 1) + 1))
+  const random = useRef(Math.floor(Math.random() * (9 - 1) + 1))
   const posData = [
     [
+      [5, 2, 5],
+      [-1.2, 2, 9],
+      [-18, 1.5, -9],
+      [9.5, 1.2, -8],
       [-8, 2, -4],
+      [-3, 2, 0],
+      [-8, 2, 7.5],
+      [3, 2, -11],
+      [9, 2, -3],
+    ],
+    [
+      [-18, 1.5, -9],
+      [5, 2, 5],
+      [-3, 2, 0],
+      [3, 2, -11],
+      [-8, 2, -4],
+      [9, 2, -3],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [-1.2, 2, 9],
+    ],
+    [
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [5, 2, 5],
+      [9.5, 1.2, -8],
+      [-8, 2, 7.5],
+      [-1.2, 2, 9],
+      [-8, 2, -4],
+      [-3, 2, 0],
+      [9, 2, -3],
+    ],
+    [
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [5, 2, 5],
+      [-8, 2, 7.5],
+      [9, 2, -3],
+      [-8, 2, -4],
+      [-3, 2, 0],
+      [-1.2, 2, 9],
+    ],
+    [
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [5, 2, 5],
+      [-3, 2, 0],
+      [9, 2, -3],
+      [-8, 2, -4],
+      [-1.2, 2, 9],
+    ],
+    [
+      [-8, 2, -4],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [5, 2, 5],
       [-1.2, 2, 9],
       [9, 2, -3],
       [-3, 2, 0],
@@ -43,6 +112,11 @@ export default function Experience() {
     [
       [-1.2, 2, 9],
       [-8, 2, -4],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [5, 2, 5],
       [-3, 2, 0],
       [9, 2, -3],
     ],
@@ -50,6 +124,11 @@ export default function Experience() {
       [-1.2, 2, 9],
       [-3, 2, 0],
       [9, 2, -3],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [5, 2, 5],
       [-8, 2, -4],
     ],
     [
@@ -57,15 +136,21 @@ export default function Experience() {
       [9, 2, -3],
       [-1.2, 2, 9],
       [-8, 2, -4],
+      [-8, 2, 7.5],
+      [9.5, 1.2, -8],
+      [3, 2, -11],
+      [-18, 1.5, -9],
+      [5, 2, 5],
     ],
   ]
 
-  console.log(random.current)
+  // console.log(random.current)
 
   const posDisplay = posData[random.current - 1]
 
   return (
     <>
+    {console.log(random.current)}
       <group>
         {/* LIGHT */}
         <OrbitControls />
@@ -84,7 +169,7 @@ export default function Experience() {
               <meshStandardMaterial color="white" />
             </Cylinder>
           </RigidBody>
-          <RigidBody position={[6, 5, 0]} ref={cube}>
+          {/* <RigidBody position={[6, 5, 0]} ref={cube}>
             <Box
               onPointerEnter={() => setHover(true)}
               onPointerLeave={() => setHover(false)}
@@ -92,43 +177,86 @@ export default function Experience() {
             >
               <meshStandardMaterial color={hover ? 'hotpink' : 'royalblue'} />
             </Box>
-          </RigidBody>
-          <RigidBody position={posDisplay[0]} ref={cube}>
+          </RigidBody> */}
+          {/* <RigidBody position={posDisplay[0]} ref={cube}>
             <Box1 />
+          </RigidBody> */}
+          <RigidBody ref={cube}position={posDisplay[0]} 
+          >
+            {/* <Box2 /> */}
+            <NesCon/>
           </RigidBody>
-          <RigidBody position={posDisplay[1]} ref={cube}>
-            <Box2 />
-          </RigidBody>
-          <RigidBody position={posDisplay[2]} ref={cube}>
+          {/* <RigidBody position={posDisplay[2]} ref={cube}>
             <Box3 />
-          </RigidBody>
+          </RigidBody> */}
           {/* <OrbitControls target={[0, 1, 0]}/> */}
-          <RigidBody position={posDisplay[3]} ref={cube}>
-            <Chair />
-          </RigidBody>
-          <RigidBody position={[-16, 1.4, -1]} ref={cube}>
-            <Pallet />
-          </RigidBody>
-          <RigidBody position={[-16.8, 1.2, 5]} ref={cube}>
-            <Bricks />
-          </RigidBody>
-          <RigidBody position={[-8, 2, 7.5]} ref={cube}>
-            <Basket />
-          </RigidBody>
-          <RigidBody position={[9.5, 1.2, -8]} ref={cube}>
-            <Cans />
-          </RigidBody>
-          <RigidBody position={[3, 2, -11]} ref={cube}>
-            <Soda />
-          </RigidBody>
-          <RigidBody position={[-18, 1.5, -9]} ref={cube}>
-            <Trash />
-          </RigidBody>
-          <RigidBody position={[1, 1.5, 4]} ref={cube}>
-            <Spray />
+          <RigidBody position={posDisplay[1] } 
+          >
+            <Headphones scale={0.19}/>
           </RigidBody>
           
-          
+
+          <RigidBody
+            position={posDisplay[2]}
+          >
+            <Soda/>
+          </RigidBody>
+          <RigidBody
+            position={posDisplay[3]} 
+          >
+
+            <Nes/>
+          </RigidBody>
+
+          <RigidBody
+            position={posDisplay[4]}
+          >
+            <Pear/>
+          </RigidBody>
+
+          <RigidBody
+           mass={2}
+           restitution={0.2}
+           friction={10}
+           linearDamping={1}
+           angularDamping={1}>
+           <Salt position={[3, 1.3, 5]}/>
+          </RigidBody>
+            
+
+
+          <RigidBody
+            ref={ballRef}
+            colliders="ball"
+            mass={2}
+            restitution={0.2}
+            friction={10}
+            linearDamping={1}
+            angularDamping={1}
+            position={posDisplay[5]}>
+          <BeachBall />
+          </RigidBody>
+
+
+          <RigidBody
+            position={posDisplay[6]}
+          >
+            <Noodles />
+          </RigidBody>
+
+          <RigidBody
+            position={posDisplay[7]}
+            ref={cube}
+          >
+            <Sandwich />
+          </RigidBody>
+
+          <RigidBody 
+          position={posDisplay[8]}
+          ref={cube}
+          >
+            <Pepper/>
+          </RigidBody>
 
           {/*   */}
         </group>

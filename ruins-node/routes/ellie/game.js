@@ -298,14 +298,14 @@ router.get("/check/gm_achieved/:user_id", async (req, res) => {
     (${user_id}, 1, 'Mission 001', 'Create account.','Game editing features are unlocked.',1),
     (${user_id}, 2, 'Mission 002', 'Found a Portal.','Awesome You found a Portal.',0),
     (${user_id}, 3, 'Mission 003', 'Teleport yourself.','Link to some where else',0),
-    (${user_id}, 4, 'Mission 004', 'Rubbish?','Yes it smells like rotten garbage.',0),
+    (${user_id}, 4, 'Mission 004', 'Rubbish?','Yes it smells rotten.',0),
     (${user_id}, 5, 'Mission 005', 'Its construction.','Do not stand too close.',0),
-    (${user_id}, 6, 'Mission 006', 'Sooo Annoying.','Clap to welcome mosquito.',0),
-    (${user_id}, 7, 'Mission 007', 'Love window shopping','123223323424',0),
-    (${user_id}, 8, 'Mission 008', 'tour tour tour','123',0),
-    (${user_id}, 9, 'Mission 009', 'LIVE WAREHOUSE.','123',0),
-    (${user_id}, 10, 'Mission 010', 'shut up and pay attention','123',0);`;
-    // (${user_id}, 12, 'Mission 012', 'tic-tac-toe harder'),
+    (${user_id}, 6, 'Mission 006', 'Sooo Annoying.','Clap to welcome.',0),
+    (${user_id}, 7, 'Mission 007', 'Sandwitch','Whatever',0),
+    (${user_id}, 8, 'Mission 008', 'tour tour tour','Kill me',0),
+    (${user_id}, 9, 'Mission 009', 'NOODLES.','Im hangery',0),
+    (${user_id}, 10, 'Mission 010', 'Come closer.','Close enough.',0);`;
+    // (${user_id}, 12, 'Mission 012', 'shut up and pay attention'),
     // (${user_id}, 13, 'Mission 013', 'Done all.');`;
     console.log(sql);
     [result] = await db.query(sql);

@@ -10,7 +10,7 @@ export const ObjSpots = ()=>{
     currentObj: state.currentObj,
   }));
 
-  console.log(gs)
+  // console.log(gs)
 
   const {level, currentObj} = gs
 
@@ -22,7 +22,7 @@ export const ObjSpots = ()=>{
     return null;
   }
 
-  console.log(level)
+  // console.log(level)
 
   return <group key={obj.name}>
      <group 

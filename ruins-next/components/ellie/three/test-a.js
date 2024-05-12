@@ -88,15 +88,15 @@ export default function TestA() {
 //     height: window.innerHeight
 // }
 
-    const posData = [
-      [[-8, 2,-4], [-1.2, 2, 9],[9, 2, -3]],
-      [[-1.2, 2, 9],[-8, 2,-4],[9, 2, -3]],
-      [[-1.2, 2, 9],[9, 2, -3],[-8, 2,-4]],
-    ]
+    // const posData = [
+    //   [[-8, 2,-4], [-1.2, 2, 9],[9, 2, -3]],
+    //   [[-1.2, 2, 9],[-8, 2,-4],[9, 2, -3]],
+    //   [[-1.2, 2, 9],[9, 2, -3],[-8, 2,-4]],
+    // ]
 
-    console.log(random.current)
+    // console.log(random.current)
 
-    const posDisplay = posData[random.current-1]
+    // const posDisplay = posData[random.current-1]
 
   return (
     <>

@@ -138,10 +138,15 @@ const EditPost = () => {
 
       console.log('Post updated successfully')
       // 在這裡提示成功訊息
+      router.push('/member/account-settings/my-posts');
     } catch (error) {
       console.error('Error updating post:', error)
     }
   }
+
+  const handleCancel = () => {
+    router.push('/member/account-settings/my-posts');
+  };
 
   return (
     <>
@@ -301,9 +306,9 @@ const EditPost = () => {
                         >
                           <img
                             src={
-                              image?.image_url &&
-                              image?.image_url.startsWith('/img')
-                                ? `${API_SERVER}/${image.image_url}`
+                              image?.image_url ?
+                              // image?.image_url.startsWith('/img')
+                                `${API_SERVER}/img/${image.image_url}` 
                                 : image.file
                                   ? URL.createObjectURL(image.file)
                                   : `/images/borou/${image.image_url}.jpg`
@@ -351,6 +356,7 @@ const EditPost = () => {
               <button
                 type="button"
                 className="md:w-[200px] w-full h-[75px] bg-black text-white mt-5 p-2 text-2xl font-semibold"
+                onClick={handleCancel}
               >
                 取消
               </button>
