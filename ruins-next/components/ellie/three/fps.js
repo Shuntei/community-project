@@ -336,35 +336,35 @@ function controls(deltaTime) {
   }
 }
 
-// const loader = new GLTFLoader().setPath('/3Ddemo/gltf/nicetry.glb')
+const loader = new GLTFLoader().setPath('/3Ddemo/gltf/nicetry.glb')
 
-// loader.load('nicetry.glb', (gltf) => {
-//   scene.add(gltf.scene)
+loader.load('nicetry.glb', (gltf) => {
+  scene.add(gltf.scene)
 
-//   worldOctree.fromGraphNode(gltf.scene)
+  worldOctree.fromGraphNode(gltf.scene)
 
-//   gltf.scene.traverse((child) => {
-//     if (child.isMesh) {
-//       child.castShadow = true
-//       child.receiveShadow = true
+  gltf.scene.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true
+      child.receiveShadow = true
 
-//       if (child.material.map) {
-//         child.material.map.anisotropy = 4
-//       }
-//     }
-//   })
+      if (child.material.map) {
+        child.material.map.anisotropy = 4
+      }
+    }
+  })
 
-//   const helper = new OctreeHelper(worldOctree)
-//   helper.visible = false
-//   scene.add(helper)
+  const helper = new OctreeHelper(worldOctree)
+  helper.visible = false
+  scene.add(helper)
 
-//   const gui = new GUI({ width: 200 })
-//   gui.add({ debug: false }, 'debug').onChange(function (value) {
-//     helper.visible = value
-//   })
+  const gui = new GUI({ width: 200 })
+  gui.add({ debug: false }, 'debug').onChange(function (value) {
+    helper.visible = value
+  })
 
-//   animate()
-// })
+  animate()
+})
 
 function teleportPlayerIfOob() {
   if (camera.position.y <= -25) {
