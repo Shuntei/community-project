@@ -1,6 +1,6 @@
 "# ruins-exploring" 
 
-這是我的與小組合作的專案
+這是我的與小組合作的專案'\n'
 我負責community的部分
 進入首頁後點擊左上角main左側的圖示
 會顯示下拉選單，選擇community可進入我做的頁面
