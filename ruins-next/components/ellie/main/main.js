@@ -15,11 +15,9 @@ export default function Main() {
   const { auth } = useAuth()
   const mbID = auth.id
 
-
   const [mission, setMission] = useState('')
 
   const getMission = async () => {
-
 
     const url = `http://localhost:3001/game/gm_achieved/${mbID}`
     try {
@@ -83,13 +81,13 @@ export default function Main() {
         console.error("Error fetching member ID:", error);
       }
     };
-  
+
     fetchMbID();
   }, []);
-  
+
   return (
-   
-    <> 
+
+    <>
     {/* {console.log(mission)} */}
       <div className="flex flex-row mt-24 relative">
         <div className="w-5/6 h-auto bg-gray-300 overflow-hidden">

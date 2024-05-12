@@ -17,10 +17,8 @@ const router = express.Router();
 // });
 
 router.post("/ruins_final", async (req, res) => {
-  
- 
   try {
-    const { missionId, newValue ,user_id} = req.body;
+    const { missionId, newValue, user_id } = req.body;
 
     console.log({ missionId, newValue });
 
@@ -38,7 +36,6 @@ router.post("/ruins_final", async (req, res) => {
     res.status(500).json({ error: "Failed to update achievement." });
   }
 });
-
 
 router.post("/ruins_final/gm_note", async (req, res) => {
   let output = {
@@ -99,22 +96,21 @@ router.post("/ruins_final/gm_note_edit", async (req, res) => {
 
 //刪除note
 router.delete("/ruins_final/delete_form", async (req, res) => {
-  
   try {
-      const { note_id } = req.body;
-      console.log(note_id);
-      const deleteQuery = `DELETE FROM gm_note WHERE note_id = ?`;
+    const { note_id } = req.body;
+    console.log(note_id);
+    const deleteQuery = `DELETE FROM gm_note WHERE note_id = ?`;
 
-      const [result] = await db.query(deleteQuery, [note_id]);
+    const [result] = await db.query(deleteQuery, [note_id]);
 
-      if (result.affectedRows > 0) {
-          res.json({ success: true });
-      } else {
-          res.json({ success: false });
-      }
+    if (result.affectedRows > 0) {
+      res.json({ success: true });
+    } else {
+      res.json({ success: false });
+    }
   } catch (error) {
-      console.error("Error deleting form", error);
-      res.status(500).json({ error: "Failed to delete form." });
+    console.error("Error deleting form", error);
+    res.status(500).json({ error: "Failed to delete form." });
   }
 });
 
@@ -156,7 +152,6 @@ router.get("/gm_note/:user_id", async (req, res) => {
   }
 
   res.json({ success: true, rows });
-  
 });
 
 // //check note or insert
@@ -180,14 +175,13 @@ router.get("/gm_note/:user_id", async (req, res) => {
 //     (${user_id}, 'some thoughts', 'Type something here.');`;
 //     console.log(sql);
 //     [result] = await db.query(sql);
-    
+
 //   }
 
 //   res.json({ success: true, result });
 // });
 
 // +++++++++++++++++++++++++++++++
-
 
 // //取得mission
 // router.get("/gm_mission", async (req, res) => {
@@ -254,7 +248,6 @@ router.get("/gm_note/:user_id", async (req, res) => {
 //   res.json({ success: true, result });
 // });
 
-
 //取得 user_achieved
 router.get("/gm_achieved/:user_id", async (req, res) => {
   let output = {
@@ -264,19 +257,16 @@ router.get("/gm_achieved/:user_id", async (req, res) => {
   // 取得 achieved_id 去搜尋
   const user_id = req.params.user_id;
 
-
   const sql =
     "SELECT `achieved_id`,`mission_id`,`mission_name`,`title`,`description`,`activate` FROM `gm_achieved` WHERE `user_id` = ? ";
 
-  const [rows] = await db.query(sql,[user_id]);
+  const [rows] = await db.query(sql, [user_id]);
   if (!rows.length) {
     return res.json({ success: false });
   }
 
   res.json({ success: true, rows });
 });
-
-
 
 //check achieved or insert
 router.get("/check/gm_achieved/:user_id", async (req, res) => {
@@ -289,7 +279,8 @@ router.get("/check/gm_achieved/:user_id", async (req, res) => {
   const user_id = +req.params.user_id || 0;
 
   // find user's achieved
-  const t_sql = "SELECT COUNT(1) myCount FROM `gm_achieved` WHERE `user_id` = ?";
+  const t_sql =
+    "SELECT COUNT(1) myCount FROM `gm_achieved` WHERE `user_id` = ?";
 
   const [rows] = await db.query(t_sql, [user_id]);
   let result = {};
@@ -309,7 +300,6 @@ router.get("/check/gm_achieved/:user_id", async (req, res) => {
     // (${user_id}, 13, 'Mission 013', 'Done all.');`;
     console.log(sql);
     [result] = await db.query(sql);
-    
   }
   /*
   const sql =

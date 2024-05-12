@@ -8,12 +8,9 @@ import Volume from '../vol/volume'
 import { useRouter } from 'next/router'
 import { useAuth } from '@/contexts/auth-context'
 
-
 export default function Mission({data}) {
 
   // const [isChanged, setIsChanged ] = useState(false)
-
-
 
   const calculateProgress = () => {
     if (!data) return 0;
@@ -35,7 +32,7 @@ export default function Mission({data}) {
   return (
     <>
       {/* {console.log(data)} */}
-      
+
       <div className="w-1/6 relative">
         <div className="my-8 px-4">
           <div className="w-full flex flex-col border-b border-dotted mb-1"></div>
@@ -67,7 +64,7 @@ export default function Mission({data}) {
             </div> : <div className="mt-2 text-s font-light font-['IBM Plex Mono'] text-white line-through">
             {v.title}
             </div>}
-            
+
           </div>
           )
         })}
