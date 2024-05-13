@@ -7,7 +7,7 @@
 .pnp.js
 .yarn/install-state.gz
 /.vscode/
-/components/config/firebase.js
+# /components/config/firebase.js
 
 # testing
 /coverage
