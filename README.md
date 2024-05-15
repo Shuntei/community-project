@@ -3,7 +3,7 @@
 這是與小組合作的專案  
 我負責community(社群)的部分  
 1.下載檔案後分別進入ruins-next和ruins-node檔案位置並執行npm i
-2.在ruins-node執行npm run dev,在ruins-next執行npm run build後,執行npm start
+2.在ruins-node執行npm run dev,在ruins-next執行npm run build後,執行npm start  
 3.輸入網址: http://localhost:3000/community/main-page 進入頁面
 
 進入頁面後  
