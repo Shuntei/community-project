@@ -2,10 +2,14 @@
 
 這是與小組合作的專案  
 我負責community(社群)的部分  
-進入首頁後點擊左上角main左側的圖示  
-會顯示下拉選單，選擇community可進入我做的頁面  
-主要有community(公共論壇)、personal(個人頁面)兩部分，有RWD設計  
-右上角的LOG IN,登入後可以執行需要權限的操作(如新增修改文章、留言、按讚、加好友等)。  
+1.下載檔案後分別進入ruins-next和ruins-node檔案位置並執行npm i
+2.在ruins-node執行npm run dev,在ruins-next執行npm run build後,執行npm start
+3.輸入網址: http://localhost:3000/community/main-page 進入頁面
+
+進入頁面後  
+主要有community(公共論壇)、personal(個人頁面)兩部分，有RWD設計、使用線上資料庫    
+右上角的LOG IN,登入後可以執行需要權限的操作
+(如personal頁面新增修改文章、上傳圖片、留言、按讚、新增移除好友等)。  
   
 登入方式可以選擇:  
 1.google帳號登入  
