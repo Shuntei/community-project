@@ -1,7 +1,7 @@
 "# ruins-exploring" 
 
 這是與小組合作的專案  
-我負責community(社群)的部分 
+我負責community(社群)的部分  
 資料夾或檔案位置:  
 前端  
 ruins-next/components/johnny  
