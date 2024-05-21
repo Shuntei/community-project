@@ -1,6 +1,6 @@
 import Member from '../member/member'
 import useToggle from '@/contexts/use-toggle-show'
-import { socket } from '@/nosrc/socket'
+import { socket } from '@/src/socket'
 import { RiCornerUpLeftFill } from '@remixicon/react'
 import { useEffect, useState } from 'react'
 import styles from './memberList.module.css'

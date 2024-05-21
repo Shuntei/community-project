@@ -2,7 +2,7 @@ import { API_SERVER, IMG_SERVER } from '@/components/config/api-path'
 import { useAuth } from '@/contexts/auth-context'
 import usePoint from '@/contexts/use-points'
 import useToggle from '@/contexts/use-toggle-show'
-import { socket } from '@/nosrc/socket'
+import { socket } from '@/src/socket'
 import {
   RiCloseFill,
   RiGift2Line,

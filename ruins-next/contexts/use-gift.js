@@ -1,5 +1,5 @@
 import { API_SERVER } from '@/components/config/api-path'
-import { socket } from '@/nosrc/socket'
+import { socket } from '@/src/socket'
 import { createContext, useContext, useEffect, useState } from 'react'
 import Swal from 'sweetalert2'
 import { useAuth } from './auth-context'

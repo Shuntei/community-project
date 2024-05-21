@@ -1,5 +1,5 @@
 import useStreamInfo from '@/contexts/use-streamInfo'
-import { socket } from '@/nosrc/socket'
+import { socket } from '@/src/socket'
 import { RiArrowDownSLine, RiArrowRightSLine } from '@remixicon/react'
 import { useEffect, useState } from 'react'
 import styles from './title.module.css'
