@@ -18,8 +18,8 @@ ruins-node/utils/johnny/upload-imgs.js
 3.輸入網址: http://localhost:3000/community/main-page 進入頁面
 
 進入頁面後  
-主要有 community(公共論壇)、personal(個人頁面)兩部分，有 RWD 設計、
-使用線上資料庫(若要使用本地端資料庫，位置: community-project/ruins-node/data_base/ruins_final.sql)  
+主要有 community(公共論壇)、personal(個人頁面)兩部分，有 RWD 設計、使用線上資料庫(速度較慢，載入及操作時需稍等幾秒)    
+(若要使用本地端資料庫，位置: community-project/ruins-node/data_base/ruins_final.sql，且需將production.env改成符合本地端的內容)  
 右上角的 LOG IN,登入後可以執行需要權限的操作  
 (如 personal 頁面新增修改文章、上傳圖片、留言、按讚、新增移除好友等)。  
 ※如不小心按到其他頁面，點左上選單圖示，選 community 可回到社群頁面
