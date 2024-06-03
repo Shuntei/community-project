@@ -22,7 +22,7 @@ ruins-node/utils/johnny/upload-imgs.js
 2.在 ruins-node 執行 npm run dev,在 ruins-next 執行 npm run build 後,執行 npm start  
 3.輸入網址: http://localhost:3000/community/main-page 進入頁面
 
-頁面操作方式  
+頁面操作方式:  
 主要有 community(公共論壇)、personal(個人頁面)兩部分，有 RWD 設計、使用線上資料庫(速度較慢，載入及操作時需稍等幾秒)    
 (若要使用本地端資料庫，位置: community-project/ruins-node/data_base/ruins_final.sql，且需將production.env改成符合本地端的內容)  
 右上角的 LOG IN,登入後可以執行需要權限的操作  
