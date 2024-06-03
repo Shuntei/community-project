@@ -1,7 +1,7 @@
 "# ruins-exploring"
 
 這是與小組合作的專案  
-Vercel連結: https://vercel.com/shunteis-projects/community-project-frontend
+Vercel連結: https://community-project-frontend.vercel.app/community/main-page
 
 我負責 community(社群)的部分  
 由於檔案大小關係,網頁僅提供社群部分操作  
