@@ -1,6 +1,8 @@
 "# ruins-exploring"
 
 這是與小組合作的專案  
+Vercel連結: https://vercel.com/shunteis-projects/community-project-frontend
+
 我負責 community(社群)的部分  
 由於檔案大小關係,網頁僅提供社群部分操作  
 資料夾或檔案位置:  
@@ -24,7 +26,6 @@ ruins-node/utils/johnny/upload-imgs.js
 (如 personal 頁面新增修改文章、上傳圖片、留言、按讚、新增移除好友等)。  
 ※如不小心按到其他頁面，點左上選單圖示，選 community 可回到社群頁面
 
-登入方式可以選擇:  
-1.google 帳號登入  
-2.另外註冊帳號  
-3.使用我的帳號:johnny,密碼:283au4a83
+登入方式: 
+帳號:johnny
+密碼:283au4a83
