@@ -33,7 +33,7 @@ router.get("/userinfo", async (req, res) => {
   // const sql = `SELECT * FROM mb_user WHERE 1`;
   const keyword = req.query.followsKeyword;
 
-  console.log("keyword", keyword);
+  // console.log("followsKeyword", keyword);
 
   let where = ` WHERE 1 `;
   if (keyword) {

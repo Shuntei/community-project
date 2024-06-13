@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RiSearchLine, RiCloseLine } from '@remixicon/react'
-import Image from 'next/image'
-import profileImg from './img/16.jpg'
 import { useToggles } from '@/contexts/use-toggles'
 import { SN_USER_INFO } from '../config/johnny-api-path'
 import { IMG_SERVER } from '../config/api-path'
@@ -21,7 +19,7 @@ export default function FollowsBar() {
       .then((r) => r.json())
       .then((result) => {
         setUserinfo(result)
-        console.log(result)
+        // console.log(result)
       })
   }
 
@@ -43,7 +41,7 @@ export default function FollowsBar() {
       .then((r) => r.json())
       .then((result) => {
         setUserinfo(result)
-        console.log(result)
+        // console.log(result)
       })
       .catch((err) => {
         console.error('Error fetching user info:', err)

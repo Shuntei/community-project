@@ -1,16 +1,13 @@
-import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 import { FaYoutube } from 'react-icons/fa'
 import { FaFacebook } from 'react-icons/fa'
 import { MdEmail } from 'react-icons/md'
 import { AiFillInstagram } from 'react-icons/ai'
 import { RiAddLine } from '@remixicon/react'
-import { useAuth } from '@/contexts/auth-context'
 import { SN_USER_INFO } from '../config/johnny-api-path'
 import { useRouter } from 'next/router'
 
 export default function InfoMobile() {
-  const { auth } = useAuth()
   const router = useRouter()
   const [userInfo, setUserinfo] = useState('')
 

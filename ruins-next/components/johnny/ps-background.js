@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Image from 'next/image'
-import { useAuth } from '@/contexts/auth-context'
 import { IMG_SERVER } from '../config/api-path'
 import { SN_USER_INFO } from '../config/johnny-api-path'
 import { useRouter } from 'next/router'
 import { useBoards } from '@/contexts/use-boards'
-import SeeMoreFollows from '@/components/johnny/seemore-follows'
-import { useToggles } from '@/contexts/use-toggles'
 
 export default function PersonalBackground() {
   // const { auth } = useAuth()

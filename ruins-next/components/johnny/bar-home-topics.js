@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useBoards } from '@/contexts/use-boards'
-import { RiArrowDropDownLine, RiListCheck } from '@remixicon/react'
 import { SN_BOARDS } from '../config/johnny-api-path'
 import { useRouter } from 'next/router'
 
 export default function Topics() {
   const router = useRouter()
-  const { boards, setBoards, setSelectedPosts, isBoard, setIsBoard } =
-    useBoards()
+  const { boards, setBoards, setSelectedPosts, setIsBoard } = useBoards()
   // const [isBoard, setIsBoard] = useState('')
 
   useEffect(() => {
@@ -48,7 +46,6 @@ export default function Topics() {
             }}
           >
             所有文章
-            {/* <RiArrowDropDownLine /> */}
           </li>
           {boards &&
             boards.map((v, i) => {
@@ -63,7 +60,6 @@ export default function Topics() {
                         ...router.query,
                         boardId: v.board_id,
                         bdpage: 1,
-                        keyword: '',
                       },
                     })
                   }}

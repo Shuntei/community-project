@@ -60,7 +60,12 @@ export default function CentralContent() {
   }, [render])
 
   useEffect(() => {
-    queryHandler()
+    // 6/12修改
+    if (searchTerm) {
+      queryHandler()
+    } else {
+      router.push({ pathname: '/community/main-page' })
+    }
   }, [searchTerm])
 
   useEffect(() => {

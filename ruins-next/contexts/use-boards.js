@@ -28,7 +28,7 @@ export default function BoardsContextProvider({ children }) {
       const r = await fetch(`${SN_POSTS}${location.search}`)
       const data = await r.json()
       setPostsLists(data)
-      console.log(data)
+      // console.log(data)
     } catch (err) {
       console.log(err)
     }
