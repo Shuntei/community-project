@@ -1,9 +1,6 @@
 "# ruins-exploring"
 
 這是與小組合作的專案  
-Vercel連結: https://community-project-frontend.vercel.app/community/main-page  
-(由於線上資料庫關係，載入時需稍等幾秒)  
-
 我負責 community(社群)的部分  
 完成用戶追蹤與取消追蹤功能，使得不同帳號登入後可以透過判斷顯示符合該帳號的的追蹤列表、被追蹤列表。  
 ![image](https://github.com/Shuntei/community-project/assets/106071701/6a1ad134-0196-4b3b-be05-64ecb282be93)  
